@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>lumnik — Dégelez les données prisonnières de vos ERP</title>
+  <meta name="description" content="lumnik ingère en lecture seule les données de vos ERP legacy (Sage, Cegid, AS/400…), les fusionne et les rend interrogeables en français, métier par métier — sans rien toucher à l'existant.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='34' fill='%23ffd24a'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<div id="thermometre" aria-hidden="true"></div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="#">lumnik<span class="dot" aria-hidden="true"></span></a>
+    <ul>
+      <li><a href="#comment">Comment ça marche</a></li>
+      <li><a href="#cas">Cas concrets</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#offre">Offre</a></li>
+      <li><a href="essai.html">Essai cloud</a></li>
+      <li><a class="btn btn-lumiere" style="padding:10px 22px" href="#contact">Nous parler</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ================= HÉROS ================= -->
+<header class="hero">
+  <div class="wrap">
+    <p class="surtitre">Sage · Cegid · AS/400 · Divalto · Excel — et tous les autres</p>
+    <h1>Vos données ne sont pas perdues.<br>Elles sont <span class="gelees">gelées</span>.<br>lumnik les <span class="degel">dégèle</span>.</h1>
+    <p class="sous">
+      lumnik lit vos systèmes existants <strong>sans jamais y écrire</strong>, fusionne leurs données
+      en une seule vérité, et donne à chaque métier un <strong>assistant qui répond en français</strong> —
+      ou qui dit honnêtement « je ne sais pas ».
+    </p>
+    <div class="ctas">
+      <a class="btn btn-lumiere" href="#contact">Demander une démonstration</a>
+      <a class="btn btn-givre" href="#comment">Voir comment ça marche</a>
+    </div>
+    <p class="preuve">lecture seule · installé <b>chez vous</b> · vos données ne quittent jamais vos murs</p>
+  </div>
+</header>
+
+<!-- ================= LE CONGÉLATEUR ================= -->
+<section class="congelateur" id="probleme">
+  <div class="wrap reveal">
+    <p class="kicker">Le problème</p>
+    <h2>Vingt ans de décisions dorment dans des systèmes que <em>personne n'ose toucher</em>.</h2>
+    <p class="lede">
+      Commandes, clients, stocks, interventions : tout existe, quelque part, dans un ERP
+      vieillissant que l'on n'ose ni migrer ni brancher. Résultat : trois personnes savent
+      interroger le système, les questions attendent leur retour de congés, et chaque
+      rapport est un ticket payant chez l'éditeur. <strong>La donnée n'est pas rare —
+      elle est prisonnière.</strong>
+    </p>
+    <div class="systemes">
+      <div class="systeme"><div class="nom">Sage 100 / X3</div><div class="depuis">fidèle depuis 2006</div></div>
+      <div class="systeme"><div class="nom">Cegid</div><div class="depuis">la compta n'y touche plus</div></div>
+      <div class="systeme"><div class="nom">AS/400</div><div class="depuis">écran vert, un seul expert</div></div>
+      <div class="systeme"><div class="nom">Divalto / EBP</div><div class="depuis">hérité d'un rachat</div></div>
+      <div class="systeme"><div class="nom">Dossier d'exports CSV</div><div class="depuis">900 fichiers, un magicien Excel parti</div></div>
+      <div class="systeme"><div class="nom">Le développement maison</div><div class="depuis">son auteur part à la retraite</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TROIS GESTES ================= -->
+<section class="gestes" id="comment">
+  <div class="wrap reveal">
+    <p class="kicker">Comment ça marche</p>
+    <h2>Trois gestes. <em>Zéro risque</em> pour l'existant.</h2>
+    <p class="lede">
+      Personne ne signe une migration d'ERP. Tout le monde accepte qu'on <strong>lise</strong>.
+      C'est toute la philosophie de lumnik : l'entrée se fait en lecture seule, votre système
+      reste l'unique maître de ses données, et il ne saura même pas que nous sommes passés.
+    </p>
+    <div class="geste-grille">
+      <div class="geste">
+        <h3>Brancher, en lecture seule</h3>
+        <p>Des connecteurs prêts pour le vieux fer : bases SQL des ERP, exports CSV,
+        API, systèmes AS/400. <strong>Aucune écriture, jamais</strong> — c'est une garantie
+        d'architecture, pas une promesse.</p>
+      </div>
+      <div class="geste">
+        <h3>Fusionner en une vérité</h3>
+        <p>Le même client existe dans deux systèmes avec deux adresses ? lumnik construit
+        la fiche unique et consigne chaque désaccord dans un <strong>registre des conflits</strong> —
+        qui devient votre liste de nettoyage, offerte.</p>
+      </div>
+      <div class="geste">
+        <h3>Interroger, en français</h3>
+        <p>Chaque métier reçoit son assistant, borné à <strong>son</strong> périmètre.
+        Le magasinier interroge le stock depuis son téléphone ; la réponse cite ses sources —
+        ou s'abstient honnêtement.</p>
+      </div>
+    </div>
+
+    <div class="demo">
+      <div>
+        <h2 style="font-size:1.8rem">La réponse cite ses sources.<br>Ou elle <em>n'existe pas</em>.</h2>
+        <p class="lede">
+          Tout le monde a une IA. La nôtre est élevée autrement : des garde-fous déterministes
+          vérifient chaque réponse avant qu'elle ne vous atteigne. Un « il n'y en a aucun »
+          faussement assuré est, chez nous, la faute capitale — <strong>lumnik préfère
+          admettre qu'il ne sait pas</strong>. C'est ce qui rend ses réponses utilisables
+          par un métier qui porte des conséquences.
+        </p>
+      </div>
+      <div class="fenetre" aria-label="Exemple de conversation">
+        <div class="barre">
+          <span class="rond"></span><span class="rond"></span><span class="rond"></span>
+          &nbsp;lumnik — périmètre : stock
+        </div>
+        <div class="corps">
+          <div class="bulle q">Combien de roulements 6205 en stock, tous sites confondus ?</div>
+          <div class="bulle r">
+            142 unités : 96 à Lyon, 38 à Nantes, 8 à Mâcon.
+            <span class="source">sources : sage-lyon · divalto-nantes · csv-macon — données du jour</span>
+          </div>
+          <div class="bulle q">Et la référence 6205-ZZ chez notre fournisseur Habasit ?</div>
+          <div class="bulle r abstention">
+            <em>Je ne peux pas l'établir</em> à partir des données ingérées : aucun champ
+            fournisseur n'est renseigné pour cette référence. Plutôt que d'inventer, je m'abstiens.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CAS FRANÇAIS ================= -->
+<section id="cas">
+  <div class="wrap reveal">
+    <p class="kicker">Cas concrets</p>
+    <h2>Des situations que vous <em>reconnaîtrez</em>.</h2>
+    <p class="lede">
+      Chaque cas ci-dessous existe aujourd'hui dans des entreprises françaises.
+      Le déclencheur est toujours le même : un expert qui part, un rachat, un audit,
+      une licence payée pour rien.
+    </p>
+    <div class="cas-grille">
+      <article class="cas">
+        <div class="contexte">PME industrielle · 4 sites</div>
+        <h3>« Ce roulement, quelqu'un l'a en stock ? »</h3>
+        <p>Quatre usines, quatre ERP différents (Sage X3, Divalto, un développement maison).
+        Quand une ligne s'arrête, la maintenance téléphone aux sites voisins. Une ligne
+        arrêtée coûte quatre chiffres de l'heure.</p>
+        <p class="lumen">Une pièce, une fiche fusionnée, une question — la réponse site par
+        site en quelques secondes. Le premier arrêt évité paie des années d'outil.</p>
+      </article>
+      <article class="cas">
+        <div class="contexte">Négoce · après un rachat</div>
+        <h3>Deux catalogues, deux prix pour le même produit</h3>
+        <p>L'acquéreur découvre 40&nbsp;% de références en doublon entre son Sage et
+        l'EBP racheté. Les commerciaux annoncent des prix différents pour le même article.
+        La migration prendra dix-huit mois.</p>
+        <p class="lumen">La fiche produit unique est servie en quelques semaines, pendant
+        que la migration avance à son rythme. Le registre des conflits EST la liste de
+        dédoublonnage que l'équipe attendait.</p>
+      </article>
+      <article class="cas">
+        <div class="contexte">Services · système « zombie »</div>
+        <h3>La licence payée pour un logiciel que plus personne n'utilise</h3>
+        <p>Un système déclassé en 2019, conservé uniquement parce que la loi impose de
+        garder ses données dix ans. Licence + serveur + le seul admin qui sait le
+        redémarrer : cinq chiffres par an pour une poignée de consultations.</p>
+        <p class="lumen">Une dernière ingestion, puis la machine s'éteint. L'archive reste
+        interrogeable pour toujours. Le retour sur investissement est une soustraction
+        qu'on fait de tête.</p>
+      </article>
+      <article class="cas">
+        <div class="contexte">Distribution automobile · 15 concessions</div>
+        <h3>Le client de Lyon est un inconnu à Grenoble</h3>
+        <p>Chaque concession a son DMS. L'historique d'un véhicule s'arrête aux portes
+        du site qui l'a vu. L'analyse groupe est une mission de conseil annuelle.</p>
+        <p class="lumen">Le numéro de châssis (VIN) fusionne tout : n'importe quel
+        conseiller voit l'historique complet du véhicule, et le groupe interroge
+        l'ensemble de son parc en une phrase.</p>
+      </article>
+      <article class="cas">
+        <div class="contexte">Secteur public · intercommunalité</div>
+        <h3>Cinquante communes, un seul déploiement</h3>
+        <p>Les petites communes n'auront jamais le budget d'un tel outil chacune.
+        Un syndicat ou un intégrateur public en opère <strong>un seul</strong> — chaque
+        commune ne voit que sa tranche, isolation garantie par la base elle-même.</p>
+        <p class="lumen">L'architecture multi-organisations n'est pas de la plomberie :
+        c'est le produit. Un déploiement, cinquante dégels.</p>
+      </article>
+      <article class="cas">
+        <div class="contexte">Tout projet de migration</div>
+        <h3>La radiographie avant l'opération</h3>
+        <p>Toute migration commence par des mois d'interviews pour deviner ce que
+        contient l'ancien système. La vérité n'est pas dans la documentation —
+        elle est dans les données.</p>
+        <p class="lumen">Ingérez l'ancien ERP au premier jour de l'étude et
+        posez-lui la question directement : champs réellement utilisés, colonnes vides,
+        vrais domaines de valeurs. lumnik n'est pas le concurrent de la migration —
+        c'est son instrument.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ARCHITECTURE ================= -->
+<section class="archi" id="architecture">
+  <div class="wrap reveal">
+    <p class="kicker">L'architecture, en clair</p>
+    <h2>Simple à comprendre. <em>Sérieux</em> en dessous.</h2>
+    <p class="lede">
+      Pas de magie : trois étages, et des choix d'ingénierie faits pour les directions
+      informatiques exigeantes.
+    </p>
+    <div class="schema">
+      <div class="colonne">
+        <h4>Vos systèmes</h4>
+        <ul>
+          <li>ERP &amp; gestion <small>Sage, Cegid, Divalto, EBP, AS/400…</small></li>
+          <li>Exports &amp; fichiers <small>CSV, dépôts SFTP</small></li>
+          <li>Applications métier <small>API, développements maison</small></li>
+        </ul>
+      </div>
+      <div class="fleche" aria-hidden="true">→</div>
+      <div class="colonne hub">
+        <h4>Le hub lumnik — chez vous</h4>
+        <ul>
+          <li>Ingestion en lecture seule <small>vos systèmes restent maîtres</small></li>
+          <li>Fusion en une vérité <small>+ registre des conflits</small></li>
+          <li>Sécurité par métier et par organisation <small>isolée par la base de données elle-même, pas par l'application</small></li>
+          <li>Garde-fous d'honnêteté <small>chaque réponse vérifiée avant d'être servie</small></li>
+        </ul>
+      </div>
+      <div class="fleche" aria-hidden="true">→</div>
+      <div class="colonne">
+        <h4>Vos métiers</h4>
+        <ul>
+          <li>Assistant en français <small>sur ordinateur et téléphone</small></li>
+          <li>API prête à l'emploi <small>pour vos portails et outils</small></li>
+          <li>Vues &amp; tableaux <small>décrits en une phrase, générés pour vous</small></li>
+        </ul>
+      </div>
+    </div>
+    <p class="serment">
+      <b>Trois engagements d'architecture&nbsp;:</b> lumnik n'écrit jamais dans vos systèmes ·
+      l'isolation entre organisations est appliquée par la base de données, pas par du code applicatif ·
+      l'IA peut fonctionner entièrement <b>dans vos murs</b> — aucune donnée n'a besoin de sortir.
+    </p>
+  </div>
+</section>
+
+<!-- ================= COMPARAISON ================= -->
+<section class="comparaison">
+  <div class="wrap reveal">
+    <p class="kicker">Pour situer</p>
+    <h2>Ni un projet BI, ni une migration, ni <em>« un chatbot »</em>.</h2>
+    <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>L'alternative classique</th>
+          <th>Ce qu'elle exige</th>
+          <th>lumnik</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Le projet BI / entrepôt de données</td>
+          <td>6 à 18 mois, une équipe data, des consultants, un budget à six chiffres</td>
+          <td class="lumnik-col">Premier périmètre interrogeable en quelques semaines, sans équipe data entre le métier et la réponse</td>
+        </tr>
+        <tr>
+          <td>La migration d'ERP</td>
+          <td>Des années, un risque majeur, et l'historique reste souvent derrière</td>
+          <td class="lumnik-col">Sert les métiers <em>maintenant</em> — et devient l'instrument de la migration si elle a lieu un jour</td>
+        </tr>
+        <tr>
+          <td>« Une IA branchée sur vos données »</td>
+          <td>Des réponses plausibles… et personne pour garantir qu'elles sont vraies</td>
+          <td class="lumnik-col">Des garde-fous déterministes : sources citées, périmètres bornés, abstention plutôt qu'invention</td>
+        </tr>
+        <tr>
+          <td>L'interface payante de l'éditeur historique</td>
+          <td>Cinq chiffres par connecteur, et un ticket de trois mois pour chaque rapport</td>
+          <td class="lumnik-col">Une fois ingéré, le même socle sert le chat, l'API et les tableaux — deux besoins, une ingestion</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PERSONAS ================= -->
+<section id="pour-qui">
+  <div class="wrap reveal">
+    <p class="kicker">Pour qui</p>
+    <h2>Trois lecteurs, trois raisons d'y <em>croire</em>.</h2>
+    <div class="personas-grille">
+      <div class="persona">
+        <div class="qui">Le dirigeant</div>
+        <p>Posez à vos données de 2006 les questions de 2026. Les réponses que vous attendiez
+        « pour le prochain comité » arrivent <strong>dans la minute</strong>, sourcées — sans
+        projet pharaonique, sans risque sur l'outil de production, sans embaucher une équipe data.</p>
+      </div>
+      <div class="persona">
+        <div class="qui">La direction informatique</div>
+        <p><strong>Lecture seule</strong> par construction. Installé sur vos serveurs, sur un socle
+        de base de données éprouvé où l'isolation entre organisations est appliquée par la base
+        elle-même. SQL généré exécuté en lecture seule, traçabilité, et une IA qui peut tourner
+        <strong>entièrement dans vos murs</strong>. Le dégel sans le risque de la migration.</p>
+      </div>
+      <div class="persona integrateur">
+        <div class="qui">L'intégrateur</div>
+        <p>Le produit qui vous fait briller chez vos clients à ERP vieillissant : connecteurs
+        déclaratifs, outillage en ligne de commande pensé pour vous, et une démonstration qui
+        fait son effet <strong>en soixante secondes</strong> sur leurs vraies données.
+        <strong>Programme partenaire en construction — parlons-en tôt.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= OFFRE ================= -->
+<section id="offre">
+  <div class="wrap reveal">
+    <p class="kicker">L'offre</p>
+    <h2>Commencez <em>gratuitement</em>. Grandissez quand vos métiers en redemandent.</h2>
+    <div class="offre-grille">
+      <div class="tier">
+        <h3>Hub</h3>
+        <div class="pour">Pour découvrir et outiller</div>
+        <ul>
+          <li><strong>Gratuit</strong>, installé chez vous</li>
+          <li>Connecteurs et ingestion lecture seule</li>
+          <li>Fusion et registre des conflits</li>
+          <li>Accès SQL et exports</li>
+        </ul>
+        <a class="btn btn-givre" href="#contact">Commencer</a>
+      </div>
+      <div class="tier pro">
+        <h3>Pro</h3>
+        <div class="pour">Pour servir les métiers</div>
+        <ul>
+          <li>Tout le Hub, plus&nbsp;:</li>
+          <li><strong>Assistant en français</strong> par métier, avec les garde-fous d'honnêteté</li>
+          <li>Application mobile des métiers</li>
+          <li>Vues générées en une phrase</li>
+          <li>Mises à jour et support</li>
+        </ul>
+        <a class="btn btn-lumiere" href="#contact">Demander un pilote</a>
+      </div>
+      <div class="tier">
+        <h3>Enterprise</h3>
+        <div class="pour">Pour lumnik dans votre monde</div>
+        <ul>
+          <li>Tout Pro, plus&nbsp;:</li>
+          <li>Votre annuaire d'identités (SSO), arrivées/départs automatisés</li>
+          <li>Organisations et métiers illimités</li>
+          <li>Engagements de service (SLA)</li>
+        </ul>
+        <a class="btn btn-givre" href="#contact">Sur devis</a>
+      </div>
+    </div>
+    <p class="lede" style="margin-top:34px; font-size:0.95rem">
+      Installation par votre intégrateur ou par nos soins. Une version cloud managée arrive —
+      <a href="essai.html" style="color:var(--lumiere)">inscrivez-vous à l'essai</a>.
+    </p>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="contact" id="contact">
+  <div class="wrap reveal">
+    <p class="kicker">Contact</p>
+    <h2>La première question est <em>gratuite</em>.</h2>
+    <div class="contact-grille">
+      <div>
+        <p class="lede">
+          Dites-nous quel système garde vos données au frais — nous vous répondrons avec
+          un scénario concret de dégel, souvent réalisable en démonstration sur un
+          échantillon de <strong>vos</strong> données.
+        </p>
+        <p class="direct" style="margin-top:26px">
+          En direct&nbsp;: <a href="mailto:contact@lumnik.fr">contact@lumnik.fr</a><br>
+          Intégrateurs&nbsp;: mentionnez-le, le programme partenaire vous est ouvert en avant-première.
+        </p>
+      </div>
+      <!-- Formulaire : renseigner l'ID Formspree (voir README) ou remplacer par votre backend -->
+      <form action="https://formspree.io/f/VOTRE_ID_FORMSPREE" method="POST">
+        <div>
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" name="nom" required autocomplete="name">
+        </div>
+        <div>
+          <label for="email">Email professionnel</label>
+          <input type="email" id="email" name="email" required autocomplete="email">
+        </div>
+        <div>
+          <label for="profil">Vous êtes</label>
+          <select id="profil" name="profil">
+            <option>Dirigeant / métier</option>
+            <option>Direction informatique</option>
+            <option>Intégrateur / ESN</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div>
+          <label for="message">Votre système gelé, en une phrase</label>
+          <textarea id="message" name="message" placeholder="Ex. : un Sage 100 de 2008, quatre sites, et personne ne sait croiser les stocks…"></textarea>
+        </div>
+        <button class="btn btn-lumiere" type="submit">Envoyer</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>lumnik — édité par icreated · Châtillon d'Azergues, France</div>
+    <div><a href="mailto:contact@lumnik.fr">contact@lumnik.fr</a> · <a href="essai.html">Essai cloud</a></div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>

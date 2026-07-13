@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Essai cloud — lumnik</title>
+  <meta name="description" content="Essayez lumnik dans un bac à sable cloud : un ERP fictif déjà gelé, un assistant métier prêt à interroger. Ouverture prochaine — inscrivez-vous.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='34' fill='%23ffd24a'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<div id="thermometre" aria-hidden="true"></div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="index.html">lumnik<span class="dot" aria-hidden="true"></span></a>
+    <ul>
+      <li><a href="index.html#comment">Comment ça marche</a></li>
+      <li><a href="index.html#cas">Cas concrets</a></li>
+      <li><a href="index.html#offre">Offre</a></li>
+      <li><a class="btn btn-lumiere" style="padding:10px 22px" href="index.html#contact">Nous parler</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="essai-hero">
+  <div class="wrap">
+    <div class="badge-bientot">Ouverture prochaine</div>
+    <h1>Essayez le dégel, <span class="degel">sans rien installer</span>.</h1>
+    <p class="sous" style="max-width:56ch">
+      Un bac à sable cloud avec un ERP fictif déjà gelé dedans : branchez-vous,
+      posez vos questions en français, voyez les sources citées et l'abstention honnête —
+      en dix minutes, depuis votre navigateur.
+    </p>
+
+    <!-- Formulaire d'accès : renseigner l'ID Formspree (voir README) -->
+    <form class="essai-form" action="https://formspree.io/f/VOTRE_ID_FORMSPREE" method="POST">
+      <input type="hidden" name="objet" value="Inscription essai cloud">
+      <div>
+        <label for="email-essai">Email professionnel</label>
+        <input type="email" id="email-essai" name="email" required autocomplete="email"
+               placeholder="vous@entreprise.fr">
+      </div>
+      <div>
+        <label for="profil-essai">Vous êtes</label>
+        <select id="profil-essai" name="profil">
+          <option>Dirigeant / métier</option>
+          <option>Direction informatique</option>
+          <option>Intégrateur / ESN</option>
+          <option>Curieux de passage</option>
+        </select>
+      </div>
+      <button class="btn btn-lumiere" type="submit">Me prévenir à l'ouverture</button>
+    </form>
+
+    <div class="essai-etapes">
+      <div class="essai-etape">
+        <div class="num">1</div>
+        <div>
+          <h3>Vous recevez vos accès</h3>
+          <p>Un lien, un identifiant — le bac à sable tourne déjà, avec un ERP fictif
+          de PME (clients, commandes, stocks) gelé dedans pour vous.</p>
+        </div>
+      </div>
+      <div class="essai-etape">
+        <div class="num">2</div>
+        <div>
+          <h3>Vous posez de vraies questions</h3>
+          <p>« Quels clients n'ont pas commandé depuis six mois ? » — la réponse arrive
+          sourcée. Demandez l'impossible : vous verrez l'abstention honnête au travail.</p>
+        </div>
+      </div>
+      <div class="essai-etape">
+        <div class="num">3</div>
+        <div>
+          <h3>Vous imaginez vos propres données à la place</h3>
+          <p>C'est généralement le moment où l'on nous écrit. La marche suivante :
+          une démonstration sur un échantillon de <strong>vos</strong> données,
+          chez vous, en lecture seule.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<footer>
+  <div class="wrap">
+    <div>lumnik — édité par icreated · Châtillon d'Azergues, France</div>
+    <div><a href="mailto:contact@lumnik.fr">contact@lumnik.fr</a> · <a href="index.html">Retour au site</a></div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>
