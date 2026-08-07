@@ -42,6 +42,20 @@ body {
 
 ::selection { background: var(--lumiere); color: var(--nuit); }
 
+/* --- Lien d'évitement : hors écran jusqu'à ce qu'on l'atteigne au clavier --- */
+.saut {
+  position: absolute;
+  top: -60px; left: 0;
+  z-index: 200;
+  background: var(--lumiere);
+  color: var(--nuit);
+  font-weight: 600;
+  padding: 12px 22px;
+  border-radius: 0 0 var(--radius) 0;
+  text-decoration: none;
+}
+.saut:focus { top: 0; outline: 2px solid var(--nuit); outline-offset: -5px; }
+
 /* --- Texture givre (grain) sur tout le site --- */
 body::before {
   content: "";
@@ -539,7 +553,7 @@ h2 em { font-style: italic; color: var(--lumiere); }
   background: rgba(255, 210, 74, 0.05);
   box-shadow: 0 0 50px rgba(255, 210, 74, 0.06) inset;
 }
-.colonne h4 {
+.colonne h3 {
   font-family: var(--mono);
   font-size: 0.78rem;
   letter-spacing: 0.18em;
@@ -547,7 +561,7 @@ h2 em { font-style: italic; color: var(--lumiere); }
   color: var(--brume);
   margin-bottom: 16px;
 }
-.colonne.hub h4 { color: var(--lumiere); }
+.colonne.hub h3 { color: var(--lumiere); }
 .colonne ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
 .colonne li { font-size: 0.93rem; color: var(--neige); }
 .colonne li small { display: block; color: var(--brume); font-size: 0.8rem; }
@@ -754,7 +768,7 @@ footer a:hover { color: var(--lumiere); }
   font-size: 1.9rem;
   color: var(--lumiere);
 }
-.essai-etape h3 { font-family: var(--serif); font-weight: 550; font-size: 1.2rem; margin-bottom: 6px; }
+.essai-etape h2 { font-family: var(--serif); font-weight: 550; font-size: 1.2rem; max-width: none; margin-bottom: 6px; }
 .essai-etape p { color: var(--brume); font-size: 0.94rem; }
 
 /* accessibilité */

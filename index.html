@@ -13,6 +13,8 @@
 </head>
 <body>
 
+<a class="saut" href="#contenu">Aller au contenu</a>
+
 <div id="thermometre" aria-hidden="true"></div>
 
 <nav>
@@ -29,6 +31,8 @@
     </ul>
   </div>
 </nav>
+
+<main id="contenu">
 
 <!-- ================= HÉROS ================= -->
 <header class="hero">
@@ -113,7 +117,7 @@
           par un métier qui porte des conséquences.
         </p>
       </div>
-      <div class="fenetre" aria-label="Exemple de conversation">
+      <div class="fenetre" role="group" aria-label="Exemple de conversation">
         <div class="barre">
           <span class="rond"></span><span class="rond"></span><span class="rond"></span>
           &nbsp;lumnik — périmètre : stock
@@ -168,7 +172,7 @@
         </p>
       </div>
 
-      <div class="fenetre tape" aria-label="Exemple de journal d'observations">
+      <div class="fenetre tape" role="group" aria-label="Exemple de journal d'observations">
         <div class="barre">
           <span class="rond"></span><span class="rond"></span><span class="rond"></span>
           &nbsp;lumnik — journal des observations
@@ -287,7 +291,7 @@
     </p>
     <div class="schema">
       <div class="colonne">
-        <h4>Vos systèmes</h4>
+        <h3>Vos systèmes</h3>
         <ul>
           <li>ERP &amp; gestion <small>Sage, Cegid, Divalto, EBP, AS/400…</small></li>
           <li>Exports &amp; fichiers <small>CSV, dépôts SFTP</small></li>
@@ -296,7 +300,7 @@
       </div>
       <div class="fleche" aria-hidden="true">→</div>
       <div class="colonne hub">
-        <h4>Le hub lumnik — chez vous</h4>
+        <h3>Le hub lumnik — chez vous</h3>
         <ul>
           <li>Ingestion en lecture seule <small>vos systèmes restent maîtres</small></li>
           <li>Fusion en une vérité <small>+ registre des conflits</small></li>
@@ -306,7 +310,7 @@
       </div>
       <div class="fleche" aria-hidden="true">→</div>
       <div class="colonne">
-        <h4>Vos métiers</h4>
+        <h3>Vos métiers</h3>
         <ul>
           <li>Assistant en français <small>sur ordinateur et téléphone</small></li>
           <li>API prête à l'emploi <small>pour vos portails et outils</small></li>
@@ -490,6 +494,8 @@
     </div>
   </div>
 </section>
+
+</main>
 
 <footer>
   <div class="wrap">
