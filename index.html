@@ -23,6 +23,7 @@
     <ul>
       <li><a href="#comment">Comment ça marche</a></li>
       <li><a href="#temps">Le temps</a></li>
+      <li><a href="#adaptateur">L'adaptateur</a></li>
       <li><a href="#cas">Cas concrets</a></li>
       <li><a href="#architecture">Architecture</a></li>
       <li><a href="#offre">Offre</a></li>
@@ -207,6 +208,58 @@
   </div>
 </section>
 
+<!-- ================= L'ADAPTATEUR ================= -->
+<section id="adaptateur">
+  <div class="wrap reveal">
+    <p class="kicker">La prise qui manquait</p>
+    <h2>Vos outils modernes veulent des événements.<br>Votre ERP n'en a <em>jamais émis</em>.</h2>
+    <p class="lede">
+      Agendas partagés, tableaux de bord, agrégateurs de métriques, moteurs de règles :
+      tout le SI moderne vit d'événements. Le vieux système n'en produit pas — pas de
+      webhook, pas de flux, pas de prise. lumnik respire, compare, date : chaque changement
+      observé devient un événement que vos outils consomment par les prises standard —
+      webhooks, exports, SQL. <strong>Et chaque silence aussi</strong> : « immobile depuis
+      trente jours » est une alerte qu'aucun système événementiel ne peut émettre,
+      puisqu'il ne s'est justement rien passé.
+    </p>
+    <div class="cas-grille">
+      <article class="cas">
+        <div class="contexte">Zéro accès au legacy</div>
+        <h3>Brancher le moderne sans toucher l'ancien</h3>
+        <p>Chaque intégration classique réclame un compte, un accès, parfois une écriture
+        dans l'ERP fragile — et l'administrateur dit non, souvent avec raison.</p>
+        <p class="lumen">Avec lumnik, vos outils modernes n'obtiennent jamais d'accès au
+        vieux système : lecture seule d'un côté, prises standard de l'autre. Le
+        « zéro risque » du premier jour s'étend à tout l'écosystème.</p>
+      </article>
+      <article class="cas">
+        <div class="contexte">Découplage dans le temps</div>
+        <h3>L'assurance-migration</h3>
+        <p>Chaque outil branché en direct sur l'ERP le rend un peu plus indéboulonnable.
+        Le jour du remplacement, tout l'aval est à refaire.</p>
+        <p class="lumen">Vos outils se branchent sur lumnik, pas sur l'ERP. Le jour où le
+        vieux système change enfin, on remplace un connecteur — et rien en aval ne le
+        remarque. Investissez dans le moderne sans épouser le legacy.</p>
+      </article>
+      <article class="cas">
+        <div class="contexte">Des séries temporelles</div>
+        <h3>L'historique que la source n'a jamais tenu</h3>
+        <p>Un tableau de bord veut des courbes ; le legacy n'a que l'état courant,
+        écrasé à chaque mise à jour.</p>
+        <p class="lumen">Le journal des observations fabrique la série temporelle que la
+        source a détruite : vos outils de métriques tracent enfin les tendances d'un
+        système sans mémoire.</p>
+      </article>
+    </div>
+    <p class="lede" style="margin-top:38px">
+      Honnêteté oblige : ces événements battent au rythme de la respiration — l'heure,
+      pas la milliseconde. Assez vite pour un agenda, un tableau de bord, une alerte
+      métier ; ce n'est pas du temps réel, et lumnik ne prétendra jamais le contraire.
+      <strong>Et rien, jamais, n'écrit vers la source.</strong>
+    </p>
+  </div>
+</section>
+
 <!-- ================= CAS FRANÇAIS ================= -->
 <section id="cas">
   <div class="wrap reveal">
@@ -215,7 +268,7 @@
     <p class="lede">
       Chaque cas ci-dessous existe aujourd'hui dans des entreprises françaises.
       Le déclencheur est toujours le même : un expert qui part, un rachat, un audit,
-      une licence payée pour rien.
+      un dossier qui dort, une licence payée pour rien.
     </p>
     <div class="cas-grille">
       <article class="cas">
@@ -238,6 +291,16 @@
         dédoublonnage que l'équipe attendait.</p>
       </article>
       <article class="cas">
+        <div class="contexte">Vente B2B · le silence qui coûte</div>
+        <h3>Le devis à 40 000 € que personne n'a relancé</h3>
+        <p>Envoyé un vendredi, marqué « en attente » — puis plus rien. Le commercial
+        est sur la route, le statut n'a pas bougé depuis six semaines, et aucun système
+        n'alerte sur ce qui ne se passe pas. Le client a signé ailleurs.</p>
+        <p class="lumen">lumnik observe chaque dossier, ingestion après ingestion, et
+        signale l'immobile : « en attente depuis 42 jours — seuil métier : 15 ».
+        L'alerte cite l'observation exacte ; il ne reste qu'à décrocher le téléphone.</p>
+      </article>
+      <article class="cas">
         <div class="contexte">Services · système « zombie »</div>
         <h3>La licence payée pour un logiciel que plus personne n'utilise</h3>
         <p>Un système déclassé en 2019, conservé uniquement parce que la loi impose de
@@ -255,6 +318,16 @@
         <p class="lumen">Le numéro de châssis (VIN) fusionne tout : n'importe quel
         conseiller voit l'historique complet du véhicule, et le groupe interroge
         l'ensemble de son parc en une phrase.</p>
+      </article>
+      <article class="cas">
+        <div class="contexte">Industrie · l'ERP muet</div>
+        <h3>Le tableau de bord repoussé depuis trois ans</h3>
+        <p>La direction veut des courbes : commandes en retard, encours par site,
+        délais qui dérivent. L'ERP n'a ni API, ni webhooks, ni historique — chaque
+        tentative décisionnelle ressort en projet de six mois, et meurt au chiffrage.</p>
+        <p class="lumen">lumnik devient la prise : webhooks, exports, SQL. Le tableau
+        de bord se branche en quelques jours — sur lumnik, pas sur l'ERP — et il
+        survivra même au remplacement de celui-ci.</p>
       </article>
       <article class="cas">
         <div class="contexte">Secteur public · intercommunalité</div>
