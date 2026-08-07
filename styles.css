@@ -409,6 +409,72 @@ h2 em { font-style: italic; color: var(--lumiere); }
 .bulle.r.abstention { border-style: dashed; }
 .bulle.r.abstention em { color: var(--lumiere); font-style: normal; font-weight: 600; }
 
+/* --- Le temps : le journal des observations --- */
+.temps { background: linear-gradient(180deg, var(--nuit-2), var(--nuit)); }
+
+.sous-titre {
+  font-family: var(--serif);
+  font-weight: 550;
+  font-size: 1.45rem;
+  line-height: 1.25;
+  margin-bottom: 16px;
+}
+
+/* pas de marge sous la dernière ligne : l'alerte touche le bord de la fenêtre */
+.tape .corps { padding: 10px 0 0; gap: 0; }
+
+.tape .ligne {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 13px 24px 13px 48px;
+  position: relative;
+  font-size: 0.93rem;
+}
+/* le rail : une observation, un point.
+   Chaque segment reste dans SA ligne — sinon le fond de l'alerte le recouvre. */
+.tape .ligne::before {
+  content: "";
+  position: absolute;
+  left: 25px;
+  top: 20px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--givre);
+  z-index: 1;
+}
+.tape .ligne::after {
+  content: "";
+  position: absolute;
+  left: 28px;
+  top: 0; bottom: 0;
+  width: 1px;
+  background: rgba(143, 168, 189, 0.18);
+}
+.tape .ligne:first-child::after { top: 23px; }
+.tape .ligne:last-child::after { bottom: calc(100% - 24px); }
+
+.tape .quand {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--brume);
+  flex: 0 0 78px;
+}
+.tape .quoi { color: var(--neige); }
+.tape .quoi b { color: var(--neige); font-weight: 600; }
+.tape .statut { font-family: var(--mono); font-size: 0.8rem; color: var(--brume); }
+
+/* la dormance : le seul moment où la lumière s'allume seule */
+.tape .ligne.alerte { background: rgba(255, 210, 74, 0.07); }
+.tape .ligne.alerte::before {
+  background: var(--lumiere);
+  box-shadow: 0 0 12px var(--lumiere), 0 0 26px var(--lueur-forte);
+}
+.tape .ligne.alerte .quand,
+.tape .ligne.alerte .quoi,
+.tape .ligne.alerte .quoi b { color: var(--lumiere); }
+.tape .ligne.alerte .statut { color: rgba(255, 210, 74, 0.75); }
+
 /* --- Cas français --- */
 .cas-grille {
   margin-top: 56px;
@@ -492,7 +558,7 @@ h2 em { font-style: italic; color: var(--lumiere); }
   font-size: 1.5rem;
   text-align: center;
 }
-.archi .serment {
+.serment {
   margin-top: 34px;
   font-family: var(--mono);
   font-size: 0.85rem;
@@ -501,7 +567,7 @@ h2 em { font-style: italic; color: var(--lumiere); }
   padding-left: 18px;
   max-width: 70ch;
 }
-.archi .serment b { color: var(--lumiere); font-weight: 500; }
+.serment b { color: var(--lumiere); font-weight: 500; }
 
 /* --- Comparaison --- */
 .comparaison table {
