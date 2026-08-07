@@ -13,6 +13,8 @@
 </head>
 <body>
 
+<a class="saut" href="#contenu">Aller au contenu</a>
+
 <div id="thermometre" aria-hidden="true"></div>
 
 <nav>
@@ -20,6 +22,8 @@
     <a class="logo" href="#">lumnik<span class="dot" aria-hidden="true"></span></a>
     <ul>
       <li><a href="#comment">Comment ça marche</a></li>
+      <li><a href="#temps">Le temps</a></li>
+      <li><a href="#adaptateur">L'adaptateur</a></li>
       <li><a href="#cas">Cas concrets</a></li>
       <li><a href="#architecture">Architecture</a></li>
       <li><a href="#offre">Offre</a></li>
@@ -28,6 +32,8 @@
     </ul>
   </div>
 </nav>
+
+<main id="contenu">
 
 <!-- ================= HÉROS ================= -->
 <header class="hero">
@@ -112,7 +118,7 @@
           par un métier qui porte des conséquences.
         </p>
       </div>
-      <div class="fenetre" aria-label="Exemple de conversation">
+      <div class="fenetre" role="group" aria-label="Exemple de conversation">
         <div class="barre">
           <span class="rond"></span><span class="rond"></span><span class="rond"></span>
           &nbsp;lumnik — périmètre : stock
@@ -134,6 +140,126 @@
   </div>
 </section>
 
+<!-- ================= LE TEMPS ================= -->
+<section class="temps" id="temps">
+  <div class="wrap reveal">
+    <p class="kicker">Le troisième dégel</p>
+    <h2>Vos données n'ont pas seulement froid.<br>Elles ont perdu la <em>mémoire</em>.</h2>
+    <p class="lede">
+      Un ERP vous dit ce qui <em>est</em>. Jamais depuis quand. L'export de ce soir écrase
+      celui d'hier ; la colonne « statut » affiche « en cours » — elle l'affichait déjà il y a
+      quarante jours, mais personne ne l'a gardé. <strong>Le temps est la première chose que le
+      vieux système détruit.</strong>
+    </p>
+
+    <div class="demo">
+      <div>
+        <h3 class="sous-titre">lumnik le reconstruit, ingestion après ingestion.</h3>
+        <p class="lede">
+          Chaque passage laisse une observation datée. Au bout de quelques semaines, votre hub
+          sait une chose que l'ERP n'a jamais sue : <strong>ce qui n'a pas bougé</strong>.
+          Un dossier ouvert que plus personne ne touche, une commande figée entre deux étapes,
+          une réclamation oubliée un vendredi soir.
+        </p>
+        <p class="lede" style="margin-top:18px">
+          Le seuil est <strong>déclaré par vous</strong>, jamais deviné : trente jours pour une
+          commande, quarante-huit heures pour une réclamation. lumnik applique ce que le métier
+          a dit — et cite l'observation exacte qui a déclenché l'alerte.
+        </p>
+        <p class="serment" style="margin-top:26px">
+          <b>Ce qui ne bouge plus ne déclenche rien.</b> Aucun système ne vous prévient d'un
+          non-événement. C'est le seul endroit où lumnik ne se contente pas de montrer&nbsp;:
+          il trouve.
+        </p>
+      </div>
+
+      <div class="fenetre tape" role="group" aria-label="Exemple de journal d'observations">
+        <div class="barre">
+          <span class="rond"></span><span class="rond"></span><span class="rond"></span>
+          &nbsp;lumnik — journal des observations
+        </div>
+        <div class="corps">
+          <div class="ligne">
+            <span class="quand">2 juin</span>
+            <span class="quoi">commande <b>C-4471</b> <span class="statut">· en cours</span></span>
+          </div>
+          <div class="ligne">
+            <span class="quand">16 juin</span>
+            <span class="quoi">observée, <span class="statut">inchangée</span></span>
+          </div>
+          <div class="ligne">
+            <span class="quand">30 juin</span>
+            <span class="quoi">observée, <span class="statut">inchangée</span></span>
+          </div>
+          <div class="ligne alerte">
+            <span class="quand">2 juillet</span>
+            <span class="quoi">immobile depuis <b>30 jours</b>
+              <span class="statut">· signalée au métier</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="lede" style="margin-top:38px">
+      Le premier jour, lumnik ne sait rien de votre passé — <strong>et il le dit</strong>,
+      plutôt que de le supposer. Cette mémoire commence à la première ingestion et s'approfondit
+      chaque nuit : c'est la seule part du dégel qui ne se rattrape pas.
+    </p>
+  </div>
+</section>
+
+<!-- ================= L'ADAPTATEUR ================= -->
+<section id="adaptateur">
+  <div class="wrap reveal">
+    <p class="kicker">La prise qui manquait</p>
+    <h2>Vos outils modernes veulent des événements.<br>Votre ERP n'en a <em>jamais émis</em>.</h2>
+    <p class="lede">
+      Agendas partagés, tableaux de bord, agrégateurs de métriques, moteurs de règles :
+      tout le SI moderne vit d'événements. Le vieux système n'en produit pas — pas de
+      webhook, pas de flux, pas de prise. lumnik respire, compare, date : chaque changement
+      observé devient un événement que vos outils consomment par les prises standard —
+      webhooks, exports, SQL. <strong>Et chaque silence aussi</strong> : « immobile depuis
+      trente jours » est une alerte qu'aucun système événementiel ne peut émettre,
+      puisqu'il ne s'est justement rien passé.
+    </p>
+    <div class="cas-grille">
+      <article class="cas">
+        <div class="contexte">Zéro accès au legacy</div>
+        <h3>Brancher le moderne sans toucher l'ancien</h3>
+        <p>Chaque intégration classique réclame un compte, un accès, parfois une écriture
+        dans l'ERP fragile — et l'administrateur dit non, souvent avec raison.</p>
+        <p class="lumen">Avec lumnik, vos outils modernes n'obtiennent jamais d'accès au
+        vieux système : lecture seule d'un côté, prises standard de l'autre. Le
+        « zéro risque » du premier jour s'étend à tout l'écosystème.</p>
+      </article>
+      <article class="cas">
+        <div class="contexte">Découplage dans le temps</div>
+        <h3>L'assurance-migration</h3>
+        <p>Chaque outil branché en direct sur l'ERP le rend un peu plus indéboulonnable.
+        Le jour du remplacement, tout l'aval est à refaire.</p>
+        <p class="lumen">Vos outils se branchent sur lumnik, pas sur l'ERP. Le jour où le
+        vieux système change enfin, on remplace un connecteur — et rien en aval ne le
+        remarque. Investissez dans le moderne sans épouser le legacy.</p>
+      </article>
+      <article class="cas">
+        <div class="contexte">Des séries temporelles</div>
+        <h3>L'historique que la source n'a jamais tenu</h3>
+        <p>Un tableau de bord veut des courbes ; le legacy n'a que l'état courant,
+        écrasé à chaque mise à jour.</p>
+        <p class="lumen">Le journal des observations fabrique la série temporelle que la
+        source a détruite : vos outils de métriques tracent enfin les tendances d'un
+        système sans mémoire.</p>
+      </article>
+    </div>
+    <p class="lede" style="margin-top:38px">
+      Honnêteté oblige : ces événements battent au rythme de la respiration — l'heure,
+      pas la milliseconde. Assez vite pour un agenda, un tableau de bord, une alerte
+      métier ; ce n'est pas du temps réel, et lumnik ne prétendra jamais le contraire.
+      <strong>Et rien, jamais, n'écrit vers la source.</strong>
+    </p>
+  </div>
+</section>
+
 <!-- ================= CAS FRANÇAIS ================= -->
 <section id="cas">
   <div class="wrap reveal">
@@ -142,7 +268,7 @@
     <p class="lede">
       Chaque cas ci-dessous existe aujourd'hui dans des entreprises françaises.
       Le déclencheur est toujours le même : un expert qui part, un rachat, un audit,
-      une licence payée pour rien.
+      un dossier qui dort, une licence payée pour rien.
     </p>
     <div class="cas-grille">
       <article class="cas">
@@ -165,6 +291,16 @@
         dédoublonnage que l'équipe attendait.</p>
       </article>
       <article class="cas">
+        <div class="contexte">Vente B2B · le silence qui coûte</div>
+        <h3>Le devis à 40 000 € que personne n'a relancé</h3>
+        <p>Envoyé un vendredi, marqué « en attente » — puis plus rien. Le commercial
+        est sur la route, le statut n'a pas bougé depuis six semaines, et aucun système
+        n'alerte sur ce qui ne se passe pas. Le client a signé ailleurs.</p>
+        <p class="lumen">lumnik observe chaque dossier, ingestion après ingestion, et
+        signale l'immobile : « en attente depuis 42 jours — seuil métier : 15 ».
+        L'alerte cite l'observation exacte ; il ne reste qu'à décrocher le téléphone.</p>
+      </article>
+      <article class="cas">
         <div class="contexte">Services · système « zombie »</div>
         <h3>La licence payée pour un logiciel que plus personne n'utilise</h3>
         <p>Un système déclassé en 2019, conservé uniquement parce que la loi impose de
@@ -182,6 +318,16 @@
         <p class="lumen">Le numéro de châssis (VIN) fusionne tout : n'importe quel
         conseiller voit l'historique complet du véhicule, et le groupe interroge
         l'ensemble de son parc en une phrase.</p>
+      </article>
+      <article class="cas">
+        <div class="contexte">Industrie · l'ERP muet</div>
+        <h3>Le tableau de bord repoussé depuis trois ans</h3>
+        <p>La direction veut des courbes : commandes en retard, encours par site,
+        délais qui dérivent. L'ERP n'a ni API, ni webhooks, ni historique — chaque
+        tentative décisionnelle ressort en projet de six mois, et meurt au chiffrage.</p>
+        <p class="lumen">lumnik devient la prise : webhooks, exports, SQL. Le tableau
+        de bord se branche en quelques jours — sur lumnik, pas sur l'ERP — et il
+        survivra même au remplacement de celui-ci.</p>
       </article>
       <article class="cas">
         <div class="contexte">Secteur public · intercommunalité</div>
@@ -218,7 +364,7 @@
     </p>
     <div class="schema">
       <div class="colonne">
-        <h4>Vos systèmes</h4>
+        <h3>Vos systèmes</h3>
         <ul>
           <li>ERP &amp; gestion <small>Sage, Cegid, Divalto, EBP, AS/400…</small></li>
           <li>Exports &amp; fichiers <small>CSV, dépôts SFTP</small></li>
@@ -227,7 +373,7 @@
       </div>
       <div class="fleche" aria-hidden="true">→</div>
       <div class="colonne hub">
-        <h4>Le hub lumnik — chez vous</h4>
+        <h3>Le hub lumnik — chez vous</h3>
         <ul>
           <li>Ingestion en lecture seule <small>vos systèmes restent maîtres</small></li>
           <li>Fusion en une vérité <small>+ registre des conflits</small></li>
@@ -237,7 +383,7 @@
       </div>
       <div class="fleche" aria-hidden="true">→</div>
       <div class="colonne">
-        <h4>Vos métiers</h4>
+        <h3>Vos métiers</h3>
         <ul>
           <li>Assistant en français <small>sur ordinateur et téléphone</small></li>
           <li>API prête à l'emploi <small>pour vos portails et outils</small></li>
@@ -335,10 +481,14 @@
         <div class="pour">Pour découvrir et outiller</div>
         <ul>
           <li><strong>Gratuit</strong>, installé chez vous</li>
+          <li>Ni limite de volume, ni compteur d'utilisateurs</li>
           <li>Connecteurs et ingestion lecture seule</li>
           <li>Fusion et registre des conflits</li>
-          <li>Accès SQL et exports</li>
+          <li>Accès SQL, exports et webhooks</li>
         </ul>
+        <!-- Au flip public du dépôt (septembre) : remplacer la première ligne par
+             « Libre et open source, Apache-2.0 » et ajouter « Code auditable et forkable ».
+             Tant que le dépôt est privé, ne pas écrire « open source » ici. -->
         <a class="btn btn-givre" href="#contact">Commencer</a>
       </div>
       <div class="tier pro">
@@ -376,7 +526,7 @@
 <section class="contact" id="contact">
   <div class="wrap reveal">
     <p class="kicker">Contact</p>
-    <h2>La première question est <em>gratuite</em>.</h2>
+    <h2>Parlons de votre <em>congélateur</em>.</h2>
     <div class="contact-grille">
       <div>
         <p class="lede">
@@ -417,6 +567,8 @@
     </div>
   </div>
 </section>
+
+</main>
 
 <footer>
   <div class="wrap">
