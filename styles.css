@@ -42,19 +42,28 @@ body {
 
 ::selection { background: var(--lumiere); color: var(--nuit); }
 
-/* --- Lien d'évitement : hors écran jusqu'à ce qu'on l'atteigne au clavier --- */
+/* --- Lien d'évitement : invisible jusqu'au premier Tab, puis impossible à rater.
+       `fixed` et non `absolute` : il doit apparaître dans le viewport même si la
+       page est déjà défilée quand le clavier l'atteint. --- */
 .saut {
-  position: absolute;
-  top: -60px; left: 0;
+  position: fixed;
+  top: 14px; left: 14px;
   z-index: 200;
+  transform: translateY(calc(-100% - 20px));
   background: var(--lumiere);
   color: var(--nuit);
   font-weight: 600;
-  padding: 12px 22px;
-  border-radius: 0 0 var(--radius) 0;
+  padding: 12px 24px;
+  border-radius: 999px;
   text-decoration: none;
+  box-shadow: 0 8px 34px var(--lueur-forte);
+  transition: transform 0.2s ease;
 }
-.saut:focus { top: 0; outline: 2px solid var(--nuit); outline-offset: -5px; }
+.saut:focus {
+  transform: translateY(0);
+  outline: 2px solid var(--nuit);
+  outline-offset: -5px;
+}
 
 /* --- Texture givre (grain) sur tout le site --- */
 body::before {
