@@ -25,8 +25,8 @@ site.js       barre de dégel (progression) + révélation au défilement
 ## À faire avant la mise en ligne
 
 1. ~~**Formulaire** : créer un formulaire sur formspree.io et remplacer
-   `VOTRE_ID_FORMSPREE`.~~ Fait — les deux pages postent vers le formulaire
-   Formspree réel.
+   l'ID de formulaire placeholder.~~ Fait — les deux pages postent vers le
+   formulaire Formspree réel.
 2. ~~**Email**~~ Décision : pas d'email affiché, le formulaire est l'unique canal
    de contact (l'adresse email retirée des deux pages).
 3. ~~Page mentions légales~~ Fait — `mentions.html`, liée depuis le pied des deux pages.
