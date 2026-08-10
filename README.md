@@ -26,12 +26,13 @@ site.js         barre de dégel (progression) + révélation au défilement
 ## À faire avant la mise en ligne
 
 1. ~~**Formulaire** : créer un formulaire sur formspree.io et remplacer
-   l'ID de formulaire placeholder.~~ Fait — les trois pages postent vers le
-   formulaire Formspree réel (`mentions.html` n'a pas de formulaire).
+   l'ID de formulaire placeholder.~~ Fait — les deux pages à formulaire
+   (`index.html`, `essai.html`) postent vers le formulaire Formspree réel.
 2. ~~**Email**~~ Décision : le formulaire reste l'unique canal de contact sur les
    pages marketing (`index.html`, `essai.html`) ; l'adresse email légale
    n'apparaît que sur `mentions.html`, comme contact de l'éditeur.
-3. ~~Page mentions légales~~ Fait — `mentions.html`, liée depuis le pied des trois pages.
+3. ~~Page mentions légales~~ Fait — `mentions.html`, liée depuis le pied des
+   pages marketing.
 4. **Essai cloud** : quand le bac à sable existera, `essai.html` accueillera le lien
    d'accès à la place du badge « ouverture prochaine ».
 5. **Mise en ligne** : `CNAME` (`lumnik.fr`) → GitHub Pages, DNS (4×A + `www` CNAME),
