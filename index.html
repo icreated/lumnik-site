@@ -6,6 +6,12 @@
   <title>lumnik — Dégelez les données prisonnières de vos ERP</title>
   <meta name="description" content="lumnik ingère en lecture seule les données de vos ERP legacy (Sage, Cegid, AS/400…), les fusionne et les rend interrogeables en français, métier par métier — sans rien toucher à l'existant.">
   <link rel="canonical" href="https://lumnik.fr/">
+  <meta property="og:title" content="lumnik — Dégelez les données prisonnières de vos ERP">
+  <meta property="og:description" content="lumnik ingère en lecture seule les données de vos ERP legacy (Sage, Cegid, AS/400…), les fusionne et les rend interrogeables en français, métier par métier — sans rien toucher à l'existant.">
+  <meta property="og:url" content="https://lumnik.fr/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta name="twitter:card" content="summary">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -543,11 +549,13 @@
           échantillon de <strong>vos</strong> données.
         </p>
         <p class="direct" style="margin-top:26px">
-          Intégrateurs&nbsp;: choisissez-le dans le formulaire, le programme partenaire
-          vous est ouvert en avant-première.
+          Intégrateurs&nbsp;: sélectionnez « Intégrateur / ESN » dans le formulaire —
+          le programme partenaire vous est ouvert en avant-première.
         </p>
       </div>
       <form action="https://formspree.io/f/xqpzpwow" method="POST">
+        <input type="hidden" name="objet" value="Contact site">
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div>
           <label for="nom">Nom</label>
           <input type="text" id="nom" name="nom" required autocomplete="name">
