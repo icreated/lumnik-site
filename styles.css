@@ -707,8 +707,6 @@ input:focus, textarea:focus, select:focus {
 textarea { min-height: 130px; resize: vertical; }
 
 .contact .direct { color: var(--brume); font-size: 0.95rem; }
-.contact .direct a { color: var(--lumiere); text-decoration: none; }
-.contact .direct a:hover { text-decoration: underline; }
 
 /* --- Pied --- */
 footer {
@@ -784,5 +782,6 @@ footer a:hover { color: var(--lumiere); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .reveal { opacity: 1; transform: none; }
+  h1, .hero .surtitre, .hero .sous, .hero .ctas, .hero .preuve { opacity: 1; transform: none; }
   html { scroll-behavior: auto; }
 }
