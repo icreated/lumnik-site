@@ -1,16 +1,17 @@
 # lumnik.fr — site vitrine
 
-Site statique, zéro framework, zéro build : deux pages HTML, une feuille de style,
+Site statique, zéro framework, zéro build : trois pages HTML, une feuille de style,
 un script de 30 lignes. Se déploie sur n'importe quel hébergeur statique.
 
 ## Structure
 
 ```
-index.html    la vitrine (héros, problème, 3 gestes, cas français, architecture,
-              comparaison, personas, offre, contact)
-essai.html    inscription à l'essai cloud (bac à sable — ouverture prochaine)
-styles.css    « la lumière dans le congélateur » — nuit glaciaire + jaune de lumière
-site.js       barre de dégel (progression) + révélation au défilement
+index.html      la vitrine (héros, problème, 3 gestes, cas français, architecture,
+                comparaison, personas, offre, contact)
+essai.html      inscription à l'essai cloud (bac à sable — ouverture prochaine)
+mentions.html   mentions légales, hébergeur, données personnelles (RGPD)
+styles.css      « la lumière dans le congélateur » — nuit glaciaire + jaune de lumière
+site.js         barre de dégel (progression) + révélation au défilement
 ```
 
 ## Direction visuelle
@@ -25,11 +26,12 @@ site.js       barre de dégel (progression) + révélation au défilement
 ## À faire avant la mise en ligne
 
 1. ~~**Formulaire** : créer un formulaire sur formspree.io et remplacer
-   l'ID de formulaire placeholder.~~ Fait — les deux pages postent vers le
-   formulaire Formspree réel.
-2. ~~**Email**~~ Décision : pas d'email affiché, le formulaire est l'unique canal
-   de contact (l'adresse email retirée des deux pages).
-3. ~~Page mentions légales~~ Fait — `mentions.html`, liée depuis le pied des deux pages.
+   l'ID de formulaire placeholder.~~ Fait — les trois pages postent vers le
+   formulaire Formspree réel (`mentions.html` n'a pas de formulaire).
+2. ~~**Email**~~ Décision : le formulaire reste l'unique canal de contact sur les
+   pages marketing (`index.html`, `essai.html`) ; l'adresse email légale
+   n'apparaît que sur `mentions.html`, comme contact de l'éditeur.
+3. ~~Page mentions légales~~ Fait — `mentions.html`, liée depuis le pied des trois pages.
 4. **Essai cloud** : quand le bac à sable existera, `essai.html` accueillera le lien
    d'accès à la place du badge « ouverture prochaine ».
 5. **Mise en ligne** : `CNAME` (`lumnik.fr`) → GitHub Pages, DNS (4×A + `www` CNAME),
@@ -40,19 +42,16 @@ site.js       barre de dégel (progression) + révélation au défilement
 
 ## Déploiement
 
-N'importe quel hébergeur statique fait l'affaire — exemples :
-
-```bash
-# Netlify / Vercel : glisser-déposer le dossier, pointer lumnik.fr dessus.
-# Ou n'importe quel serveur :
-rsync -av --exclude .git ./ votre-serveur:/var/www/lumnik.fr/
-```
+GitHub Pages sert directement `main`, à la racine : zéro build, zéro workflow —
+un `push` sur `main` est déployé tel quel. Le fichier `CNAME` (`lumnik.fr`) fixe
+le domaine apex ; côté DNS, 4 enregistrements A vers les IP GitHub Pages plus un
+CNAME `www` → `<compte>.github.io`.
 
 Test local : `python3 -m http.server 8000` puis http://localhost:8000
 
 ## Ce que le site ne dit volontairement pas
 
 Pas de pile technique interne (framework serveur, bibliothèques IA), pas de tarifs
-chiffrés (hypothèses en cours de validation — voir la réflexion pricing privée),
-pas de détails d'implémentation des garde-fous. Le site vend le *quoi* et le
-*pourquoi* ; le *comment* profond reste dans la maison.
+chiffrés (hypothèses en cours de validation), pas de détails d'implémentation des
+garde-fous. Le site vend le *quoi* et le *pourquoi* ; le *comment* profond reste
+dans la maison.
