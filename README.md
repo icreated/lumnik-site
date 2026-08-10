@@ -24,14 +24,19 @@ site.js       barre de dégel (progression) + révélation au défilement
 
 ## À faire avant la mise en ligne
 
-1. **Formulaire** : créer un formulaire sur [formspree.io](https://formspree.io) (gratuit)
-   et remplacer `VOTRE_ID_FORMSPREE` dans `index.html` **et** `essai.html`.
-   Alternative sans service tiers : remplacer le `<form>` par un lien `mailto:`.
-2. **Email** : créer `contact@lumnik.fr` (les deux pages y font référence).
-3. **Essai cloud** : quand le bac à sable existera, `essai.html` accueillera le lien
+1. ~~**Formulaire** : créer un formulaire sur formspree.io et remplacer
+   `VOTRE_ID_FORMSPREE`.~~ Fait — les deux pages postent vers le formulaire
+   Formspree réel.
+2. ~~**Email**~~ Décision : pas d'email affiché, le formulaire est l'unique canal
+   de contact (l'adresse email retirée des deux pages).
+3. ~~Page mentions légales~~ Fait — `mentions.html`, liée depuis le pied des deux pages.
+4. **Essai cloud** : quand le bac à sable existera, `essai.html` accueillera le lien
    d'accès à la place du badge « ouverture prochaine ».
-4. Éventuel : favicon fichier (actuellement un data-URI), page mentions légales,
-   plausible.io pour la mesure d'audience sans cookies.
+5. **Mise en ligne** : `CNAME` (`lumnik.fr`) → GitHub Pages, DNS (4×A + `www` CNAME),
+   HTTPS enforcement — hors périmètre de ce dépôt de contenu, traité au moment de
+   la publication.
+6. Éventuel : favicon fichier (actuellement un data-URI), plausible.io pour la
+   mesure d'audience sans cookies.
 
 ## Déploiement
 
