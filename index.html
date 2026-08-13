@@ -60,6 +60,32 @@
       <a class="btn btn-givre" href="#comment">Voir comment ça marche</a>
     </div>
     <p class="preuve">lecture seule · installé <b>chez vous</b> · vos données ne quittent jamais vos murs — <b>l'IA non plus</b></p>
+    <div class="hero-schema" aria-label="Vue d'ensemble du produit">
+      <div class="schema-col sources">
+        <div class="schema-etiquette">Systèmes gelés</div>
+        <div class="schema-pile">
+          <span>Sage / Cegid</span>
+          <span>AS/400</span>
+          <span>Exports CSV</span>
+          <span>API métier</span>
+        </div>
+      </div>
+      <div class="schema-fleche" aria-hidden="true">→</div>
+      <div class="schema-col hub">
+        <div class="schema-etiquette">Hub Lumnik</div>
+        <div class="schema-noyau">Lecture seule · fusion · mémoire · garde-fous</div>
+      </div>
+      <div class="schema-fleche" aria-hidden="true">→</div>
+      <div class="schema-col sorties">
+        <div class="schema-etiquette">Sorties utiles</div>
+        <div class="schema-pile">
+          <span>Réponses sourcées</span>
+          <span>SQL / tableaux</span>
+          <span>Webhooks</span>
+          <span>Alertes d'immobilité</span>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -70,10 +96,9 @@
     <h2>Vingt ans de décisions dorment dans des systèmes que <em>personne n'ose toucher</em>.</h2>
     <p class="lede">
       Commandes, clients, stocks, interventions : tout existe, quelque part, dans un ERP
-      vieillissant que l'on n'ose ni migrer ni brancher. Résultat : trois personnes savent
-      interroger le système, les questions attendent leur retour de congés, et chaque
-      rapport est un ticket payant chez l'éditeur. <strong>La donnée n'est pas rare —
-      elle est prisonnière.</strong>
+      vieillissant que l'on n'ose ni migrer ni brancher. Trois personnes savent l'interroger,
+      les questions attendent leur retour, et chaque rapport devient un ticket éditeur.
+      <strong>La donnée n'est pas rare — elle est prisonnière.</strong>
     </p>
     <div class="systemes">
       <div class="systeme"><div class="nom">Sage 100 / X3</div><div class="depuis">fidèle depuis 2006</div></div>
@@ -93,8 +118,7 @@
     <h2>Trois gestes. <em>Zéro risque</em> pour l'existant.</h2>
     <p class="lede">
       Personne ne signe une migration d'ERP. Tout le monde accepte qu'on <strong>lise</strong>.
-      C'est toute la philosophie de Lumnik : l'entrée se fait en lecture seule, votre système
-      reste l'unique maître de ses données, et il ne saura même pas que nous sommes passés.
+      Lumnik entre donc en lecture seule, et votre système reste l'unique maître de ses données.
     </p>
     <div class="geste-grille">
       <div class="geste">
@@ -117,15 +141,40 @@
       </div>
     </div>
 
+    <div class="fusion-preuve" aria-label="Exemple de fusion de données">
+      <div class="fusion-entrees">
+        <div class="source-carte">
+          <div class="source-nom">Sage</div>
+          <p>Client DUPONT INDUSTRIE<br>12 rue du Port<br>04 72 00 00 00</p>
+        </div>
+        <div class="source-carte">
+          <div class="source-nom">Cegid</div>
+          <p>Dupont Indus.<br>12 rue du Port, Bât. C<br>compte bloqué</p>
+        </div>
+        <div class="source-carte">
+          <div class="source-nom">CSV</div>
+          <p>DUPONT INDUSTRIE<br>contact achats : M. Rey<br>email présent</p>
+        </div>
+      </div>
+      <div class="fusion-centre" aria-hidden="true">→</div>
+      <div class="fusion-sortie">
+        <div class="source-nom">Fiche unique servie</div>
+        <ul>
+          <li>Client unique consolidé</li>
+          <li>Adresse retenue et tracée</li>
+          <li>Contact achats enrichi</li>
+        </ul>
+        <div class="conflit">Conflit détecté : adresse Sage ≠ adresse Cegid</div>
+      </div>
+    </div>
+
     <div class="demo">
       <div>
         <h2 style="font-size:1.8rem">La réponse cite ses sources.<br>Ou elle <em>n'existe pas</em>.</h2>
         <p class="lede">
-          Tout le monde a une IA. La nôtre est élevée autrement : des garde-fous déterministes
-          vérifient chaque réponse avant qu'elle ne vous atteigne. Un « il n'y en a aucun »
-          faussement assuré est, chez nous, la faute capitale — <strong>Lumnik préfère
-          admettre qu'il ne sait pas</strong>. C'est ce qui rend ses réponses utilisables
-          par un métier qui porte des conséquences.
+          Des garde-fous déterministes vérifient chaque réponse avant qu'elle ne vous atteigne.
+          Chez nous, un « il n'y en a aucun » faux est la faute capitale : <strong>Lumnik préfère
+          admettre qu'il ne sait pas</strong>. C'est ce qui rend ses réponses utilisables.
         </p>
       </div>
       <div class="fenetre" role="group" aria-label="Exemple de conversation">
@@ -156,10 +205,9 @@
     <p class="kicker">Le troisième dégel</p>
     <h2>Vos données n'ont pas seulement froid.<br>Elles ont perdu la <em>mémoire</em>.</h2>
     <p class="lede">
-      Un ERP vous dit ce qui <em>est</em>. Jamais depuis quand. L'export de ce soir écrase
-      celui d'hier ; la colonne « statut » affiche « en cours » — elle l'affichait déjà il y a
-      quarante jours, mais personne ne l'a gardé. <strong>Le temps est la première chose que le
-      vieux système détruit.</strong>
+      Un ERP vous dit ce qui <em>est</em>, rarement depuis quand. L'export de ce soir écrase
+      celui d'hier ; « en cours » était peut-être déjà vrai il y a quarante jours.
+      <strong>Le temps est la première chose que le vieux système détruit.</strong>
     </p>
 
     <div class="demo">
@@ -168,18 +216,15 @@
         <p class="lede">
           Chaque passage laisse une observation datée. Au bout de quelques semaines, votre hub
           sait une chose que l'ERP n'a jamais sue : <strong>ce qui n'a pas bougé</strong>.
-          Un dossier ouvert que plus personne ne touche, une commande figée entre deux étapes,
-          une réclamation oubliée un vendredi soir.
         </p>
         <p class="lede" style="margin-top:18px">
           Le seuil est <strong>déclaré par vous</strong>, jamais deviné : trente jours pour une
-          commande, quarante-huit heures pour une réclamation. Lumnik applique ce que le métier
-          a dit — et cite l'observation exacte qui a déclenché l'alerte.
+          commande, quarante-huit heures pour une réclamation. Lumnik applique cette règle et cite
+          l'observation exacte qui a déclenché l'alerte.
         </p>
         <p class="serment" style="margin-top:26px">
           <b>Ce qui ne bouge plus ne déclenche rien.</b> Aucun système ne vous prévient d'un
-          non-événement. C'est le seul endroit où Lumnik ne se contente pas de montrer&nbsp;:
-          il trouve.
+          non-événement. C'est là que Lumnik ne se contente pas de montrer : il trouve.
         </p>
       </div>
 
@@ -211,9 +256,8 @@
     </div>
 
     <p class="lede" style="margin-top:38px">
-      Le premier jour, Lumnik ne sait rien de votre passé — <strong>et il le dit</strong>,
-      plutôt que de le supposer. Cette mémoire commence à la première ingestion et s'approfondit
-      chaque nuit : c'est la seule part du dégel qui ne se rattrape pas.
+      Le premier jour, Lumnik ne sait rien de votre passé — <strong>et il le dit</strong>.
+      Cette mémoire commence à la première ingestion et s'approfondit chaque nuit.
     </p>
   </div>
 </section>
@@ -224,48 +268,51 @@
     <p class="kicker">La prise qui manquait</p>
     <h2>Vos outils modernes veulent des événements.<br>Votre ERP n'en a <em>jamais émis</em>.</h2>
     <p class="lede">
-      Agendas partagés, tableaux de bord, agrégateurs de métriques, moteurs de règles :
-      tout le SI moderne vit d'événements. Le vieux système n'en produit pas — pas de
-      webhook, pas de flux, pas de prise. Lumnik respire, compare, date : chaque changement
-      observé devient un événement que vos outils consomment par les prises standard :
-      un webhook vers <strong>Make, n8n ou Power Automate</strong>, un export, une
-      requête SQL. <strong>Et chaque silence aussi</strong> : « immobile depuis
-      trente jours » est une alerte qu'aucun système événementiel ne peut émettre,
-      puisqu'il ne s'est justement rien passé.
+      Le SI moderne vit d'événements. Le vieux système n'en produit pas. Lumnik observe,
+      compare et date : chaque changement devient un événement consommable par
+      <strong>Make, n8n, Power Automate</strong>, un export ou une requête SQL.
+      <strong>Et chaque silence aussi</strong> : « immobile depuis trente jours » est une alerte
+      que la source n'aurait jamais émise.
     </p>
-    <div class="cas-grille">
-      <article class="cas">
-        <div class="contexte">Zéro accès au legacy</div>
-        <h3>Brancher le moderne sans toucher l'ancien</h3>
-        <p>Chaque intégration classique réclame un compte, un accès, parfois une écriture
-        dans l'ERP fragile — et l'administrateur dit non, souvent avec raison.</p>
-        <p class="lumen">Avec Lumnik, vos outils modernes n'obtiennent jamais d'accès au
-        vieux système : lecture seule d'un côté, prises standard de l'autre. Le
-        « zéro risque » du premier jour s'étend à tout l'écosystème.</p>
-      </article>
-      <article class="cas">
-        <div class="contexte">Découplage dans le temps</div>
-        <h3>L'assurance-migration</h3>
-        <p>Chaque outil branché en direct sur l'ERP le rend un peu plus indéboulonnable.
-        Le jour du remplacement, tout l'aval est à refaire.</p>
-        <p class="lumen">Vos outils se branchent sur Lumnik, pas sur l'ERP. Le jour où le
-        vieux système change enfin, on remplace un connecteur — et rien en aval ne le
-        remarque. Investissez dans le moderne sans épouser le legacy.</p>
-      </article>
-      <article class="cas">
-        <div class="contexte">Des séries temporelles</div>
-        <h3>L'historique que la source n'a jamais tenu</h3>
-        <p>Un tableau de bord veut des courbes ; le legacy n'a que l'état courant,
-        écrasé à chaque mise à jour.</p>
-        <p class="lumen">Le journal des observations fabrique la série temporelle que la
-        source a détruite : vos outils de métriques tracent enfin les tendances d'un
-        système sans mémoire.</p>
-      </article>
+    <div class="event-flow" aria-label="Transformation des observations en événements">
+      <div class="event-step">
+        <div class="event-kicker">1</div>
+        <h3>Le legacy reste muet</h3>
+        <p>Pas de webhook, pas d'historique, pas de flux exploitable.</p>
+      </div>
+      <div class="event-arrow" aria-hidden="true">→</div>
+      <div class="event-step central">
+        <div class="event-kicker">2</div>
+        <h3>Lumnik observe et compare</h3>
+        <p>Chaque ingestion produit un changement détectable, ou une immobilité constatable.</p>
+      </div>
+      <div class="event-arrow" aria-hidden="true">→</div>
+      <div class="event-step">
+        <div class="event-kicker">3</div>
+        <h3>Le moderne consomme</h3>
+        <p>Webhook, SQL, tableau de bord, moteur de règles, agenda partagé.</p>
+      </div>
+    </div>
+    <div class="event-output">
+      <div class="payload">
+        <div class="source-nom">Exemple d'événement</div>
+        <pre>{
+  "type": "commande_immobile",
+  "reference": "C-4471",
+  "depuis": "2026-06-02",
+  "seuil_jours": 30,
+  "source": "sage-lyon"
+}</pre>
+      </div>
+      <div class="prise-preuves">
+        <p><strong>Zéro accès au legacy</strong> pour vos outils modernes.</p>
+        <p><strong>Zéro recâblage aval</strong> le jour où l'ERP change enfin.</p>
+        <p><strong>Enfin des courbes</strong> même quand la source n'a gardé que l'état courant.</p>
+      </div>
     </div>
     <p class="lede" style="margin-top:38px">
-      Honnêteté oblige : ces événements battent au rythme de la respiration — l'heure,
-      pas la milliseconde. Assez vite pour un agenda, un tableau de bord, une alerte
-      métier ; ce n'est pas du temps réel, et Lumnik ne prétendra jamais le contraire.
+      Ces événements battent au rythme de la respiration — l'heure, pas la milliseconde.
+      Assez vite pour un agenda, un tableau de bord ou une alerte métier.
       <strong>Et rien, jamais, n'écrit vers la source.</strong>
     </p>
   </div>
@@ -278,15 +325,15 @@
     <h2>Des situations que vous <em>reconnaîtrez</em>.</h2>
     <p class="lede">
       Chaque cas ci-dessous existe aujourd'hui dans des entreprises françaises.
-      Le déclencheur est toujours le même : un expert qui part, un rachat, un audit,
-      un dossier qui dort, une licence payée pour rien.
+      Le déclencheur est presque toujours le même : un expert qui part, un rachat,
+      ou un dossier qui dort trop longtemps.
     </p>
     <div class="cas-grille">
       <article class="cas">
         <div class="contexte">PME industrielle · 4 sites</div>
         <h3>« Ce roulement, quelqu'un l'a en stock ? »</h3>
         <p>Quatre usines, quatre ERP différents (Sage X3, Divalto, un développement maison).
-        Quand une ligne s'arrête, la maintenance téléphone aux sites voisins. Une ligne
+        Quand une ligne s'arrête, la maintenance téléphone aux sites voisins — et une ligne
         arrêtée coûte quatre chiffres de l'heure.</p>
         <p class="lumen">Une pièce, une fiche fusionnée, une question — la réponse site par
         site en quelques secondes. Le premier arrêt évité paie des années d'outil.</p>
@@ -295,8 +342,7 @@
         <div class="contexte">Négoce · après un rachat</div>
         <h3>Deux catalogues, deux prix pour le même produit</h3>
         <p>L'acquéreur découvre 40&nbsp;% de références en doublon entre son Sage et
-        l'EBP racheté. Les commerciaux annoncent des prix différents pour le même article.
-        La migration prendra dix-huit mois.</p>
+        l'EBP racheté. Les commerciaux annoncent des prix différents pour le même article.</p>
         <p class="lumen">La fiche produit unique est servie en quelques semaines, pendant
         que la migration avance à son rythme. Le registre des conflits EST la liste de
         dédoublonnage que l'équipe attendait.</p>
@@ -322,25 +368,6 @@
         qu'on fait de tête.</p>
       </article>
       <article class="cas">
-        <div class="contexte">Distribution automobile · 15 concessions</div>
-        <h3>Le client de Lyon est un inconnu à Grenoble</h3>
-        <p>Chaque concession a son DMS. L'historique d'un véhicule s'arrête aux portes
-        du site qui l'a vu. L'analyse groupe est une mission de conseil annuelle.</p>
-        <p class="lumen">Le numéro de châssis (VIN) fusionne tout : n'importe quel
-        conseiller voit l'historique complet du véhicule, et le groupe interroge
-        l'ensemble de son parc en une phrase.</p>
-      </article>
-      <article class="cas">
-        <div class="contexte">Industrie · l'ERP muet</div>
-        <h3>Le tableau de bord repoussé depuis trois ans</h3>
-        <p>La direction veut des courbes : commandes en retard, encours par site,
-        délais qui dérivent. L'ERP n'a ni API, ni webhooks, ni historique — chaque
-        tentative décisionnelle ressort en projet de six mois, et meurt au chiffrage.</p>
-        <p class="lumen">Lumnik devient la prise : Metabase, Grafana ou Power BI
-        lisent son SQL en direct. Le tableau de bord se branche en quelques jours —
-        sur Lumnik, pas sur l'ERP — et il survivra même au remplacement de celui-ci.</p>
-      </article>
-      <article class="cas">
         <div class="contexte">Secteur public · intercommunalité</div>
         <h3>Cinquante communes, un seul déploiement</h3>
         <p>Les petites communes n'auront jamais le budget d'un tel outil chacune.
@@ -348,17 +375,6 @@
         commune ne voit que sa tranche, isolation garantie par la base elle-même.</p>
         <p class="lumen">L'architecture multi-organisations n'est pas de la plomberie :
         c'est le produit. Un déploiement, cinquante dégels.</p>
-      </article>
-      <article class="cas">
-        <div class="contexte">Tout projet de migration</div>
-        <h3>La radiographie avant l'opération</h3>
-        <p>Toute migration commence par des mois d'interviews pour deviner ce que
-        contient l'ancien système. La vérité n'est pas dans la documentation —
-        elle est dans les données.</p>
-        <p class="lumen">Ingérez l'ancien ERP au premier jour de l'étude et
-        posez-lui la question directement : champs réellement utilisés, colonnes vides,
-        vrais domaines de valeurs. Lumnik n'est pas le concurrent de la migration —
-        c'est son instrument.</p>
       </article>
     </div>
   </div>
@@ -370,48 +386,125 @@
     <p class="kicker">L'architecture, en clair</p>
     <h2>Simple à comprendre. <em>Sérieux</em> en dessous.</h2>
     <p class="lede">
-      Pas de magie : trois étages, et des choix d'ingénierie faits pour les directions
-      informatiques exigeantes.
+      Pas de magie : trois étages, et des choix d'ingénierie faits pour une DSI exigeante.
     </p>
     <div class="schema">
       <div class="colonne">
         <h3>Vos systèmes</h3>
-        <ul>
-          <li>ERP &amp; gestion <small>Sage, Cegid, Divalto, EBP, AS/400…</small></li>
-          <li>Exports &amp; fichiers <small>CSV, dépôts SFTP</small></li>
-          <li>Applications métier <small>API, développements maison</small></li>
-        </ul>
+        <div class="schema-blocs">
+          <span>ERP &amp; gestion</span>
+          <span>Exports &amp; fichiers</span>
+          <span>Applications métier</span>
+        </div>
       </div>
       <div class="fleche" aria-hidden="true">→</div>
       <div class="colonne hub">
         <h3>Le hub Lumnik — chez vous</h3>
-        <ul>
-          <li>Ingestion en lecture seule <small>vos systèmes restent maîtres</small></li>
-          <li>Fusion en une vérité <small>+ registre des conflits</small></li>
-          <li>Sécurité par métier et par organisation <small>isolée par la base de données elle-même, pas par l'application</small></li>
-          <li>Garde-fous d'honnêteté <small>chaque réponse vérifiée avant d'être servie</small></li>
-          <li>IA locale par défaut <small>Ollama — Llama, Qwen, Gemma ; un fournisseur cloud seulement si vous le décidez</small></li>
-        </ul>
+        <div class="schema-blocs centre">
+          <span>Lecture seule</span>
+          <span>Fusion</span>
+          <span>Mémoire temporelle</span>
+          <span>Cloisonnement</span>
+          <span>Garde-fous</span>
+          <span>IA locale possible</span>
+        </div>
       </div>
       <div class="fleche" aria-hidden="true">→</div>
       <div class="colonne">
         <h3>Vos métiers</h3>
-        <ul>
-          <li>Assistant en français <small>sur ordinateur et téléphone</small></li>
-          <li>API prête à l'emploi <small>pour vos portails et outils</small></li>
-          <li>Vues &amp; tableaux <small>décrits en une phrase, générés pour vous</small></li>
-        </ul>
+        <div class="schema-blocs">
+          <span>Assistant en français</span>
+          <span>API</span>
+          <span>SQL / tableaux</span>
+          <span>Webhooks / alertes</span>
+        </div>
       </div>
     </div>
+    <div class="console-preuve" role="group" aria-label="Aperçu de la console web à venir — illustration, pas une capture d'écran">
+      <div class="console-barre">
+        <span class="rond"></span><span class="rond"></span><span class="rond"></span>
+        &nbsp;Lumnik Console — organisation : Groupe Durand
+        <span class="console-mention">aperçu</span>
+      </div>
+      <div class="console-corps">
+        <aside class="console-nav">
+          <div class="console-rubrique active">Sources</div>
+          <div class="console-rubrique">Conflits</div>
+          <div class="console-rubrique">Observations</div>
+          <div class="console-rubrique">Périmètres métier</div>
+          <div class="console-rubrique">Sorties</div>
+        </aside>
+        <div class="console-main">
+          <div class="console-tete">
+            <div>
+              <div class="source-nom">Ingestion du matin</div>
+              <h3>4 sources, 0 écriture, 3 sorties actives</h3>
+            </div>
+            <div class="console-badge">lecture seule garantie</div>
+          </div>
+          <div class="console-stats">
+            <div class="console-stat">
+              <span class="label">Sources reliées</span>
+              <strong>4</strong>
+              <span class="detail">Sage, Cegid, CSV, API SAV</span>
+            </div>
+            <div class="console-stat">
+              <span class="label">Conflits ouverts</span>
+              <strong>12</strong>
+              <span class="detail">9 doublons, 3 champs divergents</span>
+            </div>
+            <div class="console-stat">
+              <span class="label">Alertes métier</span>
+              <strong>3</strong>
+              <span class="detail">2 commandes immobiles, 1 devis gelé</span>
+            </div>
+          </div>
+          <div class="console-grille">
+            <div class="console-carte">
+              <div class="source-nom">Connecteurs</div>
+              <ul>
+                <li>Sage X3 <span>synchronisé à 06:02</span></li>
+                <li>Cegid <span>synchronisé à 06:04</span></li>
+                <li>CSV stock Mâcon <span>synchronisé à 06:07</span></li>
+              </ul>
+            </div>
+            <div class="console-carte">
+              <div class="source-nom">Sorties activées</div>
+              <ul>
+                <li>Assistant stock <span>borné au magasin</span></li>
+                <li>Webhook devis gelés <span>vers n8n</span></li>
+                <li>Vue SQL achats <span>Power BI</span></li>
+              </ul>
+            </div>
+            <div class="console-carte large">
+              <div class="source-nom">Dernier conflit servi au métier</div>
+              <div class="console-conflit-ligne">
+                <span>Client DUPONT INDUSTRIE</span>
+                <span class="etat">adresse divergente</span>
+              </div>
+              <p>Sage : 12 rue du Port<br>Cegid : 12 rue du Port, Bât. C</p>
+              <div class="console-note">La fiche unique est servie, le désaccord reste tracé et visible.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="console-cadre">
+      <b>Aperçu, pas une capture.</b> L'exploitation se pilote aujourd'hui depuis
+      <code>lm</code>, notre outil en ligne de commande&nbsp;; la console web est la
+      prochaine marche. Les chiffres ci-dessus illustrent une matinée type — ils ne
+      viennent d'aucune installation réelle. <b>Nous préférons vous le dire</b> plutôt que
+      de vous laisser le découvrir en démonstration.
+    </p>
     <p class="serment">
       <b>Trois engagements d'architecture&nbsp;:</b> Lumnik n'écrit jamais dans vos systèmes ·
       l'isolation entre organisations est appliquée par la base de données, pas par du code applicatif ·
       l'IA peut fonctionner entièrement <b>dans vos murs</b> — aucune donnée n'a besoin de sortir.
     </p>
     <p class="lede" style="margin-top:26px">
-      Le détail technique — connecteurs, garde-fous, schéma de données — vit dans la
+      Le détail technique vit dans la
       <a href="https://docs.lumnik.io" rel="noopener" style="color:var(--lumiere)">documentation</a>,
-      ouverte à qui veut vérifier avant de faire confiance.
+      pour qui veut vérifier avant de faire confiance.
     </p>
   </div>
 </section>
@@ -465,16 +558,16 @@
     <div class="personas-grille">
       <div class="persona">
         <div class="qui">Le dirigeant</div>
-        <p>Posez à vos données de 2006 les questions de 2026. Les réponses que vous attendiez
-        « pour le prochain comité » arrivent <strong>dans la minute</strong>, sourcées — sans
-        projet pharaonique, sans risque sur l'outil de production, sans embaucher une équipe data.</p>
+        <p>Les réponses attendues pour le prochain comité arrivent <strong>dans la minute</strong>,
+        sourcées — sans projet pharaonique, sans risque sur l'outil de production, sans
+        embaucher une équipe data.</p>
       </div>
       <div class="persona">
         <div class="qui">La direction informatique</div>
-        <p><strong>Lecture seule</strong> par construction. Installé sur vos serveurs, sur un socle
-        de base de données éprouvé où l'isolation entre organisations est appliquée par la base
-        elle-même. SQL généré exécuté en lecture seule, traçabilité, et une IA qui peut tourner
-        <strong>entièrement dans vos murs</strong>. Le dégel sans le risque de la migration.</p>
+        <p><strong>Lecture seule</strong> par construction, sur vos serveurs. L'isolation entre
+        organisations est appliquée par <strong>la base de données elle-même</strong>, pas par le
+        code applicatif ; le SQL généré s'exécute en lecture seule et reste tracé ; l'IA peut
+        tourner <strong>entièrement dans vos murs</strong>.</p>
       </div>
       <div class="persona integrateur">
         <div class="qui">L'intégrateur</div>
@@ -498,7 +591,7 @@
         <div class="pour">Pour découvrir et outiller</div>
         <ul>
           <li><strong>Gratuit</strong>, installé chez vous</li>
-          <li>Ni limite de volume, ni compteur d'utilisateurs</li>
+          <li>Sans limite de volume ni compteur d'utilisateurs</li>
           <li>Connecteurs et ingestion lecture seule</li>
           <li>Fusion et registre des conflits</li>
           <li>Accès SQL, exports et webhooks</li>
@@ -533,7 +626,7 @@
       </div>
     </div>
     <p class="lede" style="margin-top:34px; font-size:0.95rem">
-      Installation par votre intégrateur ou par nos soins. Une version cloud managée arrive —
+      Installation par votre intégrateur ou par nos soins. La version cloud managée arrive —
       <a href="essai.html" style="color:var(--lumiere)">inscrivez-vous à l'essai</a>.
     </p>
   </div>
@@ -547,13 +640,12 @@
     <div class="contact-grille">
       <div>
         <p class="lede">
-          Dites-nous quel système garde vos données au frais — nous vous répondrons avec
-          un scénario concret de dégel, souvent réalisable en démonstration sur un
-          échantillon de <strong>vos</strong> données.
+          Dites-nous quel système garde vos données au frais : nous vous répondrons avec
+          un scénario concret de dégel, souvent démontrable sur un échantillon de
+          <strong>vos</strong> données.
         </p>
         <p class="direct" style="margin-top:26px">
-          Intégrateurs&nbsp;: sélectionnez « Intégrateur / ESN » dans le formulaire —
-          le programme partenaire vous est ouvert en avant-première.
+          Intégrateurs&nbsp;: sélectionnez « Intégrateur / ESN » dans le formulaire.
         </p>
       </div>
       <form action="https://formspree.io/f/xqpzpwow" method="POST">
