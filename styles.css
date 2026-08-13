@@ -700,7 +700,7 @@ h2 em { font-style: italic; color: var(--lumiere); }
 .cas-grille {
   margin-top: 56px;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 22px;
 }
 .cas {
