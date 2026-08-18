@@ -3,6 +3,21 @@
    Nuit glaciaire dominante · un seul jaune, traité comme de la lumière.
    ========================================================================== */
 
+/* Archivo et Fraunces dessinent des esperluettes stylisées (« ε » / « 8 »).
+   Ces familles ne remplacent QUE le glyphe U+0026 par celui des polices
+   système ; tout le reste des deux polices est intact, et sans police
+   locale la pile retombe sur l'esperluette d'origine. */
+@font-face {
+  font-family: "amp-sans";
+  src: local("Helvetica Neue"), local("Arial"), local("Liberation Sans");
+  unicode-range: U+26;
+}
+@font-face {
+  font-family: "amp-serif";
+  src: local("Georgia"), local("Times New Roman"), local("Liberation Serif");
+  unicode-range: U+26;
+}
+
 :root {
   /* La nuit glaciaire */
   --nuit: #060d16;
@@ -18,8 +33,8 @@
   --lueur: rgba(255, 210, 74, 0.14);
   --lueur-forte: rgba(255, 210, 74, 0.35);
 
-  --serif: "Fraunces", Georgia, serif;
-  --sans: "Archivo", "Helvetica Neue", sans-serif;
+  --serif: "amp-serif", "Fraunces", Georgia, serif;
+  --sans: "amp-sans", "Archivo", "Helvetica Neue", sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
 
   --maxw: 1120px;
