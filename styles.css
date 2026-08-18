@@ -24,8 +24,10 @@
   --nuit-2: #0a1420;
   --glace: #122233;
   --givre: #1c3349;
-  --brume: #8fa8bd;
-  --neige: #e9f1f8;
+  /* Texte adouci (valeurs GitHub dark, ratifiées 2026-08-18) : le quasi-blanc
+     #e9f1f8 flashait sur la nuit — #d1d7e0 porte le corps, #9198a1 la sourdine. */
+  --brume: #9198a1;
+  --neige: #d1d7e0;
 
   /* Le jaune de lumière — unique accent */
   --lumiere: #ffd24a;
