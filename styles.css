@@ -144,7 +144,7 @@ nav .wrap {
 }
 @keyframes pulse { 50% { box-shadow: 0 0 6px var(--lumiere), 0 0 16px var(--lueur); } }
 
-nav ul { display: flex; gap: 30px; list-style: none; align-items: center; }
+nav ul { display: flex; gap: 26px; list-style: none; align-items: center; }
 nav ul a {
   color: var(--brume);
   text-decoration: none;
