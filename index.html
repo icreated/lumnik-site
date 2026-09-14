@@ -52,10 +52,11 @@
     <p class="surtitre">Sage · Cegid · AS/400 · Divalto · Excel — et tous les autres</p>
     <h1>Vos données ne sont pas perdues.<br>Elles sont <span class="gelees">gelées</span>.<br>lumnik les <span class="degel">dégèle</span>.</h1>
     <p class="sous">
+      On ne touche pas à ce qui fonctionne. <strong>On libère ce qui est prisonnier dedans.</strong><br>
       lumnik lit vos systèmes existants <strong>sans jamais y écrire</strong> et fusionne
-      leurs données en une seule vérité.<br>
-      Chaque métier reçoit un <strong>assistant qui répond en français</strong> —
-      ou qui dit « je ne sais pas » plutôt que d'inventer.
+      leurs données en une seule vérité. Chaque métier reçoit un
+      <strong>assistant qui répond en français</strong> — ou qui dit « je ne sais pas »
+      plutôt que d'inventer.
     </p>
     <div class="ctas">
       <a class="btn btn-lumiere" href="#contact">Demander une démonstration</a>
@@ -112,6 +113,27 @@
       <div class="systeme"><div class="nom">Le développement maison</div><div class="depuis">son auteur part à la retraite</div></div>
     </div>
     <p class="lede" style="margin-top:34px">
+      Le problème n'est pas le legacy. <strong>C'est ce qu'on ne peut plus faire avec lui.</strong>
+    </p>
+    <div class="impasses" aria-label="Les trois impasses">
+      <div class="impasse">
+        <h3>Remplacer ?</h3>
+        <p>Trop critique. Trop cher. Trop risqué. <strong>Personne ne signe.</strong></p>
+      </div>
+      <div class="impasse">
+        <h3>Modifier ?</h3>
+        <p>Chaque changement peut casser un métier — <strong>et le schéma ne vous appartient pas.</strong></p>
+      </div>
+      <div class="impasse">
+        <h3>Connecter ?</h3>
+        <p>Données dispersées, verrouillées, hétérogènes. <strong>L'admin dit non, souvent à raison.</strong></p>
+      </div>
+    </div>
+    <p class="lede" style="margin-top:34px">
+      Alors on construit encore un système… autour du système. lumnik <strong>est</strong> ce
+      système — à une différence près&nbsp;: <strong>il ne demande rien au vôtre.</strong>
+    </p>
+    <p class="lede" style="margin-top:18px">
       Et pendant ce temps, la direction pose la question de 2026&nbsp;: «&nbsp;on ne peut pas juste
       demander à l'IA&nbsp;?&nbsp;» Si — mais pas en envoyant vingt ans de données dans le cloud de
       quelqu'un d'autre, et pas avec des réponses que personne ne peut vérifier.
@@ -129,6 +151,11 @@
       Personne ne signe une migration d'ERP. Tout le monde accepte qu'on <strong>lise</strong>.
       lumnik entre donc en lecture seule, et votre système reste l'unique maître de ses données.
     </p>
+    <ul class="principes" aria-label="Le principe, en trois refus">
+      <li>Pas de migration pour commencer</li>
+      <li>Pas de réécriture de l'existant</li>
+      <li>Pas de fuite de données</li>
+    </ul>
     <div class="geste-grille">
       <div class="geste">
         <h3>Brancher, en lecture seule</h3>
@@ -181,7 +208,9 @@
       <div>
         <h2 style="font-size:1.8rem">La réponse cite ses sources.<br>Ou elle <em>n'existe pas</em>.</h2>
         <p class="lede">
-          Des garde-fous déterministes vérifient chaque réponse avant qu'elle ne vous atteigne.
+          Quand l'IA arrive, elle travaille sur des données que <strong>vous</strong> contrôlez —
+          et sous surveillance : des garde-fous déterministes vérifient chaque réponse avant
+          qu'elle ne vous atteigne.
           Chez nous, un « il n'y en a aucun » faux est la faute capitale : <strong>lumnik préfère
           admettre qu'il ne sait pas</strong>. C'est ce qui rend ses réponses utilisables.
         </p>
@@ -432,82 +461,45 @@
         </div>
       </div>
     </div>
-    <div class="console-preuve" role="group" aria-label="Aperçu de la console web à venir — illustration, pas une capture d'écran">
-      <div class="console-barre">
+    <div class="fenetre terminal" role="group" aria-label="Une session lm : connexion, validation, application, exécution, question">
+      <div class="barre">
         <span class="rond"></span><span class="rond"></span><span class="rond"></span>
-        &nbsp;lumnik Console — organisation : Groupe Durand
-        <span class="console-mention">aperçu</span>
+        &nbsp;lm — le terminal de l'intégrateur
       </div>
-      <div class="console-corps">
-        <aside class="console-nav">
-          <div class="console-rubrique active">Sources</div>
-          <div class="console-rubrique">Conflits</div>
-          <div class="console-rubrique">Observations</div>
-          <div class="console-rubrique">Périmètres métier</div>
-          <div class="console-rubrique">Sorties</div>
-        </aside>
-        <div class="console-main">
-          <div class="console-tete">
-            <div>
-              <div class="source-nom">Ingestion du matin</div>
-              <h3>4 sources, 0 écriture, 3 sorties actives</h3>
-            </div>
-            <div class="console-badge">lecture seule garantie</div>
-          </div>
-          <div class="console-stats">
-            <div class="console-stat">
-              <span class="label">Sources reliées</span>
-              <strong>4</strong>
-              <span class="detail">Sage, Cegid, CSV, API SAV</span>
-            </div>
-            <div class="console-stat">
-              <span class="label">Conflits ouverts</span>
-              <strong>12</strong>
-              <span class="detail">9 doublons, 3 champs divergents</span>
-            </div>
-            <div class="console-stat">
-              <span class="label">Alertes métier</span>
-              <strong>3</strong>
-              <span class="detail">2 commandes immobiles, 1 devis gelé</span>
-            </div>
-          </div>
-          <div class="console-grille">
-            <div class="console-carte">
-              <div class="source-nom">Connecteurs</div>
-              <ul>
-                <li>Sage X3 <span>synchronisé à 06:02</span></li>
-                <li>Cegid <span>synchronisé à 06:04</span></li>
-                <li>CSV stock Mâcon <span>synchronisé à 06:07</span></li>
-              </ul>
-            </div>
-            <div class="console-carte">
-              <div class="source-nom">Sorties activées</div>
-              <ul>
-                <li>Assistant stock <span>borné au magasin</span></li>
-                <li>Webhook devis gelés <span>vers n8n</span></li>
-                <li>Vue SQL achats <span>Power BI</span></li>
-              </ul>
-            </div>
-            <div class="console-carte large">
-              <div class="source-nom">Dernier conflit servi au métier</div>
-              <div class="console-conflit-ligne">
-                <span>Client DUPONT INDUSTRIE</span>
-                <span class="etat">adresse divergente</span>
-              </div>
-              <p>Sage : 12 rue du Port<br>Cegid : 12 rue du Port, Bât. C</p>
-              <div class="console-note">La fiche unique est servie, le désaccord reste tracé et visible.</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <pre><span class="cmd">$ lm login</span>
+To sign in, open:
+  http://localhost:8180/realms/lumnik/device?user_code=EYQP-LLJN
+and enter code: EYQP-LLJN
+
+<span class="cmd">$ lm validate -f connecteurs/sage-clients.yaml</span>
+<span class="ok">✓</span> connecteurs/sage-clients.yaml — valid
+<span class="cmd">$ lm apply -f connecteurs/sage-clients.yaml</span>
+{"name":"sage-clients","connectorId":"8e01c813-7f57-4222-8d7b-e637dfcc94c3","endpointsApplied":1}
+<span class="cmd">$ lm connector run sage-clients</span>
+run scheduled: e9cd433e-3a57-43ff-9ea7-737f2718be0a
+
+<span class="cmd">$ lm run list</span>
+ID        CONNECTOR        ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
+e9cd433e  sage-clients     default   Completed  12  12   0        0             2026-09-05 05:38  2026-09-05 05:38
+f0466804  cegid-commandes  default   Completed  10  8    2        2             2026-09-05 05:38  2026-09-05 05:38
+
+<span class="cmd">$ lm ask --scope ventes "Combien de clients GOLD à Lyon ?"</span>
+2 clients GOLD à Lyon.
+  data as of: 2026-09-13T00:39:29Z (last completed run)
+
+  SQL: SELECT COUNT(*) FROM "connector"."v_client"
+WHERE city = 'Lyon' AND segment = 'GOLD'</pre>
     </div>
-    <p class="console-cadre">
-      <b>Aperçu, pas une capture.</b> L'exploitation se pilote aujourd'hui depuis
-      <code>lm</code>, notre outil en ligne de commande&nbsp;; la console web est la
-      prochaine marche.<br>
-      Les chiffres ci-dessus illustrent une matinée type — ils ne viennent d'aucune
-      installation réelle. <b>Nous préférons vous le dire</b> plutôt que de vous laisser
-      le découvrir en démonstration.
+    <h3 class="sous-titre" style="margin-top:34px">Une infrastructure complexe. Une commande pour la piloter.</h3>
+    <p class="lede">
+      Connecteurs, entités, pipelines, API, RAG&nbsp;: tout se déclare en YAML et se pilote depuis
+      <code>lm</code> — un peu comme Docker, pour l'expérience.
+      <strong>La tuyauterie devient une interface.</strong>
+    </p>
+    <p class="lede" style="margin-top:14px">
+      Ces écrans ont la forme exacte des sorties de <code>lm</code> aujourd'hui&nbsp;; seuls les
+      noms des connecteurs sont d'illustration. Rien n'est perdu sans être compté&nbsp;:
+      <code>IN = OUT + SKIPPED</code> tient sur chaque ligne.
     </p>
     <p class="serment">
       <b>Trois engagements d'architecture&nbsp;:</b><br>
@@ -515,8 +507,20 @@
       L'isolation entre organisations est appliquée par la base de données, pas par du code applicatif.<br>
       L'IA peut fonctionner entièrement <b>dans vos murs</b> — aucune donnée n'a besoin de sortir.
     </p>
+    <div class="garanties" aria-label="Ce que le RSSI peut vérifier">
+      <p><strong>L'isolation vit dans la base.</strong> PostgreSQL cloisonne ligne par ligne
+      (Row-Level Security)&nbsp;: un bug applicatif ne la traverse pas, la base refuse.</p>
+      <p><strong>Le SQL généré ne peut que lire.</strong> Il s'exécute sous un rôle sans droit
+      d'écriture, quoi que produise le modèle.</p>
+      <p><strong>Le journal d'audit ne s'efface pas.</strong> Le rôle applicatif n'a ni UPDATE ni
+      DELETE dessus — révoqués dans la base.</p>
+      <p><strong>Réversible.</strong> Des tables PostgreSQL ordinaires et un pg_dump standard.
+      Il n'y a aucune copie chez un éditeur à réclamer.</p>
+    </div>
     <p class="lede" style="margin-top:26px">
-      Le détail technique vit dans la
+      Chaque affirmation a sa commande&nbsp;:
+      <a href="https://docs.lumnik.io/security/" rel="noopener" style="color:var(--lumiere)">vérifiez-le vous-même, en cinq minutes</a>.
+      Le reste vit dans la
       <a href="https://docs.lumnik.io" rel="noopener" style="color:var(--lumiere)">documentation</a>,
       pour qui veut vérifier avant de faire confiance.
     </p>
@@ -581,14 +585,20 @@
         <p><strong>Lecture seule</strong> par construction, sur vos serveurs. L'isolation entre
         organisations est appliquée par <strong>la base de données elle-même</strong>, pas par le
         code applicatif. Le SQL généré s'exécute en lecture seule et reste tracé. L'IA peut
-        tourner <strong>entièrement dans vos murs</strong>.</p>
+        tourner <strong>entièrement dans vos murs</strong>. Et le jour où vous partez&nbsp;: des
+        tables PostgreSQL ordinaires, un pg_dump standard —
+        <a href="https://docs.lumnik.io/reversibility/" rel="noopener" style="color:var(--lumiere)">rien à réclamer</a>.</p>
       </div>
       <div class="persona integrateur">
         <div class="qui">L'intégrateur</div>
         <p>Le produit qui vous fait briller chez vos clients à ERP vieillissant : connecteurs
         déclaratifs, outillage en ligne de commande pensé pour vous. La démonstration fait son
-        effet <strong>en soixante secondes</strong>, sur leurs vraies données.
-        <strong>Programme partenaire en construction — parlons-en tôt.</strong></p>
+        effet <strong>en soixante secondes</strong>, sur leurs vraies données.</p>
+        <p style="margin-top:12px">Vous écrivez l'univers d'un SI <strong>une fois</strong>&nbsp;: un répertoire de YAML
+        dans votre git, relu en pull request, rejoué sur le client suivant.
+        <strong>Votre deuxième client coûte moins cher que le premier.</strong>
+        <a href="https://docs.lumnik.io/integration-as-code/" rel="noopener" style="color:var(--lumiere)">L'intégration comme du code</a>.</p>
+        <p style="margin-top:12px"><strong>Programme partenaire en construction — parlons-en tôt.</strong></p>
       </div>
     </div>
   </div>
@@ -608,6 +618,18 @@
       <a class="btn btn-lumiere" href="https://docs.lumnik.io" rel="noopener">Lire la documentation</a>
       <a class="btn btn-givre" href="https://github.com/icreated/lumnik-open" rel="noopener">Voir le code</a>
     </div>
+    <p style="margin-top:52px"><span class="badge-bientot">Beta · open source</span></p>
+    <p class="lede">
+      <strong>Où en est lumnik&nbsp;?</strong> En beta&nbsp;: le produit ne grandit plus en surfaces, il
+      se corrige. Ce qui manque manque exprès, et la page qui le dit est publique. Ce que nous ne
+      savons pas encore&nbsp;: <strong>personne d'extérieur ne l'a fait tourner en production.</strong>
+      Vous pourriez être ce premier — et le premier défaut que vous trouverez sera celui que nous
+      ne pouvions pas prévoir.
+    </p>
+    <p class="lede" style="margin-top:14px">
+      <a href="https://docs.lumnik.io/where-lumnik-stands/" rel="noopener" style="color:var(--lumiere)">Où en est lumnik, page par page</a> ·
+      <a href="https://docs.lumnik.io/parcours/" rel="noopener" style="color:var(--lumiere)">le parcours guidé, trois demi-journées</a>
+    </p>
   </div>
 </section>
 
@@ -659,6 +681,18 @@
       bac à sable avec un ERP fictif tourne déjà —
       <a href="essai.html" style="color:var(--lumiere)">demandez vos accès</a>.
     </p>
+  </div>
+</section>
+
+<!-- ================= MANIFESTE ================= -->
+<section class="manifeste" id="manifeste">
+  <div class="wrap reveal">
+    <p class="kicker">En une phrase</p>
+    <h2>Vos applications peuvent rester gelées.<br>Vos données, elles, <em>ne le sont plus</em>.</h2>
+    <div class="mots" aria-label="Connecter, transformer, exploiter">
+      <span>Connecter</span><span aria-hidden="true">·</span><span>Transformer</span><span aria-hidden="true">·</span><span>Exploiter</span>
+    </div>
+    <p class="signature">Defrost your Enterprise.</p>
   </div>
 </section>
 
