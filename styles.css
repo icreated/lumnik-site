@@ -1135,6 +1135,21 @@ h2 em { font-style: italic; color: var(--lumiere); }
 .tier .btn { text-align: center; }
 
 /* --- Contact --- */
+.manifeste {
+  text-align: center;
+  background: linear-gradient(180deg, var(--nuit-2), var(--nuit));
+}
+.manifeste h2 { max-width: 34ch; margin: 0 auto 28px; }
+.manifeste .lede { margin-inline: auto; }
+.manifeste .signature {
+  margin-top: 42px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.7rem;
+  color: var(--neige);
+  text-shadow: 0 0 30px var(--lueur-forte);
+}
+
 .contact { background: linear-gradient(180deg, var(--nuit), var(--nuit-2)); }
 .contact-grille {
   margin-top: 48px;
