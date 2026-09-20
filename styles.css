@@ -160,6 +160,8 @@ nav a[aria-current="page"] {
   text-underline-offset: 0.45em;
 }
 nav .nav-contact { color: var(--nuit); }
+nav ul a.nav-contact:hover,
+nav ul a.nav-contact:focus-visible { color: var(--nuit); }
 
 .menu-toggle { display: none; }
 

@@ -30,6 +30,7 @@ class SitePage(HTMLParser):
         self.ids = set()
         self.links = []
         self.buttons = []
+        self.menu_lists = []
         self.current_links = []
         self.nav_text = []
         self._inside_nav = False
@@ -44,6 +45,8 @@ class SitePage(HTMLParser):
             self.current_links.append(attrs.get("href", ""))
         if tag == "button":
             self.buttons.append(attrs)
+        if tag == "ul" and attrs.get("id") == "menu-principal":
+            self.menu_lists.append(attrs)
         if tag == "nav":
             self._inside_nav = True
 
@@ -78,11 +81,16 @@ class SiteStructureTest(unittest.TestCase):
 
     def test_mobile_menu_contract_is_present(self):
         for name in ALL_PAGES:
-            html = (ROOT / name).read_text(encoding="utf-8")
+            page = load_page(name)
+            menu_buttons = [
+                button
+                for button in page.buttons
+                if button.get("aria-controls") == "menu-principal"
+            ]
             with self.subTest(name=name):
-                self.assertEqual(1, html.count('aria-controls="menu-principal"'))
-                self.assertEqual(1, html.count('id="menu-principal"'))
-                self.assertIn('aria-expanded="false"', html)
+                self.assertEqual(1, len(menu_buttons))
+                self.assertEqual("false", menu_buttons[0].get("aria-expanded"))
+                self.assertEqual(1, len(page.menu_lists))
 
     def test_mobile_menu_script_supports_keyboard_close(self):
         script = (ROOT / "site.js").read_text(encoding="utf-8")

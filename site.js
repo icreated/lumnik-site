@@ -26,7 +26,7 @@ const observer = new IntersectionObserver(
 );
 document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
 
-// Navigation mobile : un seul état, partagé entre la classe CSS et l'attribut ARIA.
+// Mobile navigation: one state shared by the CSS class and ARIA attribute.
 const menuToggle = document.querySelector(".menu-toggle");
 const menu = document.getElementById("menu-principal");
 const menuNav = menuToggle?.closest("nav");
