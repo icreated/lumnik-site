@@ -153,8 +153,95 @@ nav ul a {
   transition: color 0.25s;
 }
 nav ul a:hover, nav ul a:focus-visible { color: var(--lumiere); }
+nav a[aria-current="page"] {
+  color: var(--lumiere);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.45em;
+}
+nav .nav-contact { color: var(--nuit); }
 
-@media (max-width: 780px) { nav ul { display: none; } }
+.menu-toggle { display: none; }
+
+.local-nav {
+  position: static;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin: 30px 0 36px;
+  background: transparent;
+  border: 0;
+  backdrop-filter: none;
+}
+.local-nav a {
+  color: var(--brume);
+  font-size: 0.88rem;
+  text-decoration: none;
+  border-bottom: 1px solid var(--givre);
+}
+.local-nav a:hover,
+.local-nav a:focus-visible {
+  color: var(--lumiere);
+  border-bottom-color: var(--lumiere);
+}
+.local-nav a:focus-visible {
+  outline: 2px solid var(--lumiere);
+  outline-offset: 4px;
+}
+
+@media (max-width: 780px) {
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 8px 14px;
+    border: 1px solid var(--givre);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--neige);
+    font: 600 0.9rem var(--sans);
+    cursor: pointer;
+  }
+  .menu-toggle:focus-visible {
+    outline: 2px solid var(--lumiere);
+    outline-offset: 3px;
+  }
+  #menu-principal {
+    display: none;
+    position: absolute;
+    top: 64px;
+    right: 28px;
+    left: 28px;
+    z-index: 1;
+    max-height: calc(100vh - 64px);
+    max-height: calc(100dvh - 64px);
+    overflow-y: auto;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    padding: 14px;
+    background: var(--nuit-2);
+    border: 1px solid var(--givre);
+    border-top: 0;
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.35);
+  }
+  nav.menu-open #menu-principal { display: flex; }
+  #menu-principal a {
+    display: block;
+    padding: 10px 12px;
+  }
+  #menu-principal .nav-contact {
+    margin-top: 6px;
+    text-align: center;
+  }
+  .local-nav {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 4px 2px 10px;
+  }
+  .local-nav a { flex: 0 0 auto; }
+}
 
 /* ==========================================================================
    Boutons

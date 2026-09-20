@@ -29,6 +29,8 @@ class SitePage(HTMLParser):
         super().__init__()
         self.ids = set()
         self.links = []
+        self.buttons = []
+        self.current_links = []
         self.nav_text = []
         self._inside_nav = False
 
@@ -38,6 +40,10 @@ class SitePage(HTMLParser):
             self.ids.add(attrs["id"])
         if tag == "a" and "href" in attrs:
             self.links.append(attrs["href"])
+        if tag == "a" and attrs.get("aria-current") == "page":
+            self.current_links.append(attrs.get("href", ""))
+        if tag == "button":
+            self.buttons.append(attrs)
         if tag == "nav":
             self._inside_nav = True
 
@@ -69,6 +75,33 @@ class SiteStructureTest(unittest.TestCase):
             with self.subTest(name=name):
                 for label in NAV_LABELS:
                     self.assertIn(label, text)
+
+    def test_mobile_menu_contract_is_present(self):
+        for name in ALL_PAGES:
+            html = (ROOT / name).read_text(encoding="utf-8")
+            with self.subTest(name=name):
+                self.assertEqual(1, html.count('aria-controls="menu-principal"'))
+                self.assertEqual(1, html.count('id="menu-principal"'))
+                self.assertIn('aria-expanded="false"', html)
+
+    def test_mobile_menu_script_supports_keyboard_close(self):
+        script = (ROOT / "site.js").read_text(encoding="utf-8")
+        self.assertIn('event.key === "Escape"', script)
+        self.assertIn('setAttribute("aria-expanded"', script)
+
+    def test_each_thematic_page_marks_its_global_link_as_current(self):
+        current_targets = {
+            "index.html": "index.html",
+            "gel.html": "gel.html",
+            "degel.html": "degel.html",
+            "usages.html": "usages.html",
+            "architecture.html": "architecture.html",
+            "offre.html": "offre.html#offre",
+            "essai.html": "essai.html",
+        }
+        for name, target in current_targets.items():
+            with self.subTest(name=name):
+                self.assertEqual([target], load_page(name).current_links)
 
     def test_local_html_links_and_fragments_resolve(self):
         for source_name in ALL_PAGES:
