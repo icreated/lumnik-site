@@ -47,6 +47,9 @@
 
 html { scroll-behavior: smooth; }
 
+/* All local fragments must settle below the 64px sticky navigation. */
+[id] { scroll-margin-top: 84px; }
+
 body {
   background: var(--nuit);
   color: var(--neige);

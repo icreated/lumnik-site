@@ -230,3 +230,21 @@ class SiteStructureTest(unittest.TestCase):
         self.assertIn('data-label="L\'alternative classique"', gel)
         self.assertIn('data-label="Ce qu\'elle exige"', gel)
         self.assertIn('data-label="lumnik"', gel)
+
+    def test_fragment_destinations_clear_the_sticky_navigation(self):
+        styles = (ROOT / "styles.css").read_text(encoding="utf-8")
+
+        self.assertIn("[id] { scroll-margin-top: 84px; }", styles)
+
+    def test_only_homepage_announces_language_alternates(self):
+        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        self.assertIn('hreflang="fr"', homepage)
+        self.assertIn('hreflang="en"', homepage)
+        self.assertIn('hreflang="x-default"', homepage)
+
+        for name in PAGES[1:]:
+            with self.subTest(name=name):
+                self.assertNotIn(
+                    "hreflang=",
+                    (ROOT / name).read_text(encoding="utf-8"),
+                )

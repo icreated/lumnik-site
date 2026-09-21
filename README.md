@@ -1,13 +1,17 @@
 # lumnik.fr — site vitrine
 
-Site statique, zéro framework, zéro build : trois pages HTML, une feuille de style,
-un script de 30 lignes. Se déploie sur n'importe quel hébergeur statique.
+Site statique, zéro framework, zéro build : huit pages HTML, une feuille de style,
+un script. Se déploie sur n'importe quel hébergeur statique.
 
 ## Structure
 
 ```
-index.html      la vitrine (héros, problème, 3 gestes, cas français, architecture,
-                comparaison, personas, offre, contact)
+index.html      l'accueil et le parcours d'entrée
+gel.html        le problème : les données gelées
+degel.html      les trois gestes de dégel
+usages.html     les cas concrets par métier
+architecture.html l'architecture et ses garde-fous
+offre.html      les profils, l'offre et le formulaire de contact
 essai.html      inscription à l'essai cloud (bac à sable — ouverture prochaine)
 mentions.html   mentions légales, hébergeur, données personnelles (RGPD)
 styles.css      « la lumière dans le congélateur » — nuit glaciaire + jaune de lumière
@@ -27,9 +31,9 @@ site.js         barre de dégel (progression) + révélation au défilement
 
 1. ~~**Formulaire** : créer un formulaire sur formspree.io et remplacer
    l'ID de formulaire placeholder.~~ Fait — les deux pages à formulaire
-   (`index.html`, `essai.html`) postent vers le formulaire Formspree réel.
+   (`offre.html`, `essai.html`) postent vers le formulaire Formspree réel.
 2. ~~**Email**~~ Décision : le formulaire reste l'unique canal de contact sur les
-   pages marketing (`index.html`, `essai.html`) ; l'adresse email légale
+   pages marketing (`offre.html`, `essai.html`) ; l'adresse email légale
    n'apparaît que sur `mentions.html`, comme contact de l'éditeur.
 3. ~~Page mentions légales~~ Fait — `mentions.html`, liée depuis le pied des
    pages marketing.
