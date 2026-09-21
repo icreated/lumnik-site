@@ -33,7 +33,7 @@
     <ul id="menu-principal">
       <li><a href="gel.html">Gel</a></li>
       <li><a href="degel.html" aria-current="page">Dégel</a></li>
-      <li><a href="usages.html">Usages</a></li>
+      <li><a href="mouvement.html">Mouvement</a></li>
       <li><a href="architecture.html">Architecture</a></li>
       <li><a href="offre.html#offre">Offre</a></li>
       <li><a href="essai.html">Essai</a></li>
@@ -56,7 +56,6 @@
       <a href="#faits">Faits</a>
       <a href="#sens">Sens</a>
       <a href="#temps">Temps</a>
-      <a href="#adaptateur">Adaptateur</a>
     </nav>
     <ul class="principes" aria-label="Le principe, en trois refus">
       <li>Pas de migration pour commencer</li>
@@ -206,64 +205,6 @@
   </div>
 </section>
 
-<section id="adaptateur">
-  <div class="wrap reveal">
-    <p class="kicker">Le mouvement retrouvé</p>
-    <h2>Vos outils modernes peuvent enfin agir sur ce que vos systèmes <em>savent déjà</em>.</h2>
-    <p class="lede">
-      Un agenda, un tableau de bord ou un moteur de règles attend un signal exploitable.
-      Beaucoup de systèmes — anciens ou fermés — n'en produisent aucun.
-    </p>
-    <p class="lede" style="margin-top:18px">
-      lumnik observe, compare et date : chaque changement devient un événement consommable par
-      <strong>Make, n8n, Power Automate</strong>, un simple email à l'équipe, un export ou une requête SQL.
-      <strong>Et chaque silence aussi</strong> : « immobile depuis trente jours » est une alerte
-      que la source n'aurait jamais émise.
-    </p>
-    <div class="event-flow" aria-label="Transformation des observations en événements">
-      <div class="event-step">
-        <div class="event-kicker">1</div>
-        <h3>La source reste muette</h3>
-        <p>Pas de webhook, pas d'historique, pas de flux exploitable.</p>
-      </div>
-      <div class="event-arrow" aria-hidden="true">→</div>
-      <div class="event-step central">
-        <div class="event-kicker">2</div>
-        <h3>lumnik observe et compare</h3>
-        <p>Chaque ingestion produit un changement détectable, ou une immobilité constatable.</p>
-      </div>
-      <div class="event-arrow" aria-hidden="true">→</div>
-      <div class="event-step">
-        <div class="event-kicker">3</div>
-        <h3>Le moderne consomme</h3>
-        <p>Webhook, email, SQL, tableau de bord, moteur de règles, agenda partagé.</p>
-      </div>
-    </div>
-    <div class="event-output">
-      <div class="payload">
-        <div class="source-nom">Exemple d'événement</div>
-        <pre>{
-  "type": "commande_immobile",
-  "reference": "C-4471",
-  "depuis": "2026-06-02",
-  "seuil_jours": 30,
-  "source": "sage-lyon"
-}</pre>
-      </div>
-      <div class="prise-preuves">
-        <p><strong>Zéro accès au legacy</strong> pour vos outils modernes.</p>
-        <p><strong>Zéro recâblage aval</strong> le jour où l'ERP change enfin.</p>
-        <p><strong>Enfin des courbes</strong> même quand la source n'a gardé que l'état courant.</p>
-        <p><strong>Vos données deviennent une API</strong> — chaque entité fusionnée est lisible par vos propres outils, en lecture seule.</p>
-      </div>
-    </div>
-    <p class="lede" style="margin-top:38px">
-      Ces événements battent au rythme de la respiration — l'heure, pas la milliseconde.
-      Assez vite pour un agenda, un tableau de bord ou une alerte métier.
-      <strong>Et rien, jamais, n'écrit vers la source.</strong>
-    </p>
-  </div>
-</section>
 
 </main>
 
