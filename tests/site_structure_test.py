@@ -33,6 +33,15 @@ class SitePage(HTMLParser):
         self.menu_lists = []
         self.current_links = []
         self.nav_text = []
+        self.title_parts = []
+        self.canonical = ""
+        self.description = ""
+        self._inside_title = False
+        self.h1_count = 0
+        self.title_count = 0
+        self.canonical_count = 0
+        self.description_count = 0
+        self.open_graph = {}
         self._inside_nav = False
 
     def handle_starttag(self, tag, attrs):
@@ -49,14 +58,31 @@ class SitePage(HTMLParser):
             self.menu_lists.append(attrs)
         if tag == "nav":
             self._inside_nav = True
+        if tag == "title":
+            self._inside_title = True
+            self.title_count += 1
+        if tag == "link" and attrs.get("rel") == "canonical":
+            self.canonical = attrs.get("href", "")
+            self.canonical_count += 1
+        if tag == "meta" and attrs.get("name") == "description":
+            self.description = attrs.get("content", "")
+            self.description_count += 1
+        if tag == "meta" and attrs.get("property", "").startswith("og:"):
+            self.open_graph[attrs["property"]] = attrs.get("content", "")
+        if tag == "h1":
+            self.h1_count += 1
 
     def handle_endtag(self, tag):
         if tag == "nav":
             self._inside_nav = False
+        if tag == "title":
+            self._inside_title = False
 
     def handle_data(self, data):
         if self._inside_nav and data.strip():
             self.nav_text.append(data.strip())
+        if self._inside_title:
+            self.title_parts.append(data)
 
 
 def load_page(name):
@@ -110,6 +136,54 @@ class SiteStructureTest(unittest.TestCase):
         for name, target in current_targets.items():
             with self.subTest(name=name):
                 self.assertEqual([target], load_page(name).current_links)
+
+    def test_every_thematic_page_has_unique_metadata(self):
+        pages = {name: load_page(name) for name in PAGES}
+        titles = []
+        descriptions = []
+
+        for name, page in pages.items():
+            title = "".join(page.title_parts).strip()
+            with self.subTest(name=name):
+                self.assertEqual(1, page.title_count)
+                self.assertTrue(title)
+                self.assertEqual(1, page.description_count)
+                self.assertTrue(page.description.strip())
+                self.assertEqual(title, page.open_graph.get("og:title"))
+                self.assertEqual(
+                    page.description,
+                    page.open_graph.get("og:description"),
+                )
+                self.assertEqual(page.canonical, page.open_graph.get("og:url"))
+            titles.append(title)
+            descriptions.append(page.description)
+
+        self.assertEqual(len(PAGES), len(set(titles)))
+        self.assertEqual(len(PAGES), len(set(descriptions)))
+
+    def test_every_thematic_page_has_its_canonical_url(self):
+        canonical_urls = {
+            "index.html": "https://lumnik.fr/",
+            "gel.html": "https://lumnik.fr/gel.html",
+            "degel.html": "https://lumnik.fr/degel.html",
+            "usages.html": "https://lumnik.fr/usages.html",
+            "architecture.html": "https://lumnik.fr/architecture.html",
+            "offre.html": "https://lumnik.fr/offre.html",
+            "essai.html": "https://lumnik.fr/essai.html",
+        }
+        for name, expected_url in canonical_urls.items():
+            page = load_page(name)
+            with self.subTest(name=name):
+                self.assertEqual(1, page.canonical_count)
+                self.assertEqual(expected_url, page.canonical)
+
+    def test_every_thematic_page_has_one_h1_and_a_working_skip_link(self):
+        for name in PAGES:
+            page = load_page(name)
+            with self.subTest(name=name):
+                self.assertEqual(1, page.h1_count)
+                self.assertIn("contenu", page.ids)
+                self.assertIn("#contenu", page.links)
 
     def test_local_html_links_and_fragments_resolve(self):
         for source_name in ALL_PAGES:
