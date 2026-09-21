@@ -260,6 +260,46 @@ class SiteStructureTest(unittest.TestCase):
         reduced = styles.split("@media (prefers-reduced-motion: reduce) {", 1)[1]
         self.assertIn(":root { --reveal-lift: 0px; }", reduced)
 
+    def test_the_pages_carry_what_the_landing_page_proved(self):
+        """The split moved sections; it must not roll their copy back.
+
+        Splitting one page into seven copies text by hand, and a branch cut before
+        a content merge silently restores the older wording. These are the claims
+        whose loss is not cosmetic: the invented console that was replaced by a real
+        `lm` session, the four verifiable mechanisms, the beta admission, and the
+        freeze grid that stopped being 100% legacy.
+        """
+        architecture = (ROOT / "architecture.html").read_text(encoding="utf-8")
+        gel = (ROOT / "gel.html").read_text(encoding="utf-8")
+        degel = (ROOT / "degel.html").read_text(encoding="utf-8")
+        offre = (ROOT / "offre.html").read_text(encoding="utf-8")
+
+        # The terminal is a real lm session, and it says what it accounts for.
+        self.assertIn("$ lm login", architecture)
+        self.assertIn("IN = OUT + SKIPPED", architecture)
+        # The four mechanisms a RSSI can check, and the invitation to check them.
+        self.assertIn('class="garanties"', architecture)
+        self.assertIn("docs.lumnik.io/security/", architecture)
+        # Maturity is stated, not implied.
+        self.assertIn("Beta · open source", architecture)
+        self.assertIn("personne d'extérieur ne l'a fait tourner en production", architecture)
+        # The gel grid illustrates the four causes the paragraph claims, not only age.
+        self.assertIn("SaaS métier fermé", gel)
+        self.assertIn("CRM + ERP flambant neufs", gel)
+        # The three dead ends and the three refusals.
+        self.assertIn('class="impasses"', gel)
+        self.assertIn('class="principes"', degel)
+        # Reversibility and integration-as-code are what each persona is here for.
+        self.assertIn("docs.lumnik.io/reversibility/", offre)
+        self.assertIn("docs.lumnik.io/integration-as-code/", offre)
+
+        # The invented console had figures from no real installation. It is gone.
+        for name in ALL_PAGES:
+            with self.subTest(name=name):
+                page_text = (ROOT / name).read_text(encoding="utf-8")
+                self.assertNotIn("lumnik Console", page_text)
+                self.assertNotIn("console-preuve", page_text)
+
     def test_only_homepage_announces_language_alternates(self):
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
         self.assertIn('hreflang="fr"', homepage)
