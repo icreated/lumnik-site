@@ -219,3 +219,14 @@ class SiteStructureTest(unittest.TestCase):
             found = [name for name, page in parsed.items() if section_id in page.ids]
             with self.subTest(section_id=section_id):
                 self.assertEqual([owner], found)
+
+    def test_comparison_table_becomes_readable_cards_on_phone(self):
+        styles = (ROOT / "styles.css").read_text(encoding="utf-8")
+        gel = (ROOT / "gel.html").read_text(encoding="utf-8")
+
+        self.assertIn("@media (max-width: 600px)", styles)
+        self.assertIn(".comparaison tr {", styles)
+        self.assertIn(".comparaison td::before", styles)
+        self.assertIn('data-label="L\'alternative classique"', gel)
+        self.assertIn('data-label="Ce qu\'elle exige"', gel)
+        self.assertIn('data-label="lumnik"', gel)
