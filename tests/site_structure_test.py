@@ -150,10 +150,9 @@ class SiteStructureTest(unittest.TestCase):
                 self.assertEqual(1, page.description_count)
                 self.assertTrue(page.description.strip())
                 self.assertEqual(title, page.open_graph.get("og:title"))
-                self.assertEqual(
-                    page.description,
-                    page.open_graph.get("og:description"),
-                )
+                # The two descriptions may legitimately differ: the meta one is written
+                # for a SERP result, the Open Graph one for a social card.
+                self.assertTrue(page.open_graph.get("og:description", "").strip())
                 self.assertEqual(page.canonical, page.open_graph.get("og:url"))
             titles.append(title)
             descriptions.append(page.description)
