@@ -41,14 +41,26 @@
 
   --maxw: 1120px;
   --radius: 14px;
+
+  /* Anchor geometry. The sticky bar's height, the air we want under it, and the
+     distance .reveal lifts its content when it enters the viewport. They are
+     declared together because they are one calculation: a fragment is scrolled
+     to *before* the lift is undone, so anything inside a .reveal has to reserve
+     that lift too. Change one, the others follow. */
+  --nav-h: 64px;
+  --anchor-gap: 20px;
+  --reveal-lift: 30px;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }
 
-/* All local fragments must settle below the 64px sticky navigation. */
-[id] { scroll-margin-top: 84px; }
+/* Every local fragment settles below the sticky navigation… */
+[id] { scroll-margin-top: calc(var(--nav-h) + var(--anchor-gap)); }
+/* …and one sitting inside a .reveal is aimed at while the lift is still applied:
+   without the extra reserve it would rise under the bar once .vu lands. */
+.reveal [id] { scroll-margin-top: calc(var(--nav-h) + var(--anchor-gap) + var(--reveal-lift)); }
 
 body {
   background: var(--nuit);
@@ -125,7 +137,7 @@ nav .wrap {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: var(--nav-h);
 }
 
 .logo {
@@ -214,12 +226,12 @@ nav ul a.nav-contact:focus-visible { color: var(--nuit); }
   #menu-principal {
     display: none;
     position: absolute;
-    top: 64px;
+    top: var(--nav-h);
     right: 28px;
     left: 28px;
     z-index: 1;
-    max-height: calc(100vh - 64px);
-    max-height: calc(100dvh - 64px);
+    max-height: calc(100vh - var(--nav-h));
+    max-height: calc(100dvh - var(--nav-h));
     overflow-y: auto;
     flex-direction: column;
     align-items: stretch;
@@ -456,7 +468,7 @@ h1 .degel {
    ========================================================================== */
 section { padding: 96px 0; position: relative; }
 
-.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal { opacity: 0; transform: translateY(var(--reveal-lift)); transition: opacity 0.8s ease, transform 0.8s ease; }
 .reveal.vu { opacity: 1; transform: none; }
 
 .kicker {
@@ -1479,6 +1491,8 @@ footer a:hover { color: var(--lumiere); }
 
 /* accessibilité */
 @media (prefers-reduced-motion: reduce) {
+  /* No lift, so no reserve: the scroll-margin formulas collapse to nav + gap. */
+  :root { --reveal-lift: 0px; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .reveal { opacity: 1; transform: none; }
   h1, .hero .surtitre, .hero .sous, .hero .ctas, .hero .preuve { opacity: 1; transform: none; }

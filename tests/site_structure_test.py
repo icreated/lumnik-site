@@ -231,9 +231,34 @@ class SiteStructureTest(unittest.TestCase):
         self.assertIn('data-label="lumnik"', gel)
 
     def test_fragment_destinations_clear_the_sticky_navigation(self):
+        """Anchor geometry is one calculation, not three independent numbers.
+
+        A fragment inside a .reveal is scrolled to while the reveal still holds
+        its content down; the class lands a moment later and lifts everything.
+        Without reserving that lift in the scroll-margin, the heading rises under
+        the sticky bar — which is what happened to #faits, #sens and the Usages
+        cards.
+        """
         styles = (ROOT / "styles.css").read_text(encoding="utf-8")
 
-        self.assertIn("[id] { scroll-margin-top: 84px; }", styles)
+        self.assertIn("--nav-h: 64px;", styles)
+        self.assertIn("--anchor-gap: 20px;", styles)
+        self.assertIn("--reveal-lift: 30px;", styles)
+        self.assertIn(
+            "[id] { scroll-margin-top: calc(var(--nav-h) + var(--anchor-gap)); }",
+            styles,
+        )
+        self.assertIn(
+            ".reveal [id] { scroll-margin-top: "
+            "calc(var(--nav-h) + var(--anchor-gap) + var(--reveal-lift)); }",
+            styles,
+        )
+        # The bar and the reveal must read the very variables they are compensated by.
+        self.assertIn("height: var(--nav-h);", styles)
+        self.assertIn("transform: translateY(var(--reveal-lift));", styles)
+        # Reduced motion drops the lift, so it has to drop the reserve with it.
+        reduced = styles.split("@media (prefers-reduced-motion: reduce) {", 1)[1]
+        self.assertIn(":root { --reveal-lift: 0px; }", reduced)
 
     def test_only_homepage_announces_language_alternates(self):
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
