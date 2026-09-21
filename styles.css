@@ -41,11 +41,26 @@
 
   --maxw: 1120px;
   --radius: 14px;
+
+  /* Anchor geometry. The sticky bar's height, the air we want under it, and the
+     distance .reveal lifts its content when it enters the viewport. They are
+     declared together because they are one calculation: a fragment is scrolled
+     to *before* the lift is undone, so anything inside a .reveal has to reserve
+     that lift too. Change one, the others follow. */
+  --nav-h: 64px;
+  --anchor-gap: 20px;
+  --reveal-lift: 30px;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }
+
+/* Every local fragment settles below the sticky navigation… */
+[id] { scroll-margin-top: calc(var(--nav-h) + var(--anchor-gap)); }
+/* …and one sitting inside a .reveal is aimed at while the lift is still applied:
+   without the extra reserve it would rise under the bar once .vu lands. */
+.reveal [id] { scroll-margin-top: calc(var(--nav-h) + var(--anchor-gap) + var(--reveal-lift)); }
 
 body {
   background: var(--nuit);
@@ -122,7 +137,7 @@ nav .wrap {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: var(--nav-h);
 }
 
 .logo {
@@ -153,8 +168,97 @@ nav ul a {
   transition: color 0.25s;
 }
 nav ul a:hover, nav ul a:focus-visible { color: var(--lumiere); }
+nav a[aria-current="page"] {
+  color: var(--lumiere);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.45em;
+}
+nav .nav-contact { color: var(--nuit); }
+nav ul a.nav-contact:hover,
+nav ul a.nav-contact:focus-visible { color: var(--nuit); }
 
-@media (max-width: 780px) { nav ul { display: none; } }
+.menu-toggle { display: none; }
+
+.local-nav {
+  position: static;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin: 30px 0 36px;
+  background: transparent;
+  border: 0;
+  backdrop-filter: none;
+}
+.local-nav a {
+  color: var(--brume);
+  font-size: 0.88rem;
+  text-decoration: none;
+  border-bottom: 1px solid var(--givre);
+}
+.local-nav a:hover,
+.local-nav a:focus-visible {
+  color: var(--lumiere);
+  border-bottom-color: var(--lumiere);
+}
+.local-nav a:focus-visible {
+  outline: 2px solid var(--lumiere);
+  outline-offset: 4px;
+}
+
+@media (max-width: 780px) {
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 8px 14px;
+    border: 1px solid var(--givre);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--neige);
+    font: 600 0.9rem var(--sans);
+    cursor: pointer;
+  }
+  .menu-toggle:focus-visible {
+    outline: 2px solid var(--lumiere);
+    outline-offset: 3px;
+  }
+  #menu-principal {
+    display: none;
+    position: absolute;
+    top: var(--nav-h);
+    right: 28px;
+    left: 28px;
+    z-index: 1;
+    max-height: calc(100vh - var(--nav-h));
+    max-height: calc(100dvh - var(--nav-h));
+    overflow-y: auto;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    padding: 14px;
+    background: var(--nuit-2);
+    border: 1px solid var(--givre);
+    border-top: 0;
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.35);
+  }
+  nav.menu-open #menu-principal { display: flex; }
+  #menu-principal a {
+    display: block;
+    padding: 10px 12px;
+  }
+  #menu-principal .nav-contact {
+    margin-top: 6px;
+    text-align: center;
+  }
+  .local-nav {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 4px 2px 10px;
+  }
+  .local-nav a { flex: 0 0 auto; }
+}
 
 /* ==========================================================================
    Boutons
@@ -364,7 +468,7 @@ h1 .degel {
    ========================================================================== */
 section { padding: 96px 0; position: relative; }
 
-.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal { opacity: 0; transform: translateY(var(--reveal-lift)); transition: opacity 0.8s ease, transform 0.8s ease; }
 .reveal.vu { opacity: 1; transform: none; }
 
 .kicker {
@@ -1045,6 +1149,49 @@ h2 em { font-style: italic; color: var(--lumiere); }
 .comparaison td.lumnik-col::before { content: "☀ "; color: var(--lumiere); font-size: 0.85em; }
 .comparaison .table-scroll { overflow-x: auto; }
 
+@media (max-width: 600px) {
+  .comparaison .table-scroll { overflow: visible; }
+  .comparaison table { margin-top: 34px; }
+  .comparaison thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .comparaison tbody,
+  .comparaison tr,
+  .comparaison td { display: block; width: 100%; }
+  .comparaison tr {
+    margin-top: 18px;
+    padding: 8px 18px;
+    border: 1px solid rgba(143,168,189,0.16);
+    border-radius: var(--radius);
+    background: rgba(18, 34, 51, 0.28);
+  }
+  .comparaison td {
+    padding: 14px 0;
+    border: 0;
+    border-bottom: 1px solid rgba(143,168,189,0.13);
+  }
+  .comparaison td:last-child { border-bottom: 0; }
+  .comparaison td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 5px;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--brume);
+  }
+  .comparaison td.lumnik-col::before { content: "☀ " attr(data-label); }
+}
+
 /* --- Personas --- */
 .personas-grille {
   margin-top: 56px;
@@ -1344,6 +1491,8 @@ footer a:hover { color: var(--lumiere); }
 
 /* accessibilité */
 @media (prefers-reduced-motion: reduce) {
+  /* No lift, so no reserve: the scroll-margin formulas collapse to nav + gap. */
+  :root { --reveal-lift: 0px; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .reveal { opacity: 1; transform: none; }
   h1, .hero .surtitre, .hero .sous, .hero .ctas, .hero .preuve { opacity: 1; transform: none; }

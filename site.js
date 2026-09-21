@@ -25,3 +25,30 @@ const observer = new IntersectionObserver(
   { threshold: 0.12 }
 );
 document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+
+// Mobile navigation: one state shared by the CSS class and ARIA attribute.
+const menuToggle = document.querySelector(".menu-toggle");
+const menu = document.getElementById("menu-principal");
+const menuNav = menuToggle?.closest("nav");
+
+if (menuToggle && menu && menuNav) {
+  const setMenuOpen = (open) => {
+    menuNav.classList.toggle("menu-open", open);
+    menuToggle.setAttribute("aria-expanded", String(open));
+  };
+
+  menuToggle.addEventListener("click", () => {
+    setMenuOpen(menuToggle.getAttribute("aria-expanded") !== "true");
+  });
+
+  menu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => setMenuOpen(false));
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && menuToggle.getAttribute("aria-expanded") === "true") {
+      setMenuOpen(false);
+      menuToggle.focus();
+    }
+  });
+}

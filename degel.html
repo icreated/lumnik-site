@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Le dégel — lumnik</title>
+  <meta name="description" content="Faits, sens et temps : trois choses à remettre en mouvement.">
+  <link rel="canonical" href="https://lumnik.fr/degel.html">
+  <meta property="og:title" content="Le dégel — lumnik">
+  <meta property="og:description" content="Faits, sens et temps : trois choses à remettre en mouvement.">
+  <meta property="og:url" content="https://lumnik.fr/degel.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='34' fill='%23ffd24a'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<a class="saut" href="#contenu">Aller au contenu</a>
+
+<div id="thermometre" aria-hidden="true"></div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="index.html">lumnik<span class="dot" aria-hidden="true"></span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">
+      <span class="menu-toggle-label">Menu</span>
+    </button>
+    <ul id="menu-principal">
+      <li><a href="gel.html">Gel</a></li>
+      <li><a href="degel.html" aria-current="page">Dégel</a></li>
+      <li><a href="mouvement.html">Mouvement</a></li>
+      <li><a href="architecture.html">Architecture</a></li>
+      <li><a href="offre.html#offre">Offre</a></li>
+      <li><a href="essai.html">Essai</a></li>
+      <li><a class="btn btn-lumiere nav-contact" href="offre.html#contact">Nous parler</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="contenu">
+
+<section class="gestes" id="comment">
+  <div class="wrap reveal">
+    <p class="kicker">Le dégel</p>
+    <h1>Faits. Sens. Temps.<br>Trois choses à <em>remettre en mouvement</em>.</h1>
+    <p class="lede">
+      Personne ne signe une migration d'ERP. Tout le monde accepte qu'on <strong>lise</strong>.
+      lumnik entre donc en lecture seule, et votre système reste l'unique maître de ses données.
+    </p>
+    <nav class="local-nav" aria-label="Dans Dégel">
+      <a href="#faits">Faits</a>
+      <a href="#sens">Sens</a>
+      <a href="#temps">Temps</a>
+    </nav>
+    <ul class="principes" aria-label="Le principe, en trois refus">
+      <li>Pas de migration pour commencer</li>
+      <li>Pas de réécriture de l'existant</li>
+      <li>Pas de fuite de données</li>
+    </ul>
+    <div class="geste-grille">
+      <div class="geste" id="faits">
+        <h3>Les faits — enfin réunis</h3>
+        <p>lumnik lit ERP, bases, fichiers et API en lecture seule, puis rapproche les clients,
+        produits ou commandes dispersés. Vous obtenez une vue commune sans migration préalable
+        et sans masquer les désaccords.</p>
+      </div>
+      <div class="geste" id="sens">
+        <h3>Le sens — enfin explicite</h3>
+        <p>« EC », « en cours » et « 20 » veulent-ils dire la même chose ? Vos métiers le
+        déclarent une fois. lumnik transforme ce savoir oral en règles lisibles, traçables et
+        partageables.</p>
+      </div>
+      <div class="geste">
+        <h3>Le temps — enfin visible</h3>
+        <p>Chaque lecture laisse une observation datée. lumnik révèle ce qui n'a pas bougé depuis
+        le seuil choisi par le métier — sans prétendre connaître la période antérieure à sa
+        première observation.</p>
+      </div>
+    </div>
+
+    <div class="fusion-preuve" aria-label="Exemple de fusion de données">
+      <div class="fusion-entrees">
+        <div class="source-carte">
+          <div class="source-nom">Sage</div>
+          <p>Client DUPONT INDUSTRIE<br>12 rue du Port<br>04 72 00 00 00</p>
+        </div>
+        <div class="source-carte">
+          <div class="source-nom">Cegid</div>
+          <p>Dupont Indus.<br>12 rue du Port, Bât. C<br>compte bloqué</p>
+        </div>
+        <div class="source-carte">
+          <div class="source-nom">CSV</div>
+          <p>DUPONT INDUSTRIE<br>contact achats : M. Rey<br>email présent</p>
+        </div>
+      </div>
+      <div class="fusion-centre" aria-hidden="true">→</div>
+      <div class="fusion-sortie">
+        <div class="source-nom">Fiche unique servie</div>
+        <ul>
+          <li>Client unique consolidé</li>
+          <li>Adresse retenue et tracée</li>
+          <li>Contact achats enrichi</li>
+        </ul>
+        <div class="conflit">Conflit détecté : adresse Sage ≠ adresse Cegid</div>
+      </div>
+    </div>
+
+    <div class="demo">
+      <div>
+        <h2 style="font-size:1.8rem">La réponse cite ses sources.<br>Ou elle <em>n'existe pas</em>.</h2>
+        <p class="lede">
+          Quand l'IA arrive, elle travaille sur des données que <strong>vous</strong> contrôlez —
+          et sous surveillance : des garde-fous déterministes vérifient chaque réponse avant
+          qu'elle ne vous atteigne.
+          Chez nous, un « il n'y en a aucun » faux est la faute capitale : <strong>lumnik préfère
+          admettre qu'il ne sait pas</strong>. C'est ce qui rend ses réponses utilisables.
+        </p>
+      </div>
+      <div class="fenetre" role="group" aria-label="Exemple de conversation">
+        <div class="barre">
+          <span class="rond"></span><span class="rond"></span><span class="rond"></span>
+          &nbsp;lumnik — périmètre : stock
+        </div>
+        <div class="corps">
+          <div class="bulle q">Combien de roulements 6205 en stock, tous sites confondus ?</div>
+          <div class="bulle r">
+            142 unités : 96 à Lyon, 38 à Nantes, 8 à Mâcon.
+            <span class="source">sources : sage-lyon · divalto-nantes · csv-macon — données du jour</span>
+          </div>
+          <div class="bulle q">Et la référence 6205-ZZ chez notre fournisseur Habasit ?</div>
+          <div class="bulle r abstention">
+            <em>Je ne peux pas l'établir</em> à partir des données ingérées : aucun champ
+            fournisseur n'est renseigné pour cette référence. Plutôt que d'inventer, je m'abstiens.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="temps" id="temps">
+  <div class="wrap reveal">
+    <p class="kicker">Quand le temps redevient visible</p>
+    <h2>Ce qui ne bouge plus devient enfin <em>impossible à ignorer</em>.</h2>
+    <p class="lede">
+      Un ERP vous dit ce qui <em>est</em>, rarement depuis quand. L'export de ce soir écrase
+      celui d'hier ; « en cours » était peut-être déjà vrai il y a quarante jours.
+      <strong>Cette perte de mémoire ne concerne pas que les vieux systèmes.</strong>
+    </p>
+
+    <div class="demo">
+      <div>
+        <h3 class="sous-titre">lumnik le reconstruit, ingestion après ingestion.</h3>
+        <p class="lede">
+          Chaque passage laisse une observation datée. Au bout de quelques semaines, votre hub
+          sait une chose que l'ERP n'a jamais sue : <strong>ce qui n'a pas bougé</strong>.
+        </p>
+        <p class="lede" style="margin-top:18px">
+          Le seuil est <strong>déclaré par vous</strong>, jamais deviné : trente jours pour une
+          commande, quarante-huit heures pour une réclamation. lumnik applique cette règle et montre
+          l'observation exacte qui a déclenché l'alerte.
+        </p>
+        <p class="serment" style="margin-top:26px">
+          <b>Ce qui ne bouge plus ne déclenche rien.</b> Aucun système ne vous prévient d'un
+          non-événement. C'est là que lumnik ne se contente pas de montrer : il trouve.
+        </p>
+      </div>
+
+      <div class="fenetre tape" role="group" aria-label="Exemple de journal d'observations">
+        <div class="barre">
+          <span class="rond"></span><span class="rond"></span><span class="rond"></span>
+          &nbsp;lumnik — journal des observations
+        </div>
+        <div class="corps">
+          <div class="ligne">
+            <span class="quand">2 juin</span>
+            <span class="quoi">commande <b>C-4471</b> <span class="statut">· en cours</span></span>
+          </div>
+          <div class="ligne">
+            <span class="quand">16 juin</span>
+            <span class="quoi">observée, <span class="statut">inchangée</span></span>
+          </div>
+          <div class="ligne">
+            <span class="quand">30 juin</span>
+            <span class="quoi">observée, <span class="statut">inchangée</span></span>
+          </div>
+          <div class="ligne alerte">
+            <span class="quand">2 juillet</span>
+            <span class="quoi">immobile depuis <b>30 jours</b>
+              <span class="statut">· signalée au métier</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="lede" style="margin-top:38px">
+      Le premier jour, lumnik ne sait rien de votre passé — <strong>et il le dit</strong>.
+      Cette mémoire commence à la première ingestion et s'approfondit chaque nuit.
+    </p>
+  </div>
+</section>
+
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>lumnik — édité par icreated · Châtillon d'Azergues, France</div>
+    <div><a href="mentions.html">Mentions légales</a> · <a href="https://docs.lumnik.io" rel="noopener">Documentation</a> · <a href="essai.html">Essai en ligne</a></div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>

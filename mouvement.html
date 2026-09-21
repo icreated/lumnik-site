@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Le mouvement — lumnik</title>
+  <meta name="description" content="Vos outils modernes agissent enfin sur ce que vos systèmes savent déjà.">
+  <link rel="canonical" href="https://lumnik.fr/mouvement.html">
+  <meta property="og:title" content="Le mouvement — lumnik">
+  <meta property="og:description" content="Vos outils modernes agissent enfin sur ce que vos systèmes savent déjà.">
+  <meta property="og:url" content="https://lumnik.fr/mouvement.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='34' fill='%23ffd24a'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<a class="saut" href="#contenu">Aller au contenu</a>
+
+<div id="thermometre" aria-hidden="true"></div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="index.html">lumnik<span class="dot" aria-hidden="true"></span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">
+      <span class="menu-toggle-label">Menu</span>
+    </button>
+    <ul id="menu-principal">
+      <li><a href="gel.html">Gel</a></li>
+      <li><a href="degel.html">Dégel</a></li>
+      <li><a href="mouvement.html" aria-current="page">Mouvement</a></li>
+      <li><a href="architecture.html">Architecture</a></li>
+      <li><a href="offre.html#offre">Offre</a></li>
+      <li><a href="essai.html">Essai</a></li>
+      <li><a class="btn btn-lumiere nav-contact" href="offre.html#contact">Nous parler</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="contenu">
+
+<section id="adaptateur">
+  <div class="wrap reveal">
+    <p class="kicker">Le mouvement retrouvé</p>
+    <h1>Vos outils modernes peuvent enfin agir sur ce que vos systèmes <em>savent déjà</em>.</h1>
+    <p class="lede">
+      Un agenda, un tableau de bord ou un moteur de règles attend un signal exploitable.
+      Beaucoup de systèmes — anciens ou fermés — n'en produisent aucun.
+    </p>
+    <p class="lede" style="margin-top:18px">
+      lumnik observe, compare et date : chaque changement devient un événement consommable par
+      <strong>Make, n8n, Power Automate</strong>, un simple email à l'équipe, un export ou une requête SQL.
+      <strong>Et chaque silence aussi</strong> : « immobile depuis trente jours » est une alerte
+      que la source n'aurait jamais émise.
+    </p>
+    <div class="event-flow" aria-label="Transformation des observations en événements">
+      <div class="event-step">
+        <div class="event-kicker">1</div>
+        <h3>La source reste muette</h3>
+        <p>Pas de webhook, pas d'historique, pas de flux exploitable.</p>
+      </div>
+      <div class="event-arrow" aria-hidden="true">→</div>
+      <div class="event-step central">
+        <div class="event-kicker">2</div>
+        <h3>lumnik observe et compare</h3>
+        <p>Chaque ingestion produit un changement détectable, ou une immobilité constatable.</p>
+      </div>
+      <div class="event-arrow" aria-hidden="true">→</div>
+      <div class="event-step">
+        <div class="event-kicker">3</div>
+        <h3>Le moderne consomme</h3>
+        <p>Webhook, email, SQL, tableau de bord, moteur de règles, agenda partagé.</p>
+      </div>
+    </div>
+    <div class="event-output">
+      <div class="payload">
+        <div class="source-nom">Exemple d'événement</div>
+        <pre>{
+  "type": "commande_immobile",
+  "reference": "C-4471",
+  "depuis": "2026-06-02",
+  "seuil_jours": 30,
+  "source": "sage-lyon"
+}</pre>
+      </div>
+      <div class="prise-preuves">
+        <p><strong>Zéro accès au legacy</strong> pour vos outils modernes.</p>
+        <p><strong>Zéro recâblage aval</strong> le jour où l'ERP change enfin.</p>
+        <p><strong>Enfin des courbes</strong> même quand la source n'a gardé que l'état courant.</p>
+        <p><strong>Vos données deviennent une API</strong> — chaque entité fusionnée est lisible par vos propres outils, en lecture seule.</p>
+      </div>
+    </div>
+    <p class="lede" style="margin-top:38px">
+      Ces événements battent au rythme de la respiration — l'heure, pas la milliseconde.
+      Assez vite pour un agenda, un tableau de bord ou une alerte métier.
+      <strong>Et rien, jamais, n'écrit vers la source.</strong>
+    </p>
+  </div>
+</section>
+
+<section id="cas">
+  <div class="wrap reveal">
+    <p class="kicker">Cas concrets</p>
+    <h2>Des situations que vous <em>reconnaîtrez</em>.</h2>
+    <p class="lede">
+      Chaque cas ci-dessous existe aujourd'hui dans des entreprises françaises.
+      Le déclencheur est presque toujours le même : un expert qui part, un rachat,
+      ou un dossier qui dort trop longtemps.
+    </p>
+    <nav class="local-nav" aria-label="Dans les cas concrets">
+      <a href="#industrie">Industrie</a>
+      <a href="#negoce">Négoce</a>
+      <a href="#services">Services</a>
+      <a href="#secteur-public">Secteur public</a>
+    </nav>
+    <div class="cas-grille">
+      <article class="cas" id="industrie">
+        <div class="contexte">PME industrielle · 4 sites</div>
+        <h3>« Ce roulement, quelqu'un l'a en stock ? »</h3>
+        <p>Quatre usines, quatre ERP différents (Sage X3, Divalto, un développement maison).
+        Quand une ligne s'arrête, la maintenance téléphone aux sites voisins — et une ligne
+        arrêtée coûte quatre chiffres de l'heure.</p>
+        <p class="lumen">Une pièce, une fiche fusionnée, une question — la réponse site par
+        site en quelques secondes. Le premier arrêt évité paie des années d'outil.</p>
+      </article>
+      <article class="cas" id="negoce">
+        <div class="contexte">Négoce · après un rachat</div>
+        <h3>Deux catalogues, deux prix pour le même produit</h3>
+        <p>L'acquéreur découvre 40&nbsp;% de références en doublon entre son Sage et
+        l'EBP racheté. Les commerciaux annoncent des prix différents pour le même article.</p>
+        <p class="lumen">La fiche produit unique est servie en quelques semaines, pendant
+        que la migration avance à son rythme. Le registre des conflits EST la liste de
+        dédoublonnage que l'équipe attendait.</p>
+      </article>
+      <article class="cas">
+        <div class="contexte">Vente B2B · le silence qui coûte</div>
+        <h3>Le devis à 40 000 € que personne n'a relancé</h3>
+        <p>Envoyé un vendredi, marqué « en attente » — puis plus rien. Le commercial
+        est sur la route, le statut n'a pas bougé depuis six semaines, et aucun système
+        n'alerte sur ce qui ne se passe pas. Le client a signé ailleurs.</p>
+        <p class="lumen">lumnik observe chaque dossier, ingestion après ingestion, et
+        signale l'immobile : « en attente depuis 42 jours — seuil métier : 15 ».
+        L'alerte montre l'observation exacte ; il ne reste qu'à décrocher le téléphone.</p>
+      </article>
+      <article class="cas" id="services">
+        <div class="contexte">Services · système « zombie »</div>
+        <h3>La licence payée pour un logiciel que plus personne n'utilise</h3>
+        <p>Un système déclassé en 2019, conservé uniquement parce que la loi impose de
+        garder ses données dix ans. Licence + serveur + le seul admin qui sait le
+        redémarrer : cinq chiffres par an pour une poignée de consultations.</p>
+        <p class="lumen">Une dernière ingestion, puis la machine s'éteint. L'archive reste
+        interrogeable pour toujours. Le retour sur investissement est une soustraction
+        qu'on fait de tête.</p>
+      </article>
+      <article class="cas" id="secteur-public">
+        <div class="contexte">Secteur public · intercommunalité</div>
+        <h3>Cinquante communes, un seul déploiement</h3>
+        <p>Les petites communes n'auront jamais le budget d'un tel outil chacune.
+        Un syndicat ou un intégrateur public en opère <strong>un seul</strong> — chaque
+        commune ne voit que sa tranche, isolation garantie par la base elle-même.</p>
+        <p class="lumen">L'architecture multi-organisations n'est pas de la plomberie :
+        c'est le produit. Un déploiement, cinquante dégels.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>lumnik — édité par icreated · Châtillon d'Azergues, France</div>
+    <div><a href="mentions.html">Mentions légales</a> · <a href="https://docs.lumnik.io" rel="noopener">Documentation</a> · <a href="essai.html">Essai en ligne</a></div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>
