@@ -1,5 +1,6 @@
 from html.parser import HTMLParser
 from pathlib import Path
+import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -137,16 +138,22 @@ class SiteStructureTest(unittest.TestCase):
             with self.subTest(name=name):
                 self.assertEqual([target], load_page(name).current_links)
 
-    def test_the_dossier_page_has_its_metadata_and_its_one_script(self):
+    def test_the_dossier_page_has_its_metadata_and_exactly_its_two_scripts(self):
         page = load_page("dossier.html")
         self.assertEqual(1, page.title_count)
         self.assertEqual(1, page.h1_count)
         self.assertEqual("https://lumnik.fr/dossier.html", page.canonical)
         self.assertEqual(page.canonical, page.open_graph.get("og:url"))
         self.assertIn("dossier-app", page.ids)
+        # Count the tags rather than look for one spelling: an inline block can carry attributes
+        # (<script type="module">…), and harmless reformatting must not fail the test.
         text = (ROOT / "dossier.html").read_text(encoding="utf-8")
-        self.assertIn('<script type="module" src="proposal/page.mjs"></script>', text)
-        self.assertNotIn("<script>", text)
+        tags = re.findall(r"<script\b[^>]*>", text)
+        self.assertEqual(2, len(tags), tags)
+        sources = [re.search(r'\bsrc="([^"]+)"', tag) for tag in tags]
+        self.assertTrue(all(sources), f"an inline script: {tags}")
+        self.assertEqual(["site.js", "proposal/page.mjs"], [m.group(1) for m in sources])
+        self.assertEqual(["proposal/page.mjs"], [m.group(1) for tag, m in zip(tags, sources) if re.search(r'\btype="module"', tag)])
 
     def test_every_thematic_page_has_unique_metadata(self):
         pages = {name: load_page(name) for name in PAGES}
