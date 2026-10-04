@@ -7,8 +7,9 @@ import {
   buildHeader, resume, locate, localDay, parseServed, loadCatalogue,
 } from "../../proposal/flow.mjs";
 import { digest } from "../../proposal/digest.mjs";
+import { BS, readSite, withoutWebCrypto } from "./helpers.mjs";
 
-const json = (p) => JSON.parse(readFileSync(new URL(`../../${p}`, import.meta.url), "utf8"));
+const json = (p) => JSON.parse(readSite(p));
 const fixture = (p) => readFileSync(new URL(`../fixtures/proposal/${p}`, import.meta.url), "utf8");
 const catalogue = json("catalogue/2026.10.0.json");
 const base = { catalogue, language: "fr", created: "2026-10-04", words: "" };
@@ -188,8 +189,7 @@ test("locate finds exactly the version asked, or the latest when none is asked",
 });
 
 test("a hostile or unknown version is refused — never a fallback to latest, nothing to fetch", () => {
-  for (const v of ["../../x", "__proto__", "constructor", "2026.10.1", "", 7, null, {}]) {
-    if (v === null) continue; // null/undefined mean "latest" by design
+  for (const v of ["../../x", "__proto__", "constructor", "2026.10.1", "", 7, {}]) {
     assert.throws(() => locate(index, v), (e) => e instanceof Refusal && e.code === "catalogue-version-unknown", String(v));
   }
 });
@@ -204,7 +204,6 @@ test("a served file with a repeated key is refused even when the duplicate is ID
 });
 
 test("a repeated key hidden behind an escape, invalid JSON and over-deep nesting are refused too", () => {
-  const BS = String.fromCharCode(92);
   for (const text of [`{"a":1,"${BS}u0061":2}`, "{not json", '{"x":' + "[".repeat(1001) + "]".repeat(1001) + "}", ""]) {
     assert.throws(() => parseServed(text), (e) => e instanceof Refusal && e.code === "catalogue-malformed", text.slice(0, 20));
   }
@@ -234,8 +233,8 @@ test("created is the LOCAL day: just after local midnight it is not yesterday's 
 const serve = (overrides = {}) => {
   const calls = [];
   const files = {
-    "catalogue-index.json": readFileSync(new URL("../../catalogue-index.json", import.meta.url), "utf8"),
-    "catalogue/2026.10.0.json": readFileSync(new URL("../../catalogue/2026.10.0.json", import.meta.url), "utf8"),
+    "catalogue-index.json": readSite("catalogue-index.json"),
+    "catalogue/2026.10.0.json": readSite("catalogue/2026.10.0.json"),
     ...overrides,
   };
   const fetchText = async (url) => {
@@ -264,13 +263,13 @@ test("loadCatalogue: a version the index does not list is refused and NOTHING mo
 });
 
 test("loadCatalogue: a catalogue that is not the one the index digests is refused (a hand edit, a torn deploy)", async () => {
-  const text = readFileSync(new URL("../../catalogue/2026.10.0.json", import.meta.url), "utf8");
+  const text = readSite("catalogue/2026.10.0.json");
   const tampered = serve({ "catalogue/2026.10.0.json": text.replace("Repérer", "Reperer") });
   await assert.rejects(() => loadCatalogue(tampered.fetchText), refusal("catalogue-digest-mismatch"));
 });
 
 test("loadCatalogue: an IDENTICAL repeated key is refused by the strict parse — the digest alone would accept it", async () => {
-  const text = readFileSync(new URL("../../catalogue/2026.10.0.json", import.meta.url), "utf8");
+  const text = readSite("catalogue/2026.10.0.json");
   const doubled = text.replace("{", '{"catalogue": "2026.10.0",');
   assert.equal(await digest(JSON.parse(doubled)), await digest(JSON.parse(text)));   // the premise
   await assert.rejects(() => loadCatalogue(serve({ "catalogue/2026.10.0.json": doubled }).fetchText), refusal("catalogue-malformed"));
@@ -283,11 +282,5 @@ test("loadCatalogue: a missing index or a missing catalogue file are told apart"
 });
 
 test("loadCatalogue: without WebCrypto the load is refused — never unchecked", async () => {
-  const original = Object.getOwnPropertyDescriptor(globalThis, "crypto");
-  Object.defineProperty(globalThis, "crypto", { value: undefined, configurable: true });
-  try {
-    await assert.rejects(() => loadCatalogue(serve().fetchText), refusal("digest-unavailable"));
-  } finally {
-    Object.defineProperty(globalThis, "crypto", original);
-  }
+  await withoutWebCrypto(() => assert.rejects(() => loadCatalogue(serve().fetchText), refusal("digest-unavailable")));
 });

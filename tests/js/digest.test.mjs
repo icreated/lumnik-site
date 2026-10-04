@@ -1,9 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { canonical, digest, byCodePoint } from "../../proposal/digest.mjs";
+import { readSite, withoutWebCrypto } from "./helpers.mjs";
 
-const read = (p) => JSON.parse(readFileSync(new URL(`../../${p}`, import.meta.url), "utf8"));
+const read = (p) => JSON.parse(readSite(p));
 
 test("the canonical form sorts keys by code point, drops whitespace, keeps raw UTF-8", () => {
   assert.equal(canonical({ b: 1, a: [true, null, "é"] }), '{"a":[true,null,"é"],"b":1}');
@@ -39,11 +39,5 @@ test("every published catalogue equals the digest the Python publication tool wr
 });
 
 test("without WebCrypto the digest refuses — it never answers 'unchecked'", async () => {
-  const original = Object.getOwnPropertyDescriptor(globalThis, "crypto");
-  Object.defineProperty(globalThis, "crypto", { value: undefined, configurable: true });
-  try {
-    await assert.rejects(() => digest({}), /digest-unavailable/);
-  } finally {
-    Object.defineProperty(globalThis, "crypto", original);
-  }
+  await withoutWebCrypto(() => assert.rejects(() => digest({}), /digest-unavailable/));
 });

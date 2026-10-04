@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { scan } from "../../proposal/strict-json.mjs";
+import { BS } from "./helpers.mjs";
 
-const BS = String.fromCharCode(92);
 
 test("a plain object has no duplicate", () => {
   assert.equal(scan('{"a":1,"b":{"a":2}}').duplicateKey, false);

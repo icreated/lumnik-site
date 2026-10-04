@@ -11,10 +11,12 @@ const FORBIDDEN = [
   [/\bXMLHttpRequest\b/, "XMLHttpRequest"], [/\bsendBeacon\b/, "sendBeacon"], [/new\s+WebSocket/, "WebSocket"],
   [/\bimport\s*\(/, "dynamic import"],
   [/fetch\(\s*["'`]\s*(https?:)?\/\//, "fetch of a non-same-origin URL"],
-  // WebIDL turns a null/undefined argument of append/replaceChildren into the TEXT "null": a
-  // conditional child must be filtered out or replaced by "" (it showed under the goal question).
-  // (a conditional child spelled with .filter(...) in the same statement is the sanctioned form)
-  [/(?:replaceChildren|append|prepend)\((?![^;]*\.filter\()[^;]*\b(?:null|undefined)\b/, "null/undefined passed to a DOM insertion"],
+  // WebIDL turns a null/undefined argument of replaceChildren/append into the TEXT "null" (it showed
+  // under the goal question). replaceChildren goes through ONE helper that drops them — `fill(el, nodes)`,
+  // the only place the raw call may appear (its receiver is spelled `el`); append is fed by h(), which
+  // filters, so a literal null/undefined handed to append/prepend is the remaining way to get it wrong.
+  [/(?<!\bel)\.replaceChildren\(/, "raw replaceChildren outside fill()"],
+  [/(?:append|prepend)\([^;]*\b(?:null|undefined)\b/, "null/undefined passed to append/prepend"],
   // Firefox and Safari can abort a download whose blob URL is revoked before the navigation ran.
   [/^\s*URL\.revokeObjectURL\(/m, "revokeObjectURL called synchronously"],
 ];
@@ -31,7 +33,8 @@ test("the guard is not blind: every planted violation is caught", () => {
   for (const [, name] of FORBIDDEN) assert.equal(violations(PLANTED[name]).includes(name), true, name);
   assert.deepEqual(violations("const ok = document.createTextNode('x'); fetch(`catalogue/${v}.json`);"), []);
   // the sanctioned spellings are not flagged
-  assert.deepEqual(violations('block.replaceChildren(...[field, locked ? note : null].filter(Boolean)); status.replaceChildren("");'), []);
+  assert.deepEqual(violations("const fill = (el, nodes) => el.replaceChildren(...nodes.filter((n) => n != null));"), []);
+  assert.deepEqual(violations('fill(block, [field, locked ? note : null]); fill(status, [""]);'), []);
   assert.deepEqual(violations("setTimeout(() => URL.revokeObjectURL(url), 1000);"), []);
 });
 
@@ -58,6 +61,7 @@ const PLANTED = {
   "document.write": "document.write(x)", eval: "eval(x)", "new Function": "new Function(x)",
   XMLHttpRequest: "new XMLHttpRequest()", sendBeacon: "navigator.sendBeacon(u)", WebSocket: "new WebSocket(u)",
   "dynamic import": "import('x')", "fetch of a non-same-origin URL": "fetch('https://x.example/y')",
-  "null/undefined passed to a DOM insertion": "block.replaceChildren(field, locked ? note : null);",
+  "raw replaceChildren outside fill()": "block.replaceChildren(field, locked ? note : null);",
+  "null/undefined passed to append/prepend": "block.append(field, locked ? note : null);",
   "revokeObjectURL called synchronously": "link.click();\n  URL.revokeObjectURL(url);",
 };

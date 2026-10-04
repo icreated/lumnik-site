@@ -42,7 +42,6 @@ const YES_NO = [
 ];
 
 let state;                       // { catalogue, language, created, words, answers, carried }
-let latest;                      // the newest published catalogue version
 let status, wordsField, goalBlock, followups, review, reviewStatus, downloadButton;
 
 function h(tag, attrs = {}, ...children) {
@@ -55,6 +54,10 @@ function h(tag, attrs = {}, ...children) {
   for (const child of children.flat()) if (child != null) el.append(child); // a string becomes a Text node
   return el;
 }
+
+/** The one place replaceChildren is called: it turns a null argument into the TEXT "null", so
+ *  conditional children are dropped here, once, instead of at every call site. */
+const fill = (el, nodes) => el.replaceChildren(...nodes.filter((n) => n != null));
 
 // ---- loading the catalogue -----------------------------------------------------------------
 
@@ -104,12 +107,12 @@ function renderGoal() {
   const goal = state.catalogue.questions.find((q) => q.id === GOAL);
   const locked = lockedAnswers(state.catalogue, state.answers, state.carried).has(GOAL);
   const options = goal.options.map((o) => ({ value: o.id, label: o.label[state.language] }));
-  goalBlock.replaceChildren(...[choiceFieldset(goal, options, locked), locked ? lockNote() : null].filter(Boolean));
+  fill(goalBlock, [choiceFieldset(goal, options, locked), locked ? lockNote() : null]);
 }
 
 function renderFollowups() {
   const locked = lockedAnswers(state.catalogue, state.answers, state.carried);
-  followups.replaceChildren(...questionsToAsk(state.catalogue, state.answers)
+  fill(followups, questionsToAsk(state.catalogue, state.answers)
     .map((q) => choiceFieldset(q, YES_NO, locked.has(q.id))));
 }
 
@@ -142,7 +145,7 @@ function renderReview() {
   if (!goalChosen) nodes.push(h("p", { class: "dossier-aide" }, T.pickGoal));
   else if (header.leads.length === 0) nodes.push(h("p", { class: "dossier-vide" }, T.noProposal));
   for (const lead of header.leads) nodes.push(renderLead(lead, answersById));
-  review.replaceChildren(...nodes);
+  fill(review, nodes);
   reviewStatus.textContent = goalChosen
     ? T.summary(header.leads.length, header.leads.reduce((n, l) => n + l.conditions.length, 0))
     : "";
@@ -161,15 +164,15 @@ function renderAll() {
 /** The status sits above the review and the action buttons: bring it into view, or a refusal that
  *  happens below a long review is invisible (role="alert" reaches screen readers only). */
 function show(node) {
-  status.replaceChildren(node);
+  fill(status, [node]);
   // "instant": the site's CSS is scroll-behavior: smooth, an animation that does not run in a hidden tab
   // and that someone who asked for less motion does not want; a refusal should simply be there.
   if (node !== "") status.scrollIntoView({ block: "nearest", behavior: "instant" });
 }
 
 const showText = (className, role, text) => show(h("p", { class: className, role }, text));
-const showError = (error) => showText("dossier-erreur", "alert",
-  error instanceof Refusal ? refusalMessage(error.code, error.detail) : T.unreadable);
+const errorText = (error) => (error instanceof Refusal ? refusalMessage(error.code, error.detail) : T.unreadable);
+const showError = (error) => showText("dossier-erreur", "alert", errorText(error));
 const showNotice = (text) => show(text ? h("p", { class: "dossier-notice", role: "status" }, text) : "");
 
 /** Starting afresh or importing replaces the whole session, and nothing is stored: ask first. */
@@ -180,9 +183,8 @@ function discardOk() {
 
 function startFresh() {
   if (!discardOk()) return;
-  loadCatalogue().then(({ catalogue, latest: newest }) => {
+  loadCatalogue().then(({ catalogue }) => {
     state = freshState(catalogue);
-    latest = newest;
     showNotice(null);
     renderAll();
   }).catch(showError);
@@ -207,10 +209,9 @@ async function importFile(file) {
     }
     const result = read(await file.text());
     if (result.verdict === "invalid") throw new Refusal(result.reason, result.detail);
-    const { catalogue, latest: newest } = await loadCatalogue(result.header.catalogue);
+    const { catalogue, latest } = await loadCatalogue(result.header.catalogue);
     state = { catalogue, ...resume(result.header, catalogue) };
-    latest = newest;
-    showNotice(newest !== catalogue.catalogue ? T.newer(catalogue.catalogue, newest) : null);
+    showNotice(latest !== catalogue.catalogue ? T.newer(catalogue.catalogue, latest) : null);
     renderAll();
   } catch (error) {
     showError(error);
@@ -236,7 +237,7 @@ function build(root) {
     type: "file", accept: ".md,text/markdown,text/plain", class: "dossier-fichier",
     onchange: () => { const file = picker.files[0]; picker.value = ""; if (file) importFile(file); },
   });
-  root.replaceChildren(
+  fill(root, [
     status,
     h("p", { class: "dossier-avertissement" }, T.warning),
     h("div", { class: "dossier-bloc" },
@@ -247,18 +248,17 @@ function build(root) {
     h("div", { class: "dossier-actions" },
       downloadButton,
       h("label", { class: "btn btn-givre" }, T.importLabel, picker),
-      h("button", { type: "button", class: "btn btn-givre", onclick: startFresh }, T.fresh)));
+      h("button", { type: "button", class: "btn btn-givre", onclick: startFresh }, T.fresh)),
+  ]);
 }
 
 const root = document.getElementById("dossier-app");
 loadCatalogue()
-  .then(({ catalogue, latest: newest }) => {
+  .then(({ catalogue }) => {
     state = freshState(catalogue);
-    latest = newest;
     build(root);
     renderAll();
   })
   .catch((error) => {
-    root.replaceChildren(h("p", { class: "dossier-erreur", role: "alert" },
-      error instanceof Refusal ? refusalMessage(error.code, error.detail) : T.unreadable));
+    fill(root, [h("p", { class: "dossier-erreur", role: "alert" }, errorText(error))]);
   });

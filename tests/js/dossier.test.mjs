@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { read, derive, serialize, conditionSentence, SUPPORTED_VERSIONS } from "../../proposal/dossier.mjs";
+import { BS } from "./helpers.mjs";
 
-const BS = String.fromCharCode(92);
 const file = (over = {}) =>
   `---\n{"lumnik-dossier": ${over.v ?? 1}, "catalogue":"c","created":"${over.d ?? "2026-10-04"}","language":"fr",${over.extra ?? ""}"answers":[],"leads":[]}\n---\n`;
 const judge = (f) => {
