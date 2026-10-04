@@ -67,7 +67,8 @@ export function read(file) {
 }
 
 function parseHeader(file) {
-  const text = file.replaceAll("\r\n", "\n");
+  // One leading byte order mark is ignored (editors on Windows write it); a second one is not part of the contract.
+  const text = (file.startsWith("\uFEFF") ? file.slice(1) : file).replaceAll("\r\n", "\n");
   if (!text.startsWith("---\n")) refuse("malformed-header");
   // The closing line is "---", followed by the body or by nothing at all.
   let end = text.indexOf("\n---\n", 3);
