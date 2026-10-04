@@ -12,7 +12,7 @@ PAGES = (
     "offre.html",
     "essai.html",
 )
-ALL_PAGES = PAGES + ("mentions.html",)
+ALL_PAGES = PAGES + ("mentions.html", "dossier.html")
 NAV_LABELS = (
     "Gel",
     "Dégel",
@@ -136,6 +136,17 @@ class SiteStructureTest(unittest.TestCase):
         for name, target in current_targets.items():
             with self.subTest(name=name):
                 self.assertEqual([target], load_page(name).current_links)
+
+    def test_the_dossier_page_has_its_metadata_and_its_one_script(self):
+        page = load_page("dossier.html")
+        self.assertEqual(1, page.title_count)
+        self.assertEqual(1, page.h1_count)
+        self.assertEqual("https://lumnik.fr/dossier.html", page.canonical)
+        self.assertEqual(page.canonical, page.open_graph.get("og:url"))
+        self.assertIn("dossier-app", page.ids)
+        text = (ROOT / "dossier.html").read_text(encoding="utf-8")
+        self.assertIn('<script type="module" src="proposal/page.mjs"></script>', text)
+        self.assertNotIn("<script>", text)
 
     def test_every_thematic_page_has_unique_metadata(self):
         pages = {name: load_page(name) for name in PAGES}

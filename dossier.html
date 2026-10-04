@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadrez votre besoin — lumnik</title>
+  <meta name="description" content="Répondez à quelques questions et repartez avec un dossier de proposition à télécharger. Tout se passe dans votre navigateur : aucun serveur, aucune donnée transmise.">
+  <link rel="canonical" href="https://lumnik.fr/dossier.html">
+  <meta property="og:title" content="Cadrez votre besoin — lumnik">
+  <meta property="og:description" content="Un questionnaire guidé, sans serveur : vous repartez avec un dossier de proposition à télécharger.">
+  <meta property="og:url" content="https://lumnik.fr/dossier.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='34' fill='%23ffd24a'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<a class="saut" href="#contenu">Aller au contenu</a>
+
+<div id="thermometre" aria-hidden="true"></div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="index.html">lumnik<span class="dot" aria-hidden="true"></span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">
+      <span class="menu-toggle-label">Menu</span>
+    </button>
+    <ul id="menu-principal">
+      <li><a href="gel.html">Gel</a></li>
+      <li><a href="degel.html">Dégel</a></li>
+      <li><a href="mouvement.html">Mouvement</a></li>
+      <li><a href="architecture.html">Architecture</a></li>
+      <li><a href="offre.html#offre">Offre</a></li>
+      <li><a href="essai.html">Essai</a></li>
+      <li><a class="btn btn-lumiere nav-contact" href="offre.html#contact">Nous parler</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="contenu">
+
+<header class="dossier-hero">
+  <div class="wrap">
+    <h1>Cadrez votre besoin, <span class="degel">sans rien installer</span>.</h1>
+    <p class="sous" style="max-width:60ch">
+      Quelques questions, et vous repartez avec un dossier de proposition à télécharger :
+      ce que lumnik pourrait faire de votre problème — et ce qu'il faudrait vérifier avant
+      de le promettre. Aucun serveur n'intervient : rien ne quitte votre navigateur.
+    </p>
+    <div id="dossier-app" class="dossier-app">
+      <noscript><p class="dossier-erreur">Cette page a besoin de JavaScript : tout s'y passe dans votre navigateur, rien n'est envoyé.</p></noscript>
+      <p class="dossier-aide">Chargement du catalogue…</p>
+    </div>
+  </div>
+</header>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>lumnik — édité par icreated · Châtillon d'Azergues, France</div>
+    <div><a href="mentions.html">Mentions légales</a> · <a href="https://docs.lumnik.io" rel="noopener">Documentation</a> · <a href="index.html">Retour au site</a></div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+<script type="module" src="proposal/page.mjs"></script>
+</body>
+</html>
