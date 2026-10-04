@@ -1498,3 +1498,37 @@ footer a:hover { color: var(--lumiere); }
   h1, .hero .surtitre, .hero .sous, .hero .ctas, .hero .preuve { opacity: 1; transform: none; }
   html { scroll-behavior: auto; }
 }
+
+
+/* ── Dossier de proposition (questionnaire) ──────────────────────────────────── */
+.dossier-hero { padding-block: clamp(2.5rem, 6vw, 5rem); }
+.dossier-app { margin-top: 2rem; display: grid; gap: 1.5rem; max-width: 52rem; }
+.dossier-avertissement { border: 1px solid var(--lumiere); border-radius: var(--radius); padding: .9rem 1.1rem; background: var(--lueur); color: var(--neige); }
+.dossier-aide { color: var(--brume); font-size: .92rem; margin: .25rem 0 .6rem; }
+.dossier-bloc label[for] { font-weight: 600; color: var(--neige); }
+.dossier-bloc textarea { width: 100%; box-sizing: border-box; min-height: 6rem; padding: .8rem; border-radius: var(--radius); border: 1px solid var(--givre); background: var(--nuit-2); color: var(--neige); font: inherit; }
+.dossier-question { border: 1px solid var(--givre); border-radius: var(--radius); padding: .9rem 1.1rem; margin: 0 0 1rem; }
+.dossier-question legend { padding-inline: .4rem; font-weight: 600; color: var(--neige); }
+.dossier-question[disabled] { opacity: .75; }
+/* The site's global form rules (label: mono/uppercase/block, input: width 100% + padding) would stretch
+   every radio across its row and set the answers in small caps: undo them for the choices only. */
+.dossier-choix { display: flex; gap: .6rem; align-items: center; margin: 0; padding: .3rem 0; font-family: var(--sans); font-size: 1rem; letter-spacing: normal; text-transform: none; color: var(--neige); cursor: pointer; }
+.dossier-choix input[type="radio"] { width: auto; flex: none; margin: 0; padding: 0; accent-color: var(--lumiere); }
+.dossier-actions label.btn { margin: 0; letter-spacing: normal; text-transform: none; font-family: inherit; cursor: pointer; }
+.dossier-actions label.btn:focus-within { outline: 2px solid var(--lumiere); outline-offset: 3px; }
+.dossier-verrou { color: var(--lumiere); margin: -.4rem 0 1rem; }
+.dossier-revue { border-top: 1px solid var(--givre); padding-top: 1.2rem; }
+.dossier-piste { border: 1px solid var(--givre); border-radius: var(--radius); padding: 1.1rem 1.3rem; margin-top: 1rem; background: var(--glace); }
+.dossier-piste h3 { margin-top: 0; }
+.dossier-piste h4 { margin: 1rem 0 .3rem; font-family: var(--mono); font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--brume); }
+.dossier-conditions { list-style: none; padding: 0; display: grid; gap: .8rem; }
+.dossier-etiquette { font-family: var(--mono); font-size: .75rem; color: var(--lumiere); margin-right: .4rem; }
+.dossier-recalcule, .dossier-transporte, .dossier-note { margin-top: .25rem; color: var(--neige); }
+.dossier-transporte { border-left: 3px solid var(--brume); padding-left: .8rem; color: var(--brume); }
+.dossier-note { color: var(--brume); font-size: .92rem; }
+.dossier-actions { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; }
+.dossier-actions .btn[disabled] { opacity: .5; cursor: not-allowed; }
+.dossier-fichier { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.dossier-erreur { border: 1px solid #ff8a7a; border-radius: var(--radius); padding: .9rem 1.1rem; color: #ffb3a8; }
+.dossier-notice { border: 1px solid var(--givre); border-radius: var(--radius); padding: .9rem 1.1rem; color: var(--neige); }
+@media (prefers-reduced-motion: reduce) { .dossier-app * { transition: none !important; animation: none !important; } }
