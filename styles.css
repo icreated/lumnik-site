@@ -1510,7 +1510,11 @@ footer a:hover { color: var(--lumiere); }
 .dossier-question { border: 1px solid var(--givre); border-radius: var(--radius); padding: .9rem 1.1rem; margin: 0 0 1rem; }
 .dossier-question legend { padding-inline: .4rem; font-weight: 600; color: var(--neige); }
 .dossier-question[disabled] { opacity: .75; }
-.dossier-choix { display: flex; gap: .6rem; align-items: center; padding: .3rem 0; color: var(--neige); cursor: pointer; }
+/* The site's global form rules (label: mono/uppercase/block, input: width 100% + padding) would stretch
+   every radio across its row and set the answers in small caps: undo them for the choices only. */
+.dossier-choix { display: flex; gap: .6rem; align-items: center; margin: 0; padding: .3rem 0; font-family: var(--sans); font-size: 1rem; letter-spacing: normal; text-transform: none; color: var(--neige); cursor: pointer; }
+.dossier-choix input[type="radio"] { width: auto; flex: none; margin: 0; padding: 0; accent-color: var(--lumiere); }
+.dossier-actions label.btn { margin: 0; letter-spacing: normal; text-transform: none; font-family: inherit; cursor: pointer; }
 .dossier-verrou { color: var(--lumiere); margin: -.4rem 0 1rem; }
 .dossier-revue { border-top: 1px solid var(--givre); padding-top: 1.2rem; }
 .dossier-piste { border: 1px solid var(--givre); border-radius: var(--radius); padding: 1.1rem 1.3rem; margin-top: 1rem; background: var(--glace); }
