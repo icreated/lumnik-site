@@ -216,3 +216,113 @@ function checkShape(node, s) {
 function checkTexts(list) {
   for (const item of list) if (typeof item !== "string") refuse("wrong-type");
 }
+
+
+// ---------------------------------------------------------------------------------------------
+// The writer. The contract fixes no canonical serialization for a dossier, so this is the writer's
+// own: fixed key order, two-space indent, one answer and one condition per line. The serialization
+// of an evidence array depends on that array alone.
+
+const inline = (v) => {
+  if (Array.isArray(v)) return v.length === 0 ? "[]" : `[ ${v.map(inline).join(", ")} ]`;
+  if (v !== null && typeof v === "object") {
+    return `{ ${Object.entries(v).map(([k, x]) => `${JSON.stringify(k)}: ${inline(x)}`).join(", ")} }`;
+  }
+  return JSON.stringify(v);
+};
+
+/** Joins blocks of lines into the members of one JSON container: a comma after every block's last
+ *  line but the final block's. */
+const members = (blocks) =>
+  blocks.flatMap((lines, i) => lines.map((line, j) => (i < blocks.length - 1 && j === lines.length - 1 ? `${line},` : line)));
+
+const indent = (n, lines) => lines.map((l) => " ".repeat(n) + l);
+
+const leadLines = (lead) =>
+  members([
+    ...["id", "rule", "source", "title", "says"].map((k) => [`${JSON.stringify(k)}: ${JSON.stringify(lead[k])}`]),
+    ['"does-not-say": [', ...indent(2, members(lead["does-not-say"].map((t) => [JSON.stringify(t)]))), "]"],
+    [`"proposes": ${inline(lead.proposes)}`],
+    ['"conditions": [', ...indent(2, members(lead.conditions.map((c) => [inline(c)]))), "]"],
+  ]);
+
+/** The header between its two `---` lines, then the generated body. */
+export function serialize(header) {
+  const scalars = ["lumnik-dossier", "catalogue", "created", "language", "words"]
+    .filter((k) => Object.hasOwn(header, k))
+    .map((k) => [`${JSON.stringify(k)}: ${JSON.stringify(header[k])}`]);
+  const json = [
+    "{",
+    ...indent(2, members([
+      ...scalars,
+      ['"answers": [', ...indent(2, members(header.answers.map((a) => [inline(a)]))), "]"],
+      ['"leads": [', ...indent(2, members(header.leads.map((l) => ["{", ...indent(2, leadLines(l)), "}"]))), "]"],
+    ])),
+    "}",
+  ];
+  return ["---", ...json, "---", body(header), ""].join("\n");
+}
+
+const MONTHS = {
+  fr: ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"],
+};
+
+// Fixed presentation strings belong to the renderer, not to the header (spec section 1).
+const BODY = {
+  fr: {
+    heading: "Dossier lumnik",
+    answers: "Vos réponses",
+    leads: "Pistes",
+    notSays: "Ce que cette piste ne dit pas",
+    toCheck: "À vérifier",
+    value: { yes: "Oui", no: "Non", unknown: "Je ne sais pas", none: "Pas de réponse" },
+    said: {
+      yes: "Vous avez répondu oui — à vérifier.",
+      no: "Vous avez répondu non — à vérifier.",
+      unknown: "Vous ne savez pas — à établir.",
+      none: "Pas de réponse — à établir.",
+      uncovered: "Non couvert par le questionnaire — à établir.",
+    },
+    against: (label) => `Cette piste suppose : ${label}. Vous indiquez ne pas l'avoir : elle reste à examiner avec l'intégrateur.`,
+    carried: "Preuve transportée, non vérifiée par ce site",
+  },
+};
+
+/** What the dossier says about one condition, from its backing answer: the §2 table rendered, and
+ *  the contract's sentence frame when the prospect answered `no`. Shared by the body and the page. */
+export function conditionSentence(language, c, answersById) {
+  const t = BODY[language];
+  const backing = c["backed-by"] ? answersById.get(c["backed-by"]) : undefined;
+  const key = !c["backed-by"] ? "uncovered" : Object.hasOwn(backing, "value") ? backing.value : "none";
+  return key === "no" ? t.against(c.label) : t.said[key];
+}
+
+function body(header) {
+  const t = BODY[header.language];
+  if (!t) throw new Error(`no presentation strings for language ${header.language}`);
+  const [y, m, d] = header.created.split("-").map(Number);
+  const out = [
+    "<!-- Generated from the header above. Only the header is read back; edits below are ignored. -->",
+    "",
+    `# ${t.heading} — ${d} ${MONTHS[header.language][m - 1]} ${y}`,
+  ];
+  if (header.words) out.push("", ...header.words.split("\n").map((line) => `> ${line}`));
+  const byId = new Map(header.answers.map((a) => [a.id, a]));
+  out.push("", `## ${t.answers}`, "");
+  for (const a of header.answers) {
+    const shown = Object.hasOwn(a, "value") ? (a.label ?? t.value[a.value]) : t.value.none;
+    out.push(`- ${a.asked} — **${shown}**`);
+  }
+  out.push("", `## ${t.leads}`);
+  for (const lead of header.leads) {
+    out.push("", `### ${lead.id} — ${lead.title}`, "", lead.says, "", `**${t.notSays}**`, "");
+    for (const line of lead["does-not-say"]) out.push(`- ${line}`);
+    out.push("", `**${t.toCheck}**`, "");
+    for (const c of lead.conditions) {
+      out.push(`- ${c.label} — ${conditionSentence(header.language, c, byId)}`);
+      if (c.note) out.push(`  ${c.note}`);
+      for (const e of c.evidence ?? []) out.push(`  - ${t.carried} : ${e.target} — ${e.observed}`);
+    }
+  }
+  return out.join("\n");
+}

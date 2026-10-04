@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { read, derive, SUPPORTED_VERSIONS } from "../../proposal/dossier.mjs";
+import { read, derive, serialize, conditionSentence, SUPPORTED_VERSIONS } from "../../proposal/dossier.mjs";
 
 const BS = String.fromCharCode(92);
 const file = (over = {}) =>
@@ -61,4 +61,73 @@ test("derive is the contract's §2 table", () => {
   assert.equal(derive({ value: "unknown" }), "missing");
   assert.equal(derive({}), "missing");          // unanswered: no value key
   assert.equal(derive(undefined), "missing");   // no backed-by
+});
+
+const header = (over = {}) => ({
+  "lumnik-dossier": 1, catalogue: "c", created: "2026-10-04", language: "fr",
+  answers: [
+    { id: "goal", kind: "choice", asked: "But ?", value: "g1", label: "Un but", source: "prospect" },
+    { id: "q1", kind: "yes-no-unknown", asked: "Q1 ?", value: "no", source: "prospect" },
+    { id: "q2", kind: "yes-no-unknown", asked: "Q2 ?", source: "prospect" },
+  ],
+  leads: [{
+    id: "L1", rule: "r@1", source: "catalogue", title: "T", says: "S", "does-not-say": ["a", "b"],
+    proposes: { kind: "Workflow", uses: ["spec.on.table"] },
+    conditions: [
+      { id: "C1", needs: "n1", verifier: "workflow-data-truth", label: "Cond 1", "backed-by": "q1", check: "unverified" },
+      { id: "C2", needs: "n2", verifier: "none", label: "Cond 2", "backed-by": "q2", check: "missing", note: "Une note" },
+      { id: "C3", needs: "n3", verifier: "workflow-apply-door", label: "Cond 3", check: "missing" },
+    ],
+  }],
+  ...over,
+});
+
+test("serialize writes a file the reader accepts, header deep-equal to what was written", () => {
+  const h = header({ words: "mes mots" });
+  const r = read(serialize(h));
+  assert.equal(r.verdict, "valid");
+  assert.deepEqual(r.header, h);
+});
+
+test("free text that looks like format survives byte-faithfully and never becomes the header", () => {
+  const words = 'ligne 1\n---\n<script>alert(1)</script>\n"guillemets" \\ antislash\n# titre\n- puce';
+  const r = read(serialize(header({ words })));
+  assert.equal(r.verdict, "valid");
+  assert.equal(r.header.words, words);
+});
+
+test("the body states that only the header is read back, on its first line", () => {
+  const lines = serialize(header()).split("\n");
+  assert.equal(lines[lines.indexOf("---", 1) + 1],
+    "<!-- Generated from the header above. Only the header is read back; edits below are ignored. -->");
+});
+
+test("evidence is re-emitted unchanged: deep-equal after parsing, serialization depends on the array alone", () => {
+  const evidence = [{ source: "discovery", via: "workflow-data-truth", target: "t.c", observed: "obs \"q\" é" }];
+  const h = header();
+  h.leads[0].conditions[0].evidence = evidence;
+  const once = serialize(h);
+  const back = read(once);
+  assert.deepEqual(back.header.leads[0].conditions[0].evidence, evidence);
+  const other = header({ words: "autre" });
+  other.leads[0].conditions[0].evidence = structuredClone(evidence);
+  const line = (t) => t.split("\n").find((l) => l.includes('"evidence"')).match(/"evidence": .*\]/)[0];
+  assert.equal(line(serialize(other)), line(once));
+});
+
+test("serialization is idempotent: read then serialize again gives the same bytes", () => {
+  const once = serialize(header({ words: "x" }));
+  assert.equal(serialize(read(once).header), once);
+});
+
+test("conditionSentence: said / not covered / not answered / the 'no' frame", () => {
+  const answers = new Map(header().answers.map((a) => [a.id, a]));
+  const [c1, c2, c3] = header().leads[0].conditions;
+  assert.match(conditionSentence("fr", c1, answers), /Cette piste suppose : Cond 1\. Vous indiquez ne pas l'avoir/);
+  assert.equal(conditionSentence("fr", c2, answers), "Pas de réponse — à établir.");
+  assert.equal(conditionSentence("fr", c3, answers), "Non couvert par le questionnaire — à établir.");
+});
+
+test("a language with no presentation strings is refused, not guessed", () => {
+  assert.throws(() => serialize(header({ language: "xx" })), /no presentation strings/);
 });
