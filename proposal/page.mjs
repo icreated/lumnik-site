@@ -2,9 +2,8 @@
 // the page through textContent (Node.append of a string), never as markup. Nothing is persisted in
 // the browser; the only requests are the same-origin catalogue index and catalogue.
 
-import { digest } from "./digest.mjs";
 import { conditionSentence, read, serialize } from "./dossier.mjs";
-import { GOAL, Refusal, buildHeader, localDay, locate, lockedAnswers, parseServed, questionsToAsk, resume } from "./flow.mjs";
+import { GOAL, Refusal, buildHeader, loadCatalogue as loadFrom, localDay, lockedAnswers, questionsToAsk, resume } from "./flow.mjs";
 import { refusalMessage } from "./messages.mjs";
 
 const LANGUAGE = "fr";
@@ -29,6 +28,10 @@ const T = {
     fresh: "Nouveau dossier",
     newer: (current, latest) => `Une version plus récente du catalogue existe (${latest}). Ce dossier reste sur la version ${current} ; pour profiter de la nouvelle, démarrez un nouveau dossier.`,
     tooBig: "Ce fichier est trop volumineux pour un dossier (limite : 1 Mo).",
+    discard: "Ce que vous avez saisi ici sera remplacé. Téléchargez d'abord votre dossier si vous voulez le garder. Continuer ?",
+    summary: (leads, conditions) => (leads === 0
+      ? "Aucune piste pour ce but."
+      : `${leads} piste${leads > 1 ? "s" : ""}, ${conditions} condition${conditions > 1 ? "s" : ""} à vérifier ou à établir.`),
     unreadable: "Ce fichier n'a pas pu être lu.",
   },
 }[LANGUAGE];
@@ -40,7 +43,7 @@ const YES_NO = [
 
 let state;                       // { catalogue, language, created, words, answers, carried }
 let latest;                      // the newest published catalogue version
-let status, wordsField, goalBlock, followups, review, downloadButton;
+let status, wordsField, goalBlock, followups, review, reviewStatus, downloadButton;
 
 function h(tag, attrs = {}, ...children) {
   const el = document.createElement(tag);
@@ -55,38 +58,14 @@ function h(tag, attrs = {}, ...children) {
 
 // ---- loading the catalogue -----------------------------------------------------------------
 
-async function fetchServed(url, code) {
-  let response;
-  try {
-    response = await fetch(url, { cache: "no-cache" });
-  } catch {
-    throw new Refusal(code);
-  }
-  if (!response.ok) throw new Refusal(code);
-  let text;
-  try {
-    text = await response.text();
-  } catch {
-    throw new Refusal(code);
-  }
-  return parseServed(text); // strict: a repeated key is refused BEFORE any digest is computed
+async function fetchText(url) {
+  const response = await fetch(url, { cache: "no-cache" });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return response.text();
 }
 
-/** Exactly the version asked (the latest when none is), checked against the digest the index
- *  records. A missing version, a missing file or a different digest refuses; nothing falls back. */
-async function loadCatalogue(version) {
-  const index = await fetchServed("catalogue-index.json", "catalogue-index-unavailable");
-  const wanted = locate(index, version);
-  const catalogue = await fetchServed(`catalogue/${encodeURIComponent(wanted.version)}.json`, "catalogue-unavailable");
-  let actual;
-  try {
-    actual = await digest(catalogue);
-  } catch {
-    throw new Refusal("digest-unavailable");
-  }
-  if (actual !== wanted.digest) throw new Refusal("catalogue-digest-mismatch", wanted.version);
-  return { catalogue, latest: index.latest };
-}
+/** The integrity path (version, strict parse, digest) lives in flow.mjs and is unit-tested. */
+const loadCatalogue = (version) => loadFrom(fetchText, version);
 
 // ---- state ---------------------------------------------------------------------------------
 
@@ -125,7 +104,7 @@ function renderGoal() {
   const goal = state.catalogue.questions.find((q) => q.id === GOAL);
   const locked = lockedAnswers(state.catalogue, state.answers, state.carried).has(GOAL);
   const options = goal.options.map((o) => ({ value: o.id, label: o.label[state.language] }));
-  goalBlock.replaceChildren(choiceFieldset(goal, options, locked), locked ? lockNote() : null);
+  goalBlock.replaceChildren(...[choiceFieldset(goal, options, locked), locked ? lockNote() : null].filter(Boolean));
 }
 
 function renderFollowups() {
@@ -164,6 +143,9 @@ function renderReview() {
   else if (header.leads.length === 0) nodes.push(h("p", { class: "dossier-vide" }, T.noProposal));
   for (const lead of header.leads) nodes.push(renderLead(lead, answersById));
   review.replaceChildren(...nodes);
+  reviewStatus.textContent = goalChosen
+    ? T.summary(header.leads.length, header.leads.reduce((n, l) => n + l.conditions.length, 0))
+    : "";
   downloadButton.disabled = !goalChosen;
 }
 
@@ -176,16 +158,28 @@ function renderAll() {
 
 // ---- actions -------------------------------------------------------------------------------
 
-function showError(error) {
-  const text = error instanceof Refusal ? refusalMessage(error.code, error.detail) : T.unreadable;
-  status.replaceChildren(h("p", { class: "dossier-erreur", role: "alert" }, text));
+/** The status sits above the review and the action buttons: bring it into view, or a refusal that
+ *  happens below a long review is invisible (role="alert" reaches screen readers only). */
+function show(node) {
+  status.replaceChildren(node);
+  // "instant": the site's CSS is scroll-behavior: smooth, an animation that does not run in a hidden tab
+  // and that someone who asked for less motion does not want; a refusal should simply be there.
+  if (node !== "") status.scrollIntoView({ block: "nearest", behavior: "instant" });
 }
 
-function showNotice(text) {
-  status.replaceChildren(text ? h("p", { class: "dossier-notice", role: "status" }, text) : "");
+const showText = (className, role, text) => show(h("p", { class: className, role }, text));
+const showError = (error) => showText("dossier-erreur", "alert",
+  error instanceof Refusal ? refusalMessage(error.code, error.detail) : T.unreadable);
+const showNotice = (text) => show(text ? h("p", { class: "dossier-notice", role: "status" }, text) : "");
+
+/** Starting afresh or importing replaces the whole session, and nothing is stored: ask first. */
+function discardOk() {
+  const hasWork = state.words !== "" || Object.hasOwn(state.answers, GOAL);
+  return !hasWork || window.confirm(T.discard);
 }
 
 function startFresh() {
+  if (!discardOk()) return;
   loadCatalogue().then(({ catalogue, latest: newest }) => {
     state = freshState(catalogue);
     latest = newest;
@@ -201,13 +195,14 @@ function download() {
   document.body.append(link);
   link.click();
   link.remove();
-  URL.revokeObjectURL(url);
+  setTimeout(() => URL.revokeObjectURL(url), 1000); // not before the browser has taken the blob
 }
 
 async function importFile(file) {
   try {
+    if (!discardOk()) return;
     if (file.size > MAX_BYTES) {
-      status.replaceChildren(h("p", { class: "dossier-erreur", role: "alert" }, T.tooBig));
+      showText("dossier-erreur", "alert", T.tooBig);
       return;
     }
     const result = read(await file.text());
@@ -232,7 +227,10 @@ function build(root) {
   });
   goalBlock = h("div", { class: "dossier-bloc" });
   followups = h("div", { class: "dossier-bloc" });
-  review = h("section", { class: "dossier-revue", "aria-live": "polite" });
+  // A polite live region over the whole review would re-read every lead on every radio change; one short
+  // sentence, in a node that persists, is what a screen-reader user needs to hear.
+  reviewStatus = h("p", { class: "dossier-aide", role: "status" });
+  review = h("section", { class: "dossier-revue" });
   downloadButton = h("button", { type: "button", class: "btn btn-lumiere", onclick: download }, T.download);
   const picker = h("input", {
     type: "file", accept: ".md,text/markdown,text/plain", class: "dossier-fichier",
@@ -245,7 +243,7 @@ function build(root) {
       h("label", { for: "dossier-mots" }, T.words),
       h("p", { class: "dossier-aide" }, T.wordsHelp),
       wordsField),
-    goalBlock, followups, review,
+    goalBlock, followups, reviewStatus, review,
     h("div", { class: "dossier-actions" },
       downloadButton,
       h("label", { class: "btn btn-givre" }, T.importLabel, picker),

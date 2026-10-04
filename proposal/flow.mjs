@@ -1,5 +1,6 @@
 // What the questionnaire asks, what it proposes, and how a carried dossier resumes. Pure.
 
+import { digest } from "./digest.mjs";
 import { derive } from "./dossier.mjs";
 import { scan } from "./strict-json.mjs";
 
@@ -189,6 +190,34 @@ export function parseServed(text) {
     throw new Refusal("catalogue-malformed");
   }
   return value;
+}
+
+async function served(fetchText, url, code) {
+  let text;
+  try {
+    text = await fetchText(url);
+  } catch {
+    throw new Refusal(code);
+  }
+  return parseServed(text); // strict: a repeated key is refused BEFORE any digest is computed
+}
+
+/** Exactly the version asked (the latest when none is), checked against the digest the index records.
+ *  A missing version, a missing file, a malformed file or a different digest refuses; nothing falls
+ *  back. `fetchText(url)` returns the text of a same-origin file or throws — injected, so the whole
+ *  integrity path is testable without a browser. */
+export async function loadCatalogue(fetchText, version) {
+  const index = await served(fetchText, "catalogue-index.json", "catalogue-index-unavailable");
+  const wanted = locate(index, version);
+  const catalogue = await served(fetchText, `catalogue/${encodeURIComponent(wanted.version)}.json`, "catalogue-unavailable");
+  let actual;
+  try {
+    actual = await digest(catalogue);
+  } catch {
+    throw new Refusal("digest-unavailable");
+  }
+  if (actual !== wanted.digest) throw new Refusal("catalogue-digest-mismatch", wanted.version);
+  return { catalogue, latest: index.latest };
 }
 
 /** The prospect's local calendar day as YYYY-MM-DD — not the UTC one, which is yesterday for a

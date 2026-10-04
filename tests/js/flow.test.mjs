@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { read, serialize } from "../../proposal/dossier.mjs";
 import {
   GOAL, RESUME_CODES, Refusal, matchedRules, questionsToAsk, rankRules, lockedAnswers,
-  buildHeader, resume, locate, localDay, parseServed,
+  buildHeader, resume, locate, localDay, parseServed, loadCatalogue,
 } from "../../proposal/flow.mjs";
 import { digest } from "../../proposal/digest.mjs";
 
@@ -226,5 +226,68 @@ test("created is the LOCAL day: just after local midnight it is not yesterday's 
     assert.equal(localDay(new Date(2026, 0, 5, 9, 0)), "2026-01-05");
   } finally {
     if (before === undefined) delete process.env.TZ; else process.env.TZ = before;
+  }
+});
+
+// ---- loading the catalogue (the integrity path, with an injected fetch) -------------------
+
+const serve = (overrides = {}) => {
+  const calls = [];
+  const files = {
+    "catalogue-index.json": readFileSync(new URL("../../catalogue-index.json", import.meta.url), "utf8"),
+    "catalogue/2026.10.0.json": readFileSync(new URL("../../catalogue/2026.10.0.json", import.meta.url), "utf8"),
+    ...overrides,
+  };
+  const fetchText = async (url) => {
+    calls.push(url);
+    if (!Object.hasOwn(files, url) || files[url] === null) throw new Error(`404 ${url}`);
+    return files[url];
+  };
+  return { fetchText, calls };
+};
+const refusal = (code) => (e) => e instanceof Refusal && e.code === code;
+
+test("loadCatalogue: the published catalogue loads, checked against its digest, latest or named", async () => {
+  const a = await loadCatalogue(serve().fetchText);
+  assert.equal(a.catalogue.catalogue, "2026.10.0");
+  assert.equal(a.latest, "2026.10.0");
+  assert.equal((await loadCatalogue(serve().fetchText, "2026.10.0")).catalogue.catalogue, "2026.10.0");
+});
+
+test("loadCatalogue: a version the index does not list is refused and NOTHING more is fetched — no fallback to latest", async () => {
+  const s = serve();
+  await assert.rejects(() => loadCatalogue(s.fetchText, "2099.1.0"), refusal("catalogue-version-unknown"));
+  assert.deepEqual(s.calls, ["catalogue-index.json"]);
+  const hostile = serve();
+  await assert.rejects(() => loadCatalogue(hostile.fetchText, "../../x"), refusal("catalogue-version-unknown"));
+  assert.deepEqual(hostile.calls, ["catalogue-index.json"]);
+});
+
+test("loadCatalogue: a catalogue that is not the one the index digests is refused (a hand edit, a torn deploy)", async () => {
+  const text = readFileSync(new URL("../../catalogue/2026.10.0.json", import.meta.url), "utf8");
+  const tampered = serve({ "catalogue/2026.10.0.json": text.replace("Repérer", "Reperer") });
+  await assert.rejects(() => loadCatalogue(tampered.fetchText), refusal("catalogue-digest-mismatch"));
+});
+
+test("loadCatalogue: an IDENTICAL repeated key is refused by the strict parse — the digest alone would accept it", async () => {
+  const text = readFileSync(new URL("../../catalogue/2026.10.0.json", import.meta.url), "utf8");
+  const doubled = text.replace("{", '{"catalogue": "2026.10.0",');
+  assert.equal(await digest(JSON.parse(doubled)), await digest(JSON.parse(text)));   // the premise
+  await assert.rejects(() => loadCatalogue(serve({ "catalogue/2026.10.0.json": doubled }).fetchText), refusal("catalogue-malformed"));
+});
+
+test("loadCatalogue: a missing index or a missing catalogue file are told apart", async () => {
+  await assert.rejects(() => loadCatalogue(serve({ "catalogue-index.json": null }).fetchText), refusal("catalogue-index-unavailable"));
+  await assert.rejects(() => loadCatalogue(serve({ "catalogue/2026.10.0.json": null }).fetchText), refusal("catalogue-unavailable"));
+  await assert.rejects(() => loadCatalogue(serve({ "catalogue-index.json": "{ not json" }).fetchText), refusal("catalogue-malformed"));
+});
+
+test("loadCatalogue: without WebCrypto the load is refused — never unchecked", async () => {
+  const original = Object.getOwnPropertyDescriptor(globalThis, "crypto");
+  Object.defineProperty(globalThis, "crypto", { value: undefined, configurable: true });
+  try {
+    await assert.rejects(() => loadCatalogue(serve().fetchText), refusal("digest-unavailable"));
+  } finally {
+    Object.defineProperty(globalThis, "crypto", original);
   }
 });

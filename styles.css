@@ -1515,6 +1515,7 @@ footer a:hover { color: var(--lumiere); }
 .dossier-choix { display: flex; gap: .6rem; align-items: center; margin: 0; padding: .3rem 0; font-family: var(--sans); font-size: 1rem; letter-spacing: normal; text-transform: none; color: var(--neige); cursor: pointer; }
 .dossier-choix input[type="radio"] { width: auto; flex: none; margin: 0; padding: 0; accent-color: var(--lumiere); }
 .dossier-actions label.btn { margin: 0; letter-spacing: normal; text-transform: none; font-family: inherit; cursor: pointer; }
+.dossier-actions label.btn:focus-within { outline: 2px solid var(--lumiere); outline-offset: 3px; }
 .dossier-verrou { color: var(--lumiere); margin: -.4rem 0 1rem; }
 .dossier-revue { border-top: 1px solid var(--givre); padding-top: 1.2rem; }
 .dossier-piste { border: 1px solid var(--givre); border-radius: var(--radius); padding: 1.1rem 1.3rem; margin-top: 1rem; background: var(--glace); }
