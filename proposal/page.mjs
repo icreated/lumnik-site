@@ -2,7 +2,7 @@
 // the page through textContent (Node.append of a string), never as markup. Nothing is persisted in
 // the browser; the only requests are the same-origin catalogue index and catalogue.
 
-import { conditionSentence, read, serialize } from "./dossier.mjs";
+import { conditionSentence, readBytes, serialize } from "./dossier.mjs";
 import { GOAL, Refusal, buildHeader, loadCatalogue as loadFrom, localDay, lockedAnswers, questionsToAsk, resume } from "./flow.mjs";
 import { refusalMessage } from "./messages.mjs";
 
@@ -207,7 +207,7 @@ async function importFile(file) {
       showText("dossier-erreur", "alert", T.tooBig);
       return;
     }
-    const result = read(await file.text());
+    const result = readBytes(new Uint8Array(await file.arrayBuffer()));
     if (result.verdict === "invalid") throw new Refusal(result.reason, result.detail);
     const { catalogue, latest } = await loadCatalogue(result.header.catalogue);
     state = { catalogue, ...resume(result.header, catalogue) };

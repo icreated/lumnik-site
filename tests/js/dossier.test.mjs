@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { read, derive, serialize, conditionSentence, SUPPORTED_VERSIONS } from "../../proposal/dossier.mjs";
+import { read, readBytes, derive, serialize, conditionSentence, SUPPORTED_VERSIONS } from "../../proposal/dossier.mjs";
 import { BS } from "./helpers.mjs";
 
 const file = (over = {}) =>
@@ -130,4 +130,33 @@ test("conditionSentence: said / not covered / not answered / the 'no' frame", ()
 
 test("a language with no presentation strings is refused, not guessed", () => {
   assert.throws(() => serialize(header({ language: "xx" })), /no presentation strings/);
+});
+
+// What the file picker hands over is bytes. Decoded leniently, an invalid one becomes U+FFFD and the
+// free text comes back without its accent, with nothing said (#809).
+const bytes = (text) => new TextEncoder().encode(text);
+const judgeBytes = (b) => {
+  const r = readBytes(b);
+  return r.verdict === "invalid" ? `invalid:${r.reason}` : r.verdict;
+};
+
+test("a file that is not UTF-8 is refused as malformed-header, saying why, never read with U+FFFD in it", () => {
+  const latin1 = Uint8Array.from(Buffer.from(file({ extra: '"words":"café",' }), "latin1")); // é is the lone byte 0xE9
+  assert.ok(latin1.includes(0xe9), "the fixture really holds a lone 0xE9");
+  const r = readBytes(latin1);
+  assert.equal(r.verdict, "invalid");
+  assert.equal(r.reason, "malformed-header");
+  assert.equal(r.detail, "not-utf8");
+});
+
+test("a UTF-8 file reads from bytes as it does from text, accents kept", () => {
+  assert.equal(judgeBytes(bytes(file({ extra: '"words":"café",' }))), "valid");
+  assert.equal(judgeBytes(bytes(file())), judge(file()));
+});
+
+test("from bytes, one leading BOM is ignored and a second is refused, as the other readers do", () => {
+  const bom = Uint8Array.of(0xef, 0xbb, 0xbf);
+  const cat = (...parts) => Uint8Array.from(parts.flatMap((p) => [...p]));
+  assert.equal(judgeBytes(cat(bom, bytes(file()))), "valid");
+  assert.equal(judgeBytes(cat(bom, bom, bytes(file()))), "invalid:malformed-header");
 });

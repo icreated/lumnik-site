@@ -11,7 +11,9 @@ export const CATALOGUE_CODES = [
 
 export const MESSAGES = {
   // The contract's reasons: the file is refused whole, nothing is imported.
-  "malformed-header": () => "L'en-tête de ce fichier n'est pas du JSON valide, ou ses deux lignes « --- » manquent ou il est imbriqué trop profondément.",
+  "malformed-header": (detail) => detail === "not-utf8"
+    ? "Ce fichier n'est pas encodé en UTF-8 (une copie enregistrée en Latin-1, par exemple) : il est refusé plutôt que lu avec des accents perdus. Réenregistrez-le en UTF-8."
+    : "L'en-tête de ce fichier n'est pas du JSON valide, ou ses deux lignes « --- » manquent ou il est imbriqué trop profondément.",
   "duplicate-key": () => "Une clé apparaît deux fois dans le même objet de l'en-tête : le fichier est ambigu, il est refusé.",
   "unknown-schema-version": (found) => `Ce dossier est de version ${found} ; cette page lit la version ${SUPPORTED_VERSIONS.join(", ")}.`,
   "unknown-field": () => "L'en-tête contient un champ que cette version du format ne connaît pas.",

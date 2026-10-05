@@ -66,6 +66,24 @@ export function read(file) {
   }
 }
 
+// What a file picker hands over is bytes, and the browser's own text() decodes leniently: an invalid byte
+// becomes U+FFFD and the free text loses its accent without a word (#809). The contract says UTF-8, so a
+// file that is not is refused whole, as the hub does. ignoreBOM keeps a leading U+FEFF in the text, so
+// that parseHeader — and only it — ignores exactly one, whatever the decoder's own default.
+const UTF8 = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true });
+
+/** @returns {ReturnType<typeof read>} {@link read} over the strictly decoded bytes of the file. */
+export function readBytes(bytes) {
+  let text;
+  try {
+    text = UTF8.decode(bytes);
+  } catch (e) {
+    if (e instanceof TypeError) return { verdict: "invalid", reason: "malformed-header", detail: "not-utf8" };
+    throw e;
+  }
+  return read(text);
+}
+
 function parseHeader(file) {
   // One leading byte order mark is ignored (editors on Windows write it); a second one is not part of the contract.
   const text = (file.startsWith("\uFEFF") ? file.slice(1) : file).replaceAll("\r\n", "\n");
