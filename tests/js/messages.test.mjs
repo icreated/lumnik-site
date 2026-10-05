@@ -27,3 +27,9 @@ test("a code nobody wrote a sentence for still yields a sentence, never a throw"
 test("messages are French sentences, none ends without a full stop", () => {
   for (const code of Object.keys(MESSAGES)) assert.match(refusalMessage(code, "x"), /[.»)]$/, code);
 });
+
+test("malformed-header says the encoding when that is what was wrong, and keeps its old sentence otherwise", () => {
+  assert.match(refusalMessage("malformed-header", "not-utf8"), /UTF-8/);
+  assert.doesNotMatch(refusalMessage("malformed-header"), /UTF-8/);
+  assert.equal(refusalMessage("malformed-header", "x"), refusalMessage("malformed-header"));
+});
