@@ -34,6 +34,17 @@
       { "colonne": "Ville", "sources": [["t_acme_desk_erp", "Lyon"], ["t_acme_desk_crm", "Villeurbanne"]] }
     ]
   },
+  "alerte": {
+    "provenance": "Forme exacte de WorkflowDormancySweep.emit (lumnik-hub, WorkflowDormancySweep.java:262-277) appliquée à la ligne SO-000006 du ruban documenté dans docs/apps/workflows.md : premier relevé 2026-09-13 02:45 (heure de Paris), alerte à 03:00. Le seuil y est raccourci à 1m pour la démonstration ; le manifeste livré déclare 30d.",
+    "evenement": "decision.dormant.acme-order-lifecycle",
+    "message": "SO-000006 : observé immobile en « EN LITIGE » depuis le 2026-09-13 (première observation 2026-09-13) — seuil déclaré 1m dans acme-order-lifecycle",
+    "workflow": "acme-order-lifecycle",
+    "doc_key": "SO-000006",
+    "state": "EN LITIGE",
+    "since": "2026-09-13T00:45:00Z",
+    "first_observed_at": "2026-09-13T00:45:00Z",
+    "threshold": "1m"
+  },
   "commande": {
     "provenance": "docs/apps/demo/data/acme-orders.csv, acme-orders-day2.csv, acme-orders-day3.csv — ligne 7, identique dans les trois exports",
     "order_no": "SO-000006",

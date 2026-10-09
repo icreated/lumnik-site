@@ -6,13 +6,15 @@ un script. Se déploie sur n'importe quel hébergeur statique.
 ## Structure
 
 ```
-index.html      l'accueil et le parcours d'entrée
-gel.html        le problème : les données gelées
-degel.html      les trois gestes de dégel
-usages.html     les cas concrets par métier
+index.html      l'accueil : la fiche P-1008 de section en section
+produit.html    faits · sens · temps — la fusion, la réponse qui montre sa requête, l'immobilité
+situations.html les situations reconnaissables, les cas concrets, l'adaptateur, la comparaison
+pour-qui.html   direction, DSI, intégrateurs
 architecture.html l'architecture et ses garde-fous
-offre.html      les profils, l'offre et le formulaire de contact
+offre.html      l'offre (Hub · Pro · Enterprise) et le formulaire de contact
 essai.html      inscription à l'essai cloud (bac à sable — ouverture prochaine)
+pourquoi.html   le manifeste : gel → dégel → mouvement, et le nom (lié depuis le pied de page)
+gel.html, degel.html, mouvement.html   relais vers les nouvelles pages, ancre comprise (#15)
 mentions.html   mentions légales, hébergeur, données personnelles (RGPD)
 dossier.html    le questionnaire guidé : un dossier de proposition à télécharger (client seul)
 heros-a.html    variante A du premier écran, pour le test des cinq secondes (#13) — non indexée, liée nulle part

@@ -509,38 +509,8 @@ h2 em { font-style: italic; color: var(--lumiere); }
 }
 .fenetre .barre .rond { width: 9px; height: 9px; border-radius: 50%; background: var(--givre); }
 .fenetre .barre .rond:first-child { background: var(--lumiere); opacity: 0.8; }
-.fenetre .corps { padding: 22px; display: flex; flex-direction: column; gap: 14px; }
 
-.bulle {
-  max-width: 88%;
-  padding: 12px 16px;
-  border-radius: 12px;
-  font-size: 0.92rem;
-  line-height: 1.55;
-}
-.bulle.q {
-  align-self: flex-end;
-  background: var(--glace);
-  color: var(--neige);
-  border-bottom-right-radius: 3px;
-}
-.bulle.r {
-  align-self: flex-start;
-  background: rgba(255, 210, 74, 0.08);
-  border: 1px solid rgba(255, 210, 74, 0.22);
-  border-bottom-left-radius: 3px;
-}
-.bulle.r .source {
-  display: block;
-  margin-top: 8px;
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  color: var(--brume);
-}
-.bulle.r.abstention { border-style: dashed; }
-.bulle.r.abstention em { color: var(--lumiere); font-style: normal; font-weight: 600; }
-
-/* --- Le temps : le journal des observations --- */
+/* --- Le temps --- */
 .temps { background: linear-gradient(180deg, var(--nuit-2), var(--nuit)); }
 
 .sous-titre {
@@ -550,61 +520,6 @@ h2 em { font-style: italic; color: var(--lumiere); }
   line-height: 1.25;
   margin-bottom: 16px;
 }
-
-/* pas de marge sous la dernière ligne : l'alerte touche le bord de la fenêtre */
-.tape .corps { padding: 10px 0 0; gap: 0; }
-
-.tape .ligne {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  padding: 13px 24px 13px 48px;
-  position: relative;
-  font-size: 0.93rem;
-}
-/* le rail : une observation, un point.
-   Chaque segment reste dans SA ligne — sinon le fond de l'alerte le recouvre. */
-.tape .ligne::before {
-  content: "";
-  position: absolute;
-  left: 25px;
-  top: 20px;
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--givre);
-  z-index: 1;
-}
-.tape .ligne::after {
-  content: "";
-  position: absolute;
-  left: 28px;
-  top: 0; bottom: 0;
-  width: 1px;
-  background: rgba(143, 168, 189, 0.18);
-}
-.tape .ligne:first-child::after { top: 23px; }
-.tape .ligne:last-child::after { bottom: calc(100% - 24px); }
-
-.tape .quand {
-  font-family: var(--mono);
-  font-size: 0.78rem;
-  color: var(--brume);
-  flex: 0 0 78px;
-}
-.tape .quoi { color: var(--neige); }
-.tape .quoi b { color: var(--neige); font-weight: 600; }
-.tape .statut { font-family: var(--mono); font-size: 0.8rem; color: var(--brume); }
-
-/* la dormance : le seul moment où la lumière s'allume seule */
-.tape .ligne.alerte { background: rgba(255, 210, 74, 0.07); }
-.tape .ligne.alerte::before {
-  background: var(--lumiere);
-  box-shadow: 0 0 12px var(--lumiere), 0 0 26px var(--lueur-forte);
-}
-.tape .ligne.alerte .quand,
-.tape .ligne.alerte .quoi,
-.tape .ligne.alerte .quoi b { color: var(--lumiere); }
-.tape .ligne.alerte .statut { color: rgba(255, 210, 74, 0.75); }
 
 .event-flow {
   margin-top: 52px;
@@ -657,6 +572,7 @@ h2 em { font-style: italic; color: var(--lumiere); }
 .payload pre {
   margin: 0;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
   font-family: var(--mono);
   font-size: 0.82rem;
   color: var(--neige);
@@ -1857,3 +1773,12 @@ section.fenetres { padding-top: 24px; }
 @media (max-width: 780px) { .confiance-liste { grid-template-columns: minmax(0, 1fr); } }
 
 .manifeste-cta { margin-top: 36px; }
+
+/* ==========================================================================
+   Pages recomposées (issue #15)
+   ========================================================================== */
+.actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 40px; }
+.ia-garde { margin-top: 56px; max-width: 70ch; }
+.temps .demo .note { margin-top: 12px; }
+.relais { padding: 120px 0; }
+.relais a { color: var(--lumiere); }
