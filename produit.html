@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produit — lumnik</title>
+  <meta name="description" content="Ce que fait lumnik : lire vos logiciels sans y écrire, rassembler vos fiches en gardant leurs désaccords, déclarer le sens de vos statuts, voir ce qui ne bouge plus.">
+  <link rel="canonical" href="https://lumnik.fr/produit.html">
+  <meta property="og:title" content="Produit — lumnik">
+  <meta property="og:description" content="Ce que fait lumnik : lire vos logiciels sans y écrire, rassembler vos fiches en gardant leurs désaccords, déclarer le sens de vos statuts, voir ce qui ne bouge plus.">
+  <meta property="og:url" content="https://lumnik.fr/produit.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='34' fill='%23ffd24a'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<a class="saut" href="#contenu">Aller au contenu</a>
+
+<div id="thermometre" aria-hidden="true"></div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="index.html">lumnik<span class="dot" aria-hidden="true"></span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">
+      <span class="menu-toggle-label">Menu</span>
+    </button>
+    <ul id="menu-principal">
+      <li><a href="produit.html" aria-current="page">Produit</a></li>
+      <li><a href="situations.html">Situations</a></li>
+      <li><a href="pour-qui.html">Pour qui</a></li>
+      <li><a href="architecture.html">Architecture</a></li>
+      <li><a href="offre.html#offre">Offre</a></li>
+      <li><a href="essai.html">Essayer</a></li>
+      <li><a class="btn btn-lumiere nav-contact" href="offre.html#contact">Nous parler</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="contenu">
+
+<section class="gestes" id="comment">
+  <div class="wrap reveal">
+    <p class="kicker">Le produit</p>
+    <h1>Faits. Sens. Temps.<br>Trois choses à <em>remettre en mouvement</em>.</h1>
+    <p class="lede">
+      Une migration engage toute l'entreprise&nbsp;; un accès en <strong>lecture</strong> permet de
+      commencer avec un risque bien plus réduit. lumnik entre donc en lecture seule, et votre
+      système reste l'unique maître de ses données.
+    </p>
+    <nav class="local-nav" aria-label="Dans Produit">
+      <a href="#faits">Faits</a>
+      <a href="#sens">Sens</a>
+      <a href="#temps">Temps</a>
+    </nav>
+    <ul class="principes" aria-label="Le principe, en trois refus">
+      <li>Pas de migration pour commencer</li>
+      <li>Pas de réécriture de l'existant</li>
+      <li>Pas de cloud imposé</li>
+    </ul>
+    <div class="geste-grille">
+      <div class="geste" id="faits">
+        <h3>Les faits — enfin réunis</h3>
+        <p>lumnik lit ERP, bases, fichiers et API en lecture seule, puis rapproche les clients,
+        produits ou commandes dispersés. Vous obtenez une vue commune sans migration préalable
+        et sans masquer les désaccords.</p>
+      </div>
+      <div class="geste" id="sens">
+        <h3>Le sens — enfin explicite</h3>
+        <p>« EC », « en cours » et « 20 » veulent-ils dire la même chose ? Vos métiers le
+        déclarent une fois. lumnik transforme ce savoir oral en règles lisibles, traçables et
+        partageables.</p>
+      </div>
+      <div class="geste">
+        <h3>Le temps — enfin visible</h3>
+        <p>Chaque lecture laisse une observation datée. lumnik révèle ce qui n'a pas bougé depuis
+        le seuil choisi par le métier — sans prétendre connaître la période antérieure à sa
+        première observation.</p>
+      </div>
+    </div>
+
+    <div class="fusion-preuve" aria-label="Exemple de fusion de données">
+      <div class="fusion-entrees">
+        <div class="source-carte">
+          <div class="source-nom">Sage</div>
+          <p>Client DUPONT INDUSTRIE<br>12 rue du Port<br>04 72 00 00 00</p>
+        </div>
+        <div class="source-carte">
+          <div class="source-nom">Cegid</div>
+          <p>Dupont Indus.<br>12 rue du Port, Bât. C<br>compte bloqué</p>
+        </div>
+        <div class="source-carte">
+          <div class="source-nom">CSV</div>
+          <p>DUPONT INDUSTRIE<br>contact achats : M. Rey<br>email présent</p>
+        </div>
+      </div>
+      <div class="fusion-centre" aria-hidden="true">→</div>
+      <div class="fusion-sortie">
+        <div class="source-nom">Fiche unique servie</div>
+        <ul>
+          <li>Client unique consolidé</li>
+          <li>Adresse retenue et tracée</li>
+          <li>Contact achats enrichi</li>
+        </ul>
+        <div class="conflit">Conflit détecté : adresse Sage ≠ adresse Cegid</div>
+      </div>
+    </div>
+
+    <div class="ia-garde">
+      <h2 style="font-size:1.8rem">La réponse montre sa requête.<br>Ou elle <em>s'abstient</em>.</h2>
+      <p class="lede">
+        Avec l'édition Pro, vos métiers posent leurs questions en langage naturel, sur les fiches de
+        leur périmètre. Des contrôles déterministes refusent une table, une colonne ou une valeur non
+        déclarées&nbsp;; un résultat vide n'est jamais présenté comme «&nbsp;il n'y en a aucun&nbsp;»&nbsp;; et
+        la requête exécutée est toujours montrée.
+      </p>
+      <p class="lede" style="margin-top:14px"><a href="https://docs.lumnik.io/transparency/ask-honesty/" rel="noopener" style="color:var(--lumiere)">Les garde-fous, un par un</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="temps" id="temps">
+  <div class="wrap reveal">
+    <p class="kicker">Quand le temps redevient visible</p>
+    <h2>Ce qui ne bouge plus devient enfin <em>impossible à ignorer</em>.</h2>
+    <p class="lede">
+      Un ERP vous dit ce qui <em>est</em>, rarement depuis quand. L'export de ce soir écrase
+      celui d'hier ; « en cours » était peut-être déjà vrai il y a quarante jours.
+      <strong>Cette perte de mémoire ne concerne pas que les vieux systèmes.</strong>
+    </p>
+
+    <div class="demo">
+      <div>
+        <h3 class="sous-titre">lumnik le reconstruit, ingestion après ingestion.</h3>
+        <p class="lede">
+          Chaque passage laisse une observation datée. Au bout de quelques semaines, votre hub
+          sait une chose que l'ERP n'a jamais sue : <strong>ce qui n'a pas bougé</strong>.
+        </p>
+        <p class="lede" style="margin-top:18px">
+          Le seuil est <strong>déclaré par vous</strong>, jamais deviné : trente jours pour une
+          commande, quarante-huit heures pour une réclamation. lumnik applique cette règle et montre
+          l'observation exacte qui a déclenché l'alerte.
+        </p>
+        <p class="serment" style="margin-top:26px">
+          <b>Ce qui ne bouge plus ne déclenche rien.</b> Un outil qui réagit aux événements ne voit
+          pas ce qui ne se passe pas. C'est là que lumnik ne se contente pas de montrer : il trouve.
+        </p>
+      </div>
+
+      <div>
+        <div class="fenetre fenetre-code" role="group" aria-label="Le message exact d'une alerte d'immobilité">
+          <div class="barre"><span class="rond"></span><span class="rond"></span><span class="rond"></span>&nbsp;lm inbox — une alerte</div>
+<pre>SO-000006 : observé immobile en « EN LITIGE » depuis le 2026-09-13 (première observation 2026-09-13) — seuil déclaré 1m dans acme-order-lifecycle</pre>
+        </div>
+        <p class="note">Le message exact, sur les données de démonstration. Le seuil y est raccourci à une minute&nbsp;; le manifeste livré déclare trente jours.</p>
+      </div>
+    </div>
+
+    <p class="lede" style="margin-top:38px">
+      Le premier jour, lumnik ne sait rien de votre passé — <strong>et il le dit</strong>.
+      Cette mémoire commence à la première ingestion et s'approfondit à chaque lecture.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>lumnik — édité par icreated · Châtillon d'Azergues, France</div>
+    <div><a href="pourquoi.html">Pourquoi lumnik</a> · <a href="mentions.html">Mentions légales</a> · <a href="https://docs.lumnik.io" rel="noopener">Documentation</a> · <a href="essai.html">Essai en ligne</a> · <a href="dossier.html">Cadrer votre besoin</a></div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>

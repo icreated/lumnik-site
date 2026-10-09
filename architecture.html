@@ -31,12 +31,12 @@
       <span class="menu-toggle-label">Menu</span>
     </button>
     <ul id="menu-principal">
-      <li><a href="gel.html">Gel</a></li>
-      <li><a href="degel.html">Dégel</a></li>
-      <li><a href="mouvement.html">Mouvement</a></li>
+      <li><a href="produit.html">Produit</a></li>
+      <li><a href="situations.html">Situations</a></li>
+      <li><a href="pour-qui.html">Pour qui</a></li>
       <li><a href="architecture.html" aria-current="page">Architecture</a></li>
       <li><a href="offre.html#offre">Offre</a></li>
-      <li><a href="essai.html">Essai</a></li>
+      <li><a href="essai.html">Essayer</a></li>
       <li><a class="btn btn-lumiere nav-contact" href="offre.html#contact">Nous parler</a></li>
     </ul>
   </div>
@@ -82,7 +82,7 @@
       <div class="colonne">
         <h3>Vos métiers</h3>
         <div class="schema-blocs">
-          <span>Assistant en français</span>
+          <span>Questions en langage naturel</span>
           <span>API</span>
           <span>SQL / tableaux</span>
           <span>Webhooks / alertes</span>
@@ -137,11 +137,12 @@ WHERE city = 'Lyon' AND segment = 'GOLD'</pre>
     </p>
     <div class="garanties" aria-label="Ce que le RSSI peut vérifier">
       <p><strong>L'isolation vit dans la base.</strong> PostgreSQL cloisonne ligne par ligne
-      (Row-Level Security)&nbsp;: un bug applicatif ne la traverse pas, la base refuse.</p>
+      (Row-Level Security), par organisation.</p>
       <p><strong>Le SQL généré ne peut que lire.</strong> Il s'exécute sous un rôle sans droit
       d'écriture, quoi que produise le modèle.</p>
-      <p><strong>Le journal d'audit ne s'efface pas.</strong> Le rôle applicatif n'a ni UPDATE ni
-      DELETE dessus — révoqués dans la base.</p>
+      <p><strong>Le journal d'audit ne se réécrit pas.</strong> Le rôle applicatif n'a ni UPDATE ni
+      DELETE dessus — révoqués dans la base. Une purge de rétention le taille au-delà de 365 jours
+      par défaut, réglable.</p>
       <p><strong>Réversible.</strong> Des tables PostgreSQL ordinaires et un pg_dump standard.
       Il n'y a aucune copie chez un éditeur à réclamer.</p>
     </div>
@@ -158,7 +159,7 @@ WHERE city = 'Lyon' AND segment = 'GOLD'</pre>
 <section id="doc">
   <div class="wrap reveal">
     <p class="kicker">Aller au fond</p>
-    <h2>La documentation est publique. Le code aussi.<br><em>Vérifiez avant de croire.</em></h2>
+    <h2>La documentation est publique. Le code de l'édition Open aussi.<br><em>Vérifiez avant de croire.</em></h2>
     <p class="lede">Les connecteurs, les cinq garde-fous d'honnêteté, le modèle de données,
     l'installation en une commande — tout est écrit, et lisible sans nous parler. Le substrat
     complet est ouvert sous licence <strong>Apache-2.0</strong> : vous pouvez lire ce que le
@@ -168,13 +169,11 @@ WHERE city = 'Lyon' AND segment = 'GOLD'</pre>
       <a class="btn btn-lumiere" href="https://docs.lumnik.io" rel="noopener">Lire la documentation</a>
       <a class="btn btn-givre" href="https://github.com/icreated/lumnik-open" rel="noopener">Voir le code</a>
     </div>
-    <p style="margin-top:52px"><span class="badge-bientot">Beta · open source</span></p>
+    <p style="margin-top:52px"><span class="badge-bientot">Beta</span>
+    <a href="https://github.com/icreated/lumnik-open" rel="noopener" style="color:var(--lumiere)">lumnik Open · Apache-2.0</a></p>
     <p class="lede">
-      <strong>Où en est lumnik&nbsp;?</strong> En beta&nbsp;: le produit ne grandit plus en surfaces, il
-      se corrige. Ce qui manque manque exprès, et la page qui le dit est publique. Ce que nous ne
-      savons pas encore&nbsp;: <strong>personne d'extérieur ne l'a fait tourner en production.</strong>
-      Vous pourriez être ce premier — et le premier défaut que vous trouverez sera celui que nous
-      ne pouvions pas prévoir.
+      <strong>Où en est lumnik&nbsp;?</strong> En beta&nbsp;: ce qui est fait, ce qui manque exprès,
+      et ce que nous ne savons pas encore tiennent sur une seule page.
     </p>
     <p class="lede" style="margin-top:14px">
       <a href="https://docs.lumnik.io/where-lumnik-stands/" rel="noopener" style="color:var(--lumiere)">Où en est lumnik, page par page</a> ·
@@ -188,7 +187,7 @@ WHERE city = 'Lyon' AND segment = 'GOLD'</pre>
 <footer>
   <div class="wrap">
     <div>lumnik — édité par icreated · Châtillon d'Azergues, France</div>
-    <div><a href="mentions.html">Mentions légales</a> · <a href="https://docs.lumnik.io" rel="noopener">Documentation</a> · <a href="essai.html">Essai en ligne</a></div>
+    <div><a href="pourquoi.html">Pourquoi lumnik</a> · <a href="mentions.html">Mentions légales</a> · <a href="https://docs.lumnik.io" rel="noopener">Documentation</a> · <a href="essai.html">Essai en ligne</a></div>
   </div>
 </footer>
 

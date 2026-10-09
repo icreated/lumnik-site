@@ -7,22 +7,54 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 PAGES = (
     "index.html",
-    "gel.html",
-    "degel.html",
-    "mouvement.html",
+    "produit.html",
+    "situations.html",
+    "pour-qui.html",
     "architecture.html",
     "offre.html",
     "essai.html",
+    "pourquoi.html",
 )
 ALL_PAGES = PAGES + ("mentions.html", "dossier.html")
-NAV_LABELS = (
-    "Gel",
-    "Dégel",
-    "Mouvement",
-    "Architecture",
-    "Offre",
-    "Essai",
-    "Nous parler",
+# The navigation of issue #13: labels a visitor understands without knowing lumnik.
+TARGET_NAV = (
+    ("Produit", "produit.html"),
+    ("Situations", "situations.html"),
+    ("Pour qui", "pour-qui.html"),
+    ("Architecture", "architecture.html"),
+    ("Offre", "offre.html#offre"),
+    ("Essayer", "essai.html"),
+    ("Nous parler", "offre.html#contact"),
+)
+NAV_LABELS = tuple(label for label, _ in TARGET_NAV)
+# Issue #15: the three pages that became relays, where each now sends its visitor, and every
+# anchor they ever published — a bookmark or a search result must still land on its section.
+RELAYS = {
+    "gel.html": ("situations.html", ("probleme", "comparaison")),
+    "degel.html": ("produit.html", ("comment", "faits", "sens", "temps")),
+    "mouvement.html": ("situations.html", ("adaptateur", "cas", "industrie", "negoce", "services", "secteur-public")),
+}
+# Wordings the theses ruled out site-wide (absolutes, real-time, a French answer the product
+# does not give yet — lumnik#873 — and maturity copied away from its single source).
+SITE_FORBIDDEN = (
+    "temps réel",
+    "zéro risque",
+    "Personne ne",
+    "ne la traverse pas",
+    "Zéro recâblage",
+    "Assistant en français",
+    "personne d'extérieur",
+    "lumnik Console",
+    "console-preuve",
+    # The answer shows the query it ran; "sources" promised citations it does not give (lumnik#874).
+    "sources citées",
+    "sourcée",
+    "avec ses sources",
+    "en français",
+    # Security and permanence are mechanisms, never guarantees.
+    "fuite de données",
+    "pour toujours",
+    "sans risque",
 )
 
 
@@ -101,11 +133,11 @@ class SiteStructureTest(unittest.TestCase):
 
     def test_every_page_exposes_the_global_navigation(self):
         for name in ALL_PAGES:
-            page = load_page(name)
-            text = " ".join(page.nav_text)
-            with self.subTest(name=name):
-                for label in NAV_LABELS:
-                    self.assertIn(label, text)
+            menu = between((ROOT / name).read_text(encoding="utf-8"), '<ul id="menu-principal">', "</ul>")
+            for label, href in TARGET_NAV:
+                with self.subTest(name=name, label=label):
+                    self.assertIn(f'href="{href}"', menu)
+                    self.assertIn(f">{label}</a>", menu)
 
     def test_mobile_menu_contract_is_present(self):
         for name in ALL_PAGES:
@@ -128,9 +160,9 @@ class SiteStructureTest(unittest.TestCase):
     def test_each_thematic_page_marks_its_global_link_as_current(self):
         current_targets = {
             "index.html": "index.html",
-            "gel.html": "gel.html",
-            "degel.html": "degel.html",
-            "mouvement.html": "mouvement.html",
+            "produit.html": "produit.html",
+            "situations.html": "situations.html",
+            "pour-qui.html": "pour-qui.html",
             "architecture.html": "architecture.html",
             "offre.html": "offre.html#offre",
             "essai.html": "essai.html",
@@ -182,12 +214,13 @@ class SiteStructureTest(unittest.TestCase):
     def test_every_thematic_page_has_its_canonical_url(self):
         canonical_urls = {
             "index.html": "https://lumnik.fr/",
-            "gel.html": "https://lumnik.fr/gel.html",
-            "degel.html": "https://lumnik.fr/degel.html",
-            "mouvement.html": "https://lumnik.fr/mouvement.html",
+            "produit.html": "https://lumnik.fr/produit.html",
+            "situations.html": "https://lumnik.fr/situations.html",
+            "pour-qui.html": "https://lumnik.fr/pour-qui.html",
             "architecture.html": "https://lumnik.fr/architecture.html",
             "offre.html": "https://lumnik.fr/offre.html",
             "essai.html": "https://lumnik.fr/essai.html",
+            "pourquoi.html": "https://lumnik.fr/pourquoi.html",
         }
         for name, expected_url in canonical_urls.items():
             page = load_page(name)
@@ -221,17 +254,18 @@ class SiteStructureTest(unittest.TestCase):
                         self.assertIn(fragment, load_page(target_name).ids)
 
     def test_moved_sections_have_one_owner(self):
-        owners = {
-            "probleme": "gel.html",
-            "comment": "degel.html",
-            "temps": "degel.html",
-            "adaptateur": "mouvement.html",
-            "cas": "mouvement.html",
+        owners = {relayed: target for target, anchors in RELAYS.values() for relayed in anchors}
+        owners.update({
             "architecture": "architecture.html",
+            # offre.html keeps the old fragment as a signpost to the page the personas moved to.
             "pour-qui": "offre.html",
+            "direction": "pour-qui.html",
+            "dsi": "pour-qui.html",
+            "integrateurs": "pour-qui.html",
             "offre": "offre.html",
             "contact": "offre.html",
-        }
+            "manifeste": "index.html",
+        })
         parsed = {name: load_page(name) for name in PAGES}
         for section_id, owner in owners.items():
             found = [name for name, page in parsed.items() if section_id in page.ids]
@@ -240,7 +274,7 @@ class SiteStructureTest(unittest.TestCase):
 
     def test_comparison_table_becomes_readable_cards_on_phone(self):
         styles = (ROOT / "styles.css").read_text(encoding="utf-8")
-        gel = (ROOT / "gel.html").read_text(encoding="utf-8")
+        gel = (ROOT / "situations.html").read_text(encoding="utf-8")
 
         self.assertIn("@media (max-width: 600px)", styles)
         self.assertIn(".comparaison tr {", styles)
@@ -289,9 +323,9 @@ class SiteStructureTest(unittest.TestCase):
         freeze grid that stopped being 100% legacy.
         """
         architecture = (ROOT / "architecture.html").read_text(encoding="utf-8")
-        gel = (ROOT / "gel.html").read_text(encoding="utf-8")
-        degel = (ROOT / "degel.html").read_text(encoding="utf-8")
-        offre = (ROOT / "offre.html").read_text(encoding="utf-8")
+        gel = (ROOT / "situations.html").read_text(encoding="utf-8")
+        degel = (ROOT / "produit.html").read_text(encoding="utf-8")
+        offre = (ROOT / "pour-qui.html").read_text(encoding="utf-8")
 
         # The terminal is a real lm session, and it says what it accounts for.
         self.assertIn("$ lm login", architecture)
@@ -299,12 +333,15 @@ class SiteStructureTest(unittest.TestCase):
         # The four mechanisms a RSSI can check, and the invitation to check them.
         self.assertIn('class="garanties"', architecture)
         self.assertIn("docs.lumnik.io/security/", architecture)
-        # Maturity is stated, not implied.
-        self.assertIn("Beta · open source", architecture)
-        self.assertIn("personne d'extérieur ne l'a fait tourner en production", architecture)
+        # Maturity is stated, not implied — once, as a link to its single source; and only the
+        # Open edition is called open source.
+        self.assertIn("lumnik Open · Apache-2.0", architecture)
+        self.assertIn("https://docs.lumnik.io/where-lumnik-stands/", architecture)
         # The gel grid illustrates the four causes the paragraph claims, not only age.
         self.assertIn("SaaS métier fermé", gel)
         self.assertIn("CRM + ERP flambant neufs", gel)
+        # The worked cases are illustrations, and say so before a reader takes them for clients.
+        self.assertIn("Exemples illustratifs", between(gel, 'id="cas"', '<div class="cas-grille">'))
         # The three dead ends and the three refusals.
         self.assertIn('class="impasses"', gel)
         self.assertIn('class="principes"', degel)
@@ -312,12 +349,29 @@ class SiteStructureTest(unittest.TestCase):
         self.assertIn("docs.lumnik.io/reversibility/", offre)
         self.assertIn("docs.lumnik.io/integration-as-code/", offre)
 
-        # The invented console had figures from no real installation. It is gone.
+        # The invented console had figures from no real installation. It is gone — and the
+        # other ruled-out wordings with it (SITE_FORBIDDEN).
         for name in ALL_PAGES:
+            page_text = (ROOT / name).read_text(encoding="utf-8")
+            for word in SITE_FORBIDDEN:
+                with self.subTest(name=name, word=word):
+                    self.assertNotIn(word, page_text)
+
+    def test_every_footer_leads_to_the_why(self):
+        for name in ALL_PAGES:
+            footer = between((ROOT / name).read_text(encoding="utf-8"), "<footer>", "</footer>")
             with self.subTest(name=name):
-                page_text = (ROOT / name).read_text(encoding="utf-8")
-                self.assertNotIn("lumnik Console", page_text)
-                self.assertNotIn("console-preuve", page_text)
+                self.assertIn('href="pourquoi.html"', footer)
+
+    def test_no_page_links_to_a_relay(self):
+        for name in ALL_PAGES + HERO_VARIANTS:
+            for href in load_page(name).links:
+                with self.subTest(name=name, href=href):
+                    self.assertNotIn(href.partition("#")[0], RELAYS)
+
+    def test_the_personas_moved_but_their_old_fragment_still_answers(self):
+        stub = between((ROOT / "offre.html").read_text(encoding="utf-8"), 'id="pour-qui"', "</p>")
+        self.assertIn('href="pour-qui.html"', stub)
 
     def test_no_public_page_links_to_the_hero_variants(self):
         for name in ALL_PAGES:
@@ -350,15 +404,6 @@ class SiteStructureTest(unittest.TestCase):
 HERO_VARIANTS = ("heros-a.html", "heros-b.html")
 CATEGORY = "La couche de lecture de vos logiciels"
 OBJECT = "Une seule fiche client, lisible partout"
-TARGET_NAV = (
-    ("Produit", "degel.html"),
-    ("Situations", "mouvement.html"),
-    ("Pour qui", "offre.html#pour-qui"),
-    ("Architecture", "architecture.html"),
-    ("Offre", "offre.html#offre"),
-    ("Essayer", "essai.html"),
-    ("Nous parler", "offre.html#contact"),
-)
 FORBIDDEN = ("temps réel", "zéro risque", "honnête", "proxy", "nettoie", "Personne ne", "gelée")
 
 
@@ -543,3 +588,46 @@ class HomepageTest(unittest.TestCase):
         for word in FORBIDDEN:
             with self.subTest(word=word):
                 self.assertNotIn(word, home)
+
+
+class RelayTest(unittest.TestCase):
+    """GitHub Pages cannot redirect server-side: each old page is a small relay that sends its
+    visitor on, fragment included, and tells search engines where the page went."""
+
+    def test_each_relay_sends_its_visitor_on_with_the_fragment(self):
+        for old, (target, _) in RELAYS.items():
+            text = (ROOT / old).read_text(encoding="utf-8")
+            with self.subTest(old=old):
+                self.assertIn(f'<meta http-equiv="refresh" content="0; url={target}">', text)
+                self.assertIn(f'<link rel="canonical" href="https://lumnik.fr/{target}">', text)
+                self.assertIn('<meta name="robots" content="noindex">', text)
+                self.assertIn(f'location.replace("{target}" + location.hash)', text)
+                self.assertIn(f'href="{target}"', text)
+
+    def test_every_published_anchor_lands_on_its_section(self):
+        for old, (target, anchors) in RELAYS.items():
+            ids = load_page(target).ids
+            for anchor in anchors:
+                with self.subTest(old=f"{old}#{anchor}"):
+                    self.assertIn(anchor, ids)
+
+
+class AlertTest(unittest.TestCase):
+    """The product and situations pages show a dormancy alert in its real shape — the one
+    WorkflowDormancySweep emits — for P-1008's order SO-000006, from donnees/p1008.json. The
+    demo's one-minute threshold is said where it shows, so nobody reads it as the product's."""
+
+    def test_the_product_page_shows_the_exact_alert_message(self):
+        produit = (ROOT / "produit.html").read_text(encoding="utf-8")
+        self.assertIn(FICHE["alerte"]["message"], produit)
+        self.assertIn("une minute", produit)
+
+    def test_the_situations_page_shows_the_exact_event(self):
+        situations = (ROOT / "situations.html").read_text(encoding="utf-8")
+        alerte = FICHE["alerte"]
+        self.assertIn(f"X-Lumnik-Event: {alerte['evenement']}", situations)
+        for key in ("message", "workflow", "doc_key", "state", "since", "first_observed_at", "threshold"):
+            with self.subTest(key=key):
+                self.assertIn(f'"{key}": {json.dumps(alerte[key], ensure_ascii=False)}', situations)
+        self.assertIn("une minute", situations)
+        self.assertNotIn("commande_immobile", situations)
