@@ -1584,9 +1584,10 @@ section.fenetres { padding-top: 24px; }
 .fenetres-grille {
   margin-top: 34px;
   display: grid;
-  grid-template-columns: 320px minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: 320px minmax(0, 1fr);
   gap: 22px;
   align-items: start;
+  max-width: 980px;
 }
 .fenetre-lieu { margin: 0; min-width: 0; }
 .fenetre-lieu figcaption {
@@ -1653,10 +1654,6 @@ section.fenetres { padding-top: 24px; }
 .pwa .conflict .src { display: flex; flex-wrap: wrap; column-gap: 8px; color: var(--pwa-dim); font-size: 13.5px; }
 .pwa .conflict .src b { color: var(--pwa-ink); font-weight: 550; }
 
-@media (max-width: 1080px) {
-  .fenetres-grille { grid-template-columns: 320px minmax(0, 1fr); }
-  .fenetres-grille .fenetre-lieu:last-child { grid-column: 1 / -1; }
-}
 @media (max-width: 720px) {
   .fenetres-grille { grid-template-columns: minmax(0, 1fr); }
   .pwa { max-width: none; }

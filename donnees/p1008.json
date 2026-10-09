@@ -34,17 +34,6 @@
       { "colonne": "Ville", "sources": [["t_acme_desk_erp", "Lyon"], ["t_acme_desk_crm", "Villeurbanne"]] }
     ]
   },
-  "question": {
-    "provenance": "docs/entities.md, section « Askable immediately » — transcription réelle de `lm ask`, réponse du modèle laissée telle quelle",
-    "commande": "lm ask --scope desk \"Combien de clients GOLD sont à Lyon, et quel est leur encours autorisé total ?\"",
-    "reponse": "There are 2 GOLD customers in Lyon with a total encours autorisé of 2096.",
-    "fraicheur": "data as of: 2026-09-13T00:39:29.573902Z (last completed run)",
-    "sql": [
-      "SQL: SELECT COUNT(*) AS customer_count, SUM(credit_limit::numeric) AS total_credit_limit",
-      "FROM \"connector\".\"v_acmecustomer\"",
-      "WHERE city = 'Lyon' AND segment = 'GOLD'"
-    ]
-  },
   "commande": {
     "provenance": "docs/apps/demo/data/acme-orders.csv, acme-orders-day2.csv, acme-orders-day3.csv — ligne 7, identique dans les trois exports",
     "order_no": "SO-000006",

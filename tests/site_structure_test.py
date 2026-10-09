@@ -503,17 +503,19 @@ class HomepageTest(unittest.TestCase):
             for src, value in conflict["sources"]:
                 self.assertIn(f"{src} : <b>{value}</b>", pwa)
 
-    def test_the_question_window_is_the_real_transcript(self):
-        ask = self.block("question")
-        question = FICHE["question"]
-        for line in (question["commande"], question["reponse"], question["fraicheur"], *question["sql"]):
-            with self.subTest(line=line):
-                self.assertIn(line, ask)
-
     def test_each_window_says_which_edition_carries_it(self):
         self.assertIn('class="edition">Hub<', self.block("pwa"))
         self.assertIn('class="edition">Hub<', self.block("api"))
-        self.assertIn('class="edition">Pro<', self.block("question"))
+
+    def test_no_ai_window_until_the_answer_can_name_a_disputed_record(self):
+        """The homepage shows P-1008's disputed city, so an AI window may not count P-1008 in
+        silence. The only real transcript did exactly that — `WHERE city = 'Lyon'` counted it
+        without a word, in English. It comes back once lumnik#873 (answer in the question's
+        language) and lumnik#874 (say so when a counted row is disputed) are shipped and a
+        fresh run is transcribed into donnees/p1008.json.
+        """
+        self.assertNotIn("lm ask", self.home())
+        self.assertNotIn("fenetre:question", self.home())
 
     def test_the_fusion_section_shows_both_sources_and_the_kept_disagreement(self):
         fusion = between(self.home(), 'id="fusion"', "</section>")

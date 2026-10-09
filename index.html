@@ -84,7 +84,7 @@
 <section class="fenetres" id="fenetres">
   <div class="wrap reveal">
     <p class="kicker">Lisible partout</p>
-    <h2>La même fiche, <em>trois fenêtres</em>.</h2>
+    <h2>La même fiche, <em>deux fenêtres</em>.</h2>
     <div class="fenetres-grille">
       <!-- fenetre:pwa -->
       <figure class="fenetre-lieu">
@@ -128,23 +128,8 @@
         </div>
       </figure>
       <!-- /fenetre:api -->
-      <!-- fenetre:question -->
-      <figure class="fenetre-lieu">
-        <figcaption><span class="lieu">Devant votre IA</span> <span class="edition">Pro</span></figcaption>
-        <div class="fenetre fenetre-code">
-          <div class="barre"><span class="rond"></span><span class="rond"></span><span class="rond"></span>&nbsp;lm ask</div>
-<pre><span class="cmd">$ lm ask --scope desk "Combien de clients GOLD sont à Lyon, et quel est leur encours autorisé total ?"</span>
-There are 2 GOLD customers in Lyon with a total encours autorisé of 2096.
-  data as of: 2026-09-13T00:39:29.573902Z (last completed run)
-
-  SQL: SELECT COUNT(*) AS customer_count, SUM(credit_limit::numeric) AS total_credit_limit
-FROM "connector"."v_acmecustomer"
-WHERE city = 'Lyon' AND segment = 'GOLD'</pre>
-        </div>
-      </figure>
-      <!-- /fenetre:question -->
     </div>
-    <p class="note">Sorties réelles de lumnik, sur des données de démonstration fictives. Filtration Lyon 1008 est l'un des deux clients comptés. La réponse du modèle est restituée telle quelle — en anglais, aujourd'hui.</p>
+    <p class="note">Sorties réelles de lumnik, sur des données de démonstration fictives.</p>
   </div>
 </section>
 
