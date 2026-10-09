@@ -34,6 +34,24 @@
       { "colonne": "Ville", "sources": [["t_acme_desk_erp", "Lyon"], ["t_acme_desk_crm", "Villeurbanne"]] }
     ]
   },
+  "question": {
+    "provenance": "docs/entities.md (lumnik main, après #874), section « Askable immediately » — exécution réelle de `lm ask` sur le demo desk le 2026-10-09, recopiée ligne pour ligne, réponse du modèle laissée telle quelle",
+    "transcription": [
+      "$ lm ask --scope desk \"Combien de clients GOLD sont à Lyon, et quel est leur encours autorisé total ?\"",
+      "Il y a 2 clients GOLD à Lyon et leur encours autorisé total est de 2096.",
+      "  data as of: 2026-10-09T14:55:10.790181Z (last completed run)",
+      "",
+      "  disputed — a source disagrees on a value this answer filtered on:",
+      "    P-1008  city = 'Lyon'  counted  t_acme_desk_erp: Lyon · t_acme_desk_crm: Villeurbanne",
+      "",
+      "  SQL: SELECT COUNT(*) AS gold_customers_count, SUM(credit_limit::numeric) AS total_credit_limit",
+      "FROM \"connector\".\"v_acmecustomer\"",
+      "WHERE city = 'Lyon' AND segment = 'GOLD'",
+      "LIMIT 500",
+      "",
+      "  try: lm conflicts list --scope desk  — where this scope has source conflicts or lookup ambiguities, row by row"
+    ]
+  },
   "alerte": {
     "provenance": "Forme exacte de WorkflowDormancySweep.emit (lumnik-hub, WorkflowDormancySweep.java:262-277) appliquée à la ligne SO-000006 du ruban documenté dans docs/apps/workflows.md : premier relevé 2026-09-13 02:45 (heure de Paris), alerte à 03:00. Le seuil y est raccourci à 1m pour la démonstration ; le manifeste livré déclare 30d.",
     "evenement": "decision.dormant.acme-order-lifecycle",
