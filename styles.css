@@ -1532,3 +1532,180 @@ footer a:hover { color: var(--lumiere); }
 .dossier-erreur { border: 1px solid #ff8a7a; border-radius: var(--radius); padding: .9rem 1.1rem; color: #ffb3a8; }
 .dossier-notice { border: 1px solid var(--givre); border-radius: var(--radius); padding: .9rem 1.1rem; color: var(--neige); }
 @media (prefers-reduced-motion: reduce) { .dossier-app * { transition: none !important; animation: none !important; } }
+
+/* ==========================================================================
+   Héros de test (issue #13) — heros-a.html / heros-b.html
+   La catégorie, l'objet visible, la règle de confiance — puis les boutons.
+   Une seule lumière : le désaccord et l'action. Pas de grand halo.
+   ========================================================================== */
+header.heros {
+  position: relative;
+  padding: 72px 0 88px;
+  overflow: hidden;
+}
+/* une lueur discrète derrière la fiche, pas un halo de décor */
+header.heros::before {
+  content: "";
+  position: absolute;
+  top: 40px; right: -120px;
+  width: 560px; height: 560px;
+  background: radial-gradient(circle, rgba(255, 210, 74, 0.08) 0%, transparent 62%);
+  pointer-events: none;
+}
+.heros-grille {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-areas:
+    "surtitre fiche"
+    "titre    fiche"
+    "sous     fiche"
+    "preuves  fiche"
+    "ctas     fiche";
+  grid-template-rows: auto auto auto auto 1fr;
+  column-gap: 56px;
+  align-items: start;
+}
+.heros .surtitre {
+  grid-area: surtitre;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brume);
+  margin-bottom: 18px;
+}
+.heros h1 {
+  grid-area: titre;
+  font-size: clamp(2.2rem, 4.4vw, 3.5rem);
+  max-width: 16ch;
+  opacity: 1;
+  animation: heros-entre 0.4s ease both;
+}
+/* une montée courte, sans phase où le texte est presque invisible */
+@keyframes heros-entre { from { transform: translateY(8px); } to { transform: none; } }
+
+.heros .sous {
+  grid-area: sous;
+  margin-top: 22px;
+  font-size: 1.12rem;
+  color: var(--brume);
+  max-width: 44ch;
+}
+.heros-preuves {
+  grid-area: preuves;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 22px;
+}
+.heros-preuves li {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--neige);
+  border: 1px solid var(--givre);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+.heros-ctas {
+  grid-area: ctas;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+/* --- la fiche : plusieurs systèmes sombres, une fiche claire, le désaccord gardé --- */
+.heros-fiche {
+  grid-area: fiche;
+  align-self: center;
+  margin: 0;
+}
+.heros-sources {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.heros-source {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--brume);
+  background: rgba(10, 20, 32, 0.7);
+  border: 1px solid rgba(143, 168, 189, 0.14);
+  border-radius: 10px;
+  padding: 10px 12px;
+  overflow-wrap: anywhere;
+}
+.heros-source-nom,
+.origine {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--brume);
+}
+.heros-source-nom { display: block; margin-bottom: 4px; }
+.fiche {
+  background: var(--glace);
+  border: 1px solid rgba(209, 215, 224, 0.22);
+  border-radius: var(--radius);
+  padding: 18px 20px 8px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+}
+.fiche-tete {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--givre);
+}
+.fiche-nom { font-family: var(--serif); font-size: 1.3rem; color: var(--neige); }
+.fiche-code { font-family: var(--mono); font-size: 0.8rem; color: var(--brume); }
+.fiche dl > div {
+  display: grid;
+  grid-template-columns: 5.5em minmax(0, 1fr);
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(28, 51, 73, 0.6);
+}
+.fiche dl > div:last-child { border-bottom: none; }
+.fiche dt { color: var(--brume); font-size: 0.9rem; }
+.fiche dd { color: var(--neige); overflow-wrap: anywhere; }
+.origine { margin-left: 6px; }
+.desaccord {
+  display: block;
+  margin-top: 6px;
+  padding: 4px 10px;
+  border-left: 2px solid var(--lumiere);
+  background: var(--lueur);
+  color: var(--lumiere);
+  font-size: 0.88rem;
+}
+.desaccord::before { content: "⚠ "; }
+.heros-fiche figcaption {
+  margin-top: 10px;
+  font-size: 0.78rem;
+  color: var(--brume);
+}
+.heros-fiche figcaption a { color: var(--brume); }
+.heros-fiche figcaption a:hover,
+.heros-fiche figcaption a:focus-visible { color: var(--lumiere); }
+
+/* téléphone : l'ordre du document — titre, fiche, phrase, preuves, boutons */
+@media (max-width: 880px) {
+  header.heros { padding: 36px 0 64px; }
+  .heros-grille {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "surtitre" "titre" "fiche" "sous" "preuves" "ctas";
+    grid-template-rows: none;
+  }
+  .heros-fiche { margin-top: 22px; max-width: 560px; }
+  .heros-sources { display: none; }
+}
+@media (max-width: 600px) {
+  .heros .surtitre { font-size: 0.72rem; margin-bottom: 12px; }
+  .heros h1 { font-size: 2rem; }
+  .fiche { padding: 14px 16px 4px; }
+  .fiche dl > div { padding: 8px 0; grid-template-columns: 4.6em minmax(0, 1fr); }
+}
