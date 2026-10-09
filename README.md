@@ -15,6 +15,9 @@ offre.html      les profils, l'offre et le formulaire de contact
 essai.html      inscription à l'essai cloud (bac à sable — ouverture prochaine)
 mentions.html   mentions légales, hébergeur, données personnelles (RGPD)
 dossier.html    le questionnaire guidé : un dossier de proposition à télécharger (client seul)
+heros-a.html    variante A du premier écran, pour le test des cinq secondes (#13) — non indexée, liée nulle part
+heros-b.html    variante B (retenue, provisoirement) — son héros est recopié tel quel dans index.html
+donnees/        p1008.json : la fiche de démonstration et sa provenance — seule source des valeurs de l'accueil
 proposal/       les modules ES du questionnaire (.mjs, zéro build) ; page.mjs est le seul code DOM
 catalogue/      les catalogues publiés (<version>.json) — ARTEFACTS DE PUBLICATION
 catalogue-index.json  les versions servies et leurs empreintes — ARTEFACT DE PUBLICATION

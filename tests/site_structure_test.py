@@ -1,5 +1,6 @@
 from html.parser import HTMLParser
 from pathlib import Path
+import json
 import re
 import unittest
 
@@ -446,3 +447,99 @@ class HeroVariantTest(unittest.TestCase):
             for word in FORBIDDEN:
                 with self.subTest(name=name, word=word):
                     self.assertNotIn(word, text)
+
+
+# --- Issue #14: the homepage built around hero B -------------------------------------------
+#
+# Every value a window shows comes from donnees/p1008.json, itself copied from real outputs on
+# the demo desk (each block names its source). The windows are checked against that one file,
+# so a value edited in one window and not the others fails here.
+
+FICHE = json.loads((ROOT / "donnees" / "p1008.json").read_text(encoding="utf-8"))
+HOME_SECTIONS = ("fenetres", "fusion", "avant-apres", "immobile", "portes", "confiance", "manifeste")
+
+
+class HomepageTest(unittest.TestCase):
+    def home(self):
+        return (ROOT / "index.html").read_text(encoding="utf-8")
+
+    def block(self, name):
+        return between(self.home(), f"<!-- fenetre:{name} -->", f"<!-- /fenetre:{name} -->")
+
+    def test_the_hero_is_variant_b_unchanged(self):
+        hero = lambda text: between(text, '<header class="heros">', "</header>")
+        self.assertEqual(hero(self.text_of("heros-b.html")), hero(self.home()))
+
+    def text_of(self, name):
+        return (ROOT / name).read_text(encoding="utf-8")
+
+    def test_the_three_windows_come_right_after_the_hero(self):
+        after_hero = self.home().split('<header class="heros">', 1)[1].split("</header>", 1)[1]
+        first_section = re.search(r'<section[^>]*\bid="([^"]+)"', after_hero)
+        self.assertEqual("fenetres", first_section.group(1))
+
+    def test_the_sections_follow_the_order_of_issue_14(self):
+        ids = re.findall(r'<section[^>]*\bid="([^"]+)"', self.home())
+        self.assertEqual(list(HOME_SECTIONS), ids)
+
+    def test_the_api_window_shows_the_real_row(self):
+        api = self.block("api")
+        self.assertIn(FICHE["api"]["requete"], api)
+        for key, value in FICHE["api"]["ligne"].items():
+            with self.subTest(key=key):
+                self.assertIn(f'"{key}": {json.dumps(value, ensure_ascii=False)}', api)
+
+    def test_the_phone_window_shows_the_pwa_detail(self):
+        pwa = self.block("pwa")
+        self.assertIn(FICHE["pwa"]["titre"], pwa)
+        self.assertIn(FICHE["pwa"]["cle"], pwa)
+        for label, value in FICHE["pwa"]["champs"]:
+            with self.subTest(label=label):
+                self.assertIn(f'<div class="lbl">{label}</div>', pwa)
+                self.assertIn(f'<div class="val">{value}</div>', pwa)
+        self.assertIn(FICHE["pwa"]["divergences_titre"], pwa)
+        for conflict in FICHE["pwa"]["divergences"]:
+            self.assertIn(conflict["colonne"], pwa)
+            for src, value in conflict["sources"]:
+                self.assertIn(f"{src} : <b>{value}</b>", pwa)
+
+    def test_each_window_says_which_edition_carries_it(self):
+        self.assertIn('class="edition">Hub<', self.block("pwa"))
+        self.assertIn('class="edition">Hub<', self.block("api"))
+
+    def test_no_ai_window_until_the_answer_can_name_a_disputed_record(self):
+        """The homepage shows P-1008's disputed city, so an AI window may not count P-1008 in
+        silence. The only real transcript did exactly that — `WHERE city = 'Lyon'` counted it
+        without a word, in English. It comes back once lumnik#873 (answer in the question's
+        language) and lumnik#874 (say so when a counted row is disputed) are shipped and a
+        fresh run is transcribed into donnees/p1008.json.
+        """
+        self.assertNotIn("lm ask", self.home())
+        self.assertNotIn("fenetre:question", self.home())
+
+    def test_the_fusion_section_shows_both_sources_and_the_kept_disagreement(self):
+        fusion = between(self.home(), 'id="fusion"', "</section>")
+        erp, crm = FICHE["sources"]["t_acme_desk_erp"], FICHE["sources"]["t_acme_desk_crm"]
+        for value in (erp["name"], erp["city"], erp["segment"], crm["town"], crm["email"]):
+            with self.subTest(value=value):
+                self.assertIn(value, fusion)
+
+    def test_the_time_section_shows_the_same_order_in_every_export(self):
+        time = between(self.home(), 'id="immobile"', "</section>")
+        order = FICHE["commande"]
+        self.assertEqual(order["exports"], time.count('class="jour"'))
+        self.assertEqual(order["exports"], time.count(order["order_no"]))
+        self.assertIn(order["status"], time)
+        self.assertIn(order["code"], time)
+
+    def test_maturity_is_a_link_to_its_single_source(self):
+        confiance = between(self.home(), 'id="confiance"', "</section>")
+        self.assertIn("https://docs.lumnik.io/where-lumnik-stands/", confiance)
+        self.assertIn("https://docs.lumnik.io/security/", confiance)
+        self.assertNotIn("personne d'extérieur", self.home())
+
+    def test_the_homepage_avoids_the_words_the_theses_ruled_out(self):
+        home = self.home()
+        for word in FORBIDDEN:
+            with self.subTest(word=word):
+                self.assertNotIn(word, home)

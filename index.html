@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>lumnik — Remettez votre entreprise en mouvement</title>
-  <meta name="description" content="lumnik dégèle les faits, le sens métier et le temps prisonniers de vos systèmes — ERP legacy (Sage, Cegid, AS/400), SaaS fermés, exports Excel. Interrogez vos données, repérez ce qui n'avance plus et branchez vos outils modernes — sans toucher à l'existant.">
+  <title>lumnik — Une seule fiche client, lisible partout</title>
+  <meta name="description" content="lumnik copie les données de vos logiciels — ERP (Sage, Cegid, AS/400), CRM, SaaS, exports Excel — sans jamais y écrire, les rassemble en une fiche client unique et vous montre où ils ne sont pas d'accord. Installé chez vous.">
   <link rel="canonical" href="https://lumnik.fr/">
   <link rel="alternate" hreflang="fr" href="https://lumnik.fr/">
   <link rel="alternate" hreflang="en" href="https://lumnik.io/">
   <link rel="alternate" hreflang="x-default" href="https://lumnik.io/">
-  <meta property="og:title" content="lumnik — Remettez votre entreprise en mouvement">
-  <meta property="og:description" content="lumnik dégèle les faits, le sens métier et le temps prisonniers de vos systèmes — ERP legacy, SaaS fermés, Excel — sans toucher à l'existant.">
+  <meta property="og:title" content="lumnik — Une seule fiche client, lisible partout">
+  <meta property="og:description" content="lumnik lit vos logiciels sans jamais y écrire, en fait une seule fiche client et vous montre où ils ne sont pas d'accord.">
   <meta property="og:url" content="https://lumnik.fr/">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="fr_FR">
@@ -47,50 +47,208 @@
 
 <main id="contenu">
 
-<header class="hero">
-  <div class="wrap">
-    <p class="surtitre">Quand l'information ne circule plus, l'entreprise se fige</p>
-    <h1>Votre entreprise n'est pas bloquée.<br>Elle est <span class="gelees">gelée</span>.<br>lumnik la <span class="degel">dégèle</span>.</h1>
-    <p class="sous">
-      On ne touche pas à ce qui fonctionne. <strong>On libère ce qui est prisonnier dedans.</strong><br>
-      Une réponse coincée dans trois logiciels. Une règle connue d'une seule personne.
-      Un devis qui ne bouge plus.<br>
-      lumnik remet ces savoirs en mouvement <strong>sans jamais écrire dans vos systèmes</strong>.
-    </p>
-    <div class="ctas">
+<header class="heros">
+  <div class="wrap heros-grille">
+    <p class="surtitre">La couche de lecture de vos logiciels</p>
+    <h1>Une seule fiche client, lisible partout.</h1>
+    <!-- fiche:debut -->
+    <figure class="heros-fiche">
+      <div class="heros-sources" aria-hidden="true">
+        <div class="heros-source"><span class="heros-source-nom">ERP</span>Filtration Lyon 1008<br>Lyon · GOLD</div>
+        <div class="heros-source"><span class="heros-source-nom">CRM</span>Filtration Lyon 1008<br>Villeurbanne · contact@…</div>
+      </div>
+      <div class="fiche" role="group" aria-label="Une fiche client rassemblée depuis l'ERP et le CRM">
+        <div class="fiche-tete"><span class="fiche-nom">Filtration Lyon 1008</span><span class="fiche-code">P-1008</span></div>
+        <dl>
+          <div><dt>Ville</dt><dd>Lyon <span class="origine">ERP</span><span class="desaccord">Le CRM dit Villeurbanne</span></dd></div>
+          <div><dt>Segment</dt><dd>GOLD <span class="origine">ERP</span></dd></div>
+          <div><dt>Email</dt><dd>contact@filtration-lyon.example <span class="origine">CRM</span></dd></div>
+        </dl>
+      </div>
+      <figcaption>Données de démonstration fictives, telles que lumnik les rassemble — <a href="https://docs.lumnik.io/entities/" rel="noopener">voir la documentation</a>.</figcaption>
+    </figure>
+    <!-- fiche:fin -->
+    <p class="sous">lumnik copie les données de vos logiciels sans jamais y écrire, les rassemble en une fiche, et vous montre où ils ne sont pas d'accord.</p>
+    <ul class="heros-preuves">
+      <li>Lecture seule</li>
+      <li>Installé chez vous</li>
+      <li>Sans migration</li>
+    </ul>
+    <div class="heros-ctas">
       <a class="btn btn-lumiere" href="offre.html#contact">Demander une démonstration</a>
-      <a class="btn btn-givre" href="degel.html">Voir comment ça marche</a>
-    </div>
-    <p class="preuve">lecture seule · réponses sourcées · installé <b>chez vous</b> · réversible</p>
-    <p class="preuve" style="margin-top:8px"><b style="font-family:var(--serif)">lum</b> <i>la lumière</i> · <b style="font-family:var(--serif); color:var(--lumiere)">nik</b> — comme spoutnik&nbsp;: le compagnon de route</p>
-    <div class="hero-schema" role="group" aria-label="Vue d'ensemble du produit">
-      <div class="schema-col sources">
-        <div class="schema-etiquette">Ce qui est gelé</div>
-        <div class="schema-pile">
-          <span>Faits dispersés</span>
-          <span>Règles dans les têtes</span>
-          <span>Dossiers immobiles</span>
-          <span>Systèmes difficiles à toucher</span>
-        </div>
-      </div>
-      <div class="schema-fleche" aria-hidden="true">→</div>
-      <div class="schema-col hub">
-        <div class="schema-etiquette">Hub lumnik</div>
-        <div class="schema-noyau">Lecture seule · fusion · mémoire · garde-fous</div>
-      </div>
-      <div class="schema-fleche" aria-hidden="true">→</div>
-      <div class="schema-col sorties">
-        <div class="schema-etiquette">Le mouvement retrouvé</div>
-        <div class="schema-pile">
-          <span>Réponses sourcées</span>
-          <span>API · SQL · tableaux</span>
-          <span>Webhooks</span>
-          <span>Alertes d'immobilité</span>
-        </div>
-      </div>
+      <a class="btn btn-givre" href="degel.html">Comment ça marche</a>
     </div>
   </div>
 </header>
+
+<section class="fenetres" id="fenetres">
+  <div class="wrap reveal">
+    <p class="kicker">Lisible partout</p>
+    <h2>La même fiche, <em>deux fenêtres</em>.</h2>
+    <div class="fenetres-grille">
+      <!-- fenetre:pwa -->
+      <figure class="fenetre-lieu">
+        <figcaption><span class="lieu">Sur le téléphone</span> <span class="edition">Hub</span></figcaption>
+        <div class="pwa" role="group" aria-label="L'application métier affiche la fiche P-1008">
+          <div class="pwa-grab" aria-hidden="true"></div>
+          <div class="pwa-titre">Clients ACME</div>
+          <div class="subkey">P-1008</div>
+          <div class="field"><div class="lbl">Code client</div><div class="val">P-1008</div></div>
+          <div class="field"><div class="lbl">Raison sociale</div><div class="val">Filtration Lyon 1008</div></div>
+          <div class="field"><div class="lbl">Ville</div><div class="val">Lyon</div></div>
+          <div class="field"><div class="lbl">Segment</div><div class="val">GOLD</div></div>
+          <div class="field"><div class="lbl">Encours autorisé</div><div class="val">1596</div></div>
+          <div class="conflicts">
+            <div class="conflicts-titre">⚡ Ambiguïtés et divergences</div>
+            <div class="conflict">
+              <div class="col">Ville</div>
+              <div class="src">t_acme_desk_erp : <b>Lyon</b></div>
+              <div class="src">t_acme_desk_crm : <b>Villeurbanne</b></div>
+            </div>
+          </div>
+        </div>
+      </figure>
+      <!-- /fenetre:pwa -->
+      <!-- fenetre:api -->
+      <figure class="fenetre-lieu">
+        <figcaption><span class="lieu">Dans vos applications</span> <span class="edition">Hub</span></figcaption>
+        <div class="fenetre fenetre-code">
+          <div class="barre"><span class="rond"></span><span class="rond"></span><span class="rond"></span>&nbsp;GET /api/entities/acmecustomer?code=P-1008</div>
+<pre>[
+  {
+    "code": "P-1008",
+    "name": "Filtration Lyon 1008",
+    "city": "Lyon",
+    "segment": "GOLD",
+    "credit_limit": "1596",
+    "email": "contact@filtration-lyon.example",
+    "_conflicts": "{\"city\": [{\"src\": \"t_acme_desk_erp\", \"value\": \"Lyon\"}, {\"src\": \"t_acme_desk_crm\", \"value\": \"Villeurbanne\"}]}"
+  }
+]</pre>
+        </div>
+      </figure>
+      <!-- /fenetre:api -->
+    </div>
+    <p class="note">Sorties réelles de lumnik, sur des données de démonstration fictives.</p>
+  </div>
+</section>
+
+<section id="fusion">
+  <div class="wrap reveal">
+    <p class="kicker">La fusion</p>
+    <h2>Deux logiciels, une fiche. <em>Rien de jeté.</em></h2>
+    <p class="lede">L'ERP passe en premier : sa valeur est retenue. Celle du CRM reste visible sur la fiche.</p>
+    <table class="fusion-table">
+      <thead>
+        <tr><th scope="col"><span class="sr">Champ</span></th><th scope="col">ERP</th><th scope="col">CRM</th><th scope="col">La fiche</th></tr>
+      </thead>
+      <tbody>
+        <tr class="ligne-desaccord">
+          <th scope="row">Ville</th><td data-label="ERP">Lyon</td><td data-label="CRM">Villeurbanne</td>
+          <td data-label="La fiche">Lyon <span class="etat etat-desaccord">désaccord gardé</span></td>
+        </tr>
+        <tr>
+          <th scope="row">Segment</th><td data-label="ERP">GOLD</td><td data-label="CRM" class="vide">—</td>
+          <td data-label="La fiche">GOLD <span class="etat">de l'ERP</span></td>
+        </tr>
+        <tr>
+          <th scope="row">Email</th><td data-label="ERP" class="vide">—</td><td data-label="CRM">contact@filtration-lyon.example</td>
+          <td data-label="La fiche">contact@filtration-lyon.example <span class="etat">du CRM</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="note">Fiche « Filtration Lyon 1008 » : les deux logiciels s'accordent sur le nom.</p>
+  </div>
+</section>
+
+<section class="avant-apres" id="avant-apres">
+  <div class="wrap reveal">
+    <p class="kicker">Votre architecture</p>
+    <h2>Un seul point de lecture. <em>Pas un branchement par projet.</em></h2>
+    <p class="lede">Le jour où l'ERP change, le travail se concentre dans lumnik au lieu de se répéter dans chaque projet.</p>
+    <div class="aa-grille">
+      <figure class="aa aa-avant">
+        <figcaption>Aujourd'hui</figcaption>
+        <ul class="aa-projets">
+          <li>Appli terrain <span class="aa-fleche">→ ERP</span></li>
+          <li>Portail client <span class="aa-fleche">→ ERP</span></li>
+          <li>Tableau de bord <span class="aa-fleche">→ ERP</span></li>
+          <li>Agent IA <span class="aa-fleche">→ ERP</span></li>
+        </ul>
+        <p class="aa-bilan">Quatre projets, quatre branchements</p>
+      </figure>
+      <figure class="aa aa-apres">
+        <figcaption>Avec lumnik</figcaption>
+        <ul class="aa-projets">
+          <li>Appli terrain</li>
+          <li>Portail client</li>
+          <li>Tableau de bord</li>
+          <li>Agent IA</li>
+        </ul>
+        <div class="aa-hub">lumnik</div>
+        <p class="aa-lecture">lecture seule</p>
+        <div class="aa-sources">ERP · CRM · Excel</div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="immobile" id="immobile">
+  <div class="wrap reveal">
+    <p class="kicker">Le temps</p>
+    <h2>Ce qui ne bouge plus <em>finit par se voir</em>.</h2>
+    <p class="lede">Votre ERP dit où en est une commande, rarement depuis quand. lumnik le retient, lecture après lecture.</p>
+    <ol class="jours">
+      <li class="jour"><span class="quand">Export du jour 1</span><span class="doc">SO-000006 · client P-1008</span><span class="statut">EN LITIGE</span></li>
+      <li class="jour"><span class="quand">Export du jour 2</span><span class="doc">SO-000006 · client P-1008</span><span class="statut">EN LITIGE</span></li>
+      <li class="jour"><span class="quand">Export du jour 3</span><span class="doc">SO-000006 · client P-1008</span><span class="statut">EN LITIGE</span><span class="repere">inchangée depuis la première observation</span></li>
+    </ol>
+    <p class="question-temps">Combien de dossiers attendent chez vous depuis plus de 30&nbsp;jours&nbsp;?</p>
+  </div>
+</section>
+
+<section id="portes">
+  <div class="wrap reveal">
+    <p class="kicker">Pour qui</p>
+    <h2>Trois portes d'entrée.</h2>
+    <div class="portes-grille">
+      <a class="porte" href="offre.html#pour-qui">
+        <span class="porte-qui">Direction &amp; métiers</span>
+        <span class="porte-dit">La réponse au prochain comité, dans la minute, avec ses sources.</span>
+        <span class="porte-lien">Ce que vous y gagnez →</span>
+      </a>
+      <a class="porte" href="architecture.html">
+        <span class="porte-qui">DSI &amp; sécurité</span>
+        <span class="porte-dit">Un droit de lecture, installé chez vous, cloisonné par la base.</span>
+        <span class="porte-lien">Voir l'architecture →</span>
+      </a>
+      <a class="porte" href="offre.html#pour-qui">
+        <span class="porte-qui">Intégrateurs &amp; ESN</span>
+        <span class="porte-dit">Décrivez un SI une fois, rejouez-le chez le client suivant.</span>
+        <span class="porte-lien">L'intégration comme du code →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="confiance">
+  <div class="wrap reveal">
+    <p class="kicker">Confiance</p>
+    <h2>Ce que votre DSI peut vérifier.</h2>
+    <ul class="confiance-liste">
+      <li><strong>Lecture seule.</strong> lumnik n'écrit jamais dans vos systèmes.</li>
+      <li><strong>Isolation par la base.</strong> PostgreSQL cloisonne chaque ligne par organisation.</li>
+      <li><strong>Chez vous.</strong> Sur vos serveurs&nbsp;; l'IA peut tourner dans vos murs.</li>
+      <li><strong>Réversible.</strong> Des tables PostgreSQL ordinaires, un pg_dump standard.</li>
+    </ul>
+    <p class="confiance-liens">
+      <a href="https://docs.lumnik.io/security/" rel="noopener">Le vérifier en cinq minutes</a>
+      <span class="badge-bientot">Beta</span>
+      <a href="https://github.com/icreated/lumnik-open" rel="noopener">lumnik Open · Apache-2.0</a>
+      <a href="https://docs.lumnik.io/where-lumnik-stands/" rel="noopener">Où en est lumnik</a>
+    </p>
+  </div>
+</section>
 
 <section class="manifeste" id="manifeste">
   <div class="wrap reveal">
@@ -100,6 +258,9 @@
       <span>Connecter</span><span aria-hidden="true">·</span><span>Transformer</span><span aria-hidden="true">·</span><span>Exploiter</span>
     </div>
     <p class="signature">Defrost the enterprise.</p>
+    <div class="manifeste-cta">
+      <a class="btn btn-lumiere" href="offre.html#contact">Demander une démonstration</a>
+    </div>
   </div>
 </section>
 
