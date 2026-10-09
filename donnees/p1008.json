@@ -1,0 +1,57 @@
+{
+  "provenance": "Demo desk du monorepo lumnik, données fictives (docs/apps/demo/). Chaque bloc cite la sortie réelle dont il est recopié ; le site n'affiche aucune valeur qui ne soit pas ici.",
+  "sources": {
+    "provenance": "docs/apps/demo/data/acme-erp.csv ligne 10 et acme-crm.csv ligne 6",
+    "t_acme_desk_erp": { "code": "P-1008", "name": "Filtration Lyon 1008", "city": "Lyon", "segment": "GOLD", "credit_limit": "1596" },
+    "t_acme_desk_crm": { "customer": "P-1008", "company": "Filtration Lyon 1008", "town": "Villeurbanne", "email": "contact@filtration-lyon.example" }
+  },
+  "api": {
+    "provenance": "GET /api/entities/{name} — même ligne que `lm entity get acmecustomer --filter city=Lyon -o json` dans docs/entities.md",
+    "requete": "GET /api/entities/acmecustomer?code=P-1008",
+    "ligne": {
+      "code": "P-1008",
+      "name": "Filtration Lyon 1008",
+      "city": "Lyon",
+      "segment": "GOLD",
+      "credit_limit": "1596",
+      "email": "contact@filtration-lyon.example",
+      "_conflicts": "{\"city\": [{\"src\": \"t_acme_desk_erp\", \"value\": \"Lyon\"}, {\"src\": \"t_acme_desk_crm\", \"value\": \"Villeurbanne\"}]}"
+    }
+  },
+  "pwa": {
+    "provenance": "POST /api/views/detail?key=P-1008 avec docs/apps/demo/views/10-customers.yaml — les mêmes valeurs que `lm view P-1008` dans docs/apps/views.md ; rendu par app/src/components/detail.mjs",
+    "titre": "Clients ACME",
+    "cle": "P-1008",
+    "champs": [
+      ["Code client", "P-1008"],
+      ["Raison sociale", "Filtration Lyon 1008"],
+      ["Ville", "Lyon"],
+      ["Segment", "GOLD"],
+      ["Encours autorisé", "1596"]
+    ],
+    "divergences_titre": "⚡ Ambiguïtés et divergences",
+    "divergences": [
+      { "colonne": "Ville", "sources": [["t_acme_desk_erp", "Lyon"], ["t_acme_desk_crm", "Villeurbanne"]] }
+    ]
+  },
+  "question": {
+    "provenance": "docs/entities.md, section « Askable immediately » — transcription réelle de `lm ask`, réponse du modèle laissée telle quelle",
+    "commande": "lm ask --scope desk \"Combien de clients GOLD sont à Lyon, et quel est leur encours autorisé total ?\"",
+    "reponse": "There are 2 GOLD customers in Lyon with a total encours autorisé of 2096.",
+    "fraicheur": "data as of: 2026-09-13T00:39:29.573902Z (last completed run)",
+    "sql": [
+      "SQL: SELECT COUNT(*) AS customer_count, SUM(credit_limit::numeric) AS total_credit_limit",
+      "FROM \"connector\".\"v_acmecustomer\"",
+      "WHERE city = 'Lyon' AND segment = 'GOLD'"
+    ]
+  },
+  "commande": {
+    "provenance": "docs/apps/demo/data/acme-orders.csv, acme-orders-day2.csv, acme-orders-day3.csv — ligne 7, identique dans les trois exports",
+    "order_no": "SO-000006",
+    "code": "P-1008",
+    "status": "EN LITIGE",
+    "amount": "4100.00",
+    "ordered_on": "2026-08-07",
+    "exports": 3
+  }
+}
