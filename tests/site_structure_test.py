@@ -318,6 +318,12 @@ class SiteStructureTest(unittest.TestCase):
                 self.assertNotIn("lumnik Console", page_text)
                 self.assertNotIn("console-preuve", page_text)
 
+    def test_no_public_page_links_to_the_hero_variants(self):
+        for name in ALL_PAGES:
+            with self.subTest(name=name):
+                for href in load_page(name).links:
+                    self.assertNotIn(href.partition("#")[0], HERO_VARIANTS)
+
     def test_only_homepage_announces_language_alternates(self):
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
         self.assertIn('hreflang="fr"', homepage)
@@ -330,3 +336,113 @@ class SiteStructureTest(unittest.TestCase):
                     "hreflang=",
                     (ROOT / name).read_text(encoding="utf-8"),
                 )
+
+
+# --- Issue #13: the two hero variants of the five-second test -----------------------------
+#
+# Two pages that differ by one variable only: which of "category" and "visible object" is the
+# H1 and which is the eyebrow. Everything else — sub-title, proofs, the fused record, the
+# buttons — is byte-identical, so the test measures the title and nothing else. The record is
+# the demo desk's P-1008 as `lm entity get acmecustomer` prints it in docs/entities.md: real
+# output on fictional data, never a customer's.
+
+HERO_VARIANTS = ("heros-a.html", "heros-b.html")
+CATEGORY = "La couche de lecture de vos logiciels"
+OBJECT = "Une seule fiche client, lisible partout"
+TARGET_NAV = (
+    ("Produit", "degel.html"),
+    ("Situations", "mouvement.html"),
+    ("Pour qui", "offre.html#pour-qui"),
+    ("Architecture", "architecture.html"),
+    ("Offre", "offre.html#offre"),
+    ("Essayer", "essai.html"),
+    ("Nous parler", "offre.html#contact"),
+)
+FORBIDDEN = ("temps réel", "zéro risque", "honnête", "proxy", "nettoie", "Personne ne", "gelée")
+
+
+def between(text, start, end):
+    head, sep, rest = text.partition(start)
+    if not sep:
+        raise AssertionError(f"marker not found: {start}")
+    body, sep, _ = rest.partition(end)
+    if not sep:
+        raise AssertionError(f"marker not found: {end}")
+    return body
+
+
+class HeroVariantTest(unittest.TestCase):
+    def text(self, name):
+        return (ROOT / name).read_text(encoding="utf-8")
+
+    def test_both_variants_exist_and_stay_out_of_search_engines(self):
+        for name in HERO_VARIANTS:
+            with self.subTest(name=name):
+                text = self.text(name)
+                self.assertIn('<meta name="robots" content="noindex, nofollow">', text)
+                self.assertNotIn("hreflang=", text)
+                self.assertNotIn('rel="canonical"', text)
+
+    def test_each_variant_has_one_h1_a_skip_link_and_the_mobile_menu(self):
+        for name in HERO_VARIANTS:
+            page = load_page(name)
+            with self.subTest(name=name):
+                self.assertEqual(1, page.h1_count)
+                self.assertEqual(1, page.title_count)
+                self.assertIn("contenu", page.ids)
+                self.assertIn("#contenu", page.links)
+                self.assertEqual(1, len(page.menu_lists))
+
+    def test_the_category_and_the_object_swap_places(self):
+        a, b = (self.text(name) for name in HERO_VARIANTS)
+        self.assertIn(f"<h1>{CATEGORY}.</h1>", a)
+        self.assertIn(f'<p class="surtitre">{OBJECT}</p>', a)
+        self.assertIn(f"<h1>{OBJECT}.</h1>", b)
+        self.assertIn(f'<p class="surtitre">{CATEGORY}</p>', b)
+
+    def test_the_variants_differ_by_the_title_alone(self):
+        def without_title(text):
+            text = re.sub(r"<title>.*?</title>", "", text, flags=re.S)
+            text = re.sub(r'<p class="surtitre">.*?</p>', "", text, flags=re.S)
+            return re.sub(r"<h1>.*?</h1>", "", text, flags=re.S)
+
+        a, b = (without_title(self.text(name)) for name in HERO_VARIANTS)
+        self.assertEqual(a, b)
+
+    def test_the_record_is_the_demo_desk_p1008(self):
+        record = between(self.text("heros-a.html"), "<!-- fiche:debut -->", "<!-- fiche:fin -->")
+        # The ERP and the CRM agree on the name, disagree on the city, and only the CRM has
+        # the email — a fusion and a disagreement in one record (docs/entities.md).
+        for value in ("P-1008", "Filtration Lyon 1008", "Lyon", "Villeurbanne", "GOLD",
+                      "contact@filtration-lyon.example"):
+            with self.subTest(value=value):
+                self.assertIn(value, record)
+        self.assertIn("https://docs.lumnik.io/entities/", record)
+        self.assertIn("fictives", record)
+
+    def test_the_target_navigation_points_at_pages_that_exist(self):
+        for name in HERO_VARIANTS:
+            text = between(self.text(name), '<ul id="menu-principal">', "</ul>")
+            for label, href in TARGET_NAV:
+                with self.subTest(name=name, label=label):
+                    self.assertIn(f'href="{href}"', text)
+                    self.assertIn(f">{label}</a>", text)
+
+    def test_local_links_and_fragments_resolve(self):
+        for name in HERO_VARIANTS:
+            for href in load_page(name).links:
+                if href.startswith(("http://", "https://", "mailto:")):
+                    continue
+                target, _, fragment = href.partition("#")
+                target = target or name
+                with self.subTest(name=name, href=href):
+                    self.assertTrue((ROOT / target).is_file())
+                    if fragment:
+                        self.assertIn(fragment, load_page(target).ids)
+
+    def test_the_copy_avoids_the_words_the_theses_ruled_out(self):
+        for name in HERO_VARIANTS:
+            text = self.text(name)
+            for word in FORBIDDEN:
+                with self.subTest(name=name, word=word):
+                    self.assertNotIn(word, text)

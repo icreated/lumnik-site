@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>lumnik — La couche de lecture de vos logiciels</title>
+  <meta name="description" content="Variante de test du premier écran — issue #13.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='34' fill='%23ffd24a'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<a class="saut" href="#contenu">Aller au contenu</a>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="index.html">lumnik<span class="dot" aria-hidden="true"></span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">
+      <span class="menu-toggle-label">Menu</span>
+    </button>
+    <ul id="menu-principal">
+      <li><a href="degel.html">Produit</a></li>
+      <li><a href="mouvement.html">Situations</a></li>
+      <li><a href="offre.html#pour-qui">Pour qui</a></li>
+      <li><a href="architecture.html">Architecture</a></li>
+      <li><a href="offre.html#offre">Offre</a></li>
+      <li><a href="essai.html">Essayer</a></li>
+      <li><a class="btn btn-lumiere nav-contact" href="offre.html#contact">Nous parler</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="contenu">
+
+<header class="heros">
+  <div class="wrap heros-grille">
+    <p class="surtitre">Une seule fiche client, lisible partout</p>
+    <h1>La couche de lecture de vos logiciels.</h1>
+    <!-- fiche:debut -->
+    <figure class="heros-fiche">
+      <div class="heros-sources" aria-hidden="true">
+        <div class="heros-source"><span class="heros-source-nom">ERP</span>Filtration Lyon 1008<br>Lyon · GOLD</div>
+        <div class="heros-source"><span class="heros-source-nom">CRM</span>Filtration Lyon 1008<br>Villeurbanne · contact@…</div>
+      </div>
+      <div class="fiche" role="group" aria-label="Une fiche client rassemblée depuis l'ERP et le CRM">
+        <div class="fiche-tete"><span class="fiche-nom">Filtration Lyon 1008</span><span class="fiche-code">P-1008</span></div>
+        <dl>
+          <div><dt>Ville</dt><dd>Lyon <span class="origine">ERP</span><span class="desaccord">Le CRM dit Villeurbanne</span></dd></div>
+          <div><dt>Segment</dt><dd>GOLD <span class="origine">ERP</span></dd></div>
+          <div><dt>Email</dt><dd>contact@filtration-lyon.example <span class="origine">CRM</span></dd></div>
+        </dl>
+      </div>
+      <figcaption>Données de démonstration fictives, telles que lumnik les rassemble — <a href="https://docs.lumnik.io/entities/" rel="noopener">voir la documentation</a>.</figcaption>
+    </figure>
+    <!-- fiche:fin -->
+    <p class="sous">lumnik copie les données de vos logiciels sans jamais y écrire, les rassemble en une fiche, et vous montre où ils ne sont pas d'accord.</p>
+    <ul class="heros-preuves">
+      <li>Lecture seule</li>
+      <li>Installé chez vous</li>
+      <li>Sans migration</li>
+    </ul>
+    <div class="heros-ctas">
+      <a class="btn btn-lumiere" href="offre.html#contact">Demander une démonstration</a>
+      <a class="btn btn-givre" href="degel.html">Comment ça marche</a>
+    </div>
+  </div>
+</header>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>lumnik — édité par icreated · Châtillon d'Azergues, France</div>
+    <div><a href="mentions.html">Mentions légales</a> · <a href="https://docs.lumnik.io" rel="noopener">Documentation</a> · <a href="essai.html">Essai en ligne</a> · <a href="dossier.html">Cadrer votre besoin</a></div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>
