@@ -34,8 +34,10 @@ RELAYS = {
     "degel.html": ("produit.html", ("comment", "faits", "sens", "temps")),
     "mouvement.html": ("situations.html", ("adaptateur", "cas", "industrie", "negoce", "services", "secteur-public")),
 }
-# Wordings the theses ruled out site-wide (absolutes, real-time, a French answer the product
-# does not give yet — lumnik#873 — and maturity copied away from its single source).
+# Wordings the theses ruled out site-wide: absolutes, real-time, maturity copied away from its
+# single source, and a promise of French. Since lumnik#873 the answer follows the question's
+# language, but the deterministic messages (abstentions, refusals, `data as of`) stay English and
+# a terse question can still fall back to English (lumnik#879): "langage naturel" is what holds.
 SITE_FORBIDDEN = (
     "temps réel",
     "zéro risque",
@@ -330,6 +332,9 @@ class SiteStructureTest(unittest.TestCase):
         # The terminal is a real lm session, and it says what it accounts for.
         self.assertIn("$ lm login", architecture)
         self.assertIn("IN = OUT + SKIPPED", architecture)
+        # "La forme exacte des sorties": SqlGuard puts its bound on a line of its own, and lm
+        # prints it.
+        self.assertIn("WHERE city = 'Lyon' AND segment = 'GOLD'\nLIMIT 500</pre>", architecture)
         # The four mechanisms a RSSI can check, and the invitation to check them.
         self.assertIn('class="garanties"', architecture)
         self.assertIn("docs.lumnik.io/security/", architecture)
@@ -554,10 +559,10 @@ class HomepageTest(unittest.TestCase):
 
     def test_no_ai_window_until_the_answer_can_name_a_disputed_record(self):
         """The homepage shows P-1008's disputed city, so an AI window may not count P-1008 in
-        silence. The only real transcript did exactly that — `WHERE city = 'Lyon'` counted it
-        without a word, in English. It comes back once lumnik#873 (answer in the question's
-        language) and lumnik#874 (say so when a counted row is disputed) are shipped and a
-        fresh run is transcribed into donnees/p1008.json.
+        silence. The only real transcript does exactly that — `WHERE city = 'Lyon'` counts it
+        without a word. lumnik#873 shipped (the answer now follows the question's language, and
+        docs/entities.md holds the French run), so what remains is lumnik#874 (say so when a
+        counted row is disputed); then a fresh run is transcribed into donnees/p1008.json.
         """
         self.assertNotIn("lm ask", self.home())
         self.assertNotIn("fenetre:question", self.home())
