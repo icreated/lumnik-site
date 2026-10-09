@@ -84,7 +84,7 @@
 <section class="fenetres" id="fenetres">
   <div class="wrap reveal">
     <p class="kicker">Lisible partout</p>
-    <h2>La même fiche, <em>deux fenêtres</em>.</h2>
+    <h2>La même fiche, <em>trois fenêtres</em>.</h2>
     <div class="fenetres-grille">
       <!-- fenetre:pwa -->
       <figure class="fenetre-lieu">
@@ -128,8 +128,29 @@
         </div>
       </figure>
       <!-- /fenetre:api -->
+      <!-- fenetre:question -->
+      <figure class="fenetre-lieu">
+        <figcaption><span class="lieu">Devant votre IA</span> <span class="edition">Pro</span></figcaption>
+        <div class="fenetre fenetre-code">
+          <div class="barre"><span class="rond"></span><span class="rond"></span><span class="rond"></span>&nbsp;lm ask</div>
+<pre><span class="cmd">$ lm ask --scope desk "Combien de clients GOLD sont à Lyon, et quel est leur encours autorisé total ?"</span>
+Il y a 2 clients GOLD à Lyon et leur encours autorisé total est de 2096.
+  data as of: 2026-10-09T14:55:10.790181Z (last completed run)
+
+  disputed — a source disagrees on a value this answer filtered on:
+    P-1008  city = 'Lyon'  counted  t_acme_desk_erp: Lyon · t_acme_desk_crm: Villeurbanne
+
+  SQL: SELECT COUNT(*) AS gold_customers_count, SUM(credit_limit::numeric) AS total_credit_limit
+FROM "connector"."v_acmecustomer"
+WHERE city = 'Lyon' AND segment = 'GOLD'
+LIMIT 500
+
+  try: lm conflicts list --scope desk  — where this scope has source conflicts or lookup ambiguities, row by row</pre>
+        </div>
+      </figure>
+      <!-- /fenetre:question -->
     </div>
-    <p class="note">Sorties réelles de lumnik, sur des données de démonstration fictives.</p>
+    <p class="note">Sorties réelles de lumnik, sur des données de démonstration fictives. Filtration Lyon 1008 est comptée à Lyon — et la réponse dit que le CRM la place à Villeurbanne.</p>
   </div>
 </section>
 

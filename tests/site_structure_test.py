@@ -1,4 +1,5 @@
 from html.parser import HTMLParser
+import html
 from pathlib import Path
 import json
 import re
@@ -557,15 +558,16 @@ class HomepageTest(unittest.TestCase):
         self.assertIn('class="edition">Hub<', self.block("pwa"))
         self.assertIn('class="edition">Hub<', self.block("api"))
 
-    def test_no_ai_window_until_the_answer_can_name_a_disputed_record(self):
-        """The homepage shows P-1008's disputed city, so an AI window may not count P-1008 in
-        silence. The only real transcript does exactly that — `WHERE city = 'Lyon'` counts it
-        without a word. lumnik#873 shipped (the answer now follows the question's language, and
-        docs/entities.md holds the French run), so what remains is lumnik#874 (say so when a
-        counted row is disputed); then a fresh run is transcribed into donnees/p1008.json.
+    def test_the_ai_window_is_the_real_transcript_and_names_the_disputed_record(self):
+        """The homepage shows P-1008's disputed city, so the AI window may not count P-1008 in
+        silence. Since lumnik#874 the answer names it; the window is the real run, line for line.
         """
-        self.assertNotIn("lm ask", self.home())
-        self.assertNotIn("fenetre:question", self.home())
+        question = self.block("question")
+        pre = html.unescape(re.sub(r"</?span[^>]*>", "", between(question, "<pre>", "</pre>")))
+        self.assertEqual(FICHE["question"]["transcription"], pre.split("\n"))
+        self.assertIn("P-1008  city = 'Lyon'  counted", pre)
+        self.assertIn("t_acme_desk_crm: Villeurbanne", pre)
+        self.assertIn('class="edition">Pro<', question)
 
     def test_the_fusion_section_shows_both_sources_and_the_kept_disagreement(self):
         fusion = between(self.home(), 'id="fusion"', "</section>")
