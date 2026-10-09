@@ -46,6 +46,14 @@ SITE_FORBIDDEN = (
     "personne d'extérieur",
     "lumnik Console",
     "console-preuve",
+    # The answer shows the query it ran; "sources" promised citations it does not give (lumnik#874).
+    "sources citées",
+    "sourcée",
+    "avec ses sources",
+    "en français",
+    # Security and permanence are mechanisms, never guarantees.
+    "fuite de données",
+    "pour toujours",
 )
 
 
