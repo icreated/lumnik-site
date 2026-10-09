@@ -54,6 +54,7 @@ SITE_FORBIDDEN = (
     # Security and permanence are mechanisms, never guarantees.
     "fuite de données",
     "pour toujours",
+    "sans risque",
 )
 
 
@@ -339,6 +340,8 @@ class SiteStructureTest(unittest.TestCase):
         # The gel grid illustrates the four causes the paragraph claims, not only age.
         self.assertIn("SaaS métier fermé", gel)
         self.assertIn("CRM + ERP flambant neufs", gel)
+        # The worked cases are illustrations, and say so before a reader takes them for clients.
+        self.assertIn("Exemples illustratifs", between(gel, 'id="cas"', '<div class="cas-grille">'))
         # The three dead ends and the three refusals.
         self.assertIn('class="impasses"', gel)
         self.assertIn('class="principes"', degel)
