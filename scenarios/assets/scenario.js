@@ -41,7 +41,7 @@ document.querySelectorAll('[role="tablist"]').forEach((list) => {
 
 document.querySelectorAll("[data-copy]").forEach((button) =>
   button.addEventListener("click", async () => {
-    const code = button.closest('[role="tabpanel"]').querySelector("code");
+    const code = button.closest(".file").nextElementSibling.querySelector("code");
     try {
       await navigator.clipboard.writeText(code.innerText);
       const label = button.textContent;

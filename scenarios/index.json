@@ -18,6 +18,25 @@
       },
       "replayedAt": "2026-10-21T06:11:02.847466Z",
       "evidenceDigest": "sha256:4fa6c732414b8257ba8c19f14c0143a871610106a3a373508100f637b0b66187"
+    },
+    {
+      "slug": "pwa-pagination",
+      "title": "40 000 articles, parcourus page par page.",
+      "lede": "Deux exports CSV, deux entités, deux vues liées, une app. Le hub sert le catalogue par pages de 50 ; la PWA n'en charge jamais plus.",
+      "tags": {
+        "domain": [
+          "Commerce",
+          "Catalogue"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "View",
+          "App"
+        ]
+      },
+      "replayedAt": "2026-10-21",
+      "evidenceDigest": "sha256:f9d87dcb2915e74929ebffe0e19849c65224ad8fd751ab284a1136c3d23ecc39"
     }
   ]
 }
