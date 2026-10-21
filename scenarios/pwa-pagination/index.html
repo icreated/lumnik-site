@@ -28,27 +28,27 @@
 <span class="out">✓ 10-products.yaml — valid</span>
 
 <span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-products.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;pwa-pagination-products&quot;,&quot;connectorId&quot;:&quot;4ac30156-e35e-40c5-99f1-4382e7b37d88&quot;,&quot;endpointsApplied&quot;:1}</span>
+<span class="out">{&quot;name&quot;:&quot;pwa-pagination-products&quot;,&quot;connectorId&quot;:&quot;8c45c7f3-c54f-4649-8138-253e96cd167d&quot;,&quot;endpointsApplied&quot;:1}</span>
 
 <span class="cmd"><span class="prompt">$</span> lm validate -f manifests/15-product-categories.yaml</span>
 <span class="out">✓ 15-product-categories.yaml — valid</span>
 
 <span class="cmd"><span class="prompt">$</span> lm apply -f manifests/15-product-categories.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;pwa-pagination-product-categories&quot;,&quot;connectorId&quot;:&quot;7c3b7492-0363-4843-bab2-6b50330f031d&quot;,&quot;endpointsApplied&quot;:1}</span>
+<span class="out">{&quot;name&quot;:&quot;pwa-pagination-product-categories&quot;,&quot;connectorId&quot;:&quot;b8264dfc-9697-45ee-9214-522c86e5c5d7&quot;,&quot;endpointsApplied&quot;:1}</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run pwa-pagination-product-categories</span>
-<span class="out">run scheduled: 3c1505ef-8c91-4640-bba6-6c6a7bf5a993</span>
+<span class="out">run scheduled: 2dbc1090-0a46-44d6-a64b-dc0942e4533e</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 3c1505ef-8c91-4640-bba6-6c6a7bf5a993</span>
+<span class="cmd"><span class="prompt">$</span> lm run get 2dbc1090-0a46-44d6-a64b-dc0942e4533e</span>
 <span class="out">ID        CONNECTOR                          ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-3c1505ef  pwa-pagination-product-categories  default   Completed  0   0    0        0             2026-10-21 15:12  2026-10-21 15:12</span>
+2dbc1090  pwa-pagination-product-categories  default   Completed  63  63   0        0             2026-10-21 15:46  2026-10-21 15:46</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run pwa-pagination-products</span>
-<span class="out">run scheduled: 949ba81f-bc8f-4890-9ac3-71fe22e7392f</span>
+<span class="out">run scheduled: 3c6383c5-1847-461e-88ac-282a40869df5</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 949ba81f-bc8f-4890-9ac3-71fe22e7392f</span>
-<span class="out">ID        CONNECTOR                ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-949ba81f  pwa-pagination-products  default   Completed  0   0    0        0             2026-10-21 15:12  2026-10-21 15:12</span></code></pre></div><div role="tabpanel" id="import-result" aria-labelledby="import-result-tab" tabindex="0" hidden><dl class="facts"><dt>Connectors appliqués</dt><dd>pwa-pagination-products, pwa-pagination-product-categories</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+<span class="cmd"><span class="prompt">$</span> lm run get 3c6383c5-1847-461e-88ac-282a40869df5</span>
+<span class="out">ID        CONNECTOR                ENDPOINT  STATUS     IN     OUT    SKIPPED  DEAD-LETTERS  STARTED           ENDED
+3c6383c5  pwa-pagination-products  default   Completed  40233  40233  0        0             2026-10-21 15:46  2026-10-21 15:46</span></code></pre></div><div role="tabpanel" id="import-result" aria-labelledby="import-result-tab" tabindex="0" hidden><dl class="facts"><dt>Connectors appliqués</dt><dd>pwa-pagination-products, pwa-pagination-product-categories</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
   </div>
   <aside class="explain">
     <h2 id="import-title">Un Connector par export</h2>
@@ -78,6 +78,11 @@
     <div role="tablist" class="view-tabs" aria-label="Afficher"><button type="button" role="tab" id="views-manifest-tab" data-view="manifest" aria-controls="views-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="views-commands-tab" data-view="commands" aria-controls="views-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="views-result-tab" data-view="result" aria-controls="views-result" aria-selected="false" tabindex="-1">Résultat</button></div>
     <div role="tabpanel" id="views-manifest" aria-labelledby="views-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-products-view.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: View</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: pwa-pagination-products</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: pwa-pagination</span><span class="line">  <span class="key">table</span>: connector.v_pwapaginationproduct</span><span class="line">  <span class="key">title</span>: Catalogue des articles</span><span class="line">  <span class="key">columns</span>: [product_id, reference, description, category_name, active]</span><span class="line hl">  <span class="key">links</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">column</span>: category_name</span><span class="line">      <span class="key">targetView</span>: pwa-pagination-categories</span><span class="line">      <span class="key">filters</span>:</span><span class="line hl">        <span class="key">name</span>: <span class="str">&quot;{category_name}&quot;</span></span></code></pre><div class="file"><span class="filename">manifests/35-categories-view.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: View</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: pwa-pagination-categories</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: pwa-pagination</span><span class="line">  <span class="key">table</span>: connector.v_pwapaginationcategory</span><span class="line">  <span class="key">title</span>: Catégories</span><span class="line">  <span class="key">columns</span>: [name, description, active]</span><span class="line hl">  <span class="key">links</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">column</span>: name</span><span class="line">      <span class="key">targetView</span>: pwa-pagination-products</span><span class="line">      <span class="key">filters</span>:</span><span class="line hl">        <span class="key">category_name</span>: <span class="str">&quot;{name}&quot;</span></span></code></pre></div><div role="tabpanel" id="views-commands" aria-labelledby="views-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm view apply -f manifests/30-products-view.yaml</span>
 <span class="out">applied: pwa-pagination-products (scope pwa-pagination)</span>
+<span class="note">! 30-products-view.yaml — 0 error(s), 1 warning(s)</span>
+<span class="note"></span>
+<span class="note">  WARN     spec.links[0].targetView</span>
+<span class="note">          targetView &#x27;pwa-pagination-categories&#x27; is not a view of scope &#x27;pwa-pagination&#x27; (yet); the declaration is kept, and following the link is refused until that view is applied</span>
+<span class="note"></span>
 
 <span class="cmd"><span class="prompt">$</span> lm view apply -f manifests/35-categories-view.yaml</span>
 <span class="out">applied: pwa-pagination-categories (scope pwa-pagination)</span>

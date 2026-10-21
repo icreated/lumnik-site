@@ -28,27 +28,27 @@
 <span class="out">✓ 10-products.yaml — valid</span>
 
 <span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-products.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;pwa-chat-products&quot;,&quot;connectorId&quot;:&quot;9435b487-a8ce-43f7-8322-4273a59db9a2&quot;,&quot;endpointsApplied&quot;:1}</span>
+<span class="out">{&quot;name&quot;:&quot;pwa-chat-products&quot;,&quot;connectorId&quot;:&quot;e8893df3-e318-4974-80ab-ee7722c669f4&quot;,&quot;endpointsApplied&quot;:1}</span>
 
 <span class="cmd"><span class="prompt">$</span> lm validate -f manifests/15-product-categories.yaml</span>
 <span class="out">✓ 15-product-categories.yaml — valid</span>
 
 <span class="cmd"><span class="prompt">$</span> lm apply -f manifests/15-product-categories.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;pwa-chat-product-categories&quot;,&quot;connectorId&quot;:&quot;4aecaf78-8240-43dc-9fc5-68cb21013cfc&quot;,&quot;endpointsApplied&quot;:1}</span>
+<span class="out">{&quot;name&quot;:&quot;pwa-chat-product-categories&quot;,&quot;connectorId&quot;:&quot;34d48574-6dd7-4e5a-97d5-1efba352d638&quot;,&quot;endpointsApplied&quot;:1}</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run pwa-chat-product-categories</span>
-<span class="out">run scheduled: 2cb7b5cb-e7be-4649-a262-5734f8ac3609</span>
+<span class="out">run scheduled: abdf9a63-c6ea-4f46-bfd1-802c11d49221</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 2cb7b5cb-e7be-4649-a262-5734f8ac3609</span>
+<span class="cmd"><span class="prompt">$</span> lm run get abdf9a63-c6ea-4f46-bfd1-802c11d49221</span>
 <span class="out">ID        CONNECTOR                    ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-2cb7b5cb  pwa-chat-product-categories  default   Completed  0   0    0        0             2026-10-21 15:14  2026-10-21 15:14</span>
+abdf9a63  pwa-chat-product-categories  default   Completed  63  63   0        0             2026-10-21 15:47  2026-10-21 15:47</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run pwa-chat-products</span>
-<span class="out">run scheduled: ad10516f-3655-4422-a32e-313635117860</span>
+<span class="out">run scheduled: 15eb03af-78ef-468f-89f4-67b00d5771c4</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get ad10516f-3655-4422-a32e-313635117860</span>
-<span class="out">ID        CONNECTOR          ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-ad10516f  pwa-chat-products  default   Completed  0   0    0        0             2026-10-21 15:14  2026-10-21 15:14</span></code></pre></div><div role="tabpanel" id="import-result" aria-labelledby="import-result-tab" tabindex="0" hidden><dl class="facts"><dt>Connectors appliqués</dt><dd>pwa-chat-products, pwa-chat-product-categories</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+<span class="cmd"><span class="prompt">$</span> lm run get 15eb03af-78ef-468f-89f4-67b00d5771c4</span>
+<span class="out">ID        CONNECTOR          ENDPOINT  STATUS     IN     OUT    SKIPPED  DEAD-LETTERS  STARTED           ENDED
+15eb03af  pwa-chat-products  default   Completed  40233  40233  0        0             2026-10-21 15:47  2026-10-21 15:47</span></code></pre></div><div role="tabpanel" id="import-result" aria-labelledby="import-result-tab" tabindex="0" hidden><dl class="facts"><dt>Connectors appliqués</dt><dd>pwa-chat-products, pwa-chat-product-categories</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
   </div>
   <aside class="explain">
     <h2 id="import-title">Un Connector par export</h2>
@@ -89,7 +89,7 @@ ad10516f  pwa-chat-products  default   Completed  0   0    0        0           
     <div role="tablist" class="view-tabs" aria-label="Demander"><button type="button" role="tab" id="ask-commands-tab" data-view="commands" aria-controls="ask-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="ask-result-tab" data-view="result" aria-controls="ask-result" aria-selected="false" tabindex="-1">Résultat</button></div>
     <div role="tabpanel" id="ask-commands" aria-labelledby="ask-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm ask --scope pwa-chat --lang fr &quot;Combien d&#x27;articles appartiennent à la catégorie Pompes ?&quot;</span>
 <span class="out">Il y a 7407 articles qui appartiennent à la catégorie Pompes.
-  data as of: 2026-10-21T13:14:03.543476Z (last completed run)
+  data as of: 2026-10-21T13:47:50.345786Z (last completed run)
 
   COUNT
   7407
