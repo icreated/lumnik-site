@@ -1,0 +1,41 @@
+{
+  "locale": "fr",
+  "scenarios": [
+    {
+      "slug": "gmao-candy-line-incident",
+      "title": "Un incident critique n'attend plus, invisible, qu'on le prenne en charge.",
+      "lede": "Une GMAO ancienne exporte ses incidents dans un fichier CSV et ne prévient personne. lumnik lit cet export tel quel, déclare le cycle de vie des incidents et dépose l'incident critique sans technicien dans la boîte de décisions du responsable maintenance.",
+      "tags": {
+        "domain": [
+          "Industrie",
+          "Maintenance"
+        ],
+        "kinds": [
+          "Connector",
+          "Workflow",
+          "Process"
+        ]
+      },
+      "evidence_sha256": {
+        "evidence/01-connector-apply.json": "9a52c16bf9d92957580fa641a54023b0a41e332d672f60cc278166c7ed9eaf20",
+        "evidence/02-calibration-run.json": "ccb88bb2766d88f0f63a4bb0afff02fe7d025f36d5f2e1168e3f97ed27635d83",
+        "evidence/03-workflow-apply.json": "ad18f54af1f13d5415825af14dd263027087650a6d66f00bffe83f5ef7ec4153",
+        "evidence/04-process-apply.json": "c5d0820b818892edd0ae8320f49873fc6b7a6ed29f1de7282bfc013cc4cfdc57",
+        "evidence/07-inbox.json": "2affaca4773948b3580c68de056a31494ed37eee3c7fcee7737a0ccd1a05fdc9",
+        "evidence/08-transitions.json": "b6f2aa1b408c080d9cd7e315fbdde9d7cd1266894bd32d9671cdae99f8bc7761",
+        "evidence/09-business-run-ids.txt": "5b919e1f9de826d022078a9f37ee073a6e32ce6bfa1e85aee9a6295c395db107",
+        "evidence/10-declared-run.json": "101adbb1d95ddd1101163ef4e852e13b414d4c5abee46f1aa3655194dc51bf09",
+        "evidence/11-assigned-run.json": "b23dce77137157d2eb20d1d85fb041292d5d0caccbb3e374b86adb75c648e906",
+        "evidence/12-observations-declared.json": "a493759e06ad0bd4210c29dbb5f42182349670ae23ea4cb13149041f7041d5f7",
+        "evidence/13-observations-assigned.json": "22cddc5cfaa8efbc30af55b1fe7d849fca3459f624df67235b6bc8055a1e882f",
+        "evidence/applied-manifests/10-incidents.yaml": "85f9613d4b8fc187c0899381d3e134412f8736235a2fb492633d7eea9c62b436",
+        "evidence/applied-manifests/20-incident-workflow.yaml": "008d8f290585b5f01b92920e75da0e1ce1b18518fbe19beae98b9f65eb849b01",
+        "evidence/applied-manifests/30-unassigned-critical-process.yaml": "f70f8598819812b86ffcc2baca0d2728699899b953a5fe4d0ca07d83ddde2952",
+        "evidence/commands.jsonl": "e0091d9cd31a6fbd9846a519bbe86186f93353f5fe4deab73ba66121f5fbba5a",
+        "evidence/sources/calibration.csv": "80cb50e154c761432527023b374ac6b6d6468a1fed76f68ceaea5cd2a73c391c",
+        "evidence/sources/incidents-assigned.csv": "24ff8c571164f9282ba57d70e893a4814fc9ec8eb7cb5bb1c6c5fc059789c59a",
+        "evidence/sources/incidents-declared.csv": "0126ca39d1c2f4d19fb1034e3ec3cfe66b3fef115baff77c2bcbfc51926f03f7"
+      }
+    }
+  ]
+}
