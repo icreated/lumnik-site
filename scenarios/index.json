@@ -35,7 +35,7 @@
         ]
       },
       "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:f5e07928ad36d129abbc86e8762160dd2f16cd35fbcfdd60c43c460725e56e58"
+      "evidenceDigest": "sha256:eafd0ad70a2bf076779c7564601762a63957d9210e6aa0a341c973f15c26ee27"
     },
     {
       "slug": "pwa-pagination",
@@ -54,7 +54,26 @@
         ]
       },
       "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:9ed751214c62ab9f9d4e3b355ec90ced043e9a80d29ec56b03e2510abfa4977d"
+      "evidenceDigest": "sha256:3fef15276b19cf9e8983d01669de4656fcbbe4c9ba4598f0564b36af994beb34"
+    },
+    {
+      "slug": "pwa-search",
+      "title": "Chercher dans 40 000 articles, facettes comprises.",
+      "lede": "Deux exports CSV, une entité, un SearchIndex, une app réduite à la recherche. Le hub indexe les colonnes déclarées ; la PWA filtre par facette.",
+      "tags": {
+        "domain": [
+          "Commerce",
+          "Catalogue"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "SearchIndex",
+          "App"
+        ]
+      },
+      "replayedAt": "2026-10-21",
+      "evidenceDigest": "sha256:66a82f5e2a774e0fec0a1f34cd31ae7a093cecf939403942db2c932df6afefab"
     }
   ]
 }
