@@ -488,7 +488,8 @@ class HeroVariantTest(unittest.TestCase):
                 target, _, fragment = href.partition("#")
                 target = target or name
                 with self.subTest(name=name, href=href):
-                    self.assertTrue((ROOT / target).is_file())
+                    # A directory URL serves its index.html, as GitHub Pages does (scenarios/).
+                    self.assertTrue((ROOT / target).is_file() or (ROOT / target / "index.html").is_file())
                     if fragment:
                         self.assertIn(fragment, load_page(target).ids)
 
@@ -676,3 +677,19 @@ class ScenarioPagesTest(unittest.TestCase):
             for word in SITE_FORBIDDEN:
                 with self.subTest(name=name, word=word):
                     self.assertNotIn(word.lower(), text.lower())
+
+    def test_every_footer_leads_to_the_replayed_scenarios(self):
+        for path in sorted(ROOT.glob("*.html")):
+            footers = re.findall(r"<footer.*?</footer>", path.read_text(encoding="utf-8"), re.S)
+            for footer in footers:
+                with self.subTest(page=path.name):
+                    self.assertIn('href="scenarios/"', footer)
+
+    def test_the_adapter_section_leads_to_a_published_scenario(self):
+        text = (ROOT / "situations.html").read_text(encoding="utf-8")
+        section = re.search(r'<section id="adaptateur">.*?</section>', text, re.S).group(0)
+        targets = re.findall(r'href="(scenarios/[a-z0-9-]+/)"', section)
+        self.assertTrue(targets, "the adapter section names no replayed scenario")
+        for href in targets:
+            with self.subTest(href=href):
+                self.assertTrue((ROOT / href / "index.html").is_file())
