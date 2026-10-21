@@ -22,6 +22,7 @@ heros-b.html    variante B (retenue, provisoirement) — son héros est recopié
 donnees/        p1008.json : la fiche de démonstration et sa provenance — seule source des valeurs de l'accueil
 proposal/       les modules ES du questionnaire (.mjs, zéro build) ; page.mjs est le seul code DOM
 catalogue/      les catalogues publiés (<version>.json) — ARTEFACTS DE PUBLICATION
+scenarios/      les scénarios rejoués (une page par scénario + catalogue) — ARTEFACT DE PUBLICATION
 catalogue-index.json  les versions servies et leurs empreintes — ARTEFACT DE PUBLICATION
 tests/js/       tests node:test — `node --test 'tests/js/*.test.mjs'` (forme glob, sans npm)
 tests/fixtures/ le corpus de dossiers vendu depuis le monorepo — ARTEFACT DE PUBLICATION
@@ -35,6 +36,10 @@ site.js         barre de dégel (progression) + révélation au défilement
 `lumnik` et sont écrits **uniquement** par `scripts/publish-proposal-catalogue.sh`
 (une branche + une PR ; un push sur `main` déploie). Une fixture modifiée à la main
 fait échouer `tests/js/corpus.test.mjs` : republiez au lieu d'éditer.
+
+`scenarios/` vient du dépôt `lumnik-scenario` et est réécrit en entier par
+`tools/scenario-site/publish.sh` (une branche + une PR) à partir des candidats validés de
+chaque scénario. Ne pas l'éditer ici : corriger le scénario, le rejouer, republier.
 
 L'empreinte d'une version dans `catalogue-index.json` n'est **pas** le SHA-256 des octets
 du fichier : c'est le SHA-256 de son **JSON canonique** (clés triées par point de code,

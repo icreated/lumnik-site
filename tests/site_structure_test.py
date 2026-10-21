@@ -638,3 +638,41 @@ class AlertTest(unittest.TestCase):
                 self.assertIn(f'"{key}": {json.dumps(alerte[key], ensure_ascii=False)}', situations)
         self.assertIn("une minute", situations)
         self.assertNotIn("commande_immobile", situations)
+
+
+# --- scenarios/: replayed scenarios, a publication artefact of lumnik-scenario -------------------
+#
+# Written only by lumnik-scenario's tools/scenario-site/publish.sh; the site checks what it serves
+# with the same rules as its own pages.
+
+SCENARIO_PAGES = sorted(p.relative_to(ROOT).as_posix() for p in (ROOT / "scenarios").rglob("*.html"))
+
+
+class ScenarioPagesTest(unittest.TestCase):
+    def test_situations_lead_to_the_replayed_scenarios(self):
+        self.assertIn("scenarios/", load_page("situations.html").links)
+
+    def test_every_published_scenario_has_its_page(self):
+        index = json.loads((ROOT / "scenarios" / "index.json").read_text(encoding="utf-8"))
+        for entry in index["scenarios"]:
+            with self.subTest(slug=entry["slug"]):
+                self.assertIn(f"scenarios/{entry['slug']}/index.html", SCENARIO_PAGES)
+
+    def test_local_links_resolve(self):
+        for name in SCENARIO_PAGES:
+            page = load_page(name)
+            hrefs = page.links + re.findall(r'<(?:script|link)[^>]+(?:src|href)="([^"]+)"',
+                                            (ROOT / name).read_text(encoding="utf-8"))
+            for href in hrefs:
+                if href.startswith(("http://", "https://", "mailto:")) or href.startswith("#"):
+                    continue
+                target = (ROOT / name).parent / href.partition("#")[0]
+                with self.subTest(name=name, href=href):
+                    self.assertTrue(target.is_file() or (target / "index.html").is_file())
+
+    def test_the_copy_avoids_the_words_the_theses_ruled_out(self):
+        for name in SCENARIO_PAGES:
+            text = html.unescape(re.sub(r"<[^>]+>", " ", (ROOT / name).read_text(encoding="utf-8")))
+            for word in SITE_FORBIDDEN:
+                with self.subTest(name=name, word=word):
+                    self.assertNotIn(word.lower(), text.lower())
