@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Questionner 40 000 articles, SQL à l&#x27;appui. — lumnik</title>
+<meta name="description" content="Deux exports CSV, une entité, une app réduite au chat. La question devient une requête en lecture seule ; la réponse montre son SQL.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/pwa-chat/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/pwa-chat/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Questionner 40 000 articles, SQL à l&#x27;appui.</h1>
+    <p class="lede">Deux exports CSV, une entité, une app réduite au chat. La question devient une requête en lecture seule ; la réponse montre son SQL.</p>
+    <ul class="tags"><li class="tag">Commerce</li><li class="tag">Catalogue</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li><li class="tag kind">App</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-import" data-step="import" aria-current="step"><span class="num">1 · Importer</span><span class="sub">Deux CSV</span></a><a href="#step-model" data-step="model"><span class="num">2 · Modéliser</span><span class="sub">Une entité</span></a><a href="#step-app" data-step="app"><span class="num">3 · Publier</span><span class="sub">L&#x27;app</span></a><a href="#step-ask" data-step="ask"><span class="num">4 · Demander</span><span class="sub">La preuve</span></a></nav>
+  <section class="step" id="step-import" aria-labelledby="import-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Importer"><button type="button" role="tab" id="import-manifest-tab" data-view="manifest" aria-controls="import-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="import-commands-tab" data-view="commands" aria-controls="import-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="import-result-tab" data-view="result" aria-controls="import-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="import-manifest" aria-labelledby="import-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-products.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: pwa-chat-products</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line hl">  <span class="key">scopes</span>: [pwa-chat]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/pwa_chat/m_product.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">dataset</span>:</span><span class="line">      - require-headers:</span><span class="line">          <span class="key">columns</span>: [m_product_id, m_product_category_id, name, description, isactive]</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      <span class="dash">-</span> <span class="key">clean</span>:</span><span class="line">          <span class="key">columns</span>: [name, description]</span><span class="line">          <span class="key">strip</span>: true</span><span class="line">          remove-control-chars: true</span><span class="line">          normalize-unicode: NFC</span><span class="line">      - strip-invisible: { columns: [name] }</span><span class="line">      - replace-smart-quotes: { columns: [description] }</span></code></pre><div class="file"><span class="filename">manifests/15-product-categories.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: pwa-chat-product-categories</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line hl">  <span class="key">scopes</span>: [pwa-chat]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/pwa_chat/m_product_category.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">dataset</span>:</span><span class="line">      - require-headers:</span><span class="line">          <span class="key">columns</span>: [m_product_category_id, name, description, isactive]</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      <span class="dash">-</span> <span class="key">clean</span>:</span><span class="line">          <span class="key">columns</span>: [name, description]</span><span class="line">          <span class="key">strip</span>: true</span><span class="line">          remove-control-chars: true</span><span class="line">          normalize-unicode: NFC</span><span class="line">      - strip-invisible: { columns: [name] }</span><span class="line">      - replace-smart-quotes: { columns: [name, description] }</span><span class="line">      - decode-html-entities: { columns: [name, description] }</span></code></pre></div><div role="tabpanel" id="import-commands" aria-labelledby="import-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm validate -f manifests/10-products.yaml</span>
+<span class="out">✓ 10-products.yaml — valid</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-products.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;pwa-chat-products&quot;,&quot;connectorId&quot;:&quot;9435b487-a8ce-43f7-8322-4273a59db9a2&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm validate -f manifests/15-product-categories.yaml</span>
+<span class="out">✓ 15-product-categories.yaml — valid</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f manifests/15-product-categories.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;pwa-chat-product-categories&quot;,&quot;connectorId&quot;:&quot;4aecaf78-8240-43dc-9fc5-68cb21013cfc&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run pwa-chat-product-categories</span>
+<span class="out">run scheduled: 2cb7b5cb-e7be-4649-a262-5734f8ac3609</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 2cb7b5cb-e7be-4649-a262-5734f8ac3609</span>
+<span class="out">ID        CONNECTOR                    ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
+2cb7b5cb  pwa-chat-product-categories  default   Completed  0   0    0        0             2026-10-21 15:14  2026-10-21 15:14</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run pwa-chat-products</span>
+<span class="out">run scheduled: ad10516f-3655-4422-a32e-313635117860</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get ad10516f-3655-4422-a32e-313635117860</span>
+<span class="out">ID        CONNECTOR          ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
+ad10516f  pwa-chat-products  default   Completed  0   0    0        0             2026-10-21 15:14  2026-10-21 15:14</span></code></pre></div><div role="tabpanel" id="import-result" aria-labelledby="import-result-tab" tabindex="0" hidden><dl class="facts"><dt>Connectors appliqués</dt><dd>pwa-chat-products, pwa-chat-product-categories</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="import-title">Un Connector par export</h2>
+    <p>Articles et catégories, chacun son fichier ; même périmètre métier pwa-chat.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Ordre</strong><p>Catégories d&#x27;abord, articles ensuite.</p></div></li><li><span class="n">2</span><div><strong>Périmètre</strong><p>Le chat ne lit que ce périmètre.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Les deux exports sont lus tels quels.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-model" aria-labelledby="model-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Modéliser"><button type="button" role="tab" id="model-manifest-tab" data-view="manifest" aria-controls="model-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="model-commands-tab" data-view="commands" aria-controls="model-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="model-result-tab" data-view="result" aria-controls="model-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="model-manifest" aria-labelledby="model-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-product.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: PwaChatProduct</span><span class="line"><span class="key">label</span>: Article du catalogue</span><span class="line"><span class="key">description</span>: <span class="str">&quot;Articles du catalogue, enrichis avec leur catégorie. Une ligne représente un article.&quot;</span></span><span class="line"><span class="key">match</span>: [product_id]</span><span class="line"><span class="key">scopes</span>: [pwa-chat]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">product_id</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Identifiant de l&#x27;article&quot;</span></span><span class="line">  <span class="key">category_id</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Identifiant de la catégorie&quot;</span></span><span class="line">  <span class="key">category_name</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Catégorie&quot;</span></span><span class="line">  <span class="key">category_description</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Description de la catégorie&quot;</span></span><span class="line">  <span class="key">reference</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Référence de l&#x27;article&quot;</span></span><span class="line">  <span class="key">description</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Description de l&#x27;article&quot;</span></span><span class="line">  <span class="key">active</span>:</span><span class="line hl">    <span class="key">label</span>: <span class="str">&quot;Article actif (Y pour oui, N pour non)&quot;</span></span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_pwa_chat_products</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">m_product_id</span>: product_id</span><span class="line">      <span class="key">m_product_category_id</span>: category_id</span><span class="line">      <span class="key">name</span>: reference</span><span class="line">      <span class="key">description</span>: description</span><span class="line">      <span class="key">isactive</span>: active</span><span class="line hl"><span class="key">joins</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_pwa_chat_product_categories</span><span class="line">    <span class="key">from</span>: category_id</span><span class="line">    <span class="key">to</span>: m_product_category_id</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">name</span>: category_name</span><span class="line">      <span class="key">description</span>: category_description</span></code></pre></div><div role="tabpanel" id="model-commands" aria-labelledby="model-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f manifests/20-product.yaml</span>
+<span class="out">Applied entity &quot;PwaChatProduct&quot; → connector.&quot;v_pwachatproduct&quot;</span></code></pre></div><div role="tabpanel" id="model-result" aria-labelledby="model-result-tab" tabindex="0" hidden><dl class="facts"><dt>PwaChatProduct</dt><dd>v_pwachatproduct</dd><dt>Articles dans l&#x27;entité</dt><dd>40233</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="model-title">Une entité, des libellés pour le modèle</h2>
+    <p>PwaChatProduct joint la catégorie à chaque article. Ses libellés français sont le contrat donné au modèle ; pas de SearchIndex.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Jointure</strong><p>category_name au lieu d&#x27;un identifiant.</p></div></li><li><span class="n">2</span><div><strong>Libellés explicites</strong><p>« Article actif (Y pour oui, N pour non) » guide la requête.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Chaque article de l&#x27;export est dans l&#x27;entité, avec sa catégorie.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-app" aria-labelledby="app-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Publier"><button type="button" role="tab" id="app-manifest-tab" data-view="manifest" aria-controls="app-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="app-commands-tab" data-view="commands" aria-controls="app-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="app-result-tab" data-view="result" aria-controls="app-result" aria-selected="false" tabindex="-1">Résultat</button><button type="button" role="tab" id="app-screenshots-tab" data-view="screenshots" aria-controls="app-screenshots" aria-selected="false" tabindex="-1">Captures</button></div>
+    <div role="tabpanel" id="app-manifest" aria-labelledby="app-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-pwa-chat-app.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: App</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: pwa-chat</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">title</span>: Assistant catalogue</span><span class="line">  <span class="key">scope</span>: pwa-chat</span><span class="line">  <span class="key">icon</span>: generic</span><span class="line">  <span class="key">theme</span>:</span><span class="line">    <span class="key">accentColor</span>: <span class="str">&quot;#4fd1a5&quot;</span></span><span class="line">    <span class="key">backgroundColor</span>: <span class="str">&quot;#f4f1ea&quot;</span></span><span class="line hl">  <span class="key">tabs</span>: [chat]</span><span class="line">  <span class="key">default</span>: false</span></code></pre></div><div role="tabpanel" id="app-commands" aria-labelledby="app-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm app apply -f manifests/30-pwa-chat-app.yaml</span>
+<span class="out">Applied app &quot;pwa-chat&quot; → scope pwa-chat
+  tabs: chat</span></code></pre></div><div role="tabpanel" id="app-result" aria-labelledby="app-result-tab" tabindex="0" hidden><dl class="facts"><dt>App</dt><dd>pwa-chat</dd><dt>Onglets</dt><dd>chat</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div><div role="tabpanel" id="app-screenshots" aria-labelledby="app-screenshots-tab" tabindex="0" hidden><figure class="shot"><img src="evidence/screenshots/01-desktop-chat-pompes-with-sql.jpg" alt="Ordinateur : Combien d&#x27;articles appartiennent à la catégorie Pompes ? 7407, SQL déplié." loading="lazy"><figcaption>Ordinateur : Combien d&#x27;articles appartiennent à la catégorie Pompes ? 7407, SQL déplié.</figcaption></figure><figure class="shot"><img src="evidence/screenshots/02-phone-chat-followup-active.png" alt="Téléphone : relance « et seulement les actifs ? », 6761." loading="lazy"><figcaption>Téléphone : relance « et seulement les actifs ? », 6761.</figcaption></figure></div>
+  </div>
+  <aside class="explain">
+    <h2 id="app-title">Une app réduite au chat</h2>
+    <p>spec.tabs ne garde que chat. Édition Pro, IA active ; le modèle doit répondre.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Ouvrir</strong><p>/app/?m=pwa-chat</p></div></li><li><span class="n">2</span><div><strong>Relancer</strong><p>« et seulement les actifs ? » reprend la question précédente.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La réponse affiche sa fraîcheur et le SQL exécuté.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-ask" aria-labelledby="ask-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Demander"><button type="button" role="tab" id="ask-commands-tab" data-view="commands" aria-controls="ask-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="ask-result-tab" data-view="result" aria-controls="ask-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="ask-commands" aria-labelledby="ask-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm ask --scope pwa-chat --lang fr &quot;Combien d&#x27;articles appartiennent à la catégorie Pompes ?&quot;</span>
+<span class="out">Il y a 7407 articles qui appartiennent à la catégorie Pompes.
+  data as of: 2026-10-21T13:14:03.543476Z (last completed run)
+
+  COUNT
+  7407
+  1 row returned
+
+  SQL: SELECT COUNT(*) 
+FROM &quot;connector&quot;.&quot;v_pwachatproduct&quot; 
+WHERE &quot;category_name&quot; = &#x27;Pompes&#x27;
+LIMIT 500</span></code></pre></div><div role="tabpanel" id="ask-result" aria-labelledby="ask-result-tab" tabindex="0" hidden><dl class="facts"><dt>Réponse</dt><dd>Il y a 7407 articles qui appartiennent à la catégorie Pompes.</dd><dt>SQL exécuté</dt><dd>SELECT COUNT(*) FROM &quot;connector&quot;.&quot;v_pwachatproduct&quot; WHERE &quot;category_name&quot; = &#x27;Pompes&#x27; LIMIT 500</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="ask-title">Une question, une requête en lecture seule</h2>
+    <p>run/run.sh pose « Combien d&#x27;articles appartiennent à la catégorie Pompes ? » par lm ask. Le runner échoue si aucun SQL n&#x27;est exécuté.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Lecture seule</strong><p>La requête passe par la source readonly et ses gardes.</p></div></li><li><span class="n">2</span><div><strong>Vérifiable</strong><p>Le SQL est montré avec la réponse.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La réponse vient d&#x27;une requête exécutée sur l&#x27;entité, pas du modèle seul.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Requêtes analytiques sur l&#x27;entité ; pas de recherche sémantique dans du texte libre.</li><li>Dépend d&#x27;un modèle joignable ; le rejeu échoue sans lui.</li><li>Données synthétiques.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
