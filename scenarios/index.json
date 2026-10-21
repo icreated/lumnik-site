@@ -40,6 +40,23 @@
       "evidenceDigest": "sha256:ffe4a8455e06d5f2794d63fd918164cb00ffe45f1d1502fc05dab4f67d68c10d"
     },
     {
+      "slug": "entity-resolution-drift",
+      "title": "Un client établi ne change pas de fiche en silence.",
+      "lede": "Hier, le contact CRM CC-42 et le compte ERP AC-700 désignaient Nova Pumps. Aujourd'hui, son email pointe vers Helios Valves. lumnik ne déplace pas le contact : il le rend ambigu, et un humain tranche.",
+      "tags": {
+        "domain": [
+          "Données de référence",
+          "Ventes"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "replayedAt": "2026-10-21",
+      "evidenceDigest": "sha256:783138b77fcaa6c26745e209244f7bc67c3cfce06ecfddd25fb63b25667ac76a"
+    },
+    {
       "slug": "gmao-candy-line-incident",
       "title": "Un incident critique sans technicien arrive dans la boîte du responsable.",
       "lede": "Un export CSV de GMAO, un Connector, un Workflow, un Process. Une décision, une seule ; l'affectation la fait avancer.",
