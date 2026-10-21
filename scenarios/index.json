@@ -19,6 +19,7 @@
           "Process"
         ]
       },
+      "edition": "pro",
       "replayedAt": "2026-10-21",
       "evidenceDigest": "sha256:0b9b8301994e5425be84ff8b380d79290704bb12ee8d2f3c074b4facf7d929b5"
     },
@@ -36,6 +37,7 @@
           "Entity"
         ]
       },
+      "edition": "open",
       "replayedAt": "2026-10-21",
       "evidenceDigest": "sha256:ffe4a8455e06d5f2794d63fd918164cb00ffe45f1d1502fc05dab4f67d68c10d"
     },
@@ -53,6 +55,7 @@
           "Entity"
         ]
       },
+      "edition": "open",
       "replayedAt": "2026-10-21",
       "evidenceDigest": "sha256:783138b77fcaa6c26745e209244f7bc67c3cfce06ecfddd25fb63b25667ac76a"
     },
@@ -71,8 +74,27 @@
           "Process"
         ]
       },
+      "edition": "open",
       "replayedAt": "2026-10-21T06:11:02.847466Z",
       "evidenceDigest": "sha256:4fa6c732414b8257ba8c19f14c0143a871610106a3a373508100f637b0b66187"
+    },
+    {
+      "slug": "graphql-insurance-bff",
+      "title": "Les listes d'un formulaire de sinistre, sans exposer le GraphQL du CRM.",
+      "lede": "Le type et le sous-type de sinistre vivent dans un CRM qui parle GraphQL. lumnik l'ingère page par page, en fait une entité canonique, et un petit BFF sert au formulaire du JSON REST stable : le schéma du CRM ne devient jamais un contrat du navigateur.",
+      "tags": {
+        "domain": [
+          "Assurance",
+          "Formulaires"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-22",
+      "evidenceDigest": "sha256:c4e7cfc5eba9c8095b2da7e7ef871f8de55a2c3121d95d6830fb0313111ac3c7"
     },
     {
       "slug": "import-export",
@@ -89,6 +111,7 @@
           "Export"
         ]
       },
+      "edition": "open",
       "replayedAt": "2026-10-21",
       "evidenceDigest": "sha256:19279255a1f737e09bb4a5169bc241bba26a6a47c5b0f10017acd3ed6310324c"
     },
@@ -106,6 +129,7 @@
           "Entity"
         ]
       },
+      "edition": "pro",
       "replayedAt": "2026-10-21",
       "evidenceDigest": "sha256:51afbf4edf408443129e50a9843ce31a5623605011aebcb3383756a2cc950fb7"
     },
@@ -124,6 +148,7 @@
           "Process"
         ]
       },
+      "edition": "pro",
       "replayedAt": "2026-10-21",
       "evidenceDigest": "sha256:cd8aa75aec35af4ca81fef172bd8802b2cc6f6c98ec7b77542d97417367f0d86"
     },
@@ -142,6 +167,7 @@
           "Workflow"
         ]
       },
+      "edition": "pro",
       "replayedAt": "2026-10-21",
       "evidenceDigest": "sha256:8dcd8abe1473273c9532c9f71c0fd17542ddbca7124c64ca5a0a1966b8ef38c7"
     },
@@ -160,6 +186,7 @@
           "App"
         ]
       },
+      "edition": "pro",
       "replayedAt": "2026-10-21",
       "evidenceDigest": "sha256:eafd0ad70a2bf076779c7564601762a63957d9210e6aa0a341c973f15c26ee27"
     },
@@ -179,6 +206,7 @@
           "App"
         ]
       },
+      "edition": "open",
       "replayedAt": "2026-10-21",
       "evidenceDigest": "sha256:3fef15276b19cf9e8983d01669de4656fcbbe4c9ba4598f0564b36af994beb34"
     },
@@ -198,6 +226,7 @@
           "App"
         ]
       },
+      "edition": "pro",
       "replayedAt": "2026-10-21",
       "evidenceDigest": "sha256:66a82f5e2a774e0fec0a1f34cd31ae7a093cecf939403942db2c932df6afefab"
     }
