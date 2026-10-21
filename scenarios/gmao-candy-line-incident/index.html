@@ -10,10 +10,12 @@
 <link rel="stylesheet" href="../assets/scenario.css">
 <link rel="canonical" href="https://lumnik.fr/scenarios/gmao-candy-line-incident/">
 <link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/gmao-candy-line-incident/">
+<link rel="alternate" hreflang="en" href="https://lumnik.io/scenarios/gmao-candy-line-incident/">
+<link rel="alternate" hreflang="x-default" href="https://lumnik.io/scenarios/gmao-candy-line-incident/">
 </head>
 <body>
 <header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
-<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/gmao-candy-line-incident/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
     <h1>Un incident critique sans responsable ne reste plus invisible.</h1>
@@ -52,7 +54,7 @@
   <aside class="explain">
     <h2 id="import-title">Lire l&#x27;export tel qu&#x27;il est</h2>
     <p>Un manifeste Connector déclare le fichier, son en-tête et associe les données importées au périmètre métier maintenance. lumnik n&#x27;écrit jamais dans la GMAO. Le premier fichier déposé est un export d&#x27;étalonnage de trois lignes : les manifestes Workflow et Process sont confrontés aux données déjà présentes, la table doit donc exister avant eux.</p>
-    <ol class="points"><li><span class="n">1</span><div><strong>Déclarer la source</strong><p>Le manifeste nomme le fichier et le périmètre métier.</p></div></li><li><span class="n">2</span><div><strong>Appliquer et lancer avec lm</strong><p>Les mêmes commandes se rejouent sur n&#x27;importe quel hub.</p></div></li><li><span class="n">3</span><div><strong>Rafraîchissement complet</strong><p>Chaque export donne l&#x27;état complet de la GMAO : les lignes qu&#x27;il ne contient plus sont retirées. Ce scénario règle refresh.max_removed sur off parce que ses exports rétrécissent volontairement ; pour une vraie source, la garde par défaut de 30 % est le bon choix.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>Déclarer la source</strong><p>Le manifeste nomme le fichier et le périmètre métier.</p></div></li><li><span class="n">2</span><div><strong>Appliquer et lancer avec lm</strong><p>Les mêmes commandes se rejouent sur n&#x27;importe quel hub.</p></div></li><li><span class="n">3</span><div><strong>Rafraîchissement complet</strong><p>Chaque export donne l&#x27;état complet de la GMAO : les lignes qu&#x27;il ne contient plus sont retirées. Ce scénario règle refresh.max_removed sur off parce que ses exports rétrécissent volontairement; pour une vraie source, la garde par défaut de 30 % est le bon choix.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le logiciel ancien peut rester en place : son export suffit à remettre l&#x27;information en mouvement.</p></div>
   </aside>
 </section>
@@ -93,7 +95,7 @@ scenario-gmao-incident-lifecycle      INC-2026-0042  DECLARE    2026-10-21 08:11
   </div>
   <aside class="explain">
     <h2 id="decide-title">Mettre l&#x27;incident critique sans technicien sous les yeux de quelqu&#x27;un</h2>
-    <p>Un manifeste Process réagit à une nouvelle ligne seulement si elle est à la fois CRITIQUE, DECLARE et NON_AFFECTE. L&#x27;export métier arrive ; le Process émet une décision dans la boîte de lumnik, et le Workflow commence à observer l&#x27;incident.</p>
+    <p>Un manifeste Process réagit à une nouvelle ligne seulement si elle est à la fois CRITIQUE, DECLARE et NON_AFFECTE. L&#x27;export métier arrive; le Process émet une décision dans la boîte de lumnik, et le Workflow commence à observer l&#x27;incident.</p>
     <ol class="points"><li><span class="n">1</span><div><strong>Une règle précise</strong><p>Trois conditions, toutes exigées : les lignes d&#x27;étalonnage ne les ont jamais réunies.</p></div></li><li><span class="n">2</span><div><strong>Une décision lisible</strong><p>Le message nomme l&#x27;incident, l&#x27;équipement et la ligne.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>L&#x27;incident que la GMAO gardait pour elle arrive dans la boîte du responsable maintenance, une seule fois.</p></div>
   </aside>
@@ -119,12 +121,12 @@ scenario-gmao-incident-lifecycle      INC-2026-0042  AFFECTE    2026-10-21 08:11
   </div>
   <aside class="explain">
     <h2 id="verify-title">L&#x27;affectation fait avancer l&#x27;incident, sans seconde alerte</h2>
-    <p>L&#x27;export suivant porte le même incident, désormais affecté à la technicienne fictive Sophie Martin (TECH-SMARTIN). Le Workflow observe le passage de DECLARE à AFFECTE ; le Process ne se redéclenche pas, puisque l&#x27;incident n&#x27;est plus sans technicien.</p>
+    <p>L&#x27;export suivant porte le même incident, désormais affecté à la technicienne fictive Sophie Martin (TECH-SMARTIN). Le Workflow observe le passage de DECLARE à AFFECTE; le Process ne se redéclenche pas, puisque l&#x27;incident n&#x27;est plus sans technicien.</p>
     <ol class="points"><li><span class="n">1</span><div><strong>Le même document</strong><p>L&#x27;observation garde sa date de première vue : c&#x27;est le même incident, qui a avancé.</p></div></li><li><span class="n">2</span><div><strong>Toujours une décision</strong><p>La boîte contient exactement la décision émise avant l&#x27;affectation.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une décision pour un incident critique sans technicien, puis un passage observé à AFFECTE, et rien de plus.</p></div>
   </aside>
 </section>
-  <section class="limits"><h2>Limites</h2><ul><li>lumnik observe l&#x27;export de la GMAO ; il n&#x27;y réécrit pas l&#x27;affectation.</li><li>Le Process signale que l&#x27;incident demande de l&#x27;attention. Il ne dépêche pas de technicien, n&#x27;envoie pas de relance et n&#x27;escalade pas.</li><li>Le Workflow déclare un seuil de dormance d&#x27;une minute pour activer son observation ; ce scénario n&#x27;attend pas d&#x27;alerte de dormance et n&#x27;en montre pas.</li><li>La ligne exacte de transition est vérifiée pendant le rejeu, mais aucune commande lm ne la lit encore ; la page montre plutôt l&#x27;état observé avant et après.</li><li>Tous les identifiants, personnes, lignes et incidents sont fictifs.</li></ul></section>
+  <section class="limits"><h2>Limites</h2><ul><li>lumnik observe l&#x27;export de la GMAO; il n&#x27;y réécrit pas l&#x27;affectation.</li><li>Le Process signale que l&#x27;incident demande de l&#x27;attention. Il ne dépêche pas de technicien, n&#x27;envoie pas de relance et n&#x27;escalade pas.</li><li>Le Workflow déclare un seuil de dormance d&#x27;une minute pour activer son observation; ce scénario n&#x27;attend pas d&#x27;alerte de dormance et n&#x27;en montre pas.</li><li>La ligne exacte de transition est vérifiée pendant le rejeu, mais aucune commande lm ne la lit encore; la page montre plutôt l&#x27;état observé avant et après.</li><li>Tous les identifiants, personnes, lignes et incidents sont fictifs.</li></ul></section>
 </main>
 <script src="../assets/scenario.js" defer></script>
 </body>
