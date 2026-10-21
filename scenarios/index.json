@@ -23,6 +23,23 @@
       "evidenceDigest": "sha256:0b9b8301994e5425be84ff8b380d79290704bb12ee8d2f3c074b4facf7d929b5"
     },
     {
+      "slug": "entity-resolution",
+      "title": "Un client, deux systèmes, aucun identifiant commun.",
+      "lede": "Un ERP, un CRM, une Entity. L'email rapproche les fiches ; une boîte partagée ouvre une ambiguïté. lumnik ne tranche pas : un humain décide, et la décision tient au rejeu.",
+      "tags": {
+        "domain": [
+          "Données de référence",
+          "Ventes"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "replayedAt": "2026-10-21",
+      "evidenceDigest": "sha256:ffe4a8455e06d5f2794d63fd918164cb00ffe45f1d1502fc05dab4f67d68c10d"
+    },
+    {
       "slug": "gmao-candy-line-incident",
       "title": "Un incident critique sans technicien arrive dans la boîte du responsable.",
       "lede": "Un export CSV de GMAO, un Connector, un Workflow, un Process. Une décision, une seule ; l'affectation la fait avancer.",
