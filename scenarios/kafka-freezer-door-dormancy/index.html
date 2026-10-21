@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Une porte de congélateur qui ne dit plus rien finit par se faire entendre. — lumnik</title>
+<meta name="description" content="Des capteurs publient l&#x27;état des portes sur Kafka. FZ-17 s&#x27;ouvre et se tait ; FZ-18 s&#x27;ouvre et se referme. Un workflow surveillé remarque le silence : une seule alerte, pour la porte restée ouverte au-delà d&#x27;une minute.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/kafka-freezer-door-dormancy/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/kafka-freezer-door-dormancy/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Une porte de congélateur qui ne dit plus rien finit par se faire entendre.</h1>
+    <p class="lede">Des capteurs publient l&#x27;état des portes sur Kafka. FZ-17 s&#x27;ouvre et se tait ; FZ-18 s&#x27;ouvre et se referme. Un workflow surveillé remarque le silence : une seule alerte, pour la porte restée ouverte au-delà d&#x27;une minute.</p>
+    <ul class="tags"><li class="tag">Chaîne du froid</li><li class="tag">Laboratoire</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li><li class="tag kind">Workflow</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-sources" data-step="sources" aria-current="step"><span class="num">1 · Brancher</span><span class="sub">Kafka + CSV</span></a><a href="#step-enrich" data-step="enrich"><span class="num">2 · Enrichir</span><span class="sub">L&#x27;entité</span></a><a href="#step-watch" data-step="watch"><span class="num">3 · Surveiller</span><span class="sub">Le workflow</span></a><a href="#step-safe" data-step="safe"><span class="num">4 · Refermer</span><span class="sub">FZ-18</span></a><a href="#step-silence" data-step="silence"><span class="num">5 · Se taire</span><span class="sub">FZ-17</span></a><a href="#step-late" data-step="late"><span class="num">6 · Fermeture tardive</span><span class="sub">FZ-17</span></a></nav>
+  <section class="step" id="step-sources" aria-labelledby="sources-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Brancher"><button type="button" role="tab" id="sources-manifest-tab" data-view="manifest" aria-controls="sources-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="sources-commands-tab" data-view="commands" aria-controls="sources-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="sources-result-tab" data-view="result" aria-controls="sources-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="sources-manifest" aria-labelledby="sources-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-freezers.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-freezer-registry-c</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [cold-chain]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/kafka-freezer-door-dormancy/c/freezers.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre><div class="file"><span class="filename">manifests/20-door-events.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-freezer-events-c</span><span class="line">  <span class="key">connector_type</span>: kafka</span><span class="line">  <span class="key">scopes</span>: [cold-chain]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">name</span>: scenario_freezer_events_c</span><span class="line">  <span class="key">brokers</span>: host.docker.internal:29093</span><span class="line hl">  <span class="key">topic</span>: scenario.freezer-door.c</span><span class="line">  <span class="key">format</span>: json</span></code></pre></div><div role="tabpanel" id="sources-commands" aria-labelledby="sources-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-freezers.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-freezer-registry-c&quot;,&quot;connectorId&quot;:&quot;5a74cd5f-300b-4077-8f78-711713bebe98&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f manifests/20-door-events.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-freezer-events-c&quot;,&quot;connectorId&quot;:&quot;82fa7459-0ad9-4eab-89d7-769d8c0b086e&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-freezer-registry-c</span>
+<span class="out">run scheduled: 78bbb66b-4bd9-4881-8a47-1fb212a7933c</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 78bbb66b-4bd9-4881-8a47-1fb212a7933c</span>
+<span class="out">ID        CONNECTOR                    ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+78bbb66b  scenario-freezer-registry-c  default   Completed  2   2    0        0             2026-10-21 23:39  2026-10-21 23:39  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-freezer-events-c</span>
+<span class="out">run scheduled: ff990035-80f9-4485-9cc3-e484216cadfb</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get ff990035-80f9-4485-9cc3-e484216cadfb</span>
+<span class="out">ID        CONNECTOR                  ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+ff990035  scenario-freezer-events-c  default   Completed  2   2    0        0             2026-10-21 23:39  2026-10-21 23:39  no</span></code></pre></div><div role="tabpanel" id="sources-result" aria-labelledby="sources-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-freezer-registry-c</dt><dd>IN 2 · OUT 2</dd><dt>scenario-freezer-events-c</dt><dd>IN 2 · OUT 2</dd></dl><p class="sources">preuves : replay.log, 07-observation-stats.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="sources-title">Les portes sur Kafka, les congélateurs en CSV</h2>
+    <p>L&#x27;événement dit « FZ-17 / OPEN ». Le registre dit le reste : laboratoire, salle, contenu, responsable.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Deux ouvertures</strong><p>DOOR-17 et DOOR-18 s&#x27;ouvrent ; deux événements arrivent.</p></div></li><li><span class="n">2</span><div><strong>Producteur intact</strong><p>Rien n&#x27;est ajouté côté capteurs.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le connecteur Kafka rattrape un vrai topic Redpanda.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-enrich" aria-labelledby="enrich-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Enrichir"><button type="button" role="tab" id="enrich-manifest-tab" data-view="manifest" aria-controls="enrich-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="enrich-commands-tab" data-view="commands" aria-controls="enrich-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="enrich-result-tab" data-view="result" aria-controls="enrich-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="enrich-manifest" aria-labelledby="enrich-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-enriched-door-event.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ScenarioFreezerDoorEventC</span><span class="line"><span class="key">description</span>: <span class="str">&quot;A freezer-door sensor event enriched with the laboratory registry.&quot;</span></span><span class="line"><span class="key">match</span>: [event_id]</span><span class="line"><span class="key">scopes</span>: [cold-chain]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">event_id</span>: { label: <span class="str">&quot;Event&quot;</span> }</span><span class="line">  <span class="key">door_incident_id</span>: { label: <span class="str">&quot;Door incident&quot;</span> }</span><span class="line">  <span class="key">freezer_id</span>: { label: <span class="str">&quot;Freezer&quot;</span> }</span><span class="line">  <span class="key">door_state</span>: { label: <span class="str">&quot;Door state&quot;</span> }</span><span class="line">  <span class="key">temperature_c</span>: { label: <span class="str">&quot;Temperature (°C)&quot;</span> }</span><span class="line">  <span class="key">laboratory</span>: { label: <span class="str">&quot;Laboratory&quot;</span> }</span><span class="line">  <span class="key">room</span>: { label: <span class="str">&quot;Room&quot;</span> }</span><span class="line">  <span class="key">contents</span>: { label: <span class="str">&quot;Contents&quot;</span> }</span><span class="line">  <span class="key">criticality</span>: { label: <span class="str">&quot;Criticality&quot;</span> }</span><span class="line">  <span class="key">owner</span>: { label: <span class="str">&quot;Owner&quot;</span> }</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_freezer_events_c</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">event_id</span>: event_id</span><span class="line">      <span class="key">door_incident_id</span>: door_incident_id</span><span class="line">      <span class="key">freezer_id</span>: freezer_id</span><span class="line">      <span class="key">door_state</span>: door_state</span><span class="line">      <span class="key">temperature_c</span>: temperature_c</span><span class="line">      <span class="key">occurred_at</span>: occurred_at</span><span class="line hl"><span class="key">joins</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_freezer_registry_c</span><span class="line">    <span class="key">from</span>: freezer_id</span><span class="line">    <span class="key">to</span>: freezer_id</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">laboratory</span>: laboratory</span><span class="line">      <span class="key">room</span>: room</span><span class="line">      <span class="key">contents</span>: contents</span><span class="line">      <span class="key">nominal_temperature_c</span>: nominal_temperature_c</span><span class="line">      <span class="key">criticality</span>: criticality</span><span class="line">      <span class="key">owner</span>: owner</span></code></pre></div><div role="tabpanel" id="enrich-commands" aria-labelledby="enrich-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f manifests/30-enriched-door-event.yaml</span>
+<span class="out">Applied entity &quot;ScenarioFreezerDoorEventC&quot; → connector.&quot;v_scenariofreezerdooreventc&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get ScenarioFreezerDoorEventC --filter event_id=EV-17-OPEN -o json</span>
+<span class="out">[
+  {
+    &quot;event_id&quot;: &quot;EV-17-OPEN&quot;,
+    &quot;door_incident_id&quot;: &quot;DOOR-17&quot;,
+    &quot;freezer_id&quot;: &quot;FZ-17&quot;,
+    &quot;door_state&quot;: &quot;OPEN&quot;,
+    &quot;temperature_c&quot;: &quot;-67.4&quot;,
+    &quot;occurred_at&quot;: &quot;2026-10-15T08:00:00Z&quot;,
+    &quot;laboratory&quot;: &quot;Cryobiology Lab&quot;,
+    &quot;room&quot;: &quot;Cryostorage A&quot;,
+    &quot;contents&quot;: &quot;Patient-derived cell lines&quot;,
+    &quot;nominal_temperature_c&quot;: &quot;-70&quot;,
+    &quot;criticality&quot;: &quot;critical&quot;,
+    &quot;owner&quot;: &quot;Dr. Lina Moreau&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  }
+]</span></code></pre></div><div role="tabpanel" id="enrich-result" aria-labelledby="enrich-result-tab" tabindex="0" hidden><dl class="facts"><dt>ScenarioFreezerDoorEventC</dt><dd>v_scenariofreezerdooreventc</dd><dt>EV-17-OPEN</dt><dd>FZ-17 · Cryobiology Lab · Patient-derived cell lines · Dr. Lina Moreau</dd></dl><p class="sources">preuves : replay.log, 07-observation-stats.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="enrich-title">FZ-17 devient des lignées cellulaires</h2>
+    <p>L&#x27;entité joint chaque événement au registre : FZ-17 protège des lignées cellulaires de patients, au Cryobiology Lab, sous la responsabilité de Dr Lina Moreau.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Sens</strong><p>Le capteur ne dit pas ce que la porte protège ; le registre, si.</p></div></li><li><span class="n">2</span><div><strong>Jointure</strong><p>Par freezer_id, déclarée dans un manifeste.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une jointure rend chaque événement exploitable.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-watch" aria-labelledby="watch-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Surveiller"><button type="button" role="tab" id="watch-manifest-tab" data-view="manifest" aria-controls="watch-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="watch-commands-tab" data-view="commands" aria-controls="watch-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="watch-result-tab" data-view="result" aria-controls="watch-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="watch-manifest" aria-labelledby="watch-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/40-door-workflow.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Workflow</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-freezer-door-c</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: cold-chain</span><span class="line">  <span class="key">provenance</span>: declared</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">table</span>: connector.t_scenario_freezer_events_c</span><span class="line">    <span class="key">column</span>: door_state</span><span class="line">    <span class="key">key</span>: door_incident_id</span><span class="line hl">  <span class="key">dormancy</span>:</span><span class="line hl">    <span class="key">after</span>: 1m</span><span class="line">  <span class="key">states</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: OPEN</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Open&quot;</span></span><span class="line">      <span class="key">initial</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: CLOSED</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Closed&quot;</span></span><span class="line hl">      <span class="key">terminal</span>: true</span><span class="line">  <span class="key">transitions</span>:</span><span class="line">    - { from: [OPEN], to: CLOSED }</span></code></pre></div><div role="tabpanel" id="watch-commands" aria-labelledby="watch-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm workflow apply -f manifests/40-door-workflow.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-freezer-door-c&quot;,&quot;scope&quot;:&quot;cold-chain&quot;,&quot;table&quot;:&quot;connector.t_scenario_freezer_events_c&quot;,&quot;column&quot;:&quot;door_state&quot;,&quot;dataTruth&quot;:{&quot;undeclared&quot;:[],&quot;unobserved&quot;:[&quot;CLOSED&quot;],&quot;nullOrBlank&quot;:0,&quot;tableMissing&quot;:false,&quot;keyColumnMissing&quot;:false,&quot;keyNullOrBlank&quot;:0,&quot;checkUnavailable&quot;:false,&quot;unavailableReason&quot;:null}}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm observations list --workflow scenario-freezer-door-c</span>
+<span class="out">WORKFLOW                 DOC      STATE  SINCE             ALERTED
+scenario-freezer-door-c  DOOR-17  OPEN   2026-10-21 23:39  
+scenario-freezer-door-c  DOOR-18  OPEN   2026-10-21 23:39  </span>
+
+<span class="cmd"><span class="prompt">$</span> lm observations list --workflow scenario-freezer-door-c</span>
+<span class="out">WORKFLOW                 DOC      STATE  SINCE             ALERTED
+scenario-freezer-door-c  DOOR-17  OPEN   2026-10-21 23:39  
+scenario-freezer-door-c  DOOR-18  OPEN   2026-10-21 23:39  </span></code></pre></div><div role="tabpanel" id="watch-result" aria-labelledby="watch-result-tab" tabindex="0" hidden><dl class="facts"><dt>workflow</dt><dd>scenario-freezer-door-c · scope cold-chain · door_state</dd><dt>DOOR-17</dt><dd>OPEN</dd><dt>DOOR-18</dt><dd>OPEN</dd></dl><p class="sources">preuves : replay.log, 07-observation-stats.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="watch-title">OPEN, puis CLOSED, en moins d&#x27;une minute</h2>
+    <p>Un kind:Workflow déclare le cycle d&#x27;une porte : OPEN au départ, CLOSED terminal, et une dormance au-delà d&#x27;une minute.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Clé</strong><p>door_incident_id suit chaque ouverture comme un document.</p></div></li><li><span class="n">2</span><div><strong>Observation</strong><p>Les deux portes entrent dans le registre d&#x27;observation, état OPEN.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le cycle est déclaré, pas codé.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-safe" aria-labelledby="safe-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Refermer"><button type="button" role="tab" id="safe-commands-tab" data-view="commands" aria-controls="safe-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="safe-result-tab" data-view="result" aria-controls="safe-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="safe-commands" aria-labelledby="safe-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-freezer-events-c</span>
+<span class="out">run scheduled: 10e88301-a344-44a7-be82-d2bf5891f5d7</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 10e88301-a344-44a7-be82-d2bf5891f5d7</span>
+<span class="out">ID        CONNECTOR                  ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+10e88301  scenario-freezer-events-c  default   Completed  1   1    0        0             2026-10-21 23:39  2026-10-21 23:39  no</span>
+
+<span class="cmd"><span class="prompt">$</span> lm observations list --workflow scenario-freezer-door-c</span>
+<span class="out">WORKFLOW                 DOC      STATE   SINCE             ALERTED
+scenario-freezer-door-c  DOOR-17  OPEN    2026-10-21 23:39  
+scenario-freezer-door-c  DOOR-18  CLOSED  2026-10-21 23:39  </span></code></pre></div><div role="tabpanel" id="safe-result" aria-labelledby="safe-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-freezer-events-c</dt><dd>IN 1 · OUT 1</dd><dt>DOOR-17</dt><dd>OPEN</dd><dt>DOOR-18</dt><dd>CLOSED</dd></dl><p class="sources">preuves : replay.log, 07-observation-stats.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="safe-title">FZ-18 se referme à temps</h2>
+    <p>L&#x27;événement CLOSED de DOOR-18 arrive avant le seuil. L&#x27;observation devient terminale, sans alerte.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Terminal</strong><p>Un document en état terminal ne peut plus dormir.</p></div></li><li><span class="n">2</span><div><strong>Silence légitime</strong><p>Une porte refermée n&#x27;alerte personne.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une porte refermée à temps reste silencieuse.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-silence" aria-labelledby="silence-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Se taire"><button type="button" role="tab" id="silence-commands-tab" data-view="commands" aria-controls="silence-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="silence-result-tab" data-view="result" aria-controls="silence-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="silence-commands" aria-labelledby="silence-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm observations list --workflow scenario-freezer-door-c</span>
+<span class="out">WORKFLOW                 DOC      STATE   SINCE             ALERTED
+scenario-freezer-door-c  DOOR-17  OPEN    2026-10-21 23:39  2026-10-21 23:40
+scenario-freezer-door-c  DOOR-18  CLOSED  2026-10-21 23:39  </span>
+
+<span class="cmd"><span class="prompt">$</span> lm inbox --process workflow:scenario-freezer-door-c</span>
+<span class="out">ID     WHEN      PROCESS                           MESSAGE                                                                                                                                        ENTITY_KEY
+17491  just now  workflow:scenario-freezer-door-c  DOOR-17 : observé immobile en « OPEN » depuis le 2026-10-21 (première observation 2026-10-21) — seuil déclaré 1m dans scenario-freezer-door-c  DOOR-17</span></code></pre></div><div role="tabpanel" id="silence-result" aria-labelledby="silence-result-tab" tabindex="0" hidden><dl class="facts"><dt>DOOR-17</dt><dd>OPEN · alerted 2026-10-21 23:40</dd><dt>DOOR-18</dt><dd>CLOSED</dd><dt>decisions</dt><dd>1 · DOOR-17</dd><dt>stats</dt><dd>watched 2 · dormant 1 · median detection 61 s</dd></dl><p class="sources">preuves : replay.log, 07-observation-stats.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="silence-title">DOOR-17 dépasse la minute</h2>
+    <p>Aucun nouvel événement pour DOOR-17. Le balayage la trouve immobile en OPEN au-delà du seuil et émet une seule décision de dormance.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Une décision</strong><p>lm inbox --process workflow:… ne montre que DOOR-17.</p></div></li><li><span class="n">2</span><div><strong>Statistiques</strong><p>2 documents surveillés, 1 en dormance, détection médiane 61 s.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>lumnik remarque une absence, pas seulement un événement.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-late" aria-labelledby="late-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Fermeture tardive"><button type="button" role="tab" id="late-commands-tab" data-view="commands" aria-controls="late-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="late-result-tab" data-view="result" aria-controls="late-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="late-commands" aria-labelledby="late-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-freezer-events-c</span>
+<span class="out">run scheduled: f29648ee-ca41-44c8-9cc0-1eb094850ee8</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get f29648ee-ca41-44c8-9cc0-1eb094850ee8</span>
+<span class="out">ID        CONNECTOR                  ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+f29648ee  scenario-freezer-events-c  default   Completed  1   1    0        0             2026-10-21 23:40  2026-10-21 23:40  no</span>
+
+<span class="cmd"><span class="prompt">$</span> lm observations list --workflow scenario-freezer-door-c</span>
+<span class="out">WORKFLOW                 DOC      STATE   SINCE             ALERTED
+scenario-freezer-door-c  DOOR-18  CLOSED  2026-10-21 23:39  
+scenario-freezer-door-c  DOOR-17  CLOSED  2026-10-21 23:40  </span></code></pre></div><div role="tabpanel" id="late-result" aria-labelledby="late-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-freezer-events-c</dt><dd>IN 1 · OUT 1</dd><dt>DOOR-17</dt><dd>CLOSED</dd><dt>DOOR-18</dt><dd>CLOSED</dd></dl><p class="sources">preuves : replay.log, 07-observation-stats.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="late-title">La porte se referme enfin</h2>
+    <p>Le CLOSED tardif de DOOR-17 arrive. L&#x27;observation devient terminale.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Terminal</strong><p>Les deux portes sont maintenant CLOSED.</p></div></li><li><span class="n">2</span><div><strong>Alerte levée</strong><p>Le changement d&#x27;état efface la marque d&#x27;alerte de l&#x27;observation.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La fermeture tardive clôt l&#x27;observation.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Le workflow connaît le dernier événement reçu : un OPEN qui dure peut aussi être un CLOSED perdu avant le broker. Il détecte un silence, pas l&#x27;état physique de la porte.</li><li>La dormance se compte à partir de la première observation par lumnik, pas de l&#x27;occurred_at du capteur.</li><li>Pour la démonstration, le balayage tourne toutes les 5 secondes ; il tourne toutes les 15 minutes par défaut. Le seuil métier reste le minimum accepté, 1 minute.</li><li>Le message de dormance est rédigé en français, quelle que soit la langue du workflow.</li><li>Données synthétiques.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
