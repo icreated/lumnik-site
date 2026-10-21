@@ -29,7 +29,7 @@
   <aside class="explain">
     <h2 id="import-title">Un Connector par export</h2>
     <p>Articles et catégories, chacun son fichier. Les identifiants deviennent des entiers ; les libellés sont nettoyés.</p>
-    <ol class="points"><li><span class="n">1</span><div><strong>Ordre</strong><p>Catégories d&#x27;abord, articles ensuite.</p></div></li><li><span class="n">2</span><div><strong>Périmètre</strong><p>scopes: [pwa-pagination] borne toute la lecture.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>Ordre</strong><p>Catégories d&#x27;abord, articles ensuite.</p></div></li><li><span class="n">2</span><div><strong>Périmètre</strong><p>Associe les données au périmètre métier pwa-pagination.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Les deux exports sont lus tels quels.</p></div>
   </aside>
 </section>
@@ -64,7 +64,7 @@
   </div>
   <aside class="explain">
     <h2 id="app-title">Une app réduite à Fiches</h2>
-    <p>spec.tabs ne garde que fiches. Ni Chat, ni SearchIndex ; le scénario tourne sur l&#x27;édition Open.</p>
+    <p>spec.tabs ne garde que fiches. Ni chat ni recherche ; le scénario tourne sur l&#x27;édition Open.</p>
     <ol class="points"><li><span class="n">1</span><div><strong>Ouvrir</strong><p>/app/?m=pwa-pagination</p></div></li><li><span class="n">2</span><div><strong>Naviguer</strong><p>Suivant, Précédent, Début.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>La PWA affiche la première page et annonce la suite.</p></div>
   </aside>
@@ -76,7 +76,7 @@
   </div>
   <aside class="explain">
     <h2 id="verify-title">Pages de 50, sans doublon</h2>
-    <p>run/run.sh lit deux pages par /api/views/render, puis parcourt tout le catalogue par curseur.</p>
+    <p>run/run.sh lit deux pages via /api/views/render, puis parcourt tout le catalogue par curseur.</p>
     <ol class="points"><li><span class="n">1</span><div><strong>Deux pages disjointes</strong><p>Aucun article commun entre la page 1 et la page 2.</p></div></li><li><span class="n">2</span><div><strong>Parcours complet</strong><p>Chaque article du CSV revient une fois, une seule.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le catalogue entier passe par pages, sans perte ni doublon.</p></div>
   </aside>
