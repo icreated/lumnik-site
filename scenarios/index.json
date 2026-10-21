@@ -110,6 +110,24 @@
       "evidenceDigest": "sha256:51afbf4edf408443129e50a9843ce31a5623605011aebcb3383756a2cc950fb7"
     },
     {
+      "slug": "kafka-after-hours-energy",
+      "title": "À 23 h 15, le même chiffre ne veut pas dire la même chose partout.",
+      "lede": "Trois compteurs publient leur puissance sur Kafka. Lyon tire 18,7 kW, le laboratoire de Grenoble 28,4 kW. Seul Lyon dépasse son seuil de nuit : une décision, un email à sa responsable, et un tableau Grafana qui suit les trois états.",
+      "tags": {
+        "domain": [
+          "Énergie",
+          "Exploitation"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "Process"
+        ]
+      },
+      "replayedAt": "2026-10-21",
+      "evidenceDigest": "sha256:38b0493d6c11f58bec5adaf9b70ef4216da459d4c947f23852b411ba926f0259"
+    },
+    {
       "slug": "pwa-chat",
       "title": "Questionner 40 000 articles, SQL à l'appui.",
       "lede": "Deux exports CSV, une entité, une app réduite au chat. La question devient une requête en lecture seule ; la réponse montre son SQL.",

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>À 23 h 15, le même chiffre ne veut pas dire la même chose partout. — lumnik</title>
+<meta name="description" content="Trois compteurs publient leur puissance sur Kafka. Lyon tire 18,7 kW, le laboratoire de Grenoble 28,4 kW. Seul Lyon dépasse son seuil de nuit : une décision, un email à sa responsable, et un tableau Grafana qui suit les trois états.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/kafka-after-hours-energy/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/kafka-after-hours-energy/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>À 23 h 15, le même chiffre ne veut pas dire la même chose partout.</h1>
+    <p class="lede">Trois compteurs publient leur puissance sur Kafka. Lyon tire 18,7 kW, le laboratoire de Grenoble 28,4 kW. Seul Lyon dépasse son seuil de nuit : une décision, un email à sa responsable, et un tableau Grafana qui suit les trois états.</p>
+    <ul class="tags"><li class="tag">Énergie</li><li class="tag">Exploitation</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li><li class="tag kind">Process</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-sources" data-step="sources" aria-current="step"><span class="num">1 · Brancher</span><span class="sub">Kafka + CSV</span></a><a href="#step-enrich" data-step="enrich"><span class="num">2 · Enrichir</span><span class="sub">L&#x27;entité</span></a><a href="#step-policies" data-step="policies"><span class="num">3 · Déclarer</span><span class="sub">Trois politiques</span></a><a href="#step-night" data-step="night"><span class="num">4 · Nuit</span><span class="sub">23 h 15</span></a><a href="#step-context" data-step="context"><span class="num">5 · Comprendre</span><span class="sub">Le laboratoire</span></a><a href="#step-recovery" data-step="recovery"><span class="num">6 · Rétablir</span><span class="sub">23 h 30</span></a></nav>
+  <section class="step" id="step-sources" aria-labelledby="sources-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Brancher"><button type="button" role="tab" id="sources-manifest-tab" data-view="manifest" aria-controls="sources-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="sources-commands-tab" data-view="commands" aria-controls="sources-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="sources-result-tab" data-view="result" aria-controls="sources-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="sources-manifest" aria-labelledby="sources-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-sites.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-energy-sites-l</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [energy]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/kafka-after-hours-energy/l/sites.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre><div class="file"><span class="filename">manifests/20-meter-readings.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-energy-readings-l</span><span class="line">  <span class="key">connector_type</span>: kafka</span><span class="line">  <span class="key">scopes</span>: [energy]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">name</span>: scenario_energy_readings_l</span><span class="line">  <span class="key">brokers</span>: host.docker.internal:29094</span><span class="line hl">  <span class="key">topic</span>: scenario.energy.l</span><span class="line hl">  <span class="key">format</span>: json</span></code></pre></div><div role="tabpanel" id="sources-commands" aria-labelledby="sources-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-sites.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-energy-sites-l&quot;,&quot;connectorId&quot;:&quot;92332495-fa8d-4958-b22d-da2f4f8b748c&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f manifests/20-meter-readings.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-energy-readings-l&quot;,&quot;connectorId&quot;:&quot;cf605f94-fbdd-4e29-924f-c34221e59b33&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-energy-sites-l</span>
+<span class="out">run scheduled: 22fafb7c-a0ba-426b-8454-eaa45fa75909</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 22fafb7c-a0ba-426b-8454-eaa45fa75909</span>
+<span class="out">ID        CONNECTOR                ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+22fafb7c  scenario-energy-sites-l  default   Completed  3   3    0        0             2026-10-21 22:32  2026-10-21 22:32  no</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-energy-readings-l</span>
+<span class="out">run scheduled: ed688d9e-cbba-4c74-93e3-8fe045951b78</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get ed688d9e-cbba-4c74-93e3-8fe045951b78</span>
+<span class="out">ID        CONNECTOR                   ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+ed688d9e  scenario-energy-readings-l  default   Completed  3   3    0        0             2026-10-21 22:32  2026-10-21 22:32  no</span></code></pre></div><div role="tabpanel" id="sources-result" aria-labelledby="sources-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-energy-sites-l</dt><dd>IN 3 · OUT 3</dd><dt>scenario-energy-readings-l</dt><dd>IN 3 · OUT 3</dd></dl><p class="sources">preuves : replay.log, 04-after-hours-inbox.json, 06-owner-email.json, 08-inbox-after-recovery.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="sources-title">Les compteurs sur Kafka, le registre des sites en CSV</h2>
+    <p>Le topic porte des lectures brèves : compteur, code de site, kW, période. Le CSV dit ce que le compteur ignore : le type de site, son responsable, son seuil de nuit.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Étalonnage</strong><p>Trois lectures de 17 h donnent à la table Kafka son vrai schéma.</p></div></li><li><span class="n">2</span><div><strong>Producteur intact</strong><p>Rien n&#x27;est ajouté côté compteurs.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le connecteur Kafka rattrape un vrai topic Redpanda.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-enrich" aria-labelledby="enrich-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Enrichir"><button type="button" role="tab" id="enrich-manifest-tab" data-view="manifest" aria-controls="enrich-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="enrich-commands-tab" data-view="commands" aria-controls="enrich-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="enrich-result-tab" data-view="result" aria-controls="enrich-result" aria-selected="false" tabindex="-1">Résultat</button><button type="button" role="tab" id="enrich-screenshots-tab" data-view="screenshots" aria-controls="enrich-screenshots" aria-selected="false" tabindex="-1">Captures</button></div>
+    <div role="tabpanel" id="enrich-manifest" aria-labelledby="enrich-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-enriched-reading.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ScenarioEnergyReadingL</span><span class="line"><span class="key">description</span>: <span class="str">&quot;A live electricity reading enriched with the site&#x27;s operating context.&quot;</span></span><span class="line"><span class="key">match</span>: [reading_id]</span><span class="line"><span class="key">scopes</span>: [energy]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">reading_id</span>: { label: <span class="str">&quot;Reading&quot;</span> }</span><span class="line">  <span class="key">meter_id</span>: { label: <span class="str">&quot;Meter&quot;</span> }</span><span class="line">  <span class="key">site_id</span>: { label: <span class="str">&quot;Site code&quot;</span> }</span><span class="line">  <span class="key">site_name</span>: { label: <span class="str">&quot;Site&quot;</span> }</span><span class="line">  <span class="key">power_kw</span>: { label: <span class="str">&quot;Power (kW)&quot;</span> }</span><span class="line">  <span class="key">period</span>: { label: <span class="str">&quot;Operating period&quot;</span> }</span><span class="line">  <span class="key">night_alert_kw</span>: { label: <span class="str">&quot;Night alert threshold (kW)&quot;</span> }</span><span class="line">  <span class="key">energy_owner</span>: { label: <span class="str">&quot;Energy owner&quot;</span> }</span><span class="line">  <span class="key">owner_email</span>: { label: <span class="str">&quot;Owner email&quot;</span> }</span><span class="line">  <span class="key">context</span>: { label: <span class="str">&quot;Operating context&quot;</span> }</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_energy_readings_l</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">reading_id</span>: reading_id</span><span class="line">      <span class="key">meter_id</span>: meter_id</span><span class="line">      <span class="key">site_id</span>: site_id</span><span class="line">      <span class="key">measured_at</span>: measured_at</span><span class="line">      <span class="key">power_kw</span>: power_kw</span><span class="line">      <span class="key">period</span>: period</span><span class="line hl"><span class="key">joins</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_energy_sites_l</span><span class="line">    <span class="key">from</span>: site_id</span><span class="line">    <span class="key">to</span>: site_id</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">site_name</span>: site_name</span><span class="line">      <span class="key">activity</span>: activity</span><span class="line">      <span class="key">night_baseline_kw</span>: night_baseline_kw</span><span class="line">      <span class="key">night_alert_kw</span>: night_alert_kw</span><span class="line">      <span class="key">energy_owner</span>: energy_owner</span><span class="line">      <span class="key">owner_email</span>: owner_email</span><span class="line">      <span class="key">tariff</span>: tariff</span><span class="line">      <span class="key">context</span>: context</span></code></pre></div><div role="tabpanel" id="enrich-commands" aria-labelledby="enrich-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f manifests/30-enriched-reading.yaml</span>
+<span class="out">Applied entity &quot;ScenarioEnergyReadingL&quot; → connector.&quot;v_scenarioenergyreadingl&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get ScenarioEnergyReadingL --filter reading_id=CAL-LAB -o json</span>
+<span class="out">[
+  {
+    &quot;reading_id&quot;: &quot;CAL-LAB&quot;,
+    &quot;meter_id&quot;: &quot;MTR-207&quot;,
+    &quot;site_id&quot;: &quot;SITE-LAB&quot;,
+    &quot;measured_at&quot;: &quot;2026-10-15T17:00:00Z&quot;,
+    &quot;power_kw&quot;: &quot;31&quot;,
+    &quot;period&quot;: &quot;OPEN&quot;,
+    &quot;site_name&quot;: &quot;Grenoble Materials Laboratory&quot;,
+    &quot;activity&quot;: &quot;Research laboratory&quot;,
+    &quot;night_baseline_kw&quot;: &quot;28&quot;,
+    &quot;night_alert_kw&quot;: &quot;40&quot;,
+    &quot;energy_owner&quot;: &quot;Dr. Maya Laurent&quot;,
+    &quot;owner_email&quot;: &quot;maya.laurent@example.test&quot;,
+    &quot;tariff&quot;: &quot;Research continuity&quot;,
+    &quot;context&quot;: &quot;Climate chambers run continuously overnight&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  }
+]</span></code></pre></div><div role="tabpanel" id="enrich-result" aria-labelledby="enrich-result-tab" tabindex="0" hidden><dl class="facts"><dt>ScenarioEnergyReadingL</dt><dd>v_scenarioenergyreadingl</dd><dt>CAL-LAB</dt><dd>31 kW · Grenoble Materials Laboratory · threshold 40 kW · Dr. Maya Laurent</dd><dt>grafana</dt><dd>3 readings, 40.6 kW, 0 breaches</dd></dl><p class="sources">preuves : replay.log, 04-after-hours-inbox.json, 06-owner-email.json, 08-inbox-after-recovery.json · transform v1</p></div><div role="tabpanel" id="enrich-screenshots" aria-labelledby="enrich-screenshots-tab" tabindex="0" hidden><figure class="shot"><img src="evidence/screenshots/01-grafana-calibration.jpg" alt="Grafana à l&#x27;étalonnage : 40,6 kW au total, 0 dépassement de seuil de nuit." loading="lazy"><figcaption>Grafana à l&#x27;étalonnage : 40,6 kW au total, 0 dépassement de seuil de nuit.</figcaption></figure></div>
+  </div>
+  <aside class="explain">
+    <h2 id="enrich-title">Un code de site devient un site</h2>
+    <p>L&#x27;entité joint chaque lecture au registre : SITE-LAB devient le laboratoire de Grenoble, seuil 40 kW, responsable Dr Maya Laurent.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Grafana</strong><p>Un rôle postgres en lecture seule, limité au tenant et aux tables du scénario, alimente le tableau.</p></div></li><li><span class="n">2</span><div><strong>Étalonnage</strong><p>3 lectures, 40,6 kW, aucun dépassement.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Des données de référence rendent exploitable une télémétrie laconique.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-policies" aria-labelledby="policies-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="policies-manifest-tab" data-view="manifest" aria-controls="policies-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="policies-commands-tab" data-view="commands" aria-controls="policies-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="policies-result-tab" data-view="result" aria-controls="policies-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="policies-manifest" aria-labelledby="policies-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/40-factory-policy.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-energy-factory-l</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: energy</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">event</span>: data.row.changed</span><span class="line">    <span class="key">table</span>: connector.t_scenario_energy_readings_l</span><span class="line hl">  <span class="key">when</span>:</span><span class="line">    - site_id=SITE-LYON</span><span class="line">    - period=CLOSED</span><span class="line">    - power_kw&gt;10</span><span class="line hl">  <span class="key">emit</span>:</span><span class="line">    <span class="key">type</span>: decision.energy-after-hours-factory-l</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;Meter {meter_id} at {site_id}: {power_kw} kW while the site is closed&quot;</span></span></code></pre><div class="file"><span class="filename">manifests/41-office-policy.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-energy-office-l</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: energy</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">event</span>: data.row.changed</span><span class="line">    <span class="key">table</span>: connector.t_scenario_energy_readings_l</span><span class="line hl">  <span class="key">when</span>:</span><span class="line">    - site_id=SITE-OFFICE</span><span class="line">    - period=CLOSED</span><span class="line">    - power_kw&gt;3</span><span class="line hl">  <span class="key">emit</span>:</span><span class="line">    <span class="key">type</span>: decision.energy-after-hours-office-l</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;Meter {meter_id} at {site_id}: {power_kw} kW while the office is closed&quot;</span></span></code></pre><div class="file"><span class="filename">manifests/42-laboratory-policy.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-energy-laboratory-l</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: energy</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">event</span>: data.row.changed</span><span class="line">    <span class="key">table</span>: connector.t_scenario_energy_readings_l</span><span class="line hl">  <span class="key">when</span>:</span><span class="line">    - site_id=SITE-LAB</span><span class="line">    - period=CLOSED</span><span class="line">    - power_kw&gt;40</span><span class="line hl">  <span class="key">emit</span>:</span><span class="line">    <span class="key">type</span>: decision.energy-after-hours-laboratory-l</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;Meter {meter_id} at {site_id}: {power_kw} kW above the laboratory night policy&quot;</span></span></code></pre></div><div role="tabpanel" id="policies-commands" aria-labelledby="policies-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm process apply -f manifests/40-factory-policy.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-energy-factory-l&quot;,&quot;table&quot;:&quot;connector.t_scenario_energy_readings_l&quot;,&quot;emit&quot;:&quot;decision.energy-after-hours-factory-l&quot;}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm process apply -f manifests/41-office-policy.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-energy-office-l&quot;,&quot;table&quot;:&quot;connector.t_scenario_energy_readings_l&quot;,&quot;emit&quot;:&quot;decision.energy-after-hours-office-l&quot;}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm process apply -f manifests/42-laboratory-policy.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-energy-laboratory-l&quot;,&quot;table&quot;:&quot;connector.t_scenario_energy_readings_l&quot;,&quot;emit&quot;:&quot;decision.energy-after-hours-laboratory-l&quot;}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm notify add --events decision.energy-after-hours-factory-l --to elodie.martin@example.test --template decision-alert</span>
+<span class="out">rule 1009: decision.energy-after-hours-factory-l → elodie.martin@example.test</span></code></pre></div><div role="tabpanel" id="policies-result" aria-labelledby="policies-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-energy-factory-l</dt><dd>decision.energy-after-hours-factory-l</dd><dt>scenario-energy-office-l</dt><dd>decision.energy-after-hours-office-l</dd><dt>scenario-energy-laboratory-l</dt><dd>decision.energy-after-hours-laboratory-l</dd><dt>notify</dt><dd>decision.energy-after-hours-factory-l → elodie.martin@example.test</dd></dl><p class="sources">preuves : replay.log, 04-after-hours-inbox.json, 06-owner-email.json, 08-inbox-after-recovery.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="policies-title">Un seuil de nuit par site</h2>
+    <p>Trois kind:Process surveillent la table Kafka brute : usine au-delà de 10 kW, bureau au-delà de 3 kW, laboratoire au-delà de 40 kW, site fermé. La décision de l&#x27;usine part par email à sa responsable.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Règle exacte</strong><p>notify add route le seul type de décision de l&#x27;usine vers une adresse déclarée.</p></div></li><li><span class="n">2</span><div><strong>Table brute</strong><p>Une politique lit les colonnes de la lecture Kafka, pas celles de l&#x27;entité.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le même nombre prend un sens différent selon la politique déclarée du site.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-night" aria-labelledby="night-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Nuit"><button type="button" role="tab" id="night-commands-tab" data-view="commands" aria-controls="night-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="night-result-tab" data-view="result" aria-controls="night-result" aria-selected="false" tabindex="-1">Résultat</button><button type="button" role="tab" id="night-screenshots-tab" data-view="screenshots" aria-controls="night-screenshots" aria-selected="false" tabindex="-1">Captures</button></div>
+    <div role="tabpanel" id="night-commands" aria-labelledby="night-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-energy-readings-l</span>
+<span class="out">run scheduled: c58779d0-acc1-4044-a8c9-ccacc2577643</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get c58779d0-acc1-4044-a8c9-ccacc2577643</span>
+<span class="out">ID        CONNECTOR                   ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+c58779d0  scenario-energy-readings-l  default   Completed  3   3    0        0             2026-10-21 22:32  2026-10-21 22:32  no</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get c58779d0-acc1-4044-a8c9-ccacc2577643 --wait-evaluated --timeout 2m</span>
+<span class="out">ID        CONNECTOR                   ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+c58779d0  scenario-energy-readings-l  default   Completed  3   3    0        0             2026-10-21 22:32  2026-10-21 22:32  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm inbox --limit 200</span>
+<span class="out">ID     WHEN       PROCESS                                        MESSAGE                                                                                                                                                               ENTITY_KEY
+17427  just now   scenario-energy-factory-l                      Meter MTR-042 at SITE-LYON: 18.7000 kW while the site is closed                                                                                                       b1a294e571eeaf064c1234c107674fc26c194a28ed7a08a2258073d0d536fad6</span></code></pre></div><div role="tabpanel" id="night-result" aria-labelledby="night-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-energy-readings-l</dt><dd>IN 3 · OUT 3</dd><dt>EVALUATED</dt><dd>no → yes</dd><dt>decisions</dt><dd>factory 1 · office 0 · laboratory 0</dd><dt>message</dt><dd>Meter MTR-042 at SITE-LYON: 18.7000 kW while the site is closed</dd><dt>email</dt><dd>lumnik event: decision.energy-after-hours-factory-l → elodie.martin@example.test</dd><dt>grafana</dt><dd>6 readings, 47.9 kW, 1 breaches</dd></dl><p class="sources">preuves : replay.log, 04-after-hours-inbox.json, 06-owner-email.json, 08-inbox-after-recovery.json · transform v1</p></div><div role="tabpanel" id="night-screenshots" aria-labelledby="night-screenshots-tab" tabindex="0" hidden><figure class="shot"><img src="evidence/screenshots/02-grafana-after-hours.jpg" alt="Grafana la nuit : 47,9 kW au total, 1 dépassement, Lyon à 18,7 kW." loading="lazy"><figcaption>Grafana la nuit : 47,9 kW au total, 1 dépassement, Lyon à 18,7 kW.</figcaption></figure></div>
+  </div>
+  <aside class="explain">
+    <h2 id="night-title">Lyon dépasse, le laboratoire non</h2>
+    <p>Trois lectures de nuit. Le run se termine avant que les politiques aient lu ses lignes : lm run get --wait-evaluated attend qu&#x27;elles l&#x27;aient fait, puis l&#x27;inbox se lit.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Une décision</strong><p>Seule l&#x27;usine de Lyon émet ; le bureau et le laboratoire restent silencieux.</p></div></li><li><span class="n">2</span><div><strong>Un email réel</strong><p>Le message rendu arrive dans Mailpit pour elodie.martin@example.test.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une décision n&#x27;est lue qu&#x27;une fois les politiques passées sur le run.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-context" aria-labelledby="context-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Comprendre"><button type="button" role="tab" id="context-commands-tab" data-view="commands" aria-controls="context-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="context-result-tab" data-view="result" aria-controls="context-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="context-commands" aria-labelledby="context-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity get ScenarioEnergyReadingL --filter reading_id=NIGHT-LAB-1 -o json</span>
+<span class="out">[
+  {
+    &quot;reading_id&quot;: &quot;NIGHT-LAB-1&quot;,
+    &quot;meter_id&quot;: &quot;MTR-207&quot;,
+    &quot;site_id&quot;: &quot;SITE-LAB&quot;,
+    &quot;measured_at&quot;: &quot;2026-10-15T23:15:00Z&quot;,
+    &quot;power_kw&quot;: &quot;28.4&quot;,
+    &quot;period&quot;: &quot;CLOSED&quot;,
+    &quot;site_name&quot;: &quot;Grenoble Materials Laboratory&quot;,
+    &quot;activity&quot;: &quot;Research laboratory&quot;,
+    &quot;night_baseline_kw&quot;: &quot;28&quot;,
+    &quot;night_alert_kw&quot;: &quot;40&quot;,
+    &quot;energy_owner&quot;: &quot;Dr. Maya Laurent&quot;,
+    &quot;owner_email&quot;: &quot;maya.laurent@example.test&quot;,
+    &quot;tariff&quot;: &quot;Research continuity&quot;,
+    &quot;context&quot;: &quot;Climate chambers run continuously overnight&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  }
+]</span></code></pre></div><div role="tabpanel" id="context-result" aria-labelledby="context-result-tab" tabindex="0" hidden><dl class="facts"><dt>NIGHT-LAB-1</dt><dd>28.4 kW · Grenoble Materials Laboratory · threshold 40 kW · Dr. Maya Laurent</dd><dt>context</dt><dd>Climate chambers run continuously overnight</dd></dl><p class="sources">preuves : replay.log, 04-after-hours-inbox.json, 06-owner-email.json, 08-inbox-after-recovery.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="context-title">28,4 kW, et c&#x27;est normal</h2>
+    <p>La lecture enrichie du laboratoire dit pourquoi : ses chambres climatiques tournent toute la nuit et son seuil est de 40 kW.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Contexte</strong><p>Le responsable et le contexte viennent du CSV, pas du compteur.</p></div></li><li><span class="n">2</span><div><strong>Silence légitime</strong><p>Une lecture qui ne passe pas son seuil n&#x27;émet rien.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une charge de nuit légitime reste silencieuse.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-recovery" aria-labelledby="recovery-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Rétablir"><button type="button" role="tab" id="recovery-commands-tab" data-view="commands" aria-controls="recovery-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="recovery-result-tab" data-view="result" aria-controls="recovery-result" aria-selected="false" tabindex="-1">Résultat</button><button type="button" role="tab" id="recovery-screenshots-tab" data-view="screenshots" aria-controls="recovery-screenshots" aria-selected="false" tabindex="-1">Captures</button></div>
+    <div role="tabpanel" id="recovery-commands" aria-labelledby="recovery-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-energy-readings-l</span>
+<span class="out">run scheduled: 99f6aa30-d045-476e-ad48-f131bb088a03</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 99f6aa30-d045-476e-ad48-f131bb088a03</span>
+<span class="out">ID        CONNECTOR                   ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+99f6aa30  scenario-energy-readings-l  default   Completed  1   1    0        0             2026-10-21 22:33  2026-10-21 22:33  no</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 99f6aa30-d045-476e-ad48-f131bb088a03 --wait-evaluated --timeout 2m</span>
+<span class="out">ID        CONNECTOR                   ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+99f6aa30  scenario-energy-readings-l  default   Completed  1   1    0        0             2026-10-21 22:33  2026-10-21 22:33  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm inbox --limit 200</span>
+<span class="out">ID     WHEN       PROCESS                                        MESSAGE                                                                                                                                                               ENTITY_KEY
+17427  just now   scenario-energy-factory-l                      Meter MTR-042 at SITE-LYON: 18.7000 kW while the site is closed                                                                                                       b1a294e571eeaf064c1234c107674fc26c194a28ed7a08a2258073d0d536fad6</span></code></pre></div><div role="tabpanel" id="recovery-result" aria-labelledby="recovery-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-energy-readings-l</dt><dd>IN 1 · OUT 1</dd><dt>EVALUATED</dt><dd>no → yes</dd><dt>decisions</dt><dd>factory 1 · office 0 · laboratory 0</dd><dt>message</dt><dd>Meter MTR-042 at SITE-LYON: 18.7000 kW while the site is closed</dd><dt>grafana</dt><dd>7 readings, 33.1 kW, 0 breaches</dd></dl><p class="sources">preuves : replay.log, 04-after-hours-inbox.json, 06-owner-email.json, 08-inbox-after-recovery.json · transform v1</p></div><div role="tabpanel" id="recovery-screenshots" aria-labelledby="recovery-screenshots-tab" tabindex="0" hidden><figure class="shot"><img src="evidence/screenshots/03-grafana-recovery.jpg" alt="Grafana après le retour à la normale : 33,1 kW, 0 dépassement, Lyon à 3,9 kW." loading="lazy"><figcaption>Grafana après le retour à la normale : 33,1 kW, 0 dépassement, Lyon à 3,9 kW.</figcaption></figure></div>
+  </div>
+  <aside class="explain">
+    <h2 id="recovery-title">Lyon redescend, pas de nouvelle alerte</h2>
+    <p>Lyon repasse à 3,9 kW. La même barrière attend l&#x27;évaluation du run ; l&#x27;inbox garde une seule décision.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Barrière</strong><p>« Aucune nouvelle décision » ne veut rien dire avant que les politiques aient lu le run.</p></div></li><li><span class="n">2</span><div><strong>Grafana</strong><p>7 lectures, 33,1 kW, aucun dépassement en cours.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le retour sous le seuil n&#x27;émet pas d&#x27;autre alerte.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Une politique ne voit que les colonnes de la lecture Kafka : le responsable et le contexte, venus du CSV, ne peuvent pas entrer dans le message de décision en v1.</li><li>Le destinataire est une règle statique pour ce type de décision ; lumnik ne lit pas l&#x27;adresse dans l&#x27;entité.</li><li>lumnik compare une mesure à un seuil déclaré ; il ne diagnostique pas la cause. period=CLOSED vient de la source.</li><li>Grafana interroge postgres toutes les 5 secondes : de la BI quasi temps réel, pas du streaming.</li><li>Données synthétiques.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
