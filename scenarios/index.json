@@ -22,7 +22,7 @@
     {
       "slug": "pwa-pagination",
       "title": "40 000 articles, parcourus page par page.",
-      "lede": "Deux exports CSV, deux entités, deux vues liées, une app. Le hub sert le catalogue par pages de 50; la PWA n'en charge jamais plus.",
+      "lede": "Deux exports CSV, deux entités, deux vues liées, une app. Le hub sert le catalogue par pages de 50 ; la PWA n'en charge jamais plus.",
       "tags": {
         "domain": [
           "Commerce",
