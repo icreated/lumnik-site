@@ -75,6 +75,24 @@
       "evidenceDigest": "sha256:4fa6c732414b8257ba8c19f14c0143a871610106a3a373508100f637b0b66187"
     },
     {
+      "slug": "import-export",
+      "title": "Le catalogue part chez le partenaire dans son format, pas dans le nôtre.",
+      "lede": "Deux CSV d'un ERP, produits et catégories, sont joints dans le hub puis livrés sur S3 au format d'un partenaire : en-têtes français, point-virgule, virgule décimale, statuts recodés, référence interne masquée. Un reçu prouve les octets livrés.",
+      "tags": {
+        "domain": [
+          "Catalogue",
+          "Échange partenaire"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "Export"
+        ]
+      },
+      "replayedAt": "2026-10-21",
+      "evidenceDigest": "sha256:19279255a1f737e09bb4a5169bc241bba26a6a47c5b0f10017acd3ed6310324c"
+    },
+    {
       "slug": "pwa-chat",
       "title": "Questionner 40 000 articles, SQL à l'appui.",
       "lede": "Deux exports CSV, une entité, une app réduite au chat. La question devient une requête en lecture seule ; la réponse montre son SQL.",
