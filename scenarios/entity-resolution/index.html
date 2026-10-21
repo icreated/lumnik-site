@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Un client, deux systèmes, aucun identifiant commun. — lumnik</title>
+<meta name="description" content="Un ERP, un CRM, une Entity. L&#x27;email rapproche les fiches ; une boîte partagée ouvre une ambiguïté. lumnik ne tranche pas : un humain décide, et la décision tient au rejeu.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/entity-resolution/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/entity-resolution/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Un client, deux systèmes, aucun identifiant commun.</h1>
+    <p class="lede">Un ERP, un CRM, une Entity. L&#x27;email rapproche les fiches ; une boîte partagée ouvre une ambiguïté. lumnik ne tranche pas : un humain décide, et la décision tient au rejeu.</p>
+    <ul class="tags"><li class="tag">Données de référence</li><li class="tag">Ventes</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-import" data-step="import" aria-current="step"><span class="num">1 · Importer</span><span class="sub">Deux CSV</span></a><a href="#step-model" data-step="model"><span class="num">2 · Modéliser</span><span class="sub">Une Entity</span></a><a href="#step-resolve" data-step="resolve"><span class="num">3 · Résoudre</span><span class="sub">Par l&#x27;email</span></a><a href="#step-correct" data-step="correct"><span class="num">4 · Corriger</span><span class="sub">La décision</span></a><a href="#step-replay" data-step="replay"><span class="num">5 · Rejouer</span><span class="sub">Encore une fois</span></a><a href="#step-guard" data-step="guard"><span class="num">6 · Protéger</span><span class="sub">Une faute de frappe</span></a></nav>
+  <section class="step" id="step-import" aria-labelledby="import-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Importer"><button type="button" role="tab" id="import-manifest-tab" data-view="manifest" aria-controls="import-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="import-commands-tab" data-view="commands" aria-controls="import-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="import-result-tab" data-view="result" aria-controls="import-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="import-manifest" aria-labelledby="import-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-erp-accounts.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-resolution-erp</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line hl">  <span class="key">scopes</span>: [entity-resolution]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/entity-resolution/erp-accounts.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre><div class="file"><span class="filename">manifests/20-crm-contacts.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-resolution-crm</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line hl">  <span class="key">scopes</span>: [entity-resolution]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/entity-resolution/crm-contacts.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre></div><div role="tabpanel" id="import-commands" aria-labelledby="import-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm validate -f manifests/10-erp-accounts.yaml</span>
+<span class="out">✓ 10-erp-accounts.yaml — valid</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-erp-accounts.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-resolution-erp&quot;,&quot;connectorId&quot;:&quot;52a5affd-c392-4448-b0de-ca89a33667e4&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm validate -f manifests/20-crm-contacts.yaml</span>
+<span class="out">✓ 20-crm-contacts.yaml — valid</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f manifests/20-crm-contacts.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-resolution-crm&quot;,&quot;connectorId&quot;:&quot;e3776b20-7bce-44da-a13a-966136c96e46&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-resolution-erp</span>
+<span class="out">run scheduled: 29473234-dea9-409e-9504-cfd2632eccc7</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 29473234-dea9-409e-9504-cfd2632eccc7</span>
+<span class="out">ID        CONNECTOR                ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
+29473234  scenario-resolution-erp  default   Completed  5   5    0        0             2026-10-21 17:42  2026-10-21 17:42</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-resolution-crm</span>
+<span class="out">run scheduled: 5386e0f1-95a5-49ee-9a6c-d947c2df6389</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 5386e0f1-95a5-49ee-9a6c-d947c2df6389</span>
+<span class="out">ID        CONNECTOR                ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
+5386e0f1  scenario-resolution-crm  default   Completed  5   5    0        0             2026-10-21 17:42  2026-10-21 17:42</span></code></pre></div><div role="tabpanel" id="import-result" aria-labelledby="import-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-resolution-erp</dt><dd>5</dd><dt>scenario-resolution-crm</dt><dd>5</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="import-title">Les comptes ERP et les contacts CRM</h2>
+    <p>AC-300 côté ERP, CT-9003 côté CRM : aucun des deux ne connaît l&#x27;identifiant de l&#x27;autre.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Copie</strong><p>Le runner dépose les deux exports dans le conteneur du hub.</p></div></li><li><span class="n">2</span><div><strong>Périmètre</strong><p>Les deux sources vont au périmètre entity-resolution.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Cinq comptes et cinq contacts, lus tels quels.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-model" aria-labelledby="model-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Modéliser"><button type="button" role="tab" id="model-manifest-tab" data-view="manifest" aria-controls="model-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="model-commands-tab" data-view="commands" aria-controls="model-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="model-result-tab" data-view="result" aria-controls="model-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="model-manifest" aria-labelledby="model-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-customer.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ResolvedCustomer</span><span class="line"><span class="key">description</span>: <span class="str">&quot;One customer across an ERP account and a CRM contact that share no identifier.&quot;</span></span><span class="line"><span class="key">scopes</span>: [entity-resolution]</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_resolution_erp</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">account_code</span>: account_code</span><span class="line">      <span class="key">company_name</span>: name</span><span class="line">      <span class="key">email</span>: email</span><span class="line">      <span class="key">city</span>: city</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_resolution_crm</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">contact_code</span>: crm_id</span><span class="line">      <span class="key">display_name</span>: name</span><span class="line">      <span class="key">email</span>: email</span><span class="line">      <span class="key">phone</span>: phone</span><span class="line"><span class="key">resolution</span>:</span><span class="line hl">  <span class="key">identity</span>:</span><span class="line">    <span class="key">t_scenario_resolution_erp</span>: account_code</span><span class="line">    <span class="key">t_scenario_resolution_crm</span>: crm_id</span><span class="line">  <span class="key">cascade</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: email</span><span class="line">      <span class="key">exact</span>:</span><span class="line">        <span class="key">fields</span>: [email]</span><span class="line hl">        <span class="key">normalize</span>: [lower]</span></code></pre></div><div role="tabpanel" id="model-commands" aria-labelledby="model-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f manifests/30-customer.yaml</span>
+<span class="out">Applied entity &quot;ResolvedCustomer&quot; → connector.&quot;v_resolvedcustomer&quot;</span></code></pre></div><div role="tabpanel" id="model-result" aria-labelledby="model-result-tab" tabindex="0" hidden><dl class="facts"><dt>ResolvedCustomer</dt><dd>v_resolvedcustomer</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="model-title">Déclarer l&#x27;identité et la règle</h2>
+    <p>ResolvedCustomer associe chaque source à son identifiant et rapproche par email, en minuscules.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>identity</strong><p>account_code pour l&#x27;ERP, crm_id pour le CRM.</p></div></li><li><span class="n">2</span><div><strong>cascade</strong><p>Une seule règle : email exact, normalize: [lower].</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La règle de rapprochement est écrite, pas codée.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-resolve" aria-labelledby="resolve-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Résoudre"><button type="button" role="tab" id="resolve-commands-tab" data-view="commands" aria-controls="resolve-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="resolve-result-tab" data-view="result" aria-controls="resolve-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="resolve-commands" aria-labelledby="resolve-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity resolve ResolvedCustomer</span>
+<span class="out">rows seen: 10
+resolved: 8
+ambiguous: 1
+unresolved (no rule): 1
+unresolved (provider): 0
+newly minted: 6
+provider calls: 0
+provider failures: 0
+rule hits:
+  resolvedcustomer:email: 9</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity ambiguous ResolvedCustomer -o json</span>
+<span class="out">[
+  {
+    &quot;identityRef&quot;: &quot;fb940892-24ef-43ad-8b8d-93f97f2a57cc&quot;,
+    &quot;source&quot;: &quot;t_scenario_resolution_crm&quot;,
+    &quot;sourceId&quot;: &quot;CT-9003&quot;,
+    &quot;candidates&quot;: [
+      &quot;1fdcdb61-825a-48ea-bb95-36ccb90ecafd&quot;,
+      &quot;95376818-a2ea-4516-9347-3d474a3f8460&quot;
+    ],
+    &quot;discardedCandidates&quot;: [],
+    &quot;setAside&quot;: [],
+    &quot;decidedBy&quot;: &quot;automatic&quot;,
+    &quot;occurredAt&quot;: &quot;2026-10-21T15:42:30.831063Z&quot;
+  }
+]</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get ResolvedCustomer --filter crm_id=CT-9004 -o json</span>
+<span class="out">[
+  {
+    &quot;account_code&quot;: null,
+    &quot;name&quot;: &quot;Transmission Nord&quot;,
+    &quot;email&quot;: null,
+    &quot;city&quot;: null,
+    &quot;crm_id&quot;: &quot;CT-9004&quot;,
+    &quot;phone&quot;: &quot;+33 3 28 00 00 04&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  }
+]</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity history ResolvedCustomer t_scenario_resolution_crm CT-9003 -o json</span>
+<span class="out">[
+  {
+    &quot;ruleDeclaredId&quot;: &quot;email&quot;,
+    &quot;ruleVersion&quot;: &quot;ce968f5902d73417@engine-v1@hmac-k1@lower:1.0.0&quot;,
+    &quot;provider&quot;: &quot;&quot;,
+    &quot;candidates&quot;: [
+      &quot;1fdcdb61-825a-48ea-bb95-36ccb90ecafd&quot;,
+      &quot;95376818-a2ea-4516-9347-3d474a3f8460&quot;
+    ],
+    &quot;discardedCandidates&quot;: [],
+    &quot;setAside&quot;: [],
+    &quot;outcome&quot;: &quot;AMBIGUOUS&quot;,
+    &quot;decidedBy&quot;: &quot;automatic&quot;,
+    &quot;runId&quot;: &quot;&quot;,
+    &quot;occurredAt&quot;: &quot;2026-10-21T15:42:30.831063Z&quot;
+  }
+]</span></code></pre></div><div role="tabpanel" id="resolve-result" aria-labelledby="resolve-result-tab" tabindex="0" hidden><dl class="facts"><dt>resolve</dt><dd>resolved 8 · ambiguous 1 · unresolved 1</dd><dt>CT-9003</dt><dd>AMBIGUOUS · 2</dd><dt>CT-9004</dt><dd>email=null · account_code=null</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="resolve-title">Rapprocher sans deviner</h2>
+    <p>Commandes@Atelier-Boreal et commandes@atelier-boreal se rejoignent. compta@groupe-rhone désigne deux comptes : Rhône Filtration et Rhône Levage.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Ambiguïté</strong><p>CT-9003 a deux candidats ; aucun n&#x27;est choisi.</p></div></li><li><span class="n">2</span><div><strong>Sans email</strong><p>CT-9004 reste visible, non résolu.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Deux candidats donnent une ambiguïté, jamais une fusion arbitraire.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-correct" aria-labelledby="correct-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Corriger"><button type="button" role="tab" id="correct-commands-tab" data-view="commands" aria-controls="correct-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="correct-result-tab" data-view="result" aria-controls="correct-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="correct-commands" aria-labelledby="correct-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity assert-same ResolvedCustomer --left t_scenario_resolution_crm:CT-9003 --right t_scenario_resolution_erp:AC-300 --reason &quot;The CRM billing contact belongs to Rhône Filtration&quot;</span>
+<span class="out">recorded: t_scenario_resolution_crm:CT-9003 and t_scenario_resolution_erp:AC-300 are same</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity resolve ResolvedCustomer</span>
+<span class="out">rows seen: 10
+resolved: 9
+ambiguous: 0
+unresolved (no rule): 1
+unresolved (provider): 0
+newly minted: 0
+provider calls: 0
+provider failures: 0
+rule hits:
+  resolvedcustomer:email: 8</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity ambiguous ResolvedCustomer -o json</span>
+<span class="out">[]</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get ResolvedCustomer --filter crm_id=CT-9003 -o json</span>
+<span class="out">[
+  {
+    &quot;account_code&quot;: &quot;AC-300&quot;,
+    &quot;name&quot;: &quot;Rhône Filtration&quot;,
+    &quot;email&quot;: &quot;compta@groupe-rhone.example&quot;,
+    &quot;city&quot;: &quot;Lyon&quot;,
+    &quot;crm_id&quot;: &quot;CT-9003&quot;,
+    &quot;phone&quot;: &quot;+33 4 72 00 00 03&quot;,
+    &quot;_conflicts&quot;: &quot;{\&quot;name\&quot;: [{\&quot;src\&quot;: \&quot;t_scenario_resolution_erp\&quot;, \&quot;value\&quot;: \&quot;Rhône Filtration\&quot;}, {\&quot;src\&quot;: \&quot;t_scenario_resolution_crm\&quot;, \&quot;value\&quot;: \&quot;Groupe Rhône\&quot;}]}&quot;
+  }
+]</span></code></pre></div><div role="tabpanel" id="correct-result" aria-labelledby="correct-result-tab" tabindex="0" hidden><dl class="facts"><dt>assert-same</dt><dd>t_scenario_resolution_crm:CT-9003 and t_scenario_resolution_erp:AC-300 are same</dd><dt>resolve</dt><dd>resolved 9 · ambiguous 0 · unresolved 1</dd><dt>Client</dt><dd>CT-9003 → AC-300</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="correct-title">Un humain tranche</h2>
+    <p>assert-same nomme les deux lignes par SOURCE:ID et donne la raison : le contact facturation appartient à Rhône Filtration.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Registre</strong><p>L&#x27;assertion entre dans l&#x27;historique de résolution, avec sa raison.</p></div></li><li><span class="n">2</span><div><strong>Effet</strong><p>Plus d&#x27;ambiguïté ; CT-9003 rejoint AC-300.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La correction humaine passe avant la règle.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-replay" aria-labelledby="replay-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Rejouer"><button type="button" role="tab" id="replay-commands-tab" data-view="commands" aria-controls="replay-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="replay-result-tab" data-view="result" aria-controls="replay-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="replay-commands" aria-labelledby="replay-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity resolve ResolvedCustomer</span>
+<span class="out">rows seen: 10
+resolved: 9
+ambiguous: 0
+unresolved (no rule): 1
+unresolved (provider): 0
+newly minted: 0
+provider calls: 0
+provider failures: 0
+rule hits:
+  resolvedcustomer:email: 7</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get ResolvedCustomer --filter crm_id=CT-9003 -o json</span>
+<span class="out">[
+  {
+    &quot;account_code&quot;: &quot;AC-300&quot;,
+    &quot;name&quot;: &quot;Rhône Filtration&quot;,
+    &quot;email&quot;: &quot;compta@groupe-rhone.example&quot;,
+    &quot;city&quot;: &quot;Lyon&quot;,
+    &quot;crm_id&quot;: &quot;CT-9003&quot;,
+    &quot;phone&quot;: &quot;+33 4 72 00 00 03&quot;,
+    &quot;_conflicts&quot;: &quot;{\&quot;name\&quot;: [{\&quot;src\&quot;: \&quot;t_scenario_resolution_erp\&quot;, \&quot;value\&quot;: \&quot;Rhône Filtration\&quot;}, {\&quot;src\&quot;: \&quot;t_scenario_resolution_crm\&quot;, \&quot;value\&quot;: \&quot;Groupe Rhône\&quot;}]}&quot;
+  }
+]</span></code></pre></div><div role="tabpanel" id="replay-result" aria-labelledby="replay-result-tab" tabindex="0" hidden><dl class="facts"><dt>resolve</dt><dd>resolved 9 · ambiguous 0 · unresolved 1</dd><dt>Client</dt><dd>CT-9003 → AC-300</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="replay-title">La décision tient</h2>
+    <p>Une nouvelle résolution complète repart des sources.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Durable</strong><p>Supprimer et réappliquer le manifeste n&#x27;efface pas l&#x27;assertion.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La correction survit au rejeu.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-guard" aria-labelledby="guard-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Protéger"><button type="button" role="tab" id="guard-commands-tab" data-view="commands" aria-controls="guard-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="guard-result-tab" data-view="result" aria-controls="guard-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="guard-commands" aria-labelledby="guard-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity assert-same ResolvedCustomer --left t_scenario_resolution_crm:CT-9999 --right t_scenario_resolution_erp:AC-300</span>
+<span class="note">Error: API error 404: entity &#x27;ResolvedCustomer&#x27; has no row t_scenario_resolution_crm:CT-9999 — check it with lm entity history ResolvedCustomer t_scenario_resolution_crm CT-9999, or run lm entity resolve ResolvedCustomer if the row is new</span></code></pre></div><div role="tabpanel" id="guard-result" aria-labelledby="guard-result-tab" tabindex="0" hidden><dl class="facts"><dt>Refus</dt><dd>API error 404</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="guard-title">Un identifiant inconnu est refusé</h2>
+    <p>CT-9999 n&#x27;existe pas : le hub répond 404 et indique comment vérifier la ligne.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Rien d&#x27;enregistré</strong><p>Aucune assertion sur une ligne absente.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une erreur de saisie ne crée pas de fausse identité.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>L&#x27;email est un signal déclaré, pas une preuve d&#x27;identité.</li><li>Règles exactes seulement ; aucun fournisseur de candidats.</li><li>Données synthétiques.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
