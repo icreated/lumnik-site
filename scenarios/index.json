@@ -55,6 +55,25 @@
       },
       "replayedAt": "2026-10-21",
       "evidenceDigest": "sha256:9ed751214c62ab9f9d4e3b355ec90ced043e9a80d29ec56b03e2510abfa4977d"
+    },
+    {
+      "slug": "pwa-search",
+      "title": "Chercher dans 40 000 articles, facettes comprises.",
+      "lede": "Deux exports CSV, une entité, un SearchIndex, une app réduite à la recherche. Le hub indexe les colonnes déclarées ; la PWA filtre par facette.",
+      "tags": {
+        "domain": [
+          "Commerce",
+          "Catalogue"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "SearchIndex",
+          "App"
+        ]
+      },
+      "replayedAt": "2026-10-21",
+      "evidenceDigest": "sha256:b66c5eaab29751aa25609bc49b7fbfc58ef875e4d435e9048e836d23d141215f"
     }
   ]
 }
