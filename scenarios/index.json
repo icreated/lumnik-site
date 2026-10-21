@@ -24,6 +24,24 @@
       "evidenceDigest": "sha256:0b9b8301994e5425be84ff8b380d79290704bb12ee8d2f3c074b4facf7d929b5"
     },
     {
+      "slug": "devops-ai-pod-triage",
+      "title": "Quels pods regarder en premier ? Le modèle traduit la question, il n'invente pas la priorité.",
+      "lede": "Inventaire, métriques et santé de dix pods arrivent en trois exports. lumnik les fusionne avec une priorité déterministe ; Ask transforme la question en SQL en lecture seule. Sept pods, du critique au moyen, chacun avec ses signaux.",
+      "tags": {
+        "domain": [
+          "DevOps",
+          "Incident"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-10-22",
+      "evidenceDigest": "sha256:fcfd42682a514b8758106118abbadfa20651739ea341f4f884cade5c67ece2c8"
+    },
+    {
       "slug": "devops-release-gate",
       "title": "Une version non approuvée en production bloque le pipeline, par un code de sortie.",
       "lede": "L'inventaire de production et le catalogue des versions approuvées sont deux exports CSV. lumnik les joint ; un script CI lit l'entité en JSON et sort en 1 tant que billing-api tourne en 2.4.0-hotfix. Après le correctif, la même porte passe.",
