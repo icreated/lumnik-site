@@ -2,6 +2,27 @@
   "locale": "fr",
   "scenarios": [
     {
+      "slug": "deal-in-the-pocket",
+      "title": "L'affaire avance pendant le dîner.",
+      "lede": "Cinq exports d'entreprise et un catalogue, quatre entités, trois vues, un Process. Le CRM passe l'affaire à confirmer ; la décision arrive dans la PWA, « Traiter » part en webhook et l'email client suit.",
+      "tags": {
+        "domain": [
+          "Industrie",
+          "Commerce"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "View",
+          "SearchIndex",
+          "App",
+          "Process"
+        ]
+      },
+      "replayedAt": "2026-10-21",
+      "evidenceDigest": "sha256:0b9b8301994e5425be84ff8b380d79290704bb12ee8d2f3c074b4facf7d929b5"
+    },
+    {
       "slug": "gmao-candy-line-incident",
       "title": "Un incident critique sans technicien arrive dans la boîte du responsable.",
       "lede": "Un export CSV de GMAO, un Connector, un Workflow, un Process. Une décision, une seule ; l'affectation la fait avancer.",
