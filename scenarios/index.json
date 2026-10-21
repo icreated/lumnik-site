@@ -128,6 +128,24 @@
       "evidenceDigest": "sha256:cd8aa75aec35af4ca81fef172bd8802b2cc6f6c98ec7b77542d97417367f0d86"
     },
     {
+      "slug": "kafka-freezer-door-dormancy",
+      "title": "Une porte de congélateur qui ne dit plus rien finit par se faire entendre.",
+      "lede": "Des capteurs publient l'état des portes sur Kafka. FZ-17 s'ouvre et se tait ; FZ-18 s'ouvre et se referme. Un workflow surveillé remarque le silence : une seule alerte, pour la porte restée ouverte au-delà d'une minute.",
+      "tags": {
+        "domain": [
+          "Chaîne du froid",
+          "Laboratoire"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "Workflow"
+        ]
+      },
+      "replayedAt": "2026-10-21",
+      "evidenceDigest": "sha256:990a1dee644abf20c66c38771a91439aa7f4689b5d40d89b5de096a5aa748db7"
+    },
+    {
       "slug": "pwa-chat",
       "title": "Questionner 40 000 articles, SQL à l'appui.",
       "lede": "Deux exports CSV, une entité, une app réduite au chat. La question devient une requête en lecture seule ; la réponse montre son SQL.",
