@@ -3,8 +3,8 @@
   "scenarios": [
     {
       "slug": "gmao-candy-line-incident",
-      "title": "Un incident critique sans responsable ne reste plus invisible.",
-      "lede": "Un ancien logiciel de GMAO exporte ses incidents dans un fichier CSV, sans prévenir personne. lumnik lit cet export tel quel, déclare le cycle de vie des incidents et fait apparaître l'incident critique sans technicien dans la boîte de décisions du responsable maintenance.",
+      "title": "Un incident critique sans technicien arrive dans la boîte du responsable.",
+      "lede": "Un export CSV de GMAO, un Connector, un Workflow, un Process. Une décision, une seule ; l'affectation la fait avancer.",
       "tags": {
         "domain": [
           "Industrie",
