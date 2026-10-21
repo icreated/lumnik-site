@@ -172,6 +172,24 @@
       "evidenceDigest": "sha256:8dcd8abe1473273c9532c9f71c0fd17542ddbca7124c64ca5a0a1966b8ef38c7"
     },
     {
+      "slug": "legacy-sales-grafana",
+      "title": "Un ERP figé alimente un vrai tableau Grafana, sans connecteur de plus.",
+      "lede": "L'ERP exporte ses ventes et son catalogue en CSV. lumnik les joint, Grafana lit l'entité par un compte PostgreSQL en lecture seule, borné à son tenant. Lundi : 10 450 €. Mardi, l'export change : 14 200 €, et la vente modifiée n'apparaît qu'une fois.",
+      "tags": {
+        "domain": [
+          "Ventes",
+          "BI"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-22",
+      "evidenceDigest": "sha256:c8f311c0fb15458e813e3953b2f5e5ccbcf37311ffc8541d21e8c70a2e594146"
+    },
+    {
       "slug": "pwa-chat",
       "title": "Questionner 40 000 articles, SQL à l'appui.",
       "lede": "Deux exports CSV, une entité, une app réduite au chat. La question devient une requête en lecture seule ; la réponse montre son SQL.",
