@@ -114,6 +114,23 @@
       "evidenceDigest": "sha256:783138b77fcaa6c26745e209244f7bc67c3cfce06ecfddd25fb63b25667ac76a"
     },
     {
+      "slug": "export-that-lies",
+      "title": "L'export qui ment : une ligne illisible ne passe pas en silence.",
+      "lede": "Un ERP exporte chaque nuit son catalogue d'articles en un seul fichier. Un libellé contient le séparateur, sans guillemets. lumnik met la ligne de côté avec ses valeurs brutes, ne retire rien du catalogue tant qu'elle est illisible, et ne ferme la lettre morte que sur le run qui l'a vraiment relue.",
+      "tags": {
+        "domain": [
+          "Catalogue",
+          "Intégration"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-22",
+      "evidenceDigest": "sha256:a610b53bba19b3247c78e657bf9b4edea5e10290471848a5650c09a2ed68710d"
+    },
+    {
       "slug": "gmao-candy-line-incident",
       "title": "Un incident critique sans technicien arrive dans la boîte du responsable.",
       "lede": "Un export CSV de GMAO, un Connector, un Workflow, un Process. Une décision, une seule ; l'affectation la fait avancer.",
