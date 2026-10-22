@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L&#x27;export qui ment : une ligne illisible ne passe pas en silence. — lumnik</title>
+<meta name="description" content="Un ERP exporte chaque nuit son catalogue d&#x27;articles en un seul fichier. Un libellé contient le séparateur, sans guillemets. lumnik met la ligne de côté avec ses valeurs brutes, ne retire rien du catalogue tant qu&#x27;elle est illisible, et ne ferme la lettre morte que sur le run qui l&#x27;a vraiment relue.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/export-that-lies/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/export-that-lies/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>L&#x27;export qui ment : une ligne illisible ne passe pas en silence.</h1>
+    <p class="lede">Un ERP exporte chaque nuit son catalogue d&#x27;articles en un seul fichier. Un libellé contient le séparateur, sans guillemets. lumnik met la ligne de côté avec ses valeurs brutes, ne retire rien du catalogue tant qu&#x27;elle est illisible, et ne ferme la lettre morte que sur le run qui l&#x27;a vraiment relue.</p>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Catalogue</li><li class="tag">Intégration</li><li class="tag kind">Connector</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-night1" data-step="night1" aria-current="step"><span class="num">1 · Nuit 1</span><span class="sub">Une ligne illisible</span></a><a href="#step-night2" data-step="night2"><span class="num">2 · Nuit 2</span><span class="sub">Rien n&#x27;est retiré</span></a><a href="#step-night3" data-step="night3"><span class="num">3 · Nuit 3</span><span class="sub">L&#x27;export corrigé</span></a><a href="#step-refused" data-step="refused"><span class="num">4 · Refus</span><span class="sub">Une preuve qui n&#x27;en est pas une</span></a><a href="#step-close" data-step="close"><span class="num">5 · Fermer</span><span class="sub">Sur la nuit 3</span></a></nav>
+  <section class="step" id="step-night1" aria-labelledby="night1-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Nuit 1"><button type="button" role="tab" id="night1-manifest-tab" data-view="manifest" aria-controls="night1-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="night1-commands-tab" data-view="commands" aria-controls="night1-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="night1-result-tab" data-view="result" aria-controls="night1-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="night1-manifest" aria-labelledby="night1-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-articles.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-export-articles-b</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [catalogue]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/export-that-lies/b/articles.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line hl">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">  <span class="key">after_process</span>: none</span></code></pre></div><div role="tabpanel" id="night1-commands" aria-labelledby="night1-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f /Users/macspok/eclipse-workspace/lumnik-scenario/scenarios/export-that-lies/manifests/10-articles.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-export-articles-b&quot;,&quot;connectorId&quot;:&quot;80b92726-879d-416f-973c-b1027d0a605a&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-export-articles-b</span>
+<span class="out">run scheduled: eed29e19-5f61-4849-b13f-08cd73667223</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get eed29e19-5f61-4849-b13f-08cd73667223</span>
+<span class="out">ID        CONNECTOR                   ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+eed29e19  scenario-export-articles-b  default   Completed  10  9    1        1             2026-10-22 17:25  2026-10-22 17:25  no</span>
+<span class="note">⚠ 1 rows quarantined — see: lm dlq list --run eed29e19-5f61-4849-b13f-08cd73667223</span>
+
+<span class="cmd"><span class="prompt">$</span> lm dlq list --run eed29e19-5f61-4849-b13f-08cd73667223</span>
+<span class="out">ID        CONNECTOR                   RUN       REASON           ATTEMPTS  RESOLUTION  MESSAGE
+9d6dea5d  scenario-export-articles-b  eed29e19  MalformedSource  1                     /tmp/lumnik-scenario/export-that-lies/b/articles.csv:5 — Rec…</span>
+
+<span class="cmd"><span class="prompt">$</span> lm dlq get 9d6dea5d-180a-4f54-8822-762c57e4740a</span>
+<span class="out">ID:        9d6dea5d-180a-4f54-8822-762c57e4740a
+Connector: scenario-export-articles-b (80b92726-879d-416f-973c-b1027d0a605a)
+Run:       eed29e19-5f61-4849-b13f-08cd73667223
+Reason:    MalformedSource
+Attempts:  1
+Message:   /tmp/lumnik-scenario/export-that-lies/b/articles.csv:5 — Record has 4 values but only 3 columns are declared
+Detail:    {&quot;file&quot;:&quot;/tmp/lumnik-scenario/export-that-lies/b/articles.csv&quot;,&quot;line&quot;:5,&quot;message&quot;:&quot;Record has 4 values but only 3 columns are declared&quot;}
+Payload:   {&quot;raw&quot;:[&quot;A04&quot;,&quot;Kit fixation&quot;,&quot; vis + écrou&quot;,&quot;1.90&quot;],&quot;file&quot;:&quot;/tmp/lumnik-scenario/export-that-lies/b/articles.csv&quot;,&quot;line&quot;:5}
+Resolution: open</span></code></pre></div><div role="tabpanel" id="night1-result" aria-labelledby="night1-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 10 · OUT 9 · DEAD-LETTERS 1</dd><dt>open dead letters</dt><dd>1</dd><dt>dead letter</dt><dd>Record has 4 values but only 3 columns are declared</dd><dt>raw</dt><dd>{&quot;raw&quot;:[&quot;A04&quot;,&quot;Kit fixation&quot;,&quot; vis + écrou&quot;,&quot;1.90&quot;],&quot;file&quot;:&quot;/tmp/lumnik-scenario/export-that-lies/b/articles.csv&quot;,&quot;line&quot;:5}</dd></dl><p class="sources">preuves : replay.log, 01-open-after-fix.json, 02-closed.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="night1-title">A04 part en quarantaine, les neuf autres sont écrits</h2>
+    <p>Le libellé de A04 contient un « ; » que l&#x27;export ne met pas entre guillemets : quatre valeurs pour trois colonnes. La ligne va dans les lettres mortes avec ses valeurs brutes, le fichier et le numéro de ligne.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Rien de retouché</strong><p>La valeur en trop n&#x27;est jamais coupée pour faire tenir la ligne.</p></div></li><li><span class="n">2</span><div><strong>Le run continue</strong><p>IN 10, OUT 9, une lettre morte.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une ligne illisible est mise de côté avec sa raison, pas perdue.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-night2" aria-labelledby="night2-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Nuit 2"><button type="button" role="tab" id="night2-commands-tab" data-view="commands" aria-controls="night2-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="night2-result-tab" data-view="result" aria-controls="night2-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="night2-commands" aria-labelledby="night2-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-export-articles-b</span>
+<span class="out">run scheduled: 021bf1c1-1905-4d2c-8b40-e7851649309b</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 021bf1c1-1905-4d2c-8b40-e7851649309b</span>
+<span class="out">ID        CONNECTOR                   ENDPOINT  STATUS  IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+021bf1c1  scenario-export-articles-b  default   Failed  9   8    1        1             2026-10-22 17:25  2026-10-22 17:25  no</span>
+<span class="note">⚠ 1 rows quarantined — see: lm dlq list --run 021bf1c1-1905-4d2c-8b40-e7851649309b</span>
+<span class="note">✖ run failed: 1 row(s) of the file went to the dead letters this run (lm dlq list --run 021bf1c1-1905-4d2c-8b40-e7851649309b): a full refresh removes nothing while a row of the file is in the dead letters, whatever its reason (unreadable, dropped by validate-row…) — nothing was removed. Fix the cause each dead letter reports (lm dlq get &lt;id&gt;) and run again.</span>
+
+<span class="cmd"><span class="prompt">$</span> lm dlq list --connector scenario-export-articles-b</span>
+<span class="out">ID        CONNECTOR                   RUN       REASON           ATTEMPTS  RESOLUTION  MESSAGE
+409185fe  scenario-export-articles-b  021bf1c1  MalformedSource  1                     /tmp/lumnik-scenario/export-that-lies/b/articles.csv:5 — Rec…
+9d6dea5d  scenario-export-articles-b  eed29e19  MalformedSource  1                     /tmp/lumnik-scenario/export-that-lies/b/articles.csv:5 — Rec…</span></code></pre></div><div role="tabpanel" id="night2-result" aria-labelledby="night2-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Failed · IN 9 · OUT 8 · DEAD-LETTERS 1</dd><dt>refusal</dt><dd>1 row(s) of the file went to the dead letters this run (lm dlq list --run 021bf1c1-1905-4d2c-8b40-e7851649309b): a full refresh removes nothing while a row of the file is in the dead letters, whatever its reason (unreadable, dropped by validate-row…) — nothing was removed. Fix the cause each dead letter reports (lm dlq get &lt;id&gt;) and run again.</dd><dt>open dead letters</dt><dd>2</dd></dl><p class="sources">preuves : replay.log, 01-open-after-fix.json, 02-closed.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="night2-title">A09 quitte le catalogue, A04 toujours illisible : Failed</h2>
+    <p>Le fichier est toute la table : A09 absent devrait être retiré. Mais une ligne du fichier est en lettre morte ; le run échoue et ne retire rien.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>A09 attend</strong><p>Sa dernière version reste tant qu&#x27;une ligne du fichier est illisible.</p></div></li><li><span class="n">2</span><div><strong>Deux lettres</strong><p>Chaque nuit qui lit la ligne en ajoute une.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un retrait ne passe pas tant que le fichier n&#x27;a pas été lu en entier.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-night3" aria-labelledby="night3-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Nuit 3"><button type="button" role="tab" id="night3-commands-tab" data-view="commands" aria-controls="night3-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="night3-result-tab" data-view="result" aria-controls="night3-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="night3-commands" aria-labelledby="night3-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-export-articles-b</span>
+<span class="out">run scheduled: d3d14c8b-6e46-499a-ab4e-9d9028bc370d</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get d3d14c8b-6e46-499a-ab4e-9d9028bc370d</span>
+<span class="out">ID        CONNECTOR                   ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+d3d14c8b  scenario-export-articles-b  default   Completed  9   9    0        0             2026-10-22 17:25  2026-10-22 17:25  no</span>
+<span class="note">• 1 row(s) removed — the source no longer holds them</span>
+
+<span class="cmd"><span class="prompt">$</span> lm dlq list --connector scenario-export-articles-b</span>
+<span class="out">ID        CONNECTOR                   RUN       REASON           ATTEMPTS  RESOLUTION  MESSAGE
+409185fe  scenario-export-articles-b  021bf1c1  MalformedSource  1                     /tmp/lumnik-scenario/export-that-lies/b/articles.csv:5 — Rec…
+9d6dea5d  scenario-export-articles-b  eed29e19  MalformedSource  1                     /tmp/lumnik-scenario/export-that-lies/b/articles.csv:5 — Rec…</span></code></pre></div><div role="tabpanel" id="night3-result" aria-labelledby="night3-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 9 · OUT 9 · DEAD-LETTERS 0</dd><dt>removed</dt><dd>1</dd><dt>open dead letters</dt><dd>2</dd></dl><p class="sources">preuves : replay.log, 01-open-after-fix.json, 02-closed.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="night3-title">A04 écrit, A09 retiré</h2>
+    <p>L&#x27;export met le libellé entre guillemets. Le run lit les neuf lignes, retire A09 et termine Completed. Les deux lettres mortes restent ouvertes : le hub ne relit jamais une lettre morte.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Retrait</strong><p>1 ligne retirée, la source ne la contient plus.</p></div></li><li><span class="n">2</span><div><strong>Lettres ouvertes</strong><p>Les fermer est un geste de l&#x27;intégrateur.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La nuit corrigée rattrape la table sans geste manuel sur les données.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-refused" aria-labelledby="refused-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Refus"><button type="button" role="tab" id="refused-commands-tab" data-view="commands" aria-controls="refused-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="refused-result-tab" data-view="result" aria-controls="refused-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="refused-commands" aria-labelledby="refused-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm dlq replayed 9d6dea5d-180a-4f54-8822-762c57e4740a --new-run-id 021bf1c1-1905-4d2c-8b40-e7851649309b</span>
+<span class="note">Error: API error 400: run 021bf1c1-1905-4d2c-8b40-e7851649309b ended Failed, not Completed</span></code></pre></div><div role="tabpanel" id="refused-result" aria-labelledby="refused-result-tab" tabindex="0" hidden><dl class="facts"><dt>refusal</dt><dd>API error 400: run 021bf1c1-1905-4d2c-8b40-e7851649309b ended Failed, not Completed</dd></dl><p class="sources">preuves : replay.log, 01-open-after-fix.json, 02-closed.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="refused-title">Fermer sur la nuit 2 : refusé</h2>
+    <p>La nuit 2 a remis A04 en quarantaine. La donner comme preuve du rejeu est refusé, en nommant la raison.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Le run prouve</strong><p>Completed, même connecteur, démarré après la lettre.</p></div></li><li><span class="n">2</span><div><strong>Sinon</strong><p>discard ferme une lettre qu&#x27;aucun run n&#x27;a portée.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Fermer une lettre morte ne se déclare pas sur parole.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-close" aria-labelledby="close-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Fermer"><button type="button" role="tab" id="close-commands-tab" data-view="commands" aria-controls="close-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="close-result-tab" data-view="result" aria-controls="close-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="close-commands" aria-labelledby="close-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm dlq replayed 409185fe-554c-4647-981d-16c47b1f67be --new-run-id d3d14c8b-6e46-499a-ab4e-9d9028bc370d</span>
+<span class="out">marked replayed: 409185fe-554c-4647-981d-16c47b1f67be</span>
+
+<span class="cmd"><span class="prompt">$</span> lm dlq replayed 9d6dea5d-180a-4f54-8822-762c57e4740a --new-run-id d3d14c8b-6e46-499a-ab4e-9d9028bc370d</span>
+<span class="out">marked replayed: 9d6dea5d-180a-4f54-8822-762c57e4740a</span>
+
+<span class="cmd"><span class="prompt">$</span> lm dlq get 9d6dea5d-180a-4f54-8822-762c57e4740a</span>
+<span class="out">ID:        9d6dea5d-180a-4f54-8822-762c57e4740a
+Connector: scenario-export-articles-b (80b92726-879d-416f-973c-b1027d0a605a)
+Run:       eed29e19-5f61-4849-b13f-08cd73667223
+Reason:    MalformedSource
+Attempts:  1
+Message:   /tmp/lumnik-scenario/export-that-lies/b/articles.csv:5 — Record has 4 values but only 3 columns are declared
+Detail:    {&quot;file&quot;:&quot;/tmp/lumnik-scenario/export-that-lies/b/articles.csv&quot;,&quot;line&quot;:5,&quot;message&quot;:&quot;Record has 4 values but only 3 columns are declared&quot;}
+Payload:   {&quot;raw&quot;:[&quot;A04&quot;,&quot;Kit fixation&quot;,&quot; vis + écrou&quot;,&quot;1.90&quot;],&quot;file&quot;:&quot;/tmp/lumnik-scenario/export-that-lies/b/articles.csv&quot;,&quot;line&quot;:5}
+Resolution: REPLAYED by run d3d14c8b-6e46-499a-ab4e-9d9028bc370d, 2026-10-22 17:25</span></code></pre></div><div role="tabpanel" id="close-result" aria-labelledby="close-result-tab" tabindex="0" hidden><dl class="facts"><dt>resolution</dt><dd>REPLAYED by run d3d14c8b, 2026-10-22 17:25</dd></dl><p class="sources">preuves : replay.log, 01-open-after-fix.json, 02-closed.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="close-title">Les deux lettres fermées par le run qui a écrit A04</h2>
+    <p>lm dlq replayed --new-run-id avec la nuit 3. lm dlq get dit par quel run et quand.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Une seule fois</strong><p>Une lettre fermée refuse une seconde fermeture.</p></div></li><li><span class="n">2</span><div><strong>Traçable</strong><p>Le run et l&#x27;heure restent sur la lettre.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Chaque lettre fermée dit qui l&#x27;a portée de nouveau.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Le hub vérifie que le run nommé pouvait porter la ligne (Completed, même connecteur, après la lettre), pas qu&#x27;il l&#x27;a écrite.</li><li>Chaque nuit qui relit la ligne ajoute une lettre morte : on les ferme une par une.</li><li>Données synthétiques.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
