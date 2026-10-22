@@ -244,6 +244,24 @@
       "evidenceDigest": "sha256:c8f311c0fb15458e813e3953b2f5e5ccbcf37311ffc8541d21e8c70a2e594146"
     },
     {
+      "slug": "orders-where-they-sleep",
+      "title": "Où dorment les commandes.",
+      "lede": "L'ERP ne garde que le statut du jour : hier En cours, aujourd'hui Livrée, sans rien sur l'attente entre les deux. lumnik surveille la colonne, inscrit chaque changement dans un journal, et dit combien de temps chaque commande est restée dans chaque état.",
+      "tags": {
+        "domain": [
+          "Distribution",
+          "Commandes"
+        ],
+        "kinds": [
+          "Connector",
+          "Workflow"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-22",
+      "evidenceDigest": "sha256:5d627d31ca5cfbc41db716211f8c9bdcc47c856b741b9b3add95e12822d43810"
+    },
+    {
       "slug": "pwa-chat",
       "title": "Questionner 40 000 articles, SQL à l'appui.",
       "lede": "Deux exports CSV, une entité, une app réduite au chat. La question devient une requête en lecture seule ; la réponse montre son SQL.",
