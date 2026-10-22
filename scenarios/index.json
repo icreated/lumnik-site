@@ -343,6 +343,23 @@
       "evidenceDigest": "sha256:66a82f5e2a774e0fec0a1f34cd31ae7a093cecf939403942db2c932df6afefab"
     },
     {
+      "slug": "rest-partner-loses-rows",
+      "title": "L'API du partenaire perd une page, le run ne ment pas.",
+      "lede": "Un partenaire publie 2 400 partenaires et leur nombre. Une nuit, une page de 100 disparaît, le nombre reste juste. lumnik compare ce qu'il a lu au total que la source déclare : le run échoue en nommant l'endpoint et les deux chiffres, au lieu de passer au vert.",
+      "tags": {
+        "domain": [
+          "Partenaires",
+          "Intégration"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-22",
+      "evidenceDigest": "sha256:a4cdc366fbe1e7888345bbde65e66545842441a3b0fc28ff698830687fd06acc"
+    },
+    {
       "slug": "siem-bank-account-change",
       "title": "Un changement de RIB fournisseur, silencieux dans l'ERP, arrive au SIEM.",
       "lede": "L'ERP exporte ses fournisseurs en CSV et n'émet aucun événement. lumnik relit l'export sur planning, émet une décision signée par webhook, et le SIEM corrèle : un seul changement de compte, une alerte haute. L'inbox, elle, ne montre jamais le compte.",
