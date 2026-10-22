@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La question à laquelle Ask refuse de répondre : une marge sans coût, un « meilleur » sans critère. — lumnik</title>
+<meta name="description" content="Un directeur achats pose ses questions à un an de commandes fournisseurs, avec ses mots. Trois questions reçoivent leur chiffre, avec le SQL qui l&#x27;a produit. Trois autres n&#x27;ont pas de réponse dans ces données : une marge sans prix de revient, un meilleur fournisseur sans critère, des retards sans date de livraison. Ask les refuse au lieu d&#x27;inventer un chiffre qu&#x27;on répéterait en réunion.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/purchasing-ask-abstains/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/purchasing-ask-abstains/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>La question à laquelle Ask refuse de répondre : une marge sans coût, un « meilleur » sans critère.</h1>
+    <p class="lede">Un directeur achats pose ses questions à un an de commandes fournisseurs, avec ses mots. Trois questions reçoivent leur chiffre, avec le SQL qui l&#x27;a produit. Trois autres n&#x27;ont pas de réponse dans ces données : une marge sans prix de revient, un meilleur fournisseur sans critère, des retards sans date de livraison. Ask les refuse au lieu d&#x27;inventer un chiffre qu&#x27;on répéterait en réunion.</p>
+    <ul class="tags"><li class="tag edition edition-pro"><a href="https://docs.lumnik.io/editions/">lumnik Pro</a></li><li class="tag">Achats</li><li class="tag">IA</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-load" data-step="load" aria-current="step"><span class="num">1 · Charger</span><span class="sub">240 commandes</span></a><a href="#step-answered" data-step="answered"><span class="num">2 · Répondre</span><span class="sub">Trois chiffres</span></a><a href="#step-refused" data-step="refused"><span class="num">3 · Refuser</span><span class="sub">Pas de chiffre inventé</span></a><a href="#step-empty" data-step="empty"><span class="num">4 · Vide</span><span class="sub">Aucune ligne</span></a></nav>
+  <section class="step" id="step-load" aria-labelledby="load-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Charger"><button type="button" role="tab" id="load-manifest-tab" data-view="manifest" aria-controls="load-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="load-commands-tab" data-view="commands" aria-controls="load-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="load-result-tab" data-view="result" aria-controls="load-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="load-manifest" aria-labelledby="load-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-purchase-orders.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-purchasing-b</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [purchasing-b]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/purchasing-ask-abstains/b/purchase_orders.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">dataset</span>:</span><span class="line">      - require-headers:</span><span class="line">          <span class="key">columns</span>: [po_number, supplier_id, supplier_name, category, order_date, status, amount_eur]</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      - parse-date: { column: order_date, formats: [<span class="str">&quot;yyyy-MM-dd&quot;</span>] }</span><span class="line hl">      - parse-number: { column: amount_eur, decimal-separator: <span class="str">&quot;.&quot;</span> }</span></code></pre><div class="file"><span class="filename">manifests/20-purchase-order.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: purchase_order_b</span><span class="line"><span class="key">label</span>: Commande fournisseur</span><span class="line hl"><span class="key">description</span>: <span class="str">&quot;A purchase order sent to a supplier in 2025. One row is one order. The amount is what was ordered from the supplier, excluding VAT; the hub holds no cost price, no selling price and no supplier rating.&quot;</span></span><span class="line"><span class="key">match</span>: [po_number]</span><span class="line"><span class="key">scopes</span>: [purchasing-b]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">po_number</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Numéro de commande&quot;</span></span><span class="line">    <span class="key">example</span>: <span class="str">&quot;PO-2025-0001&quot;</span></span><span class="line">  <span class="key">supplier_id</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Code fournisseur&quot;</span></span><span class="line">    <span class="key">example</span>: <span class="str">&quot;SUP-003&quot;</span></span><span class="line">  <span class="key">supplier_name</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Nom du fournisseur&quot;</span></span><span class="line">  <span class="key">category</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Famille d&#x27;achat&quot;</span></span><span class="line hl">    <span class="key">values</span>: [visserie, emballage, transport, maintenance]</span><span class="line">  <span class="key">order_date</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Date de commande&quot;</span></span><span class="line">  <span class="key">status</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Statut de la commande&quot;</span></span><span class="line hl">    <span class="key">description</span>: <span class="str">&quot;ordered: sent, not yet received; received: delivered; cancelled: cancelled before delivery.&quot;</span></span><span class="line hl">    <span class="key">values</span>: [ordered, received, cancelled]</span><span class="line">  <span class="key">amount_eur</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Montant commandé HT, en euros&quot;</span></span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_purchasing_b</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">po_number</span>: po_number</span><span class="line">      <span class="key">supplier_id</span>: supplier_id</span><span class="line">      <span class="key">supplier_name</span>: supplier_name</span><span class="line">      <span class="key">category</span>: category</span><span class="line">      <span class="key">order_date</span>: order_date</span><span class="line">      <span class="key">status</span>: status</span><span class="line">      <span class="key">amount_eur</span>: amount_eur</span></code></pre></div><div role="tabpanel" id="load-commands" aria-labelledby="load-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-purchase-orders.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-purchasing-b&quot;,&quot;connectorId&quot;:&quot;52d57ced-c323-4ef1-be38-c6e133a11626&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-purchasing-b</span>
+<span class="out">run scheduled: a10fe04f-ef0e-47ae-aeac-104263d1c8f7</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get a10fe04f-ef0e-47ae-aeac-104263d1c8f7</span>
+<span class="out">ID        CONNECTOR              ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+a10fe04f  scenario-purchasing-b  default   Completed  240  240  0        0             2026-10-23 00:00  2026-10-23 00:00  no</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-purchase-order.yaml</span>
+<span class="out">Applied entity &quot;purchase_order_b&quot; → connector.&quot;v_purchase_order_b&quot;</span></code></pre></div><div role="tabpanel" id="load-result" aria-labelledby="load-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 240 · OUT 240</dd></dl><p class="sources">preuves : replay.log, 01-cancelled.txt, 01-cancelled.json, 02-sup003-total.txt, 02-sup003-total.json, 03-sup003-over.txt, 03-sup003-over.json, 04-margin.txt, 04-margin.json, 05-best.txt, 05-best.json, 06-late.txt, 06-late.json, 07-sup009.txt, 07-sup009.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="load-title">Un an de commandes fournisseurs, et ce que chaque colonne veut dire</h2>
+    <p>Le connecteur CSV lit 240 commandes de 2025 : numéro, fournisseur, famille d&#x27;achat, date, statut et montant HT. L&#x27;entité dit ce que chaque colonne signifie, et quelles valeurs prennent le statut et la famille. Elle dit aussi ce qu&#x27;il n&#x27;y a pas : ni prix de revient, ni prix de vente, ni note fournisseur.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>240 commandes</strong><p>Six fournisseurs, trois statuts.</p></div></li><li><span class="n">2</span><div><strong>Le sens déclaré</strong><p>Ask lit ces libellés, pas des noms de colonnes.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Ask ne connaît que ce que l&#x27;entité déclare.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-answered" aria-labelledby="answered-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Répondre"><button type="button" role="tab" id="answered-commands-tab" data-view="commands" aria-controls="answered-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="answered-result-tab" data-view="result" aria-controls="answered-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="answered-commands" aria-labelledby="answered-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm ask --scope purchasing-b --lang fr &quot;Combien de commandes ont été annulées ?&quot;</span>
+<span class="out">26 commandes ont été annulées.
+  data as of: 2026-10-22T22:00:41.948298Z (last completed run)
+
+  COUNT
+  26
+  1 row returned
+
+  SQL: SELECT COUNT(*) FROM &quot;connector&quot;.&quot;v_purchase_order_b&quot; WHERE &quot;status&quot; = &#x27;cancelled&#x27;
+LIMIT 500</span>
+
+<span class="cmd"><span class="prompt">$</span> lm ask --scope purchasing-b --lang fr &quot;Quel est le montant total commandé au fournisseur SUP-003, hors commandes annulées ?&quot;</span>
+<span class="out">Le montant total commandé au fournisseur SUP-003, hors commandes annulées, est de 316021.03 euros.
+  data as of: 2026-10-22T22:00:41.948298Z (last completed run)
+
+  TOTAL_AMOUNT_EUR
+  316021.03
+  1 row returned
+
+  SQL: SELECT SUM(amount_eur) AS total_amount_eur
+FROM &quot;connector&quot;.&quot;v_purchase_order_b&quot;
+WHERE supplier_id = &#x27;SUP-003&#x27; AND status != &#x27;cancelled&#x27;
+LIMIT 500</span>
+
+<span class="cmd"><span class="prompt">$</span> lm ask --scope purchasing-b --lang fr &quot;Quelles commandes du fournisseur SUP-003 dépassent 15 000 euros ?&quot;</span>
+<span class="out">Il y a 7 commandes du fournisseur SUP-003 qui dépassent 15 000 euros. Les numéros de commande sont : PO-2025-0013, PO-2025-0022, PO-2025-0061, PO-2025-0071, PO-2025-0078, PO-2025-0155 et PO-2025-0192.
+  data as of: 2026-10-22T22:00:41.948298Z (last completed run)
+
+  PO_NUMBER
+  PO-2025-0013
+  PO-2025-0022
+  PO-2025-0061
+  PO-2025-0071
+  PO-2025-0078
+  PO-2025-0155
+  PO-2025-0192
+  7 rows returned
+
+  SQL: SELECT &quot;po_number&quot;
+FROM &quot;connector&quot;.&quot;v_purchase_order_b&quot;
+WHERE &quot;supplier_id&quot; = &#x27;SUP-003&#x27; AND &quot;amount_eur&quot; &gt; 15000
+LIMIT 500</span></code></pre></div><div role="tabpanel" id="answered-result" aria-labelledby="answered-result-tab" tabindex="0" hidden><dl class="facts"><dt>Combien de commandes ont été annulées ?</dt><dd>26 · SELECT COUNT(*) FROM &quot;connector&quot;.&quot;v_purchase_order_b&quot; WHERE &quot;status&quot; = &#x27;cancelled&#x27; LIMIT 500</dd><dt>Quel est le montant total commandé au fournisseur SUP-003, hors commandes annulées ?</dt><dd>316021.03 · SELECT SUM(amount_eur) AS total_amount_eur FROM &quot;connector&quot;.&quot;v_purchase_order_b&quot; WHERE supplier_id = &#x27;SUP-003&#x27; AND status != &#x27;cancelled&#x27; LIMIT 500</dd><dt>Quelles commandes du fournisseur SUP-003 dépassent 15 000 euros ?</dt><dd>7 rows · SELECT &quot;po_number&quot; FROM &quot;connector&quot;.&quot;v_purchase_order_b&quot; WHERE &quot;supplier_id&quot; = &#x27;SUP-003&#x27; AND &quot;amount_eur&quot; &gt; 15000 LIMIT 500</dd></dl><p class="sources">preuves : replay.log, 01-cancelled.txt, 01-cancelled.json, 02-sup003-total.txt, 02-sup003-total.json, 03-sup003-over.txt, 03-sup003-over.json, 04-margin.txt, 04-margin.json, 05-best.txt, 05-best.json, 06-late.txt, 06-late.json, 07-sup009.txt, 07-sup009.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="answered-title">Trois questions, trois chiffres, le SQL à côté</h2>
+    <p>Combien de commandes annulées, combien commandé à SUP-003 hors annulations, quelles commandes de SUP-003 dépassent 15 000 euros. Chaque réponse montre le SQL exécuté et les lignes. La phrase qui reprend le seuil de la question est gardée (#1391) ; un chiffre que ni les lignes ni la requête ne portent serait retenu.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>26 annulées</strong><p>COUNT(*) sur le statut cancelled.</p></div></li><li><span class="n">2</span><div><strong>7 commandes</strong><p>Au-dessus de 15 000 euros, chez SUP-003.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un chiffre d&#x27;Ask se vérifie sur sa requête et ses lignes.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-refused" aria-labelledby="refused-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Refuser"><button type="button" role="tab" id="refused-commands-tab" data-view="commands" aria-controls="refused-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="refused-result-tab" data-view="result" aria-controls="refused-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="refused-commands" aria-labelledby="refused-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm ask --scope purchasing-b --lang fr &quot;Quelle est notre marge sur les achats de 2025 ?&quot;</span>
+<span class="out">Je ne peux pas répondre à partir des données disponibles pour ce périmètre — la question ne correspond pas au schéma déclaré.</span>
+
+<span class="cmd"><span class="prompt">$</span> lm ask --scope purchasing-b --lang fr &quot;Quel est notre meilleur fournisseur ?&quot;</span>
+<span class="out">Je ne peux pas répondre à partir des données disponibles pour ce périmètre — la question ne correspond pas au schéma déclaré.</span>
+
+<span class="cmd"><span class="prompt">$</span> lm ask --scope purchasing-b --lang fr &quot;Quel fournisseur livre le plus en retard ?&quot;</span>
+<span class="out">Je ne peux pas répondre à partir des données disponibles pour ce périmètre — la question ne correspond pas au schéma déclaré.</span></code></pre></div><div role="tabpanel" id="refused-result" aria-labelledby="refused-result-tab" tabindex="0" hidden><dl class="facts"><dt>Quelle est notre marge sur les achats de 2025 ?</dt><dd>no SQL · abstained</dd><dt>Quel est notre meilleur fournisseur ?</dt><dd>no SQL · abstained</dd><dt>Quel fournisseur livre le plus en retard ?</dt><dd>no SQL · abstained</dd><dt>answer</dt><dd>Je ne peux pas répondre à partir des données disponibles pour ce périmètre — la question ne correspond pas au schéma déclaré.</dd></dl><p class="sources">preuves : replay.log, 01-cancelled.txt, 01-cancelled.json, 02-sup003-total.txt, 02-sup003-total.json, 03-sup003-over.txt, 03-sup003-over.json, 04-margin.txt, 04-margin.json, 05-best.txt, 05-best.json, 06-late.txt, 06-late.json, 07-sup009.txt, 07-sup009.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="refused-title">Une marge, un meilleur fournisseur, des retards : refusés</h2>
+    <p>Aucune colonne ne porte un coût, un critère de « meilleur » ou une date de livraison. Ask ne lance aucune requête et le dit : la question ne correspond pas au schéma déclaré. En JSON, abstained vaut true et le SQL est vide ; un script le lit sans interpréter la phrase.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Aucun SQL</strong><p>Rien n&#x27;est exécuté, rien n&#x27;est chiffré.</p></div></li><li><span class="n">2</span><div><strong>abstained: true</strong><p>Le refus se lit dans le JSON.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une question hors des données reçoit un refus, pas une estimation.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-empty" aria-labelledby="empty-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Vide"><button type="button" role="tab" id="empty-commands-tab" data-view="commands" aria-controls="empty-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="empty-result-tab" data-view="result" aria-controls="empty-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="empty-commands" aria-labelledby="empty-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm ask --scope purchasing-b --lang fr &quot;Quelles commandes du fournisseur SUP-009 ont été reçues ?&quot;</span>
+<span class="out">La requête n&#x27;a renvoyé aucune ligne. Il peut n&#x27;y en avoir réellement aucune, ou la requête n&#x27;a pas saisi votre question — vérifiez le SQL avant d&#x27;affirmer qu&#x27;il n&#x27;y en a pas.
+  data as of: 2026-10-22T22:00:41.948298Z (last completed run)
+
+  no rows returned
+
+  SQL: SELECT &quot;po_number&quot;, &quot;order_date&quot;, &quot;amount_eur&quot;
+FROM &quot;connector&quot;.&quot;v_purchase_order_b&quot;
+WHERE &quot;supplier_id&quot; = &#x27;SUP-009&#x27; AND &quot;status&quot; = &#x27;received&#x27;
+LIMIT 500</span></code></pre></div><div role="tabpanel" id="empty-result" aria-labelledby="empty-result-tab" tabindex="0" hidden><dl class="facts"><dt>Quelles commandes du fournisseur SUP-009 ont été reçues ?</dt><dd>0 rows · abstained</dd><dt>answer</dt><dd>La requête n&#x27;a renvoyé aucune ligne. Il peut n&#x27;y en avoir réellement aucune, ou la requête n&#x27;a pas saisi votre question — vérifiez le SQL avant d&#x27;affirmer qu&#x27;il n&#x27;y en a pas.</dd></dl><p class="sources">preuves : replay.log, 01-cancelled.txt, 01-cancelled.json, 02-sup003-total.txt, 02-sup003-total.json, 03-sup003-over.txt, 03-sup003-over.json, 04-margin.txt, 04-margin.json, 05-best.txt, 05-best.json, 06-late.txt, 06-late.json, 07-sup009.txt, 07-sup009.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="empty-title">Un fournisseur absent : « aucune ligne » n&#x27;est pas « aucune commande »</h2>
+    <p>SUP-009 n&#x27;apparaît dans aucune commande. La requête tourne et ne renvoie rien. Ask ne conclut pas qu&#x27;il n&#x27;y a pas de commande : il dit que la requête a pu manquer la question, et demande de vérifier le SQL.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>0 ligne</strong><p>Le SQL est montré.</p></div></li><li><span class="n">2</span><div><strong>Pas de non</strong><p>Le vide n&#x27;est pas présenté comme un fait.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un résultat vide n&#x27;est jamais rédigé comme une réponse négative.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Les refus viennent du modèle configuré sur le hub (qwen2.5-coder:7b ici). Un autre modèle peut traduire une question que celui-ci refuse ; ses chiffres passent alors les mêmes contrôles.</li><li>Une date reprise dans la réponse n&#x27;est reconnue que par son année : « depuis le 15 mars » fait retenir la phrase, pas les lignes.</li><li>Commandes synthétiques ; une seule entité, un seul périmètre.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
