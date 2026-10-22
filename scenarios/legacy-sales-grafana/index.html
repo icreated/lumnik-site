@@ -96,7 +96,7 @@
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une ligne modifiée dans l&#x27;ERP remplace l&#x27;ancienne au lieu de s&#x27;y ajouter.</p></div>
   </aside>
 </section>
-  <section class="limits"><h2>Limites</h2><ul><li>Grafana interroge PostgreSQL à intervalle régulier : de la BI quasi temps réel, pas du streaming.</li><li>Le compte de lecture est créé pour la démonstration ; en production, ses identifiants vont dans un gestionnaire de secrets, avec la même borne.</li><li>Le compte lit les tables du schéma connector : une évolution de la vue demande de revoir ses droits.</li><li>Données synthétiques.</li></ul></section>
+  <section class="limits"><h2>Limites</h2><ul><li>Grafana interroge PostgreSQL à intervalle régulier ; ce n&#x27;est pas du streaming.</li><li>Le compte de lecture est créé pour la démonstration ; en production, ses identifiants vont dans un gestionnaire de secrets, avec la même borne.</li><li>Le compte lit les tables du schéma connector : une évolution de la vue demande de revoir ses droits.</li><li>Données synthétiques.</li></ul></section>
 </main>
 <script src="../assets/scenario.js" defer></script>
 </body>
