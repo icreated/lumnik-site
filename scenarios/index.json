@@ -301,6 +301,24 @@
       "evidenceDigest": "sha256:5d627d31ca5cfbc41db716211f8c9bdcc47c856b741b9b3add95e12822d43810"
     },
     {
+      "slug": "purchasing-ask-abstains",
+      "title": "La question à laquelle Ask refuse de répondre : une marge sans coût, un « meilleur » sans critère.",
+      "lede": "Un directeur achats pose ses questions à un an de commandes fournisseurs, avec ses mots. Trois questions reçoivent leur chiffre, avec le SQL qui l'a produit. Trois autres n'ont pas de réponse dans ces données : une marge sans prix de revient, un meilleur fournisseur sans critère, des retards sans date de livraison. Ask les refuse au lieu d'inventer un chiffre qu'on répéterait en réunion.",
+      "tags": {
+        "domain": [
+          "Achats",
+          "IA"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-10-22",
+      "evidenceDigest": "sha256:4fc2a8f4570862eae39d0c4bfd265abf89722596a361e48f0b6173e021168859"
+    },
+    {
       "slug": "pwa-chat",
       "title": "Questionner 40 000 articles, SQL à l'appui.",
       "lede": "Deux exports CSV, une entité, une app réduite au chat. La question devient une requête en lecture seule ; la réponse montre son SQL.",
