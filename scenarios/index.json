@@ -394,6 +394,23 @@
       "evidenceDigest": "sha256:149f717d084a87a4d4c5d42f60e5a26365d5bf1dfce59d136546a2117581e7fe"
     },
     {
+      "slug": "siebel-soap-desk",
+      "title": "Le guichet SOAP du CRM : chaque service lu à sa façon, rien de lu deux fois.",
+      "lede": "Un CRM des années 2000 expose ses données par des services web SOAP sur mesure : les actions d'une demande en un appel, les opportunités d'un client page par page sur un numéro de page. Le mot de passe voyage dans l'enveloppe. lumnik lit chacun comme il se lit, dit le Fault du service tel quel, et n'envoie jamais deux fois la même requête.",
+      "tags": {
+        "domain": [
+          "CRM",
+          "Intégration"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-22",
+      "evidenceDigest": "sha256:8b3414d2ab1d0ef94f4c6a4721657dea1d3abb8af651b08a2a487f2d5801e5a2"
+    },
+    {
       "slug": "siem-bank-account-change",
       "title": "Un changement de RIB fournisseur, silencieux dans l'ERP, arrive au SIEM.",
       "lede": "L'ERP exporte ses fournisseurs en CSV et n'émet aucun événement. lumnik relit l'export sur planning, émet une décision signée par webhook, et le SIEM corrèle : un seul changement de compte, une alerte haute. L'inbox, elle, ne montre jamais le compte.",
