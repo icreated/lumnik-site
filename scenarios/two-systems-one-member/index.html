@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deux systèmes, un adhérent : chacun fait foi pour ses propres champs. — lumnik</title>
+<meta name="description" content="Une mutuelle tient ses adhérents dans sa gestion des contrats et dans son portail. Fusionnés avec un seul ordre de sources, l&#x27;un des deux a toujours tort. lumnik laisse chaque colonne nommer sa source de référence, et garde chaque désaccord visible jusqu&#x27;à ce que la source le règle.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/two-systems-one-member/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/two-systems-one-member/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Deux systèmes, un adhérent : chacun fait foi pour ses propres champs.</h1>
+    <p class="lede">Une mutuelle tient ses adhérents dans sa gestion des contrats et dans son portail. Fusionnés avec un seul ordre de sources, l&#x27;un des deux a toujours tort. lumnik laisse chaque colonne nommer sa source de référence, et garde chaque désaccord visible jusqu&#x27;à ce que la source le règle.</p>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Mutuelle</li><li class="tag">Intégration</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-sources" data-step="sources" aria-current="step"><span class="num">1 · Brancher</span><span class="sub">Deux systèmes</span></a><a href="#step-fuse" data-step="fuse"><span class="num">2 · Fusionner</span><span class="sub">Un ordre pour tout</span></a><a href="#step-prefer" data-step="prefer"><span class="num">3 · Préférer</span><span class="sub">Chaque système ses champs</span></a><a href="#step-night2" data-step="night2"><span class="num">4 · Nuit 2</span><span class="sub">La gestion rattrape</span></a></nav>
+  <section class="step" id="step-sources" aria-labelledby="sources-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Brancher"><button type="button" role="tab" id="sources-manifest-tab" data-view="manifest" aria-controls="sources-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="sources-commands-tab" data-view="commands" aria-controls="sources-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="sources-result-tab" data-view="result" aria-controls="sources-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="sources-manifest" aria-labelledby="sources-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-gestion.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-member-gestion-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [adhesion]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/two-systems-one-member/a/gestion.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre><div class="file"><span class="filename">manifests/11-portail.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-member-portail-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [adhesion]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/two-systems-one-member/a/portail.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre></div><div role="tabpanel" id="sources-commands" aria-labelledby="sources-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f /Users/macspok/eclipse-workspace/lumnik-scenario/scenarios/two-systems-one-member/manifests/10-gestion.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-member-gestion-a&quot;,&quot;connectorId&quot;:&quot;2a037cd0-87f7-44a2-9c3b-f09f3007b126&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f /Users/macspok/eclipse-workspace/lumnik-scenario/scenarios/two-systems-one-member/manifests/11-portail.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-member-portail-a&quot;,&quot;connectorId&quot;:&quot;d8061d8f-6451-470e-80e8-f48a7e1c5f44&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-member-gestion-a</span>
+<span class="out">run scheduled: 05147f50-fe72-413e-8412-dc350d9fe91d</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 05147f50-fe72-413e-8412-dc350d9fe91d</span>
+<span class="out">ID        CONNECTOR                  ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+05147f50  scenario-member-gestion-a  default   Completed  6   6    0        0             2026-10-22 18:30  2026-10-22 18:30  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-member-portail-a</span>
+<span class="out">run scheduled: 9bce4d83-e12c-4ed8-a225-724526a42449</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 9bce4d83-e12c-4ed8-a225-724526a42449</span>
+<span class="out">ID        CONNECTOR                  ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+9bce4d83  scenario-member-portail-a  default   Completed  6   6    0        0             2026-10-22 18:30  2026-10-22 18:30  no</span></code></pre></div><div role="tabpanel" id="sources-result" aria-labelledby="sources-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-member-gestion-a</dt><dd>Completed · IN 6 · OUT 6</dd><dt>scenario-member-portail-a</dt><dd>Completed · IN 6 · OUT 6</dd></dl><p class="sources">preuves : replay.log, 01-m1002-contract-first.json, 02-conflicts-night1.json, 03-m1002-prefer.json, 04-m1003-plan.json, 05-conflicts-night2.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="sources-title">La gestion et le portail, six adhérents chacun</h2>
+    <p>Deux exports CSV : la gestion des contrats (formule, date d&#x27;effet, adresse) et le portail adhérent (adresse saisie par l&#x27;adhérent, e-mail). Le n° d&#x27;adhérent est commun.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Lecture seule</strong><p>Les deux systèmes restent tels quels.</p></div></li><li><span class="n">2</span><div><strong>Même clé</strong><p>member_no relie les deux.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Deux sources, une clé commune.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-fuse" aria-labelledby="fuse-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Fusionner"><button type="button" role="tab" id="fuse-manifest-tab" data-view="manifest" aria-controls="fuse-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="fuse-commands-tab" data-view="commands" aria-controls="fuse-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="fuse-result-tab" data-view="result" aria-controls="fuse-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="fuse-manifest" aria-labelledby="fuse-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-member.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: member_a</span><span class="line"><span class="key">label</span>: Adhérent</span><span class="line"><span class="key">description</span>: <span class="str">&quot;One member across the contract system and the member portal.&quot;</span></span><span class="line"><span class="key">scopes</span>: [adhesion]</span><span class="line"><span class="key">match</span>: [member_no]</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_member_gestion_a</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">member_no</span>: member_no</span><span class="line">      <span class="key">full_name</span>: full_name</span><span class="line">      <span class="key">plan</span>: plan</span><span class="line">      <span class="key">effective_date</span>: effective_date</span><span class="line">      <span class="key">street</span>: street</span><span class="line">      <span class="key">city</span>: city</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_member_portail_a</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">member_no</span>: member_no</span><span class="line">      <span class="key">full_name</span>: full_name</span><span class="line">      <span class="key">plan</span>: plan</span><span class="line">      <span class="key">street</span>: street</span><span class="line">      <span class="key">city</span>: city</span><span class="line">      <span class="key">email</span>: email</span></code></pre></div><div role="tabpanel" id="fuse-commands" aria-labelledby="fuse-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f /Users/macspok/eclipse-workspace/lumnik-scenario/scenarios/two-systems-one-member/manifests/20-member.yaml</span>
+<span class="out">Applied entity &quot;member_a&quot; → connector.&quot;v_member_a&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get member_a --filter member_no=M-1002</span>
+<span class="out">MEMBER_NO  FULL_NAME    PLAN     EFFECTIVE_DATE  STREET          CITY          EMAIL                    _CONFLICTS
+M-1002     MARTIN Paul  CONFORT  2023-06-01      12 avenue Foch  Villeurbanne  paul.martin@example.org  {&quot;city&quot;: [{&quot;src&quot;: &quot;t_scenario_member_gestion_a&quot;, &quot;value&quot;: &quot;Villeurbanne&quot;}, {&quot;src&quot;: &quot;t_scenario_member_portail_a&quot;, &quot;value&quot;: &quot;Lyon&quot;}], &quot;street&quot;: [{&quot;src&quot;: &quot;t_scenario_member_gestion_a&quot;, &quot;value&quot;: &quot;12 avenue Foch&quot;}, {&quot;src&quot;: &quot;t_scenario_member_portail_a&quot;, &quot;value&quot;: &quot;25 rue Paul Bert&quot;}]}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm conflicts list</span>
+<span class="out">ENTITY                    KEY                                   COLUMNS      SOURCES
+member_a                  M-1001                                full_name    t_scenario_member_gestion_a,t_scenario_member_portail_a
+member_a                  M-1002                                city,street  t_scenario_member_gestion_a,t_scenario_member_portail_a
+member_a                  M-1003                                plan         t_scenario_member_gestion_a,t_scenario_member_portail_a
+member_a                  M-1005                                street       t_scenario_member_gestion_a,t_scenario_member_portail_a</span></code></pre></div><div role="tabpanel" id="fuse-result" aria-labelledby="fuse-result-tab" tabindex="0" hidden><dl class="facts"><dt>M-1002</dt><dd>12 avenue Foch, Villeurbanne</dd><dt>M-1001</dt><dd>full_name</dd><dt>M-1002</dt><dd>city, street</dd><dt>M-1003</dt><dd>plan</dd><dt>M-1005</dt><dd>street</dd></dl><p class="sources">preuves : replay.log, 01-m1002-contract-first.json, 02-conflicts-night1.json, 03-m1002-prefer.json, 04-m1003-plan.json, 05-conflicts-night2.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="fuse-title">La gestion en tête : elle gagne aussi l&#x27;adresse</h2>
+    <p>Une entité Adhérent fusionne les deux sources. La gestion passe en premier : M-1002 garde son ancienne adresse alors que le portail a la nouvelle. Quatre adhérents sont en désaccord.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Rien de perdu</strong><p>Chaque désaccord est listé avec la source de chaque valeur.</p></div></li><li><span class="n">2</span><div><strong>Le problème</strong><p>Un seul ordre de sources vaut pour toutes les colonnes.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un seul ordre ne peut pas faire de chaque système la référence de ses champs.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-prefer" aria-labelledby="prefer-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Préférer"><button type="button" role="tab" id="prefer-manifest-tab" data-view="manifest" aria-controls="prefer-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="prefer-commands-tab" data-view="commands" aria-controls="prefer-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="prefer-result-tab" data-view="result" aria-controls="prefer-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="prefer-manifest" aria-labelledby="prefer-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-member-prefer.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: member_a</span><span class="line"><span class="key">label</span>: Adhérent</span><span class="line"><span class="key">description</span>: <span class="str">&quot;One member across the contract system and the member portal.&quot;</span></span><span class="line"><span class="key">scopes</span>: [adhesion]</span><span class="line"><span class="key">match</span>: [member_no]</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_member_gestion_a</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">member_no</span>: member_no</span><span class="line">      <span class="key">full_name</span>: full_name</span><span class="line">      <span class="key">plan</span>: plan</span><span class="line">      <span class="key">effective_date</span>: effective_date</span><span class="line">      <span class="key">street</span>: street</span><span class="line">      <span class="key">city</span>: city</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_member_portail_a</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">member_no</span>: member_no</span><span class="line">      <span class="key">full_name</span>: full_name</span><span class="line">      <span class="key">plan</span>: plan</span><span class="line">      <span class="key">street</span>: street</span><span class="line">      <span class="key">city</span>: city</span><span class="line">      <span class="key">email</span>: email</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">street</span>:</span><span class="line hl">    <span class="key">prefer</span>: t_scenario_member_portail_a</span><span class="line">  <span class="key">city</span>:</span><span class="line hl">    <span class="key">prefer</span>: t_scenario_member_portail_a</span></code></pre></div><div role="tabpanel" id="prefer-commands" aria-labelledby="prefer-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f /Users/macspok/eclipse-workspace/lumnik-scenario/scenarios/two-systems-one-member/manifests/30-member-prefer.yaml</span>
+<span class="out">Applied entity &quot;member_a&quot; → connector.&quot;v_member_a&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get member_a --filter member_no=M-1002</span>
+<span class="out">MEMBER_NO  FULL_NAME    PLAN     EFFECTIVE_DATE  STREET            CITY  EMAIL                    _CONFLICTS
+M-1002     MARTIN Paul  CONFORT  2023-06-01      25 rue Paul Bert  Lyon  paul.martin@example.org  {&quot;city&quot;: [{&quot;src&quot;: &quot;t_scenario_member_portail_a&quot;, &quot;value&quot;: &quot;Lyon&quot;}, {&quot;src&quot;: &quot;t_scenario_member_gestion_a&quot;, &quot;value&quot;: &quot;Villeurbanne&quot;}], &quot;street&quot;: [{&quot;src&quot;: &quot;t_scenario_member_portail_a&quot;, &quot;value&quot;: &quot;25 rue Paul Bert&quot;}, {&quot;src&quot;: &quot;t_scenario_member_gestion_a&quot;, &quot;value&quot;: &quot;12 avenue Foch&quot;}]}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get member_a --filter member_no=M-1003</span>
+<span class="out">MEMBER_NO  FULL_NAME      PLAN     EFFECTIVE_DATE  STREET             CITY  EMAIL                      _CONFLICTS
+M-1003     BERNARD Lucie  CONFORT  2025-03-01      7 place Bellecour  Lyon  lucie.bernard@example.org  {&quot;plan&quot;: [{&quot;src&quot;: &quot;t_scenario_member_gestion_a&quot;, &quot;value&quot;: &quot;CONFORT&quot;}, {&quot;src&quot;: &quot;t_scenario_member_portail_a&quot;, &quot;value&quot;: &quot;ESSENTIEL&quot;}]}</span></code></pre></div><div role="tabpanel" id="prefer-result" aria-labelledby="prefer-result-tab" tabindex="0" hidden><dl class="facts"><dt>M-1002</dt><dd>25 rue Paul Bert, Lyon</dd><dt>ledger, first</dt><dd>25 rue Paul Bert (t_scenario_member_portail_a)</dd><dt>M-1003</dt><dd>plan CONFORT</dd></dl><p class="sources">preuves : replay.log, 01-m1002-contract-first.json, 02-conflicts-night1.json, 03-m1002-prefer.json, 04-m1003-plan.json, 05-conflicts-night2.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="prefer-title">L&#x27;adresse vient du portail, la formule de la gestion</h2>
+    <p>Rue et ville déclarent prefer sur le portail. M-1002 affiche sa nouvelle adresse ; M-1003 garde la formule de la gestion. Les quatre désaccords restent listés, la valeur affichée en premier.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Par colonne</strong><p>La source préférée passe en tête pour cette colonne seulement.</p></div></li><li><span class="n">2</span><div><strong>Rien de caché</strong><p>Le registre des conflits garde toutes les valeurs.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Chaque système fait foi pour ses propres champs, sans masquer un désaccord.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-night2" aria-labelledby="night2-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Nuit 2"><button type="button" role="tab" id="night2-commands-tab" data-view="commands" aria-controls="night2-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="night2-result-tab" data-view="result" aria-controls="night2-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="night2-commands" aria-labelledby="night2-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-member-gestion-a</span>
+<span class="out">run scheduled: fbeb7fe6-410d-4047-b1c0-80bc9ad6dbc4</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get fbeb7fe6-410d-4047-b1c0-80bc9ad6dbc4</span>
+<span class="out">ID        CONNECTOR                  ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+fbeb7fe6  scenario-member-gestion-a  default   Completed  6   6    0        0             2026-10-22 18:30  2026-10-22 18:30  no</span>
+<span class="note">• 2 row(s) removed — the source no longer holds them</span>
+
+<span class="cmd"><span class="prompt">$</span> lm conflicts list</span>
+<span class="out">ENTITY                    KEY                                   COLUMNS      SOURCES
+member_a                  M-1001                                full_name    t_scenario_member_gestion_a,t_scenario_member_portail_a
+member_a                  M-1003                                plan         t_scenario_member_gestion_a,t_scenario_member_portail_a</span></code></pre></div><div role="tabpanel" id="night2-result" aria-labelledby="night2-result-tab" tabindex="0" hidden><dl class="facts"><dt>M-1001</dt><dd>full_name</dd><dt>M-1003</dt><dd>plan</dd></dl><p class="sources">preuves : replay.log, 01-m1002-contract-first.json, 02-conflicts-night1.json, 03-m1002-prefer.json, 04-m1003-plan.json, 05-conflicts-night2.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="night2-title">Deux désaccords restants</h2>
+    <p>La gestion intègre les deux déménagements. Les désaccords d&#x27;adresse disparaissent ; restent la casse d&#x27;un nom et une formule.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Suivi</strong><p>lm conflicts list dit ce qui reste à régler à la source.</p></div></li><li><span class="n">2</span><div><strong>Sans geste</strong><p>Aucune correction manuelle dans le hub.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un désaccord sort du registre quand la source le règle.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Chaque colonne est fusionnée seule : préférer le portail pour la rue et la ville ne les lie pas.</li><li>Une préférence choisit la valeur affichée ; elle ne règle pas le désaccord à la source.</li><li>Données synthétiques.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
