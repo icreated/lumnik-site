@@ -244,6 +244,28 @@
       "evidenceDigest": "sha256:c8f311c0fb15458e813e3953b2f5e5ccbcf37311ffc8541d21e8c70a2e594146"
     },
     {
+      "slug": "one-app-per-metier",
+      "title": "Un hub, une app par métier.",
+      "lede": "La maintenance et les achats partagent un ERP où chacun voit tout. Sur le même hub, lumnik compose une app par métier ; un technicien qui ne tient que le rôle scope:maintenance voit son app, ses ordres et ses décisions, et chaque porte des achats lui répond par un refus.",
+      "tags": {
+        "domain": [
+          "Sécurité",
+          "Maintenance",
+          "Achats"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "View",
+          "App",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-22",
+      "evidenceDigest": "sha256:1731d57291ef750662c646acdaf0559f6076f4774a5f0b2e2486b470458c99ca"
+    },
+    {
       "slug": "orders-where-they-sleep",
       "title": "Où dorment les commandes.",
       "lede": "L'ERP ne garde que le statut du jour : hier En cours, aujourd'hui Livrée, sans rien sur l'attente entre les deux. lumnik surveille la colonne, inscrit chaque changement dans un journal, et dit combien de temps chaque commande est restée dans chaque état.",
