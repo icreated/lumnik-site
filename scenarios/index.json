@@ -60,6 +60,24 @@
       "evidenceDigest": "sha256:ab0cb4769b91e5bee803affc225a4644e5ae58cefc0f94fb1193a5251e224971"
     },
     {
+      "slug": "dirty-order-statuses",
+      "title": "Quatorze orthographes dans une colonne statut.",
+      "lede": "Quinze ans de saisie à la main ont laissé EC, Livré, LIV, ANNUL… dans l'export des commandes. lumnik ne touche pas l'ERP : un Workflow déclare quatre statuts et leurs orthographes, et chaque apply dit ce qui reste non déclaré.",
+      "tags": {
+        "domain": [
+          "Distribution",
+          "Commandes"
+        ],
+        "kinds": [
+          "Connector",
+          "Workflow"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-22",
+      "evidenceDigest": "sha256:fa8fdc2998822ba787e7ce54cdb8f071d407f8144682ff707b83ce2f1e1e9625"
+    },
+    {
       "slug": "entity-resolution",
       "title": "Un client, deux systèmes, aucun identifiant commun.",
       "lede": "Un ERP, un CRM, une Entity. L'email rapproche les fiches ; une boîte partagée ouvre une ambiguïté. lumnik ne tranche pas : un humain décide, et la décision tient au rejeu.",
@@ -224,6 +242,24 @@
       "edition": "open",
       "replayedAt": "2026-10-22",
       "evidenceDigest": "sha256:c8f311c0fb15458e813e3953b2f5e5ccbcf37311ffc8541d21e8c70a2e594146"
+    },
+    {
+      "slug": "orders-where-they-sleep",
+      "title": "Où dorment les commandes.",
+      "lede": "L'ERP ne garde que le statut du jour : hier En cours, aujourd'hui Livrée, sans rien sur l'attente entre les deux. lumnik surveille la colonne, inscrit chaque changement dans un journal, et dit combien de temps chaque commande est restée dans chaque état.",
+      "tags": {
+        "domain": [
+          "Distribution",
+          "Commandes"
+        ],
+        "kinds": [
+          "Connector",
+          "Workflow"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-22",
+      "evidenceDigest": "sha256:5d627d31ca5cfbc41db716211f8c9bdcc47c856b741b9b3add95e12822d43810"
     },
     {
       "slug": "pwa-chat",
