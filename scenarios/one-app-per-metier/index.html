@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Un hub, une app par métier. — lumnik</title>
+<meta name="description" content="La maintenance et les achats partagent un ERP où chacun voit tout. Sur le même hub, lumnik compose une app par métier ; un technicien qui ne tient que le rôle scope:maintenance voit son app, ses ordres et ses décisions, et chaque porte des achats lui répond par un refus.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/one-app-per-metier/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/one-app-per-metier/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Un hub, une app par métier.</h1>
+    <p class="lede">La maintenance et les achats partagent un ERP où chacun voit tout. Sur le même hub, lumnik compose une app par métier ; un technicien qui ne tient que le rôle scope:maintenance voit son app, ses ordres et ses décisions, et chaque porte des achats lui répond par un refus.</p>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Sécurité</li><li class="tag">Maintenance</li><li class="tag">Achats</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li><li class="tag kind">View</li><li class="tag kind">App</li><li class="tag kind">Process</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-compose" data-step="compose" aria-current="step"><span class="num">1 · Composer</span><span class="sub">Intégrateur</span></a><a href="#step-apps" data-step="apps"><span class="num">2 · Apps</span><span class="sub">tech-maintenance</span></a><a href="#step-views" data-step="views"><span class="num">3 · Vues</span><span class="sub">La sienne, pas l&#x27;autre</span></a><a href="#step-records" data-step="records"><span class="num">4 · Données</span><span class="sub">Entités</span></a><a href="#step-inbox" data-step="inbox"><span class="num">5 · Inbox</span><span class="sub">Décisions</span></a><a href="#step-ack" data-step="ack"><span class="num">6 · Acquitter</span><span class="sub">Avec l&#x27;id</span></a></nav>
+  <section class="step" id="step-compose" aria-labelledby="compose-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Composer"><button type="button" role="tab" id="compose-manifest-tab" data-view="manifest" aria-controls="compose-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="compose-commands-tab" data-view="commands" aria-controls="compose-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="compose-result-tab" data-view="result" aria-controls="compose-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="compose-manifest" aria-labelledby="compose-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-workorders.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-metier-workorders-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line hl">  <span class="key">scopes</span>: [maintenance]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/one-app-per-metier/a/workorders-*.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre><div class="file"><span class="filename">manifests/11-invoices.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-metier-invoices-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line hl">  <span class="key">scopes</span>: [purchasing]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/one-app-per-metier/a/invoices-*.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre><div class="file"><span class="filename">manifests/20-work-order.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ScenarioWorkOrderA</span><span class="line"><span class="key">label</span>: Ordre de travail</span><span class="line"><span class="key">description</span>: <span class="str">&quot;Ordres de travail de la maintenance. Une ligne représente un ordre.&quot;</span></span><span class="line"><span class="key">match</span>: [wo_id]</span><span class="line hl"><span class="key">scopes</span>: [maintenance]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">wo_id</span>: { label: <span class="str">&quot;Ordre&quot;</span> }</span><span class="line">  <span class="key">asset</span>: { label: <span class="str">&quot;Équipement&quot;</span> }</span><span class="line">  <span class="key">priority</span>: { label: <span class="str">&quot;Priorité&quot;</span> }</span><span class="line">  <span class="key">status</span>: { label: <span class="str">&quot;Statut&quot;</span> }</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_metier_workorders_a</span><span class="line">    <span class="key">map</span>: { wo_id: wo_id, asset: asset, priority: priority, status: status }</span></code></pre><div class="file"><span class="filename">manifests/21-supplier-invoice.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ScenarioSupplierInvoiceA</span><span class="line"><span class="key">label</span>: Facture fournisseur</span><span class="line"><span class="key">description</span>: <span class="str">&quot;Factures fournisseurs des achats. Une ligne représente une facture.&quot;</span></span><span class="line"><span class="key">match</span>: [invoice_id]</span><span class="line hl"><span class="key">scopes</span>: [purchasing]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">invoice_id</span>: { label: <span class="str">&quot;Facture&quot;</span> }</span><span class="line">  <span class="key">supplier</span>: { label: <span class="str">&quot;Fournisseur&quot;</span> }</span><span class="line">  <span class="key">amount</span>: { label: <span class="str">&quot;Montant&quot;</span> }</span><span class="line">  <span class="key">status</span>: { label: <span class="str">&quot;Statut&quot;</span> }</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_metier_invoices_a</span><span class="line">    <span class="key">map</span>: { invoice_id: invoice_id, supplier: supplier, amount: amount, status: status }</span></code></pre><div class="file"><span class="filename">manifests/30-workorders-view.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: View</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-metier-workorders-a</span><span class="line"><span class="key">spec</span>:</span><span class="line hl">  <span class="key">scope</span>: maintenance</span><span class="line">  <span class="key">table</span>: connector.v_scenarioworkordera</span><span class="line">  <span class="key">title</span>: Ordres de travail</span><span class="line">  <span class="key">columns</span>: [wo_id, asset, priority, status]</span></code></pre><div class="file"><span class="filename">manifests/31-invoices-view.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: View</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-metier-invoices-a</span><span class="line"><span class="key">spec</span>:</span><span class="line hl">  <span class="key">scope</span>: purchasing</span><span class="line">  <span class="key">table</span>: connector.v_scenariosupplierinvoicea</span><span class="line">  <span class="key">title</span>: Factures fournisseurs</span><span class="line">  <span class="key">columns</span>: [invoice_id, supplier, amount, status]</span></code></pre><div class="file"><span class="filename">manifests/40-maintenance-app.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: App</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-maintenance-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">title</span>: Maintenance</span><span class="line hl">  <span class="key">scope</span>: maintenance</span><span class="line">  <span class="key">icon</span>: generic</span><span class="line">  <span class="key">theme</span>:</span><span class="line">    <span class="key">accentColor</span>: <span class="str">&quot;#8b7ff0&quot;</span></span><span class="line">    <span class="key">backgroundColor</span>: <span class="str">&quot;#14121f&quot;</span></span><span class="line">  <span class="key">default</span>: false</span></code></pre><div class="file"><span class="filename">manifests/41-purchasing-app.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: App</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-purchasing-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">title</span>: Achats</span><span class="line hl">  <span class="key">scope</span>: purchasing</span><span class="line">  <span class="key">icon</span>: generic</span><span class="line">  <span class="key">theme</span>:</span><span class="line">    <span class="key">accentColor</span>: <span class="str">&quot;#8b7ff0&quot;</span></span><span class="line">    <span class="key">backgroundColor</span>: <span class="str">&quot;#14121f&quot;</span></span><span class="line">  <span class="key">default</span>: false</span></code></pre><div class="file"><span class="filename">manifests/50-urgent-work-order.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-metier-urgent-wo-a</span><span class="line"><span class="key">spec</span>:</span><span class="line hl">  <span class="key">scope</span>: maintenance</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">event</span>: data.row.changed</span><span class="line">    <span class="key">table</span>: connector.t_scenario_metier_workorders_a</span><span class="line">  <span class="key">when</span>:</span><span class="line">    - priority=URGENT</span><span class="line">    - status=OPEN</span><span class="line">  <span class="key">emit</span>:</span><span class="line">    <span class="key">type</span>: decision.metier-urgent-wo-a</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;Urgent work order {wo_id} on {asset}&quot;</span></span></code></pre><div class="file"><span class="filename">manifests/51-large-invoice.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-metier-large-invoice-a</span><span class="line"><span class="key">spec</span>:</span><span class="line hl">  <span class="key">scope</span>: purchasing</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">event</span>: data.row.changed</span><span class="line">    <span class="key">table</span>: connector.t_scenario_metier_invoices_a</span><span class="line">  <span class="key">when</span>:</span><span class="line">    - amount&gt;10000</span><span class="line">    - status=OPEN</span><span class="line">  <span class="key">emit</span>:</span><span class="line">    <span class="key">type</span>: decision.metier-large-invoice-a</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;Invoice {invoice_id} from {supplier} above 10000&quot;</span></span></code></pre></div><div role="tabpanel" id="compose-commands" aria-labelledby="compose-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-workorders.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-metier-workorders-a&quot;,&quot;connectorId&quot;:&quot;401580ca-159a-40e9-8deb-4aed7e0adb43&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f manifests/11-invoices.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-metier-invoices-a&quot;,&quot;connectorId&quot;:&quot;16f05172-e4d4-49b2-8a4c-743366bfec7c&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f manifests/20-work-order.yaml</span>
+<span class="out">Applied entity &quot;ScenarioWorkOrderA&quot; → connector.&quot;v_scenarioworkordera&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f manifests/21-supplier-invoice.yaml</span>
+<span class="out">Applied entity &quot;ScenarioSupplierInvoiceA&quot; → connector.&quot;v_scenariosupplierinvoicea&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm view apply -f manifests/30-workorders-view.yaml</span>
+<span class="out">applied: scenario-metier-workorders-a (scope maintenance)</span>
+
+<span class="cmd"><span class="prompt">$</span> lm view apply -f manifests/31-invoices-view.yaml</span>
+<span class="out">applied: scenario-metier-invoices-a (scope purchasing)</span>
+
+<span class="cmd"><span class="prompt">$</span> lm app apply -f manifests/40-maintenance-app.yaml</span>
+<span class="out">Applied app &quot;scenario-maintenance-a&quot; → scope maintenance</span>
+
+<span class="cmd"><span class="prompt">$</span> lm app apply -f manifests/41-purchasing-app.yaml</span>
+<span class="out">Applied app &quot;scenario-purchasing-a&quot; → scope purchasing</span>
+
+<span class="cmd"><span class="prompt">$</span> lm process apply -f manifests/50-urgent-work-order.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-metier-urgent-wo-a&quot;,&quot;table&quot;:&quot;connector.t_scenario_metier_workorders_a&quot;,&quot;emit&quot;:&quot;decision.metier-urgent-wo-a&quot;}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm process apply -f manifests/51-large-invoice.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-metier-large-invoice-a&quot;,&quot;table&quot;:&quot;connector.t_scenario_metier_invoices_a&quot;,&quot;emit&quot;:&quot;decision.metier-large-invoice-a&quot;}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-metier-workorders-a</span>
+<span class="out">run scheduled: 4cf324e6-0a8b-4307-bf5b-3df58d30de3a</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 4cf324e6-0a8b-4307-bf5b-3df58d30de3a --wait-evaluated --timeout 2m</span>
+<span class="out">ID        CONNECTOR                     ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+4cf324e6  scenario-metier-workorders-a  default   Completed  3   3    0        0             2026-10-22 14:46  2026-10-22 14:46  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-metier-invoices-a</span>
+<span class="out">run scheduled: 57cce3e4-5289-4aa4-8418-8cd476cc1cfc</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 57cce3e4-5289-4aa4-8418-8cd476cc1cfc --wait-evaluated --timeout 2m</span>
+<span class="out">ID        CONNECTOR                   ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+57cce3e4  scenario-metier-invoices-a  default   Completed  3   3    0        0             2026-10-22 14:46  2026-10-22 14:46  yes</span></code></pre></div><div role="tabpanel" id="compose-result" aria-labelledby="compose-result-tab" tabindex="0" hidden><dl class="facts"><dt>maintenance</dt><dd>connector · entity · view · app · process</dd><dt>purchasing</dt><dd>connector · entity · view · app · process</dd><dt>purchasing decisions</dt><dd>2: Invoice INV-503 from Fournisseur Gamma above 10000, Invoice INV-501 from Fournisseur Alpha above 10000</dd></dl><p class="sources">preuves : replay.log, 01-purchasing-decisions.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="compose-title">Deux métiers sur le même hub</h2>
+    <p>L&#x27;intégrateur déclare pour chaque métier un connecteur, une entité, une vue, une app et un Process. Le scope du métier est porté par chaque manifeste.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Maintenance</strong><p>Ordres de travail ; un ordre urgent ouvert devient une décision.</p></div></li><li><span class="n">2</span><div><strong>Achats</strong><p>Factures fournisseurs ; une facture ouverte au-delà de 10 000 devient une décision.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un métier est une composition déclarée, pas une copie de l&#x27;ERP.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-apps" aria-labelledby="apps-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Apps"><button type="button" role="tab" id="apps-commands-tab" data-view="commands" aria-controls="apps-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="apps-result-tab" data-view="result" aria-controls="apps-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="apps-commands" aria-labelledby="apps-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm --context maintenance app list</span>
+<span class="out">NAME                    TITLE        SCOPE        ICON     ACCENT   BACKGROUND  DEFAULT  TABS
+scenario-maintenance-a  Maintenance  maintenance  generic  #8b7ff0  #14121f              (all)</span></code></pre></div><div role="tabpanel" id="apps-result" aria-labelledby="apps-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-maintenance-a</dt><dd>maintenance</dd></dl><p class="sources">preuves : replay.log, 01-purchasing-decisions.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="apps-title">Une seule app dans la liste</h2>
+    <p>Le technicien ne tient que lm_user et scope:maintenance. Chaque commande passe par son contexte lm : --context maintenance.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Keycloak</strong><p>Le métier est un rôle de realm ; lumnik le lit, il ne le gère pas.</p></div></li><li><span class="n">2</span><div><strong>Filtré</strong><p>L&#x27;app des achats n&#x27;apparaît pas.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le métier borne ce que la PWA propose.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-views" aria-labelledby="views-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Vues"><button type="button" role="tab" id="views-commands-tab" data-view="commands" aria-controls="views-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="views-result-tab" data-view="result" aria-controls="views-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="views-commands" aria-labelledby="views-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm --context maintenance view list</span>
+<span class="out">NAME                          SCOPE        TITLE
+scenario-metier-workorders-a  maintenance  Ordres de travail</span>
+
+<span class="cmd"><span class="prompt">$</span> lm --context maintenance view scenario-metier-workorders-a</span>
+<span class="out">Ordres de travail
+
+Ordre   Équipement             Priorité  Statut
+WO-000  calibration            LOW       CLOSED
+WO-101  Convoyeur ligne 2      URGENT    OPEN
+WO-102  Compresseur atelier B  NORMAL    OPEN
+WO-103  Four de cuisson        LOW       CLOSED</span>
+
+<span class="cmd"><span class="prompt">$</span> lm --context maintenance view scenario-metier-invoices-a</span>
+<span class="note">Error: access refused (403): scope not granted</span></code></pre></div><div role="tabpanel" id="views-result" aria-labelledby="views-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-metier-workorders-a</dt><dd>4 rows</dd><dt>scenario-metier-invoices-a</dt><dd>access refused (403): scope not granted</dd></dl><p class="sources">preuves : replay.log, 01-purchasing-decisions.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="views-title">Sa vue s&#x27;affiche, celle des achats est refusée</h2>
+    <p>La liste ne montre que la vue de la maintenance. Ouvrir la vue des achats par son nom répond 403 scope not granted.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Uniforme</strong><p>Le même refus partout : la PWA s&#x27;y reconnaît.</p></div></li><li><span class="n">2</span><div><strong>Par nom</strong><p>Connaître le nom ne suffit pas.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une vue d&#x27;un autre métier ne s&#x27;ouvre pas.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-records" aria-labelledby="records-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Données"><button type="button" role="tab" id="records-commands-tab" data-view="commands" aria-controls="records-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="records-result-tab" data-view="result" aria-controls="records-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="records-commands" aria-labelledby="records-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm --context maintenance entity get ScenarioWorkOrderA -o json</span>
+<span class="out">[
+  {
+    &quot;wo_id&quot;: &quot;WO-000&quot;,
+    &quot;asset&quot;: &quot;calibration&quot;,
+    &quot;priority&quot;: &quot;LOW&quot;,
+    &quot;status&quot;: &quot;CLOSED&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;wo_id&quot;: &quot;WO-101&quot;,
+    &quot;asset&quot;: &quot;Convoyeur ligne 2&quot;,
+    &quot;priority&quot;: &quot;URGENT&quot;,
+    &quot;status&quot;: &quot;OPEN&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;wo_id&quot;: &quot;WO-102&quot;,
+    &quot;asset&quot;: &quot;Compresseur atelier B&quot;,
+    &quot;priority&quot;: &quot;NORMAL&quot;,
+    &quot;status&quot;: &quot;OPEN&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;wo_id&quot;: &quot;WO-103&quot;,
+    &quot;asset&quot;: &quot;Four de cuisson&quot;,
+    &quot;priority&quot;: &quot;LOW&quot;,
+    &quot;status&quot;: &quot;CLOSED&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  }
+]</span>
+
+<span class="cmd"><span class="prompt">$</span> lm --context maintenance entity get ScenarioSupplierInvoiceA</span>
+<span class="note">Error: access refused (403): scope not granted</span></code></pre></div><div role="tabpanel" id="records-result" aria-labelledby="records-result-tab" tabindex="0" hidden><dl class="facts"><dt>ScenarioWorkOrderA</dt><dd>4 rows</dd><dt>ScenarioSupplierInvoiceA</dt><dd>access refused (403): scope not granted</dd></dl><p class="sources">preuves : replay.log, 01-purchasing-decisions.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="records-title">Les ordres de travail oui, les factures non</h2>
+    <p>Le technicien lit les quatre ordres de travail. Les factures fournisseurs répondent le même 403.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Lecture</strong><p>lm entity get, la même porte que la PWA.</p></div></li><li><span class="n">2</span><div><strong>Aucune ligne</strong><p>Le refus ne contient aucune valeur des achats.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Les lignes d&#x27;un autre métier ne sortent pas.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-inbox" aria-labelledby="inbox-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Inbox"><button type="button" role="tab" id="inbox-commands-tab" data-view="commands" aria-controls="inbox-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="inbox-result-tab" data-view="result" aria-controls="inbox-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="inbox-commands" aria-labelledby="inbox-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm --context maintenance inbox --process scenario-metier-urgent-wo-a</span>
+<span class="out">ID     WHEN      PROCESS                      MESSAGE                                        ENTITY_KEY
+17768  just now  scenario-metier-urgent-wo-a  Urgent work order WO-101 on Convoyeur ligne 2  a61f7e7532807c18c48f0cc3126fe9e6ccdc6def4aa35b3723ec3b1dc2f953b6</span></code></pre></div><div role="tabpanel" id="inbox-result" aria-labelledby="inbox-result-tab" tabindex="0" hidden><dl class="facts"><dt>decisions</dt><dd>1: maintenance only</dd></dl><p class="sources">preuves : replay.log, 01-purchasing-decisions.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="inbox-title">L&#x27;ordre urgent, et rien des achats</h2>
+    <p>L&#x27;inbox du technicien porte la décision de l&#x27;ordre WO-101. Les deux décisions des factures n&#x27;y sont pas.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Process</strong><p>Une décision appartient au scope de son Process.</p></div></li><li><span class="n">2</span><div><strong>Même hub</strong><p>Les décisions des achats existent, ailleurs.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Chaque métier voit ses décisions.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-ack" aria-labelledby="ack-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Acquitter"><button type="button" role="tab" id="ack-commands-tab" data-view="commands" aria-controls="ack-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="ack-result-tab" data-view="result" aria-controls="ack-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="ack-commands" aria-labelledby="ack-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm --context maintenance inbox ack 17775</span>
+<span class="note">Error: API error 404: no decision 17775 in your inbox</span></code></pre></div><div role="tabpanel" id="ack-result" aria-labelledby="ack-result-tab" tabindex="0" hidden><dl class="facts"><dt>17775</dt><dd>API error 404: no decision 17775 in your inbox</dd></dl><p class="sources">preuves : replay.log, 01-purchasing-decisions.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="ack-title">Il ne peut pas solder une décision des achats</h2>
+    <p>Même avec l&#x27;id d&#x27;une décision des achats, lm inbox ack répond 404 ; la décision reste ouverte pour les achats.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Écriture</strong><p>Une porte d&#x27;écriture borne comme une lecture.</p></div></li><li><span class="n">2</span><div><strong>404</strong><p>Pour lui, cette décision n&#x27;existe pas.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le métier borne aussi ce que l&#x27;on peut faire.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Le métier est un rôle Keycloak scope:&lt;tag&gt; ; un utilisateur sans aucun rôle scope: voit tout le tenant.</li><li>Une entité inconnue répond 404, celle d&#x27;un autre métier 403 : les noms se distinguent, jamais les lignes.</li><li>Le scénario passe par lm ; la PWA lit les mêmes portes.</li><li>Données synthétiques.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
