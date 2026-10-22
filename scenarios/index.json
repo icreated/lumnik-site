@@ -393,6 +393,24 @@
       "edition": "open",
       "replayedAt": "2026-10-22",
       "evidenceDigest": "sha256:2b3ff54db7df095b8ff9531a6a89d679651c8827fe8bfc48c27c989ddd11501c"
+    },
+    {
+      "slug": "two-systems-one-member",
+      "title": "Deux systèmes, un adhérent : chacun fait foi pour ses propres champs.",
+      "lede": "Une mutuelle tient ses adhérents dans sa gestion des contrats et dans son portail. Fusionnés avec un seul ordre de sources, l'un des deux a toujours tort. lumnik laisse chaque colonne nommer sa source de référence, et garde chaque désaccord visible jusqu'à ce que la source le règle.",
+      "tags": {
+        "domain": [
+          "Mutuelle",
+          "Intégration"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-22",
+      "evidenceDigest": "sha256:34a4686b33cd9ed78ae22b0d2939162db85fb4efea44d82dd7dabaccda305e66"
     }
   ]
 }
