@@ -445,6 +445,25 @@
       "edition": "open",
       "replayedAt": "2026-10-22",
       "evidenceDigest": "sha256:34a4686b33cd9ed78ae22b0d2939162db85fb4efea44d82dd7dabaccda305e66"
+    },
+    {
+      "slug": "zombie-cmms",
+      "title": "Le système zombie : trente ans d'ordres de travail, la machine éteinte, le hub répond toujours.",
+      "lede": "Une GMAO remplacée depuis des années reste allumée pour quelques lectures de conformité par an : la licence, la machine, et la seule personne qui sait la redémarrer. lumnik la lit une dernière fois, archive ce qu'il a lu sous une seule empreinte, puis on éteint la machine. Le run suivant dit pourquoi il échoue, la pause arrête le planning, et le hub rend les mêmes octets qu'avant.",
+      "tags": {
+        "domain": [
+          "Maintenance",
+          "Conformité"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "Export"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-22",
+      "evidenceDigest": "sha256:b2f4e260daf5ac892a89a3e7c309a3fb8dcff3479cd3ab6b9537ae1a4f577b95"
     }
   ]
 }
