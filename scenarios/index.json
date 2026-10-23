@@ -2,6 +2,24 @@
   "locale": "fr",
   "scenarios": [
     {
+      "slug": "app-inventory-urls",
+      "title": "Un inventaire d'URLs saisies à la main : serveur, port et environnement, sans toucher l'export.",
+      "lede": "La DSI reprend un inventaire applicatif tenu des années dans un tableur. Une colonne porte l'URL de chaque application, tapée à la main : majuscules, espaces collés, ports tantôt là, tantôt absents. Elle veut savoir ce qui tourne sur un serveur et ce qui est encore en recette. Le manifeste découpe l'URL en colonnes, sans code.",
+      "tags": {
+        "domain": [
+          "DSI",
+          "Inventaire"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:16f88a482fa660e16e18b58296e8a94f33821b483b7a3d86f763f3c5d161e310"
+    },
+    {
       "slug": "business-log-orders",
       "title": "Le log d'hier, lu comme une source : quelles commandes les erreurs ont touchées.",
       "lede": "Des clients appellent : leur commande « n'est jamais passée ». Le serveur écrit un log texte, un fichier par jour. Le hub le lit ligne par ligne, garde les avertissements et les erreurs, en tire la commande, et la relie au client et au statut qu'il connaît déjà. Un log métier, pas un outil de supervision.",
