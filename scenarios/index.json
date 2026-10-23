@@ -532,6 +532,24 @@
       "evidenceDigest": "sha256:34a4686b33cd9ed78ae22b0d2939162db85fb4efea44d82dd7dabaccda305e66"
     },
     {
+      "slug": "two-tenants-one-hub",
+      "title": "Deux clients, un hub, une table : chacun ne lit que ses lignes.",
+      "lede": "Deux intégrateurs de deux clients appliquent les mêmes fichiers sur le même hub. Même connecteur, même entité, même table. Chacun charge ses commandes, sous les mêmes numéros. Chacun relit, interroge et compte : il ne voit que les siennes.",
+      "tags": {
+        "domain": [
+          "Sécurité",
+          "Achats"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:e808faa5e8409fe3ba7856e1ca3367048ba088ffb10e54e7fe2006eea1383d15"
+    },
+    {
       "slug": "zombie-cmms",
       "title": "Le système zombie : trente ans d'ordres de travail, la machine éteinte, le hub répond toujours.",
       "lede": "Une GMAO remplacée depuis des années reste allumée pour quelques lectures de conformité par an : la licence, la machine, et la seule personne qui sait la redémarrer. lumnik la lit une dernière fois, archive ce qu'il a lu sous une seule empreinte, puis on éteint la machine. Le run suivant dit pourquoi il échoue, la pause arrête le planning, et le hub rend les mêmes octets qu'avant.",
