@@ -502,6 +502,24 @@
       "evidenceDigest": "sha256:66a82f5e2a774e0fec0a1f34cd31ae7a093cecf939403942db2c932df6afefab"
     },
     {
+      "slug": "quantity-script-one-in-500",
+      "title": "Une valeur imprévue sur 500 : la ligne en lettre morte, les 499 autres écrites.",
+      "lede": "Un bon de réception saisi à la main : 500 lignes, des quantités écrites « 12,5 kg » ou « 3 pce ». Un script Kotlin de l'opérateur les lit en nombre et en unité. La ligne 317 dit « env. 4 kg ». Que deviennent les 499 autres ?",
+      "tags": {
+        "domain": [
+          "Logistique",
+          "Réception"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:c61020779725c30f4b7eb409300a84b2e4aa9869c831175dacdb0a210929f800"
+    },
+    {
       "slug": "rest-incremental-orders",
       "title": "L'API qui n'envoie que ce qui a changé : une commande modifiée pendant la lecture n'est pas perdue.",
       "lede": "Une API de commandes sait répondre à « ce qui a changé depuis telle date ». lumnik la lit en entier une fois, puis chaque nuit seulement ce qui a bougé. Une commande modifiée pendant qu'un run lit encore les pages suivantes aurait pu passer entre deux nuits : le run suivant repart un peu avant sa dernière marque, et la récupère.",
