@@ -166,6 +166,24 @@
       "evidenceDigest": "sha256:fa8fdc2998822ba787e7ce54cdb8f071d407f8144682ff707b83ce2f1e1e9625"
     },
     {
+      "slug": "edi-flat-order-lines",
+      "title": "Un fichier EDI à plat sorti d'un ERP : des lignes de commande en largeur fixe, lues sans outil de mapping.",
+      "lede": "Un fabricant échange avec son logisticien des fichiers à plat, un dossier par partenaire, un préfixe par type d'échange. Aucun séparateur : chaque champ a sa place et sa largeur, une ligne d'en-tête en tête, de l'ISO-8859-1, et parfois pas de fin de ligne après la dernière. Le logisticien veut les lignes de commande en colonnes.",
+      "tags": {
+        "domain": [
+          "Logistique",
+          "EDI"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:22d0e049052a29719d6ec0d48efcf410afde361223d9683819502906f2a1efc2"
+    },
+    {
       "slug": "entity-resolution",
       "title": "Un client, deux systèmes, aucun identifiant commun.",
       "lede": "Un ERP, un CRM, une Entity. L'email rapproche les fiches ; une boîte partagée ouvre une ambiguïté. lumnik ne tranche pas : un humain décide, et la décision tient au rejeu.",
