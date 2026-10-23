@@ -204,6 +204,24 @@
       "evidenceDigest": "sha256:f03dace78e160c92d14797bd736750879805033594453db69da05dae10b2acb2"
     },
     {
+      "slug": "edifact-orders",
+      "title": "Un message EDIFACT ORDERS : une ligne, découpée en segments, l'apostrophe échappée respectée.",
+      "lede": "La distribution et l'industrie échangent encore de l'EDIFACT : un message ORDERS de l'acheteur, souvent écrit sur une seule ligne, ses segments terminés par une apostrophe, ses éléments séparés par + et :. Une apostrophe dans un libellé s'écrit ?'. L'acheteur veut lire le message segment par segment.",
+      "tags": {
+        "domain": [
+          "Achats",
+          "EDI"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:3a52bff2d8eee8f58169a888cdacd7d5420404f13478d5c6d65eedb26da8119a"
+    },
+    {
       "slug": "entity-resolution",
       "title": "Un client, deux systèmes, aucun identifiant commun.",
       "lede": "Un ERP, un CRM, une Entity. L'email rapproche les fiches ; une boîte partagée ouvre une ambiguïté. lumnik ne tranche pas : un humain décide, et la décision tient au rejeu.",
