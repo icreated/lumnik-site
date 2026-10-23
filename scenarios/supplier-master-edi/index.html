@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le fichier fournisseurs envoyé à l&#x27;EDI : ASCII, majuscules, 35 caractères, un identifiant stable. — lumnik</title>
+<meta name="description" content="Les achats alimentent une plateforme EDI qui impose des noms en ASCII, en majuscules, de 35 caractères au plus, et un identifiant par fournisseur. L&#x27;export de l&#x27;ERP a des accents, de longues raisons sociales, des fournisseurs inactifs, et une colonne d&#x27;identifiant qui contient N/A, 0 ou rien. La contrainte de l&#x27;EDI est déclarée une fois dans le manifeste.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/supplier-master-edi/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/supplier-master-edi/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Le fichier fournisseurs envoyé à l&#x27;EDI : ASCII, majuscules, 35 caractères, un identifiant stable.</h1>
+    <p class="lede">Les achats alimentent une plateforme EDI qui impose des noms en ASCII, en majuscules, de 35 caractères au plus, et un identifiant par fournisseur. L&#x27;export de l&#x27;ERP a des accents, de longues raisons sociales, des fournisseurs inactifs, et une colonne d&#x27;identifiant qui contient N/A, 0 ou rien. La contrainte de l&#x27;EDI est déclarée une fois dans le manifeste.</p>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Achats</li><li class="tag">EDI</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-look" data-step="look" aria-current="step"><span class="num">1 · Regarder</span><span class="sub">6 actifs sur 8</span></a><a href="#step-policy" data-step="policy"><span class="num">2 · Décider</span><span class="sub">2 cellules comptées</span></a><a href="#step-night" data-step="night"><span class="num">3 · Lendemain</span><span class="sub">mêmes identifiants</span></a></nav>
+  <section class="step" id="step-look" aria-labelledby="look-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Regarder"><button type="button" role="tab" id="look-manifest-tab" data-view="manifest" aria-controls="look-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="look-commands-tab" data-view="commands" aria-controls="look-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="look-result-tab" data-view="result" aria-controls="look-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="look-manifest" aria-labelledby="look-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-suppliers.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-suppliers-b</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [purchasing-b]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/supplier-master-edi/b/suppliers.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">dataset</span>:</span><span class="line hl">      - filter-where: { column: ACTIF, equals: <span class="str">&quot;O&quot;</span> }        <span class="comment"># inactive suppliers out, counted</span></span><span class="line">    <span class="key">row</span>:</span><span class="line">      - map-columns:</span><span class="line">          <span class="key">rename</span>: { FOURN_CODE: code, FOURN_NOM: name, ACTIF: active, EXT_ID: ext_id, PAYS: country }</span><span class="line">      <span class="dash">-</span> <span class="key">defaults</span>: { country: FR }                            <span class="comment"># an empty country is France</span></span><span class="line">    <span class="key">cell</span>:</span><span class="line">      - remove-diacritics: { columns: [name] }               <span class="comment"># Électricité -&gt; Electricite</span></span><span class="line">      <span class="dash">-</span> <span class="key">upper</span>: { columns: [name] }</span><span class="line">      - regex-replace: { column: name, pattern: <span class="str">&quot;&amp;&quot;</span>, replacement: <span class="str">&quot; ET &quot;</span> }</span><span class="line">      - regex-replace: { column: name, pattern: <span class="str">&quot;[^A-Z0-9 ]&quot;</span>, replacement: <span class="str">&quot; &quot;</span> }   <span class="comment"># what the EDI refuses</span></span><span class="line">      - regex-replace: { column: name, pattern: <span class="str">&quot; +&quot;</span>, replacement: <span class="str">&quot; &quot;</span> }</span><span class="line">      <span class="dash">-</span> <span class="key">clean</span>: { columns: [name], strip: true }</span><span class="line hl">      <span class="dash">-</span> <span class="key">truncate</span>: { column: name, length: 35 }               <span class="comment"># the EDI&#x27;s hard limit</span></span><span class="line hl">      - to-uuid: { column: ext_id, on-invalid: keep }        <span class="comment"># look first: N/A and 0 left as they came</span></span></code></pre><div class="file"><span class="filename">manifests/20-supplier.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: supplier_b</span><span class="line"><span class="key">label</span>: Fournisseur EDI</span><span class="line"><span class="key">description</span>: <span class="str">&quot;An active supplier as the EDI platform takes it: ASCII upper-case name cut at 35 characters, country, and a stable identifier.&quot;</span></span><span class="line"><span class="key">match</span>: [code]</span><span class="line"><span class="key">scopes</span>: [purchasing-b]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">code</span>: { label: <span class="str">&quot;Code fournisseur&quot;</span> }</span><span class="line">  <span class="key">name</span>: { label: <span class="str">&quot;Nom EDI (35)&quot;</span> }</span><span class="line">  <span class="key">ext_id</span>: { label: <span class="str">&quot;Identifiant&quot;</span> }</span><span class="line">  <span class="key">country</span>: { label: <span class="str">&quot;Pays&quot;</span> }</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_suppliers_b</span><span class="line">    <span class="key">map</span>: { code: code, name: name, ext_id: ext_id, country: country }</span></code></pre></div><div role="tabpanel" id="look-commands" aria-labelledby="look-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-suppliers.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-suppliers-c&quot;,&quot;connectorId&quot;:&quot;9850e12d-e7bc-4929-9cdd-683e2b845b4e&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-suppliers-c</span>
+<span class="out">run scheduled: efbd6ac3-474c-4399-a773-c9778d1ed21b</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get efbd6ac3-474c-4399-a773-c9778d1ed21b</span>
+<span class="out">ID        CONNECTOR             ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+efbd6ac3  scenario-suppliers-c  default   Completed  8   6    2        0             2026-10-23 19:19  2026-10-23 19:19  no</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-supplier.yaml</span>
+<span class="out">Applied entity &quot;supplier_c&quot; → connector.&quot;v_supplier_c&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get supplier_c</span>
+<span class="out">CODE   NAME                                 EXT_ID                                COUNTRY  _CONFLICTS
+F0001  SOCIETE GENERALE D EQUIPEMENTS INDU  N/A                                   FR       {}
+F0002  ELECTRICITE MENARD ET FILS           3f2b8c1e-5a7d-4c2e-9b1f-0a6d8e4c2b71  FR       {}
+F0004  TRANSPORTS LEFEVRE                                                         FR       {}
+F0005  SOCIETE GENERALE D EQUIPEMENTS INDU  7c9e6679-7425-40de-944b-e07fc1f90ae7  FR       {}
+F0006  GARAGE MULLER                        0                                     DE       {}
+F0007  IMPRIMERIE COTE S A                                                        BE       {}</span></code></pre></div><div role="tabpanel" id="look-result" aria-labelledby="look-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 8 · OUT 6 · SKIPPED 2</dd><dt>F0001</dt><dd>SOCIETE GENERALE D EQUIPEMENTS INDU · N/A</dd><dt>F0005</dt><dd>SOCIETE GENERALE D EQUIPEMENTS INDU · 7c9e6679-7425-40de-944b-e07fc1f90ae7</dd><dt>F0006</dt><dd>GARAGE MULLER · 0</dd></dl><p class="sources">preuves : replay.log, look-run.txt, look-suppliers.txt, look-suppliers.json, policy-run.txt, policy-suppliers.txt, policy-suppliers.json, night-run.txt, night-suppliers.txt, night-suppliers.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="look-title">Le fichier mis au format EDI, les identifiants laissés tels quels</h2>
+    <p>filter-where garde les fournisseurs actifs ; map-columns renomme les colonnes FOURN_* ; defaults met FR dans un pays vide. Au troisième étage, remove-diacritics puis upper écrivent ELECTRICITE MENARD ; regex-replace change &amp; en ET et remplace la ponctuation que l&#x27;EDI refuse ; truncate coupe à 35. to-uuid avec on-invalid: keep laisse N/A et 0 tels quels, pour les regarder avant de choisir.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>35 caractères</strong><p>F0001 et F0005 ont le même nom une fois coupés.</p></div></li><li><span class="n">2</span><div><strong>on-invalid: keep</strong><p>Regarder avant de décider.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>8 = 6 + 2 : les deux inactifs sont écartés et comptés. La contrainte de l&#x27;EDI se voit sur chaque ligne.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-policy" aria-labelledby="policy-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Décider"><button type="button" role="tab" id="policy-manifest-tab" data-view="manifest" aria-controls="policy-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="policy-commands-tab" data-view="commands" aria-controls="policy-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="policy-result-tab" data-view="result" aria-controls="policy-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="policy-manifest" aria-labelledby="policy-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/11-suppliers-policy.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-suppliers-b</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [purchasing-b]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/supplier-master-edi/b/suppliers.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">dataset</span>:</span><span class="line">      - filter-where: { column: ACTIF, equals: <span class="str">&quot;O&quot;</span> }        <span class="comment"># inactive suppliers out, counted</span></span><span class="line">    <span class="key">row</span>:</span><span class="line">      - map-columns:</span><span class="line">          <span class="key">rename</span>: { FOURN_CODE: code, FOURN_NOM: name, ACTIF: active, EXT_ID: ext_id, PAYS: country }</span><span class="line">      <span class="dash">-</span> <span class="key">defaults</span>: { country: FR }                            <span class="comment"># an empty country is France</span></span><span class="line">    <span class="key">cell</span>:</span><span class="line">      - remove-diacritics: { columns: [name] }               <span class="comment"># Électricité -&gt; Electricite</span></span><span class="line">      <span class="dash">-</span> <span class="key">upper</span>: { columns: [name] }</span><span class="line">      - regex-replace: { column: name, pattern: <span class="str">&quot;&amp;&quot;</span>, replacement: <span class="str">&quot; ET &quot;</span> }</span><span class="line">      - regex-replace: { column: name, pattern: <span class="str">&quot;[^A-Z0-9 ]&quot;</span>, replacement: <span class="str">&quot; &quot;</span> }   <span class="comment"># what the EDI refuses</span></span><span class="line">      - regex-replace: { column: name, pattern: <span class="str">&quot; +&quot;</span>, replacement: <span class="str">&quot; &quot;</span> }</span><span class="line">      <span class="dash">-</span> <span class="key">clean</span>: { columns: [name], strip: true }</span><span class="line">      <span class="dash">-</span> <span class="key">truncate</span>: { column: name, length: 35 }               <span class="comment"># the EDI&#x27;s hard limit</span></span><span class="line hl">      - to-uuid: { column: ext_id, on-invalid: <span class="str">&quot;null&quot;</span>, generate-from: code }   <span class="comment"># junk emptied, counted; an empty id derived from the code</span></span></code></pre></div><div role="tabpanel" id="policy-commands" aria-labelledby="policy-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 11-suppliers-policy.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-suppliers-c&quot;,&quot;connectorId&quot;:&quot;9850e12d-e7bc-4929-9cdd-683e2b845b4e&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm endpoint reset-cursor scenario-suppliers-c/default</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-suppliers-c</span>
+<span class="out">run scheduled: 7e589c6d-b0f9-455f-929e-4a53b82813c7</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 7e589c6d-b0f9-455f-929e-4a53b82813c7</span>
+<span class="out">ID        CONNECTOR             ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+7e589c6d  scenario-suppliers-c  default   Completed  8   6    2        0             2026-10-23 19:19  2026-10-23 19:19  no</span>
+<span class="note">⚠ 2 cell(s) a hook did not deliver as declared — the rows were still written</span>
+<span class="note">• 4 row(s) removed — the source no longer holds them</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get supplier_c</span>
+<span class="out">CODE   NAME                                 EXT_ID                                COUNTRY  _CONFLICTS
+F0001  SOCIETE GENERALE D EQUIPEMENTS INDU                                        FR       {}
+F0002  ELECTRICITE MENARD ET FILS           3f2b8c1e-5a7d-4c2e-9b1f-0a6d8e4c2b71  FR       {}
+F0004  TRANSPORTS LEFEVRE                   673eb8c7-b4b2-3a79-91c0-7f21160d86f4  FR       {}
+F0005  SOCIETE GENERALE D EQUIPEMENTS INDU  7c9e6679-7425-40de-944b-e07fc1f90ae7  FR       {}
+F0006  GARAGE MULLER                                                              DE       {}
+F0007  IMPRIMERIE COTE S A                  4a515c7a-0e97-3802-b74d-7e5c916331b5  BE       {}</span></code></pre></div><div role="tabpanel" id="policy-result" aria-labelledby="policy-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 8 · OUT 6 · SKIPPED 2</dd><dt>F0001</dt><dd>—</dd><dt>F0004</dt><dd>673eb8c7-b4b2-3a79-91c0-7f21160d86f4</dd><dt>F0007</dt><dd>4a515c7a-0e97-3802-b74d-7e5c916331b5</dd></dl><p class="sources">preuves : replay.log, look-run.txt, look-suppliers.txt, look-suppliers.json, policy-run.txt, policy-suppliers.txt, policy-suppliers.json, night-run.txt, night-suppliers.txt, night-suppliers.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="policy-title">La règle choisie : vider ce qui est faux, dériver ce qui manque</h2>
+    <p>N/A et 0 ne sont pas des identifiants : on-invalid: &quot;null&quot; les vide et les compte. Un identifiant absent est dérivé du code fournisseur par generate-from : F0004 et F0007 en reçoivent un. Ce n&#x27;est pas l&#x27;identifiant d&#x27;un autre système : il ne se joint à rien d&#x27;autre, il sert de clé à l&#x27;EDI. Le changement de règle remplace quatre lignes, que le run annonce retirées.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>generate-from</strong><p>Le même code donne le même identifiant.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un identifiant inventé est déclaré par son nom, et compté quand il remplace une valeur reçue.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-night" aria-labelledby="night-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lendemain"><button type="button" role="tab" id="night-commands-tab" data-view="commands" aria-controls="night-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="night-result-tab" data-view="result" aria-controls="night-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="night-commands" aria-labelledby="night-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-suppliers-c</span>
+<span class="out">run scheduled: 1d689f2f-ba00-4c99-946c-2b1bd2b6deba</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 1d689f2f-ba00-4c99-946c-2b1bd2b6deba</span>
+<span class="out">ID        CONNECTOR             ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+1d689f2f  scenario-suppliers-c  default   Completed  9   7    2        0             2026-10-23 19:19  2026-10-23 19:19  yes</span>
+<span class="note">⚠ 2 cell(s) a hook did not deliver as declared — the rows were still written</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get supplier_c</span>
+<span class="out">CODE   NAME                                 EXT_ID                                COUNTRY  _CONFLICTS
+F0001  SOCIETE GENERALE D EQUIPEMENTS INDU                                        FR       {}
+F0002  ELECTRICITE MENARD ET FILS           3f2b8c1e-5a7d-4c2e-9b1f-0a6d8e4c2b71  FR       {}
+F0004  TRANSPORTS LEFEVRE                   673eb8c7-b4b2-3a79-91c0-7f21160d86f4  FR       {}
+F0005  SOCIETE GENERALE D EQUIPEMENTS INDU  7c9e6679-7425-40de-944b-e07fc1f90ae7  FR       {}
+F0006  GARAGE MULLER                                                              DE       {}
+F0007  IMPRIMERIE COTE S A                  4a515c7a-0e97-3802-b74d-7e5c916331b5  BE       {}
+F0009  CARTONNAGES DUBOIS                   a9a76ea1-bb08-30e3-bab4-27ecf986ea99  FR       {}</span></code></pre></div><div role="tabpanel" id="night-result" aria-labelledby="night-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 9 · OUT 7 · SKIPPED 2</dd><dt>F0004</dt><dd>673eb8c7-b4b2-3a79-91c0-7f21160d86f4</dd><dt>F0007</dt><dd>4a515c7a-0e97-3802-b74d-7e5c916331b5</dd><dt>F0009</dt><dd>a9a76ea1-bb08-30e3-bab4-27ecf986ea99</dd></dl><p class="sources">preuves : replay.log, look-run.txt, look-suppliers.txt, look-suppliers.json, policy-run.txt, policy-suppliers.txt, policy-suppliers.json, night-run.txt, night-suppliers.txt, night-suppliers.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="night-title">L&#x27;export du lendemain, les mêmes identifiants</h2>
+    <p>Le lendemain, l&#x27;export a un fournisseur de plus, F0009. F0004 et F0007 gardent l&#x27;identifiant de la veille, F0009 reçoit le sien, et aucune ligne n&#x27;est retirée. Avec generate: true seul, l&#x27;identifiant changeait à chaque run, et le run annonçait des lignes retirées que la source contenait toujours.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>0 retirée</strong><p>Rien ne change pour les fournisseurs connus.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>L&#x27;EDI reçoit le même identifiant chaque nuit pour le même fournisseur.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>truncate coupe sans prévenir : F0001 et F0005 portent le même nom à 35 caractères, seuls leurs codes les distinguent.</li><li>Un identifiant dérivé ne se joint à aucun autre système.</li><li>Après un changement de règle, le run annonce retirées les anciennes versions des lignes modifiées.</li><li>Fournisseurs synthétiques.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>

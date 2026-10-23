@@ -604,6 +604,24 @@
       "evidenceDigest": "sha256:2b3ff54db7df095b8ff9531a6a89d679651c8827fe8bfc48c27c989ddd11501c"
     },
     {
+      "slug": "supplier-master-edi",
+      "title": "Le fichier fournisseurs envoyé à l'EDI : ASCII, majuscules, 35 caractères, un identifiant stable.",
+      "lede": "Les achats alimentent une plateforme EDI qui impose des noms en ASCII, en majuscules, de 35 caractères au plus, et un identifiant par fournisseur. L'export de l'ERP a des accents, de longues raisons sociales, des fournisseurs inactifs, et une colonne d'identifiant qui contient N/A, 0 ou rien. La contrainte de l'EDI est déclarée une fois dans le manifeste.",
+      "tags": {
+        "domain": [
+          "Achats",
+          "EDI"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:374c812a51ae0a399c6b06828002a7669b031b381cb10eaf03b472ac84e700a0"
+    },
+    {
       "slug": "two-systems-one-member",
       "title": "Deux systèmes, un adhérent : chacun fait foi pour ses propres champs.",
       "lede": "Une mutuelle tient ses adhérents dans sa gestion des contrats et dans son portail. Fusionnés avec un seul ordre de sources, l'un des deux a toujours tort. lumnik laisse chaque colonne nommer sa source de référence, et garde chaque désaccord visible jusqu'à ce que la source le règle.",
