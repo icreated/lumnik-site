@@ -569,6 +569,24 @@
       "evidenceDigest": "sha256:149f717d084a87a4d4c5d42f60e5a26365d5bf1dfce59d136546a2117581e7fe"
     },
     {
+      "slug": "shipping-rule-changed",
+      "title": "La règle a changé au 1er janvier : chaque commande dit quelle version l'a calculée.",
+      "lede": "Les frais de port sont calculés par un script Kotlin que fournit l'opérateur du hub : port offert dès 150,00 en décembre, dès 200,00 à partir de janvier. L'opérateur remplace le script. Des mois plus tard, un auditeur demande pourquoi une commande de 172,50 n'a pas payé de port en décembre, et en a payé en janvier.",
+      "tags": {
+        "domain": [
+          "Ventes",
+          "Audit"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:4b95ff1e65a7bab3bb0e57522cc13c138b794ffc58849e66d227c8a355b5d1b2"
+    },
+    {
       "slug": "siebel-soap-desk",
       "title": "Le guichet SOAP du CRM : chaque service lu à sa façon, rien de lu deux fois.",
       "lede": "Un CRM des années 2000 expose ses données par des services web SOAP sur mesure : les actions d'une demande en un appel, les opportunités d'un client page par page sur un numéro de page. Le mot de passe voyage dans l'enveloppe. lumnik lit chacun comme il se lit, dit le Fault du service tel quel, et n'envoie jamais deux fois la même requête.",
@@ -602,6 +620,24 @@
       "edition": "open",
       "replayedAt": "2026-10-22",
       "evidenceDigest": "sha256:2b3ff54db7df095b8ff9531a6a89d679651c8827fe8bfc48c27c989ddd11501c"
+    },
+    {
+      "slug": "supplier-master-edi",
+      "title": "Le fichier fournisseurs envoyé à l'EDI : ASCII, majuscules, 35 caractères, un identifiant stable.",
+      "lede": "Les achats alimentent une plateforme EDI qui impose des noms en ASCII, en majuscules, de 35 caractères au plus, et un identifiant par fournisseur. L'export de l'ERP a des accents, de longues raisons sociales, des fournisseurs inactifs, et une colonne d'identifiant qui contient N/A, 0 ou rien. La contrainte de l'EDI est déclarée une fois dans le manifeste.",
+      "tags": {
+        "domain": [
+          "Achats",
+          "EDI"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:374c812a51ae0a399c6b06828002a7669b031b381cb10eaf03b472ac84e700a0"
     },
     {
       "slug": "two-systems-one-member",
