@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Un inventaire d&#x27;URLs saisies à la main : serveur, port et environnement, sans toucher l&#x27;export. — lumnik</title>
+<meta name="description" content="La DSI reprend un inventaire applicatif tenu des années dans un tableur. Une colonne porte l&#x27;URL de chaque application, tapée à la main : majuscules, espaces collés, ports tantôt là, tantôt absents. Elle veut savoir ce qui tourne sur un serveur et ce qui est encore en recette. Le manifeste découpe l&#x27;URL en colonnes, sans code.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/app-inventory-urls/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/app-inventory-urls/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Un inventaire d&#x27;URLs saisies à la main : serveur, port et environnement, sans toucher l&#x27;export.</h1>
+    <p class="lede">La DSI reprend un inventaire applicatif tenu des années dans un tableur. Une colonne porte l&#x27;URL de chaque application, tapée à la main : majuscules, espaces collés, ports tantôt là, tantôt absents. Elle veut savoir ce qui tourne sur un serveur et ce qui est encore en recette. Le manifeste découpe l&#x27;URL en colonnes, sans code.</p>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">DSI</li><li class="tag">Inventaire</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-load" data-step="load" aria-current="step"><span class="num">1 · Charger</span><span class="sub">12 lues, 10 gardées</span></a><a href="#step-read" data-step="read"><span class="num">2 · Lire</span><span class="sub">10 applications</span></a><a href="#step-ask" data-step="ask"><span class="num">3 · Questions</span><span class="sub">serveur, recette</span></a></nav>
+  <section class="step" id="step-load" aria-labelledby="load-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Charger"><button type="button" role="tab" id="load-manifest-tab" data-view="manifest" aria-controls="load-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="load-commands-tab" data-view="commands" aria-controls="load-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="load-result-tab" data-view="result" aria-controls="load-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="load-manifest" aria-labelledby="load-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-applications.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-apps-b</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [it-b]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/app-inventory-urls/b/applications.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">dataset</span>:</span><span class="line hl">      - filter-where: { column: status, equals: actif }     <span class="comment"># retired apps: skipped and counted</span></span><span class="line">    <span class="key">cell</span>:</span><span class="line">      <span class="dash">-</span> <span class="key">clean</span>: { columns: [url], strip: true }              <span class="comment"># spaces pasted around the URL</span></span><span class="line">      <span class="dash">-</span> <span class="key">lower</span>: { columns: [url] }                           <span class="comment"># SRV-ERP-PRD01 and srv-erp-prd01: one server</span></span><span class="line hl">      - regex-extract:</span><span class="line">          <span class="key">column</span>: url</span><span class="line">          <span class="key">pattern</span>: <span class="str">&quot;^(https?)://([^/:]+)(?::(\\d+))?.*$&quot;</span></span><span class="line">          <span class="key">groups</span>: { 1: scheme, 2: server, 3: port }</span><span class="line hl">      - regex-extract: { column: server, pattern: <span class="str">&quot;^srv-[a-z]+-(prd|rec|dev)\\d+\\..*$&quot;</span>, groups: { 1: environment } }</span><span class="line hl">      <span class="dash">-</span> <span class="key">default</span>: { column: environment, value: hors-convention }</span><span class="line hl">      <span class="dash">-</span> <span class="key">lookup</span>:</span><span class="line">          <span class="key">column</span>: environment</span><span class="line">          <span class="key">table</span>: { prd: production, rec: recette, dev: développement }</span></code></pre><div class="file"><span class="filename">manifests/20-application.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: application_b</span><span class="line"><span class="key">label</span>: Application</span><span class="line"><span class="key">description</span>: <span class="str">&quot;An application of the IT inventory still in service: its URL, and the server, port and environment read from it.&quot;</span></span><span class="line"><span class="key">match</span>: [app_code]</span><span class="line"><span class="key">scopes</span>: [it-b]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">app_code</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Application&quot;</span></span><span class="line">  <span class="key">owner</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Métier propriétaire&quot;</span></span><span class="line">  <span class="key">url</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;URL&quot;</span></span><span class="line">  <span class="key">scheme</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Protocole&quot;</span></span><span class="line">  <span class="key">server</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Serveur&quot;</span></span><span class="line">  <span class="key">port</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Port (vide : celui du protocole)&quot;</span></span><span class="line">  <span class="key">environment</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Environnement&quot;</span></span><span class="line">    <span class="key">values</span>: [production, recette, développement, hors-convention]</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_apps_b</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">app_code</span>: app_code</span><span class="line">      <span class="key">owner</span>: owner</span><span class="line">      <span class="key">url</span>: url</span><span class="line">      <span class="key">scheme</span>: scheme</span><span class="line">      <span class="key">server</span>: server</span><span class="line">      <span class="key">port</span>: port</span><span class="line">      <span class="key">environment</span>: environment</span></code></pre></div><div role="tabpanel" id="load-commands" aria-labelledby="load-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-applications.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-apps-c&quot;,&quot;connectorId&quot;:&quot;20f68eca-47e7-44ec-bf5a-a8965b9b5474&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-apps-c</span>
+<span class="out">run scheduled: 894e3d14-e1ff-46d4-8747-245952354710</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 894e3d14-e1ff-46d4-8747-245952354710</span>
+<span class="out">ID        CONNECTOR        ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+894e3d14  scenario-apps-c  default   Completed  12  10   2        0             2026-10-23 18:23  2026-10-23 18:23  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-application.yaml</span>
+<span class="out">Applied entity &quot;application_c&quot; → connector.&quot;v_application_c&quot;</span></code></pre></div><div role="tabpanel" id="load-result" aria-labelledby="load-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 12 · OUT 10 · SKIPPED 2</dd></dl><p class="sources">preuves : replay.log, load-run.txt, 01-all.txt, 01-all.json, 02-on-erp-server.txt, 02-on-erp-server.json, 03-in-recette.txt, 03-in-recette.json, 04-off-convention.txt, 04-off-convention.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="load-title">Les applications en service, l&#x27;URL découpée</h2>
+    <p>filter-where garde le statut actif : les deux applications retirées sont écartées et comptées. Dans les cellules, l&#x27;ordre compte : clean retire les espaces collés, lower ramène SRV-ERP-PRD01 à srv-erp-prd01, regex-extract tire protocole, serveur et port, puis l&#x27;environnement du nom du serveur ; default nomme un hôte hors convention, et lookup traduit prd, rec et dev.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>12 = 10 + 2</strong><p>Les retirées comptées.</p></div></li><li><span class="n">2</span><div><strong>extraire, compléter, traduire</strong><p>Dans cet ordre.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une URL devient des colonnes interrogeables, déclarées dans le manifeste.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-read" aria-labelledby="read-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity get application_c --limit 100</span>
+<span class="out">APP_CODE  OWNER          URL                                              SCHEME  SERVER                        PORT  ENVIRONMENT      _CONFLICTS
+BI        Direction      https://srv-bi-dev01.corp.local:3000/dash        https   srv-bi-dev01.corp.local       3000  développement    {}
+CRM       Ventes         http://srv-crm-rec02.corp.local/crm              http    srv-crm-rec02.corp.local            recette          {}
+EDI       Logistique     ftp://srv-edi-prd01.corp.local:21                                                            hors-convention  {}
+ERP       Finance        https://srv-erp-prd01.corp.local:8443/erp/login  https   srv-erp-prd01.corp.local      8443  production       {}
+GMAO      Maintenance    https://srv-gmao-prd01.corp.local:9443           https   srv-gmao-prd01.corp.local     9443  production       {}
+INTRANET  Communication  https://intranet.corp.local                      https   intranet.corp.local                 hors-convention  {}
+PAIE      RH             https://srv-paie-prd01.corp.local/paie           https   srv-paie-prd01.corp.local           production       {}
+PORTAIL   Ventes         https://srv-erp-prd01.corp.local:8443/portail    https   srv-erp-prd01.corp.local      8443  production       {}
+QUALITE   Production     https://srv-qual-rec01.corp.local/qualite        https   srv-qual-rec01.corp.local           recette          {}
+TICKETS   DSI            https://srv-tickets-prd02.corp.local/            https   srv-tickets-prd02.corp.local        production       {}</span></code></pre></div><div role="tabpanel" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>ERP</dt><dd>srv-erp-prd01.corp.local · 8443 · production</dd><dt>CRM</dt><dd>srv-crm-rec02.corp.local · — · recette</dd><dt>PAIE</dt><dd>srv-paie-prd01.corp.local · — · production</dd><dt>INTRANET</dt><dd>intranet.corp.local · — · hors-convention</dd><dt>EDI</dt><dd>— · — · hors-convention</dd></dl><p class="sources">preuves : replay.log, load-run.txt, 01-all.txt, 01-all.json, 02-on-erp-server.txt, 02-on-erp-server.json, 03-in-recette.txt, 03-in-recette.json, 04-off-convention.txt, 04-off-convention.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="read-title">Chaque application avec son serveur, son port et son environnement</h2>
+    <p>ERP : srv-erp-prd01, port 8443, production. Une URL sans port garde un port vide, celui de son protocole : le hub ne devine pas 80 ou 443. EDI déclare une URL ftp:// que le motif ne lit pas : son serveur reste vide, regex-extract ne compte pas ce raté, et default range l&#x27;application en hors-convention alors que son nom suit la convention.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Port vide</strong><p>Pas deviné.</p></div></li><li><span class="n">2</span><div><strong>EDI</strong><p>Un raté silencieux, à relire.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Ce que le hub ne sait pas lire reste visible ; un raté non compté se voit à la relecture, pas dans la lecture.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-ask" aria-labelledby="ask-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Questions"><button type="button" role="tab" id="ask-commands-tab" data-view="commands" aria-controls="ask-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="ask-result-tab" data-view="result" aria-controls="ask-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="ask-commands" aria-labelledby="ask-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity get application_c --filter server=srv-erp-prd01.corp.local</span>
+<span class="out">APP_CODE  OWNER    URL                                              SCHEME  SERVER                    PORT  ENVIRONMENT  _CONFLICTS
+ERP       Finance  https://srv-erp-prd01.corp.local:8443/erp/login  https   srv-erp-prd01.corp.local  8443  production   {}
+PORTAIL   Ventes   https://srv-erp-prd01.corp.local:8443/portail    https   srv-erp-prd01.corp.local  8443  production   {}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get application_c --filter environment=recette</span>
+<span class="out">APP_CODE  OWNER       URL                                        SCHEME  SERVER                     PORT  ENVIRONMENT  _CONFLICTS
+CRM       Ventes      http://srv-crm-rec02.corp.local/crm        http    srv-crm-rec02.corp.local         recette      {}
+QUALITE   Production  https://srv-qual-rec01.corp.local/qualite  https   srv-qual-rec01.corp.local        recette      {}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get application_c --filter environment=hors-convention</span>
+<span class="out">APP_CODE  OWNER          URL                                SCHEME  SERVER               PORT  ENVIRONMENT      _CONFLICTS
+EDI       Logistique     ftp://srv-edi-prd01.corp.local:21                                     hors-convention  {}
+INTRANET  Communication  https://intranet.corp.local        https   intranet.corp.local        hors-convention  {}</span></code></pre></div><div role="tabpanel" id="ask-result" aria-labelledby="ask-result-tab" tabindex="0" hidden><dl class="facts"><dt>srv-erp-prd01</dt><dd>ERP, PORTAIL</dd><dt>recette</dt><dd>CRM, QUALITE</dd><dt>hors-convention</dt><dd>EDI, INTRANET</dd></dl><p class="sources">preuves : replay.log, load-run.txt, 01-all.txt, 01-all.json, 02-on-erp-server.txt, 02-on-erp-server.json, 03-in-recette.txt, 03-in-recette.json, 04-off-convention.txt, 04-off-convention.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="ask-title">Les questions de la DSI</h2>
+    <p>Qu&#x27;est-ce qui tourne sur srv-erp-prd01 ? ERP et PORTAIL. Qu&#x27;est-ce qui est encore en recette ? CRM et QUALITE, même si QUALITE était saisi Srv-Qual-Rec01. Qu&#x27;est-ce qui sort de la convention ? INTRANET, et EDI.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>2 applications</strong><p>Sur un même serveur.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un filtre sur une colonne extraite répond comme sur une colonne de la source.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>regex-extract ne compte pas un raté : un motif qui ne lit pas une ligne laisse ses colonnes vides sans alerte, et un default en aval peut les remplir.</li><li>default remplit une constante : le port d&#x27;un protocole n&#x27;est pas déduit.</li><li>Inventaire synthétique.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
