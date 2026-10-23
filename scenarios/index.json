@@ -94,6 +94,24 @@
       "evidenceDigest": "sha256:0b9b8301994e5425be84ff8b380d79290704bb12ee8d2f3c074b4facf7d929b5"
     },
     {
+      "slug": "delivery-date-two-warehouses",
+      "title": "Une règle de date de livraison, deux entrepôts : chacun son délai, ses fériés, ses jours fermés.",
+      "lede": "La date promise au client est la date de commande plus un nombre de jours ouvrés, sans les week-ends, les jours fériés ni les jours où l'entrepôt est fermé. L'opérateur écrit la règle une fois, dans un script Kotlin. Chaque entrepôt la règle à sa façon : Lyon en France, 3 jours, deux jours d'inventaire ; Liège en Belgique, 5 jours.",
+      "tags": {
+        "domain": [
+          "Logistique",
+          "Ventes"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:0c815961842dd09ffe69c48f144e01f6f2ff4c8b4ce00c9ee4c287f5ff98c8d7"
+    },
+    {
       "slug": "devops-ai-pod-triage",
       "title": "Quels pods regarder en premier ? Le modèle traduit la question, il n'invente pas la priorité.",
       "lede": "Inventaire, métriques et santé de dix pods arrivent en trois exports. lumnik les fusionne avec une priorité déterministe ; Ask transforme la question en SQL en lecture seule. Sept pods, du critique au moyen, chacun avec ses signaux.",
