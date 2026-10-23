@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>« Et SUP-004 ? » : une question de suite, répondue comme la question entière. — lumnik</title>
+<meta name="description" content="Un acheteur demande combien de commandes ont été annulées, puis « Et pour le fournisseur SUP-003 ? », puis « Et SUP-004 ? ». Il ne retape pas la question. Ask lit chaque suite avec la question d&#x27;avant, répond à la question complète et affiche celle qu&#x27;il a comprise.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/purchasing-follow-up/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/purchasing-follow-up/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>« Et SUP-004 ? » : une question de suite, répondue comme la question entière.</h1>
+    <p class="lede">Un acheteur demande combien de commandes ont été annulées, puis « Et pour le fournisseur SUP-003 ? », puis « Et SUP-004 ? ». Il ne retape pas la question. Ask lit chaque suite avec la question d&#x27;avant, répond à la question complète et affiche celle qu&#x27;il a comprise.</p>
+    <ul class="tags"><li class="tag edition edition-pro"><a href="https://docs.lumnik.io/editions/">lumnik Pro</a></li><li class="tag">Achats</li><li class="tag">IA</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-load" data-step="load" aria-current="step"><span class="num">1 · Charger</span><span class="sub">240 commandes</span></a><a href="#step-first" data-step="first"><span class="num">2 · Demander</span><span class="sub">26 annulées</span></a><a href="#step-follow" data-step="follow"><span class="num">3 · Enchaîner</span><span class="sub">SUP-003, puis SUP-004</span></a><a href="#step-unresolved" data-step="unresolved"><span class="num">4 · Refuser</span><span class="sub">Pas de date</span></a></nav>
+  <section class="step" id="step-load" aria-labelledby="load-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Charger"><button type="button" role="tab" id="load-manifest-tab" data-view="manifest" aria-controls="load-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="load-commands-tab" data-view="commands" aria-controls="load-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="load-result-tab" data-view="result" aria-controls="load-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="load-manifest" aria-labelledby="load-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-purchase-orders.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-followup-b</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [followup-b]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/purchasing-follow-up/b/purchase_orders.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">dataset</span>:</span><span class="line">      - require-headers:</span><span class="line">          <span class="key">columns</span>: [po_number, supplier_id, supplier_name, category, order_date, status, amount_eur]</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      - parse-date: { column: order_date, formats: [<span class="str">&quot;yyyy-MM-dd&quot;</span>] }</span><span class="line">      - parse-number: { column: amount_eur, decimal-separator: <span class="str">&quot;.&quot;</span> }</span></code></pre><div class="file"><span class="filename">manifests/20-purchase-order.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: followup_order_b</span><span class="line"><span class="key">label</span>: Commande fournisseur</span><span class="line hl"><span class="key">description</span>: <span class="str">&quot;A purchase order sent to a supplier in 2025. One row is one order. The amount is what was ordered from the supplier, excluding VAT; the hub holds no cost price, no selling price and no supplier rating.&quot;</span></span><span class="line"><span class="key">match</span>: [po_number]</span><span class="line"><span class="key">scopes</span>: [followup-b]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">po_number</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Numéro de commande&quot;</span></span><span class="line">    <span class="key">example</span>: <span class="str">&quot;PO-2025-0001&quot;</span></span><span class="line">  <span class="key">supplier_id</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Code fournisseur&quot;</span></span><span class="line">    <span class="key">example</span>: <span class="str">&quot;SUP-003&quot;</span></span><span class="line">  <span class="key">supplier_name</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Nom du fournisseur&quot;</span></span><span class="line">  <span class="key">category</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Famille d&#x27;achat&quot;</span></span><span class="line hl">    <span class="key">values</span>: [visserie, emballage, transport, maintenance]</span><span class="line">  <span class="key">order_date</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Date de commande&quot;</span></span><span class="line">  <span class="key">status</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Statut de la commande&quot;</span></span><span class="line hl">    <span class="key">description</span>: <span class="str">&quot;ordered: sent, not yet received; received: delivered; cancelled: cancelled before delivery.&quot;</span></span><span class="line hl">    <span class="key">values</span>: [ordered, received, cancelled]</span><span class="line">  <span class="key">amount_eur</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Montant commandé HT, en euros&quot;</span></span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_followup_b</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">po_number</span>: po_number</span><span class="line">      <span class="key">supplier_id</span>: supplier_id</span><span class="line">      <span class="key">supplier_name</span>: supplier_name</span><span class="line">      <span class="key">category</span>: category</span><span class="line">      <span class="key">order_date</span>: order_date</span><span class="line">      <span class="key">status</span>: status</span><span class="line">      <span class="key">amount_eur</span>: amount_eur</span></code></pre></div><div role="tabpanel" id="load-commands" aria-labelledby="load-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-purchase-orders.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-followup-c&quot;,&quot;connectorId&quot;:&quot;983da86c-9a37-4e2e-9e23-e89d04640dfe&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-followup-c</span>
+<span class="out">run scheduled: 5a3fd45a-2e27-4f76-8cad-17a0c8a534f4</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 5a3fd45a-2e27-4f76-8cad-17a0c8a534f4</span>
+<span class="out">ID        CONNECTOR            ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+5a3fd45a  scenario-followup-c  default   Completed  240  240  0        0             2026-10-23 16:01  2026-10-23 16:01  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-purchase-order.yaml</span>
+<span class="out">Applied entity &quot;followup_order_c&quot; → connector.&quot;v_followup_order_c&quot;</span></code></pre></div><div role="tabpanel" id="load-result" aria-labelledby="load-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 240 · OUT 240</dd></dl><p class="sources">preuves : replay.log, 01-cancelled.txt, 01-cancelled.json, 02-sup003.txt, 02-sup003.json, 03-sup004.txt, 03-sup004.json, 04-unresolved.txt, 04-unresolved.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="load-title">Un an de commandes fournisseurs</h2>
+    <p>Le connecteur CSV lit les 240 commandes synthétiques de 2025 du scénario « La question à laquelle Ask refuse de répondre ». L&#x27;entité dit ce que chaque colonne veut dire.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>240 commandes</strong><p>Six fournisseurs, trois statuts.</p></div></li><li><span class="n">2</span><div><strong>Le sens déclaré</strong><p>Ask lit ces libellés.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Les mêmes données que le scénario Ask : seule la conversation change.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-first" aria-labelledby="first-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Demander"><button type="button" role="tab" id="first-commands-tab" data-view="commands" aria-controls="first-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="first-result-tab" data-view="result" aria-controls="first-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="first-commands" aria-labelledby="first-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm ask --scope followup-c --lang fr &quot;Combien de commandes ont été annulées ?&quot;</span>
+<span class="out">26 commandes ont été annulées.
+  data as of: 2026-10-23T14:01:13.954964Z (last completed run)
+
+  COUNT
+  26
+  1 row returned
+
+  SQL: SELECT COUNT(*) FROM &quot;connector&quot;.&quot;v_followup_order_c&quot; WHERE &quot;status&quot; = &#x27;cancelled&#x27;
+LIMIT 500</span></code></pre></div><div role="tabpanel" id="first-result" aria-labelledby="first-result-tab" tabindex="0" hidden><dl class="facts"><dt>Combien de commandes ont été annulées ?</dt><dd>26</dd></dl><p class="sources">preuves : replay.log, 01-cancelled.txt, 01-cancelled.json, 02-sup003.txt, 02-sup003.json, 03-sup004.txt, 03-sup004.json, 04-unresolved.txt, 04-unresolved.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="first-title">Une première question, seule</h2>
+    <p>« Combien de commandes ont été annulées ? » reçoit 26, avec le SQL exécuté. Rien n&#x27;est envoyé avant elle : en JSON, understoodAs vaut null.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>26</strong><p>COUNT(*) sur le statut cancelled.</p></div></li><li><span class="n">2</span><div><strong>understoodAs: null</strong><p>Une question seule n&#x27;est pas réécrite.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Sans question précédente, Ask répond à la question telle quelle.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-follow" aria-labelledby="follow-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Enchaîner"><button type="button" role="tab" id="follow-commands-tab" data-view="commands" aria-controls="follow-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="follow-result-tab" data-view="result" aria-controls="follow-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="follow-commands" aria-labelledby="follow-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm ask --scope followup-c --lang fr --previous &quot;Combien de commandes ont été annulées ?&quot; &quot;Et pour le fournisseur SUP-003 ?&quot;</span>
+<span class="out">7 commandes ont été annulées pour le fournisseur SUP-003.
+  understood as: Combien de commandes ont été annulées pour le fournisseur SUP-003 ?
+  data as of: 2026-10-23T14:01:13.954964Z (last completed run)
+
+  COUNT
+  7
+  1 row returned
+
+  SQL: SELECT COUNT(*) 
+FROM &quot;connector&quot;.&quot;v_followup_order_c&quot; 
+WHERE &quot;supplier_id&quot; = &#x27;SUP-003&#x27; AND &quot;status&quot; = &#x27;cancelled&#x27;
+LIMIT 500</span>
+
+<span class="cmd"><span class="prompt">$</span> lm ask --scope followup-c --lang fr --previous &quot;Combien de commandes ont été annulées pour le fournisseur SUP-003 ?&quot; &quot;Et SUP-004 ?&quot;</span>
+<span class="out">2 commandes ont été annulées pour le fournisseur SUP-004.
+  understood as: Combien de commandes ont été annulées pour le fournisseur SUP-004 ?
+  data as of: 2026-10-23T14:01:13.954964Z (last completed run)
+
+  COUNT
+  2
+  1 row returned
+
+  SQL: SELECT COUNT(*) 
+FROM &quot;connector&quot;.&quot;v_followup_order_c&quot; 
+WHERE &quot;supplier_id&quot; = &#x27;SUP-004&#x27; AND &quot;status&quot; = &#x27;cancelled&#x27;
+LIMIT 500</span></code></pre></div><div role="tabpanel" id="follow-result" aria-labelledby="follow-result-tab" tabindex="0" hidden><dl class="facts"><dt>Et pour le fournisseur SUP-003 ?</dt><dd>7 · understood as: Combien de commandes ont été annulées pour le fournisseur SUP-003 ?</dd><dt>Et SUP-004 ?</dt><dd>2 · understood as: Combien de commandes ont été annulées pour le fournisseur SUP-004 ?</dd></dl><p class="sources">preuves : replay.log, 01-cancelled.txt, 01-cancelled.json, 02-sup003.txt, 02-sup003.json, 03-sup004.txt, 03-sup004.json, 04-unresolved.txt, 04-unresolved.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="follow-title">« Et pour SUP-003 ? », puis « Et SUP-004 ? »</h2>
+    <p>lm ask --previous envoie la question d&#x27;avant avec la suite. Ask répond à « Combien de commandes ont été annulées pour le fournisseur SUP-003 ? » et l&#x27;affiche sur la ligne « understood as » : 7. La suivante part de cette question complète : 2 pour SUP-004, et SUP-003 a disparu de la question.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>7, puis 2</strong><p>Chaque chiffre a son SQL.</p></div></li><li><span class="n">2</span><div><strong>Une seule phrase en mémoire</strong><p>La troisième question porte SUP-004, pas SUP-003.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une question de suite est répondue comme une question entière, et la réponse dit laquelle.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-unresolved" aria-labelledby="unresolved-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Refuser"><button type="button" role="tab" id="unresolved-commands-tab" data-view="commands" aria-controls="unresolved-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="unresolved-result-tab" data-view="result" aria-controls="unresolved-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="unresolved-commands" aria-labelledby="unresolved-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm ask --scope followup-c --lang fr --previous &quot;Combien de commandes ont été annulées ?&quot; &quot;Et celle de mardi dernier ?&quot;</span>
+<span class="out">Je ne peux pas répondre à partir des données disponibles pour ce périmètre — la question ne correspond pas au schéma déclaré.
+  understood as: Combien de commandes ont été annulées mardi dernier ?</span></code></pre></div><div role="tabpanel" id="unresolved-result" aria-labelledby="unresolved-result-tab" tabindex="0" hidden><dl class="facts"><dt>Et celle de mardi dernier ?</dt><dd>no SQL · abstained</dd><dt>answer</dt><dd>Je ne peux pas répondre à partir des données disponibles pour ce périmètre — la question ne correspond pas au schéma déclaré.</dd></dl><p class="sources">preuves : replay.log, 01-cancelled.txt, 01-cancelled.json, 02-sup003.txt, 02-sup003.json, 03-sup004.txt, 03-sup004.json, 04-unresolved.txt, 04-unresolved.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="unresolved-title">« Et celle de mardi dernier ? » : refusée</h2>
+    <p>La suite est comprise comme les commandes annulées mardi dernier. Les commandes ne portent rien qui y réponde : Ask ne lance aucune requête et le dit. En JSON, abstained vaut true et le SQL est vide.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Aucun SQL</strong><p>Rien n&#x27;est exécuté.</p></div></li><li><span class="n">2</span><div><strong>abstained: true</strong><p>Le refus se lit dans le JSON.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une suite à laquelle les données ne répondent pas reçoit un refus, comme toute question.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>La question comprise vient du modèle configuré sur le hub (qwen2.5-coder:7b ici). Le hub la contrôle avant de s&#x27;en servir ; un autre modèle peut la formuler autrement.</li><li>lm envoie la question précédente seulement quand on la lui donne. L&#x27;écran :ask du TUI ne la porte pas encore (#1406) ; le chat de la PWA, si.</li><li>Commandes synthétiques ; une seule entité, un seul périmètre.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
