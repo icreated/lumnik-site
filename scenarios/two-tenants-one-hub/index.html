@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deux clients, un hub, une table : chacun ne lit que ses lignes. — lumnik</title>
+<meta name="description" content="Deux intégrateurs de deux clients appliquent les mêmes fichiers sur le même hub. Même connecteur, même entité, même table. Chacun charge ses commandes, sous les mêmes numéros. Chacun relit, interroge et compte : il ne voit que les siennes.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/two-tenants-one-hub/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/two-tenants-one-hub/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Deux clients, un hub, une table : chacun ne lit que ses lignes.</h1>
+    <p class="lede">Deux intégrateurs de deux clients appliquent les mêmes fichiers sur le même hub. Même connecteur, même entité, même table. Chacun charge ses commandes, sous les mêmes numéros. Chacun relit, interroge et compte : il ne voit que les siennes.</p>
+    <ul class="tags"><li class="tag edition edition-pro"><a href="https://docs.lumnik.io/editions/">lumnik Pro</a></li><li class="tag">Sécurité</li><li class="tag">Achats</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-load-a" data-step="load-a" aria-current="step"><span class="num">1 · Client A</span><span class="sub">240 commandes</span></a><a href="#step-load-b" data-step="load-b"><span class="num">2 · Client B</span><span class="sub">60 commandes</span></a><a href="#step-read" data-step="read"><span class="num">3 · Relire</span><span class="sub">240 / 60</span></a><a href="#step-ask" data-step="ask"><span class="num">4 · Demander</span><span class="sub">26 / 5</span></a><a href="#step-door" data-step="door"><span class="num">5 · Refuser</span><span class="sub">404</span></a></nav>
+  <section class="step" id="step-load-a" aria-labelledby="load-a-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Client A"><button type="button" role="tab" id="load-a-manifest-tab" data-view="manifest" aria-controls="load-a-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="load-a-commands-tab" data-view="commands" aria-controls="load-a-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="load-a-result-tab" data-view="result" aria-controls="load-a-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="load-a-manifest" aria-labelledby="load-a-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-purchase-orders.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-tenants-b</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line hl">  <span class="key">scopes</span>: [tenants-b]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/two-tenants-one-hub/b/tenant-a/orders.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">dataset</span>:</span><span class="line">      - require-headers:</span><span class="line">          <span class="key">columns</span>: [po_number, supplier_id, supplier_name, category, order_date, status, amount_eur]</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      - parse-date: { column: order_date, formats: [<span class="str">&quot;yyyy-MM-dd&quot;</span>] }</span><span class="line">      - parse-number: { column: amount_eur, decimal-separator: <span class="str">&quot;.&quot;</span> }</span></code></pre><div class="file"><span class="filename">manifests/20-purchase-order.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: tenants_order_b</span><span class="line"><span class="key">label</span>: Commande fournisseur</span><span class="line"><span class="key">description</span>: <span class="str">&quot;A purchase order sent to a supplier in 2025. One row is one order. The amount is what was ordered from the supplier, excluding VAT; the hub holds no cost price, no selling price and no supplier rating.&quot;</span></span><span class="line"><span class="key">match</span>: [po_number]</span><span class="line hl"><span class="key">scopes</span>: [tenants-b]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">po_number</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Numéro de commande&quot;</span></span><span class="line">    <span class="key">example</span>: <span class="str">&quot;PO-2025-0001&quot;</span></span><span class="line">  <span class="key">supplier_id</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Code fournisseur&quot;</span></span><span class="line">    <span class="key">example</span>: <span class="str">&quot;SUP-003&quot;</span></span><span class="line">  <span class="key">supplier_name</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Nom du fournisseur&quot;</span></span><span class="line">  <span class="key">category</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Famille d&#x27;achat&quot;</span></span><span class="line">    <span class="key">values</span>: [visserie, emballage, transport, maintenance]</span><span class="line">  <span class="key">order_date</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Date de commande&quot;</span></span><span class="line">  <span class="key">status</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Statut de la commande&quot;</span></span><span class="line">    <span class="key">description</span>: <span class="str">&quot;ordered: sent, not yet received; received: delivered; cancelled: cancelled before delivery.&quot;</span></span><span class="line">    <span class="key">values</span>: [ordered, received, cancelled]</span><span class="line">  <span class="key">amount_eur</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Montant commandé HT, en euros&quot;</span></span><span class="line"><span class="key">sources</span>:</span><span class="line hl">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_tenants_b</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">po_number</span>: po_number</span><span class="line">      <span class="key">supplier_id</span>: supplier_id</span><span class="line">      <span class="key">supplier_name</span>: supplier_name</span><span class="line">      <span class="key">category</span>: category</span><span class="line">      <span class="key">order_date</span>: order_date</span><span class="line">      <span class="key">status</span>: status</span><span class="line">      <span class="key">amount_eur</span>: amount_eur</span></code></pre></div><div role="tabpanel" id="load-a-commands" aria-labelledby="load-a-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm --context local apply -f 10-purchase-orders.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-tenants-c&quot;,&quot;connectorId&quot;:&quot;f92a34e5-ecc0-4b6f-bcc2-8cfd9fbfd760&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm --context local connector run scenario-tenants-c</span>
+<span class="out">run scheduled: 5ac4d058-c555-4f76-a203-7448ba724f7c</span>
+
+<span class="cmd"><span class="prompt">$</span> lm --context local run get 5ac4d058-c555-4f76-a203-7448ba724f7c</span>
+<span class="out">ID        CONNECTOR           ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+5ac4d058  scenario-tenants-c  default   Completed  240  240  0        0             2026-10-23 16:23  2026-10-23 16:23  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm --context local entity apply -f 20-purchase-order.yaml</span>
+<span class="out">Applied entity &quot;tenants_order_c&quot; → connector.&quot;v_tenants_order_c&quot;</span></code></pre></div><div role="tabpanel" id="load-a-result" aria-labelledby="load-a-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 240 · OUT 240</dd></dl><p class="sources">preuves : replay.log, 01-a-entity.txt, 01-a-entity.json, 02-b-entity.txt, 02-b-entity.json, 03-a-po0001.txt, 03-a-po0001.json, 04-b-po0001.txt, 04-b-po0001.json, 05-a-cancelled.txt, 05-a-cancelled.json, 06-b-cancelled.txt, 06-b-cancelled.json, 07-b-run-of-a.txt · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="load-a-title">Le client A charge ses 240 commandes</h2>
+    <p>L&#x27;intégrateur du client A est connecté avec le contexte lm « local ». Son jeton porte tenant_id 1. Il applique le connecteur CSV et l&#x27;entité, puis lance la lecture : 240 commandes.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>tenant_id 1</strong><p>Lu dans le jeton, jamais dans le manifeste.</p></div></li><li><span class="n">2</span><div><strong>240 commandes</strong><p>Six fournisseurs, 26 annulées.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un chargement ordinaire, dans le tenant du jeton.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-load-b" aria-labelledby="load-b-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Client B"><button type="button" role="tab" id="load-b-commands-tab" data-view="commands" aria-controls="load-b-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="load-b-result-tab" data-view="result" aria-controls="load-b-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="load-b-commands" aria-labelledby="load-b-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm --context tenant-b apply -f 10-purchase-orders.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-tenants-c&quot;,&quot;connectorId&quot;:&quot;98b9e555-4bc7-4991-a533-e35f71b965b6&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm --context tenant-b connector run scenario-tenants-c</span>
+<span class="out">run scheduled: f65a28a4-0cba-47c1-9a11-c8ce72dfeb23</span>
+
+<span class="cmd"><span class="prompt">$</span> lm --context tenant-b run get f65a28a4-0cba-47c1-9a11-c8ce72dfeb23</span>
+<span class="out">ID        CONNECTOR           ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
+f65a28a4  scenario-tenants-c  default   Completed  60  60   0        0             2026-10-23 16:23  2026-10-23 16:23</span>
+
+<span class="cmd"><span class="prompt">$</span> lm --context tenant-b entity apply -f 20-purchase-order.yaml</span>
+<span class="out">Applied entity &quot;tenants_order_c&quot; → connector.&quot;v_tenants_order_c&quot;</span></code></pre></div><div role="tabpanel" id="load-b-result" aria-labelledby="load-b-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 60 · OUT 60</dd></dl><p class="sources">preuves : replay.log, 01-a-entity.txt, 01-a-entity.json, 02-b-entity.txt, 02-b-entity.json, 03-a-po0001.txt, 03-a-po0001.json, 04-b-po0001.txt, 04-b-po0001.json, 05-a-cancelled.txt, 05-a-cancelled.json, 06-b-cancelled.txt, 06-b-cancelled.json, 07-b-run-of-a.txt · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="load-b-title">Le client B applique les mêmes fichiers</h2>
+    <p>L&#x27;intégrateur du client B, contexte « tenant-b », jeton tenant_id 11, applique les deux mêmes fichiers. Même nom de connecteur, même nom d&#x27;entité, même table. Son fichier contient 60 commandes, numérotées comme les 60 premières du client A, chez d&#x27;autres fournisseurs.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Mêmes noms</strong><p>Aucun conflit au apply.</p></div></li><li><span class="n">2</span><div><strong>60 commandes</strong><p>5 annulées.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Deux clients peuvent porter les mêmes noms sur un même hub sans se gêner.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-read" aria-labelledby="read-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Relire"><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm --context local entity get tenants_order_c --limit 1000</span>
+<span class="out">PO_NUMBER     SUPPLIER_ID  SUPPLIER_NAME  CATEGORY     ORDER_DATE  STATUS     AMOUNT_EUR  _CONFLICTS
+PO-2025-0001  SUP-006      Fournisseur F  visserie     2025-06-30  received   12328.52    {}
+PO-2025-0002  SUP-002      Fournisseur B  emballage    2025-01-25  received   17452.35    {}
+PO-2025-0003  SUP-002      Fournisseur B  emballage    2025-05-01  received   241.35      {}
+PO-2025-0004  SUP-002      Fournisseur B  emballage    2025-01-31  received   4350.22     {}
+PO-2025-0005  SUP-003      Fournisseur C  transport    2025-11-24  cancelled  14903.09    {}
+PO-2025-0006  SUP-001      Fournisseur A  visserie     2025-04-10  received   16044.38    {}
+PO-2025-0007  SUP-005      Fournisseur E  emballage    2025-03-01  cancelled  4720.45     {}
+PO-2025-0008  SUP-004      Fournisseur D  maintenance  2025-01-03  ordered    12530.45    {}
+PO-2025-0009  SUP-003      Fournisseur C  transport    2025-03-14  received   12444.82    {}
+PO-2025-0010  SUP-004      Fournisseur D  maintenance  2025-01-30  received   1472.23     {}
+PO-2025-0011  SUP-002      Fournisseur B  emballage    2025-08-23  ordered    1548.55     {}
+PO-2025-0012  SUP-005      Fournisseur E  emballage    2025-04-25  received   10939.14    {}
+PO-2025-0013  SUP-003      Fournisseur C  transport    2025-02-18  received   17843.19    {}
+PO-2025-0014  SUP-004      Fournisseur D  maintenance  2025-11-12  received   16114.73    {}
+PO-2025-0015  SUP-001      Fournisseur A  visserie     2025-08-07  ordered    9761.13     {}
+PO-2025-0016  SUP-002      Fournisseur B  emballage    2025-07-17  received   11251.27    {}
+PO-2025-0017  SUP-001      Fournisseur A  visserie     2025-02-06  ordered    7957.67     {}
+PO-2025-0018  SUP-003      Fournisseur C  transport    2025-09-16  ordered    4198.67     {}
+PO-2025-0019  SUP-001      Fournisseur A  visserie     2025-02-08  received   8351.96     {}
+PO-2025-0020  SUP-005      Fournisseur E  emballage    2025-09-07  ordered    10236.25    {}
+PO-2025-0021  SUP-006      Fournisseur F  visserie     2025-09-30  ordered    18130.68    {}
+PO-2025-0022  SUP-003      Fournisseur C  transport    2025-01-22  cancelled  16354.59    {}
+PO-2025-0023  SUP-004      Fournisseur D  maintenance  2025-01-03  received   15456.71    {}
+PO-2025-0024  SUP-001      Fournisseur A  visserie     2025-05-02  received   777.93      {}
+PO-2025-0025  SUP-003      Fournisseur C  transport    2025-09-22  received   10715.65    {}
+PO-2025-0026  SUP-006      Fournisseur F  visserie     2025-07-09  ordered    15510.98    {}
+PO-2025-0027  SUP-003      Fournisseur C  transport    2025-08-28  ordered    486.94      {}
+PO-2025-0028  SUP-001      Fournisseur A  visserie     2025-05-30  cancelled  12376.94    {}
+PO-2025-0029  SUP-001      Fournisseur A  visserie     2025-01-23  received   15491.56    {}
+PO-2025-0030  SUP-001      Fournisseur A  visserie     2025-07-17  received   10957.85    {}
+PO-2025-0031  SUP-004      Fournisseur D  maintenance  2025-01-11  received   9829.41     {}
+PO-2025-0032  SUP-006      Fournisseur F  visserie     2025-04-13  received   14606.75    {}
+PO-2025-0033  SUP-006      Fournisseur F  visserie     2025-11-05  received   11888.39    {}
+PO-2025-0034  SUP-006      Fournisseur F  visserie     2025-09-28  received   10349.48    {}
+PO-2025-0035  SUP-006      Fournisseur F  visserie     2025-12-06  received   18096.67    {}
+PO-2025-0036  SUP-003      Fournisseur C  transport    2025-09-21  received   8508.61     {}
+PO-2025-0037  SUP-005      Fournisseur E  emballage    2025-07-01  received   15203.06    {}
+PO-2025-0038  SUP-002      Fournisseur B  emballage    2025-03-19  received   10690.28    {}
+PO-2025-0039  SUP-004      Fournisseur D  maintenance  2025-09-21  received   6301.79     {}
+PO-2025-0040  SUP-002      Fournisseur B  emballage    2025-11-28  ordered    354.3       {}
+PO-2025-0041  SUP-006      Fournisseur F  visserie     2025-08-24  cancelled  14695.72    {}
+PO-2025-0042  SUP-003      Fournisseur C  transport    2025-12-11  received   11470.6     {}
+PO-2025-0043  SUP-002      Fournisseur B  emballage    2025-12-27  received   2764.79     {}
+PO-2025-0044  SUP-004      Fournisseur D  maintenance  2025-12-18  received   18189.21    {}
+PO-2025-0045  SUP-002      Fournisseur B  emballage    2025-03-19  received   10272.72    {}
+PO-2025-0046  SUP-005      Fournisseur E  emballage    2025-01-10  received   12925.88    {}
+PO-2025-0047  SUP-005      Fournisseur E  emballage    2025-10-23  ordered    7971.76     {}
+PO-2025-0048  SUP-002      Fournisseur B  emballage    2025-07-27  ordered    7243.11     {}
+PO-2025-0049  SUP-003      Fournisseur C  transport    2025-02-25  received   12916.29    {}
+PO-2025-0050  SUP-001      Fournisseur A  visserie     2025-05-19  received   15258.02    {}
+PO-2025-0051  SUP-004      Fournisseur D  maintenance  2025-11-06  received   11324.03    {}
+PO-2025-0052  SUP-001      Fournisseur A  visserie     2025-11-16  ordered    12918.11    {}
+PO-2025-0053  SUP-002      Fournisseur B  emballage    2025-04-23  received   10466.22    {}
+PO-2025-0054  SUP-004      Fournisseur D  maintenance  2025-02-02  received   2243.93     {}
+PO-2025-0055  SUP-004      Fournisseur D  maintenance  2025-05-02  received   16856.84    {}
+PO-2025-0056  SUP-004      Fournisseur D  maintenance  2025-08-06  received   7932.56     {}
+PO-2025-0057  SUP-006      Fournisseur F  visserie     2025-07-19  cancelled  7146.62     {}
+PO-2025-0058  SUP-003      Fournisseur C  transport    2025-01-27  ordered    1236.7      {}
+PO-2025-0059  SUP-006      Fournisseur F  visserie     2025-11-22  received   9695.82     {}
+PO-2025-0060  SUP-002      Fournisseur B  emballage    2025-08-31  ordered    2823.77     {}
+PO-2025-0061  SUP-003      Fournisseur C  transport    2025-04-02  received   15756.66    {}
+PO-2025-0062  SUP-004      Fournisseur D  maintenance  2025-08-08  received   7850.81     {}
+PO-2025-0063  SUP-003      Fournisseur C  transport    2025-02-01  received   12689.66    {}
+PO-2025-0064  SUP-005      Fournisseur E  emballage    2025-03-13  received   11670.41    {}
+PO-2025-0065  SUP-004      Fournisseur D  maintenance  2025-09-19  received   11853.16    {}
+PO-2025-0066  SUP-001      Fournisseur A  visserie     2025-07-25  cancelled  10816.16    {}
+PO-2025-0067  SUP-005      Fournisseur E  emballage    2025-02-14  ordered    4068.74     {}
+PO-2025-0068  SUP-001      Fournisseur A  visserie     2025-12-10  received   12226.5     {}
+PO-2025-0069  SUP-001      Fournisseur A  visserie     2025-04-29  received   11848.31    {}
+PO-2025-0070  SUP-006      Fournisseur F  visserie     2025-06-09  cancelled  3581.63     {}
+PO-2025-0071  SUP-003      Fournisseur C  transport    2025-05-09  received   17404.21    {}
+PO-2025-0072  SUP-005      Fournisseur E  emballage    2025-05-21  cancelled  13715.96    {}
+PO-2025-0073  SUP-003      Fournisseur C  transport    2025-01-21  received   1330.03     {}
+PO-2025-0074  SUP-005      Fournisseur E  emballage    2025-05-19  received   5242.5      {}
+PO-2025-0075  SUP-002      Fournisseur B  emballage    2025-05-26  received   7678.41     {}
+PO-2025-0076  SUP-006      Fournisseur F  visserie     2025-02-03  cancelled  2961.68     {}
+PO-2025-0077  SUP-002      Fournisseur B  emballage    2025-08-08  received   12016.51    {}
+PO-2025-0078  SUP-003      Fournisseur C  transport    2025-08-19  received   16992.47    {}
+PO-2025-0079  SUP-004      Fournisseur D  maintenance  2025-04-13  received   17002.75    {}
+PO-2025-0080  SUP-002      Fournisseur B  emballage    2025-01-17  ordered    4380.08     {}
+PO-2025-0081  SUP-005      Fournisseur E  emballage    2025-06-26  received   8105.03     {}
+PO-2025-0082  SUP-004      Fournisseur D  maintenance  2025-06-28  received   14617.81    {}
+PO-2025-0083  SUP-003      Fournisseur C  transport    2025-11-09  received   4282.19     {}
+PO-2025-0084  SUP-004      Fournisseur D  maintenance  2025-02-17  cancelled  12139.89    {}
+PO-2025-0085  SUP-003      Fournisseur C  transport    2025-03-03  cancelled  14360.83    {}
+PO-2025-0086  SUP-006      Fournisseur F  visserie     2025-09-10  received   15987.12    {}
+PO-2025-0087  SUP-001      Fournisseur A  visserie     2025-05-30  received   16735.1     {}
+PO-2025-0088  SUP-001      Fournisseur A  visserie     2025-06-20  received   11850.81    {}
+PO-2025-0089  SUP-001      Fournisseur A  visserie     2025-08-11  received   14253.81    {}
+PO-2025-0090  SUP-003      Fournisseur C  transport    2025-01-19  ordered    6438.77     {}
+PO-2025-0091  SUP-002      Fournisseur B  emballage    2025-09-26  cancelled  11601.19    {}
+PO-2025-0092  SUP-002      Fournisseur B  emballage    2025-03-16  ordered    2146.43     {}
+PO-2025-0093  SUP-003      Fournisseur C  transport    2025-05-23  received   2335.82     {}
+PO-2025-0094  SUP-003      Fournisseur C  transport    2025-10-22  cancelled  11925.1     {}
+PO-2025-0095  SUP-002      Fournisseur B  emballage    2025-10-13  received   4526.71     {}
+PO-2025-0096  SUP-006      Fournisseur F  visserie     2025-01-09  ordered    7874.31     {}
+PO-2025-0097  SUP-006      Fournisseur F  visserie     2025-07-01  received   1033.29     {}
+PO-2025-0098  SUP-006      Fournisseur F  visserie     2025-08-21  received   6459.3      {}
+PO-2025-0099  SUP-003      Fournisseur C  transport    2025-07-01  received   8033.76     {}
+PO-2025-0100  SUP-001      Fournisseur A  visserie     2025-06-20  received   16918.22    {}
+PO-2025-0101  SUP-004      Fournisseur D  maintenance  2025-01-26  received   2331.97     {}
+PO-2025-0102  SUP-002      Fournisseur B  emballage    2025-12-22  received   5616.24     {}
+PO-2025-0103  SUP-003      Fournisseur C  transport    2025-05-07  received   13999.21    {}
+PO-2025-0104  SUP-006      Fournisseur F  visserie     2025-02-15  received   954.2       {}
+PO-2025-0105  SUP-005      Fournisseur E  emballage    2025-05-23  ordered    4598.77     {}
+PO-2025-0106  SUP-003      Fournisseur C  transport    2025-09-21  received   1378.3      {}
+PO-2025-0107  SUP-004      Fournisseur D  maintenance  2025-02-17  received   1475.84     {}
+PO-2025-0108  SUP-006      Fournisseur F  visserie     2025-03-25  ordered    2704.51     {}
+PO-2025-0109  SUP-002      Fournisseur B  emballage    2025-08-25  ordered    8835.08     {}
+PO-2025-0110  SUP-005      Fournisseur E  emballage    2025-12-06  ordered    1449.95     {}
+PO-2025-0111  SUP-003      Fournisseur C  transport    2025-06-20  received   8842.34     {}
+PO-2025-0112  SUP-006      Fournisseur F  visserie     2025-03-28  cancelled  5998.68     {}
+PO-2025-0113  SUP-002      Fournisseur B  emballage    2025-05-27  received   16730.35    {}
+PO-2025-0114  SUP-005      Fournisseur E  emballage    2025-11-08  received   13104.23    {}
+PO-2025-0115  SUP-006      Fournisseur F  visserie     2025-07-29  received   11543.7     {}
+PO-2025-0116  SUP-002      Fournisseur B  emballage    2025-07-13  received   16065.54    {}
+PO-2025-0117  SUP-004      Fournisseur D  maintenance  2025-01-22  ordered    18287.25    {}
+PO-2025-0118  SUP-001      Fournisseur A  visserie     2025-03-22  received   1618.7      {}
+PO-2025-0119  SUP-002      Fournisseur B  emballage    2025-03-03  ordered    1313.86     {}
+PO-2025-0120  SUP-004      Fournisseur D  maintenance  2025-01-13  received   6688.53     {}
+PO-2025-0121  SUP-001      Fournisseur A  visserie     2025-10-19  received   14970.6     {}
+PO-2025-0122  SUP-003      Fournisseur C  transport    2025-05-15  received   2048.07     {}
+PO-2025-0123  SUP-005      Fournisseur E  emballage    2025-08-24  received   3179.03     {}
+PO-2025-0124  SUP-002      Fournisseur B  emballage    2025-07-12  received   6860.12     {}
+PO-2025-0125  SUP-001      Fournisseur A  visserie     2025-04-05  ordered    12108.94    {}
+PO-2025-0126  SUP-002      Fournisseur B  emballage    2025-11-19  ordered    4731.28     {}
+PO-2025-0127  SUP-004      Fournisseur D  maintenance  2025-01-20  received   6619.71     {}
+PO-2025-0128  SUP-006      Fournisseur F  visserie     2025-03-23  ordered    3701.59     {}
+PO-2025-0129  SUP-001      Fournisseur A  visserie     2025-05-07  received   7822.51     {}
+PO-2025-0130  SUP-001      Fournisseur A  visserie     2025-01-17  received   3472.13     {}
+PO-2025-0131  SUP-004      Fournisseur D  maintenance  2025-05-16  cancelled  12946.66    {}
+PO-2025-0132  SUP-004      Fournisseur D  maintenance  2025-04-07  received   5108.07     {}
+PO-2025-0133  SUP-002      Fournisseur B  emballage    2025-10-16  received   11107.37    {}
+PO-2025-0134  SUP-002      Fournisseur B  emballage    2025-05-28  ordered    14437.52    {}
+PO-2025-0135  SUP-001      Fournisseur A  visserie     2025-08-07  received   15760.7     {}
+PO-2025-0136  SUP-002      Fournisseur B  emballage    2025-08-21  received   17498.39    {}
+PO-2025-0137  SUP-006      Fournisseur F  visserie     2025-06-12  received   6094.12     {}
+PO-2025-0138  SUP-002      Fournisseur B  emballage    2025-09-20  received   1412.17     {}
+PO-2025-0139  SUP-001      Fournisseur A  visserie     2025-09-28  received   8259.58     {}
+PO-2025-0140  SUP-002      Fournisseur B  emballage    2025-09-28  received   12339.78    {}
+PO-2025-0141  SUP-004      Fournisseur D  maintenance  2025-03-06  received   13387.85    {}
+PO-2025-0142  SUP-002      Fournisseur B  emballage    2025-06-04  received   3216.85     {}
+PO-2025-0143  SUP-001      Fournisseur A  visserie     2025-12-28  received   16077.15    {}
+PO-2025-0144  SUP-004      Fournisseur D  maintenance  2025-07-06  received   15597.26    {}
+PO-2025-0145  SUP-003      Fournisseur C  transport    2025-06-26  received   14013.17    {}
+PO-2025-0146  SUP-003      Fournisseur C  transport    2025-02-15  cancelled  4813.58     {}
+PO-2025-0147  SUP-005      Fournisseur E  emballage    2025-04-26  received   12927.35    {}
+PO-2025-0148  SUP-004      Fournisseur D  maintenance  2025-07-18  ordered    190.98      {}
+PO-2025-0149  SUP-001      Fournisseur A  visserie     2025-03-03  received   14800.85    {}
+PO-2025-0150  SUP-003      Fournisseur C  transport    2025-09-18  received   12787.16    {}
+PO-2025-0151  SUP-002      Fournisseur B  emballage    2025-05-18  cancelled  1949.52     {}
+PO-2025-0152  SUP-005      Fournisseur E  emballage    2025-10-31  ordered    5181.48     {}
+PO-2025-0153  SUP-002      Fournisseur B  emballage    2025-06-07  ordered    12825.2     {}
+PO-2025-0154  SUP-005      Fournisseur E  emballage    2025-11-28  cancelled  15800.75    {}
+PO-2025-0155  SUP-003      Fournisseur C  transport    2025-05-22  received   17613.16    {}
+PO-2025-0156  SUP-002      Fournisseur B  emballage    2025-07-26  received   5976.4      {}
+PO-2025-0157  SUP-005      Fournisseur E  emballage    2025-09-07  ordered    3534.18     {}
+PO-2025-0158  SUP-006      Fournisseur F  visserie     2025-10-31  received   3710.34     {}
+PO-2025-0159  SUP-006      Fournisseur F  visserie     2025-05-17  received   18232.68    {}
+PO-2025-0160  SUP-006      Fournisseur F  visserie     2025-04-27  received   14344.17    {}
+PO-2025-0161  SUP-005      Fournisseur E  emballage    2025-07-01  received   8667.96     {}
+PO-2025-0162  SUP-001      Fournisseur A  visserie     2025-05-04  received   16061.21    {}
+PO-2025-0163  SUP-004      Fournisseur D  maintenance  2025-05-08  received   394.53      {}
+PO-2025-0164  SUP-005      Fournisseur E  emballage    2025-10-26  received   12343.49    {}
+PO-2025-0165  SUP-004      Fournisseur D  maintenance  2025-08-10  ordered    12515.1     {}
+PO-2025-0166  SUP-004      Fournisseur D  maintenance  2025-04-25  received   10732.27    {}
+PO-2025-0167  SUP-004      Fournisseur D  maintenance  2025-09-23  received   10010.21    {}
+PO-2025-0168  SUP-002      Fournisseur B  emballage    2025-02-26  received   18220.87    {}
+PO-2025-0169  SUP-001      Fournisseur A  visserie     2025-04-13  ordered    18099.81    {}
+PO-2025-0170  SUP-003      Fournisseur C  transport    2025-02-06  received   10661.29    {}
+PO-2025-0171  SUP-005      Fournisseur E  emballage    2025-05-12  ordered    9660.14     {}
+PO-2025-0172  SUP-005      Fournisseur E  emballage    2025-05-18  received   7550.78     {}
+PO-2025-0173  SUP-005      Fournisseur E  emballage    2025-07-10  received   11490.67    {}
+PO-2025-0174  SUP-002      Fournisseur B  emballage    2025-12-24  received   5554.15     {}
+PO-2025-0175  SUP-005      Fournisseur E  emballage    2025-12-12  received   17743.32    {}
+PO-2025-0176  SUP-002      Fournisseur B  emballage    2025-12-17  received   3076.72     {}
+PO-2025-0177  SUP-002      Fournisseur B  emballage    2025-05-28  received   13665.63    {}
+PO-2025-0178  SUP-002      Fournisseur B  emballage    2025-10-22  received   13815.62    {}
+PO-2025-0179  SUP-006      Fournisseur F  visserie     2025-11-08  received   6732.51     {}
+PO-2025-0180  SUP-001      Fournisseur A  visserie     2025-05-22  received   12087.13    {}
+PO-2025-0181  SUP-003      Fournisseur C  transport    2025-03-04  cancelled  2479.06     {}
+PO-2025-0182  SUP-006      Fournisseur F  visserie     2025-04-17  received   3564.49     {}
+PO-2025-0183  SUP-001      Fournisseur A  visserie     2025-02-19  received   17265.57    {}
+PO-2025-0184  SUP-005      Fournisseur E  emballage    2025-03-17  received   14621.03    {}
+PO-2025-0185  SUP-003      Fournisseur C  transport    2025-11-26  ordered    11391.39    {}
+PO-2025-0186  SUP-001      Fournisseur A  visserie     2025-11-26  ordered    12391.31    {}
+PO-2025-0187  SUP-003      Fournisseur C  transport    2025-04-18  received   12277.29    {}
+PO-2025-0188  SUP-002      Fournisseur B  emballage    2025-04-22  received   1453.39     {}
+PO-2025-0189  SUP-002      Fournisseur B  emballage    2025-06-21  received   16113.42    {}
+PO-2025-0190  SUP-001      Fournisseur A  visserie     2025-12-28  cancelled  15648.77    {}
+PO-2025-0191  SUP-006      Fournisseur F  visserie     2025-02-23  ordered    15684.09    {}
+PO-2025-0192  SUP-003      Fournisseur C  transport    2025-06-01  ordered    18147.99    {}
+PO-2025-0193  SUP-005      Fournisseur E  emballage    2025-12-06  ordered    4323        {}
+PO-2025-0194  SUP-005      Fournisseur E  emballage    2025-02-13  ordered    8299.13     {}
+PO-2025-0195  SUP-003      Fournisseur C  transport    2025-02-17  cancelled  6632.51     {}
+PO-2025-0196  SUP-001      Fournisseur A  visserie     2025-04-10  received   973.97      {}
+PO-2025-0197  SUP-006      Fournisseur F  visserie     2025-08-21  ordered    1408.17     {}
+PO-2025-0198  SUP-004      Fournisseur D  maintenance  2025-03-07  received   15919.86    {}
+PO-2025-0199  SUP-006      Fournisseur F  visserie     2025-05-21  received   12529.71    {}
+PO-2025-0200  SUP-001      Fournisseur A  visserie     2025-04-27  ordered    14773.99    {}
+PO-2025-0201  SUP-004      Fournisseur D  maintenance  2025-08-25  received   15462.29    {}
+PO-2025-0202  SUP-004      Fournisseur D  maintenance  2025-03-03  received   5827.67     {}
+PO-2025-0203  SUP-004      Fournisseur D  maintenance  2025-01-12  received   18384.99    {}
+PO-2025-0204  SUP-002      Fournisseur B  emballage    2025-05-13  received   16760.3     {}
+PO-2025-0205  SUP-003      Fournisseur C  transport    2025-02-11  received   4853.26     {}
+PO-2025-0206  SUP-003      Fournisseur C  transport    2025-05-08  ordered    3877.59     {}
+PO-2025-0207  SUP-005      Fournisseur E  emballage    2025-01-18  received   7536.19     {}
+PO-2025-0208  SUP-004      Fournisseur D  maintenance  2025-08-03  received   17436.63    {}
+PO-2025-0209  SUP-002      Fournisseur B  emballage    2025-10-10  ordered    15293.22    {}
+PO-2025-0210  SUP-001      Fournisseur A  visserie     2025-09-10  received   10162.78    {}
+PO-2025-0211  SUP-002      Fournisseur B  emballage    2025-10-30  cancelled  6257.25     {}
+PO-2025-0212  SUP-006      Fournisseur F  visserie     2025-05-02  received   18383.8     {}
+PO-2025-0213  SUP-002      Fournisseur B  emballage    2025-04-08  received   16326.79    {}
+PO-2025-0214  SUP-005      Fournisseur E  emballage    2025-03-11  received   2970.44     {}
+PO-2025-0215  SUP-006      Fournisseur F  visserie     2025-09-10  received   17838.79    {}
+PO-2025-0216  SUP-002      Fournisseur B  emballage    2025-01-18  received   12308.13    {}
+PO-2025-0217  SUP-002      Fournisseur B  emballage    2025-02-20  received   10876.59    {}
+PO-2025-0218  SUP-001      Fournisseur A  visserie     2025-06-23  received   5148.26     {}
+PO-2025-0219  SUP-004      Fournisseur D  maintenance  2025-05-10  received   1366.75     {}
+PO-2025-0220  SUP-006      Fournisseur F  visserie     2025-11-23  received   9842.35     {}
+PO-2025-0221  SUP-001      Fournisseur A  visserie     2025-02-14  received   11438.54    {}
+PO-2025-0222  SUP-006      Fournisseur F  visserie     2025-01-21  ordered    6187.3      {}
+PO-2025-0223  SUP-001      Fournisseur A  visserie     2025-04-08  ordered    17707.11    {}
+PO-2025-0224  SUP-005      Fournisseur E  emballage    2025-05-20  received   3295.01     {}
+PO-2025-0225  SUP-005      Fournisseur E  emballage    2025-01-31  cancelled  18098.81    {}
+PO-2025-0226  SUP-005      Fournisseur E  emballage    2025-10-16  ordered    2006.32     {}
+PO-2025-0227  SUP-006      Fournisseur F  visserie     2025-06-24  ordered    3991.5      {}
+PO-2025-0228  SUP-001      Fournisseur A  visserie     2025-08-27  ordered    17529.91    {}
+PO-2025-0229  SUP-004      Fournisseur D  maintenance  2025-07-30  received   3470.54     {}
+PO-2025-0230  SUP-003      Fournisseur C  transport    2025-01-18  received   8735.87     {}
+PO-2025-0231  SUP-002      Fournisseur B  emballage    2025-03-17  cancelled  12353.77    {}
+PO-2025-0232  SUP-003      Fournisseur C  transport    2025-12-30  received   4997.94     {}
+PO-2025-0233  SUP-003      Fournisseur C  transport    2025-03-28  received   5311.96     {}
+PO-2025-0234  SUP-004      Fournisseur D  maintenance  2025-03-15  ordered    12730.27    {}
+PO-2025-0235  SUP-002      Fournisseur B  emballage    2025-07-05  ordered    4498.84     {}
+PO-2025-0236  SUP-006      Fournisseur F  visserie     2025-03-30  cancelled  2396.58     {}
+PO-2025-0237  SUP-001      Fournisseur A  visserie     2025-01-18  received   2974.94     {}
+PO-2025-0238  SUP-004      Fournisseur D  maintenance  2025-12-06  received   15842.78    {}
+PO-2025-0239  SUP-002      Fournisseur B  emballage    2025-08-17  ordered    276.17      {}
+PO-2025-0240  SUP-005      Fournisseur E  emballage    2025-11-14  received   7610.06     {}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm --context tenant-b entity get tenants_order_c --limit 1000</span>
+<span class="out">PO_NUMBER     SUPPLIER_ID  SUPPLIER_NAME    CATEGORY     ORDER_DATE  STATUS     AMOUNT_EUR  _CONFLICTS
+PO-2025-0001  SUP-104      Fournisseur 104  maintenance  2025-08-17  received   4289.72     {}
+PO-2025-0002  SUP-102      Fournisseur 102  emballage    2025-09-16  received   3186.43     {}
+PO-2025-0003  SUP-102      Fournisseur 102  visserie     2025-08-10  received   794.8       {}
+PO-2025-0004  SUP-101      Fournisseur 101  maintenance  2025-08-21  received   3720.69     {}
+PO-2025-0005  SUP-102      Fournisseur 102  visserie     2025-09-03  received   391.8       {}
+PO-2025-0006  SUP-102      Fournisseur 102  emballage    2025-10-01  received   3912.73     {}
+PO-2025-0007  SUP-103      Fournisseur 103  maintenance  2025-10-27  received   1057.07     {}
+PO-2025-0008  SUP-102      Fournisseur 102  transport    2025-08-01  received   3346        {}
+PO-2025-0009  SUP-104      Fournisseur 104  transport    2025-07-18  received   4978.89     {}
+PO-2025-0010  SUP-101      Fournisseur 101  transport    2025-06-25  received   1225.36     {}
+PO-2025-0011  SUP-103      Fournisseur 103  visserie     2025-02-19  received   3854.81     {}
+PO-2025-0012  SUP-104      Fournisseur 104  visserie     2025-05-13  cancelled  427.45      {}
+PO-2025-0013  SUP-101      Fournisseur 101  visserie     2025-04-07  received   4642.51     {}
+PO-2025-0014  SUP-101      Fournisseur 101  maintenance  2025-07-23  received   2047.38     {}
+PO-2025-0015  SUP-101      Fournisseur 101  emballage    2025-11-09  received   1750.77     {}
+PO-2025-0016  SUP-103      Fournisseur 103  transport    2025-01-14  received   3814.4      {}
+PO-2025-0017  SUP-101      Fournisseur 101  emballage    2025-04-23  received   595.13      {}
+PO-2025-0018  SUP-101      Fournisseur 101  maintenance  2025-08-06  received   3442.18     {}
+PO-2025-0019  SUP-102      Fournisseur 102  maintenance  2025-09-07  received   4927.88     {}
+PO-2025-0020  SUP-102      Fournisseur 102  maintenance  2025-11-13  received   670.89      {}
+PO-2025-0021  SUP-104      Fournisseur 104  emballage    2025-01-09  received   4335.24     {}
+PO-2025-0022  SUP-103      Fournisseur 103  visserie     2025-04-06  received   2031.95     {}
+PO-2025-0023  SUP-101      Fournisseur 101  visserie     2025-03-07  received   2263.55     {}
+PO-2025-0024  SUP-101      Fournisseur 101  transport    2025-05-13  cancelled  459.65      {}
+PO-2025-0025  SUP-101      Fournisseur 101  emballage    2025-10-21  received   1290.76     {}
+PO-2025-0026  SUP-103      Fournisseur 103  transport    2025-10-15  received   723.38      {}
+PO-2025-0027  SUP-104      Fournisseur 104  emballage    2025-07-06  received   3173.5      {}
+PO-2025-0028  SUP-103      Fournisseur 103  emballage    2025-10-08  received   3654.42     {}
+PO-2025-0029  SUP-102      Fournisseur 102  emballage    2025-11-13  received   4422.73     {}
+PO-2025-0030  SUP-101      Fournisseur 101  maintenance  2025-01-04  received   634.33      {}
+PO-2025-0031  SUP-103      Fournisseur 103  emballage    2025-12-23  received   2018.89     {}
+PO-2025-0032  SUP-104      Fournisseur 104  maintenance  2025-05-17  received   959.62      {}
+PO-2025-0033  SUP-101      Fournisseur 101  emballage    2025-04-16  received   2840.9      {}
+PO-2025-0034  SUP-101      Fournisseur 101  transport    2025-04-07  received   3770.03     {}
+PO-2025-0035  SUP-101      Fournisseur 101  transport    2025-07-15  received   1320.41     {}
+PO-2025-0036  SUP-101      Fournisseur 101  emballage    2025-05-12  cancelled  2701.92     {}
+PO-2025-0037  SUP-102      Fournisseur 102  visserie     2025-06-05  received   4465.61     {}
+PO-2025-0038  SUP-103      Fournisseur 103  emballage    2025-10-02  received   4625.58     {}
+PO-2025-0039  SUP-104      Fournisseur 104  transport    2025-12-10  received   4817.58     {}
+PO-2025-0040  SUP-101      Fournisseur 101  visserie     2025-08-03  received   3679.44     {}
+PO-2025-0041  SUP-103      Fournisseur 103  emballage    2025-02-03  received   2320.14     {}
+PO-2025-0042  SUP-103      Fournisseur 103  visserie     2025-12-24  received   3548.08     {}
+PO-2025-0043  SUP-103      Fournisseur 103  transport    2025-02-22  received   2419.06     {}
+PO-2025-0044  SUP-101      Fournisseur 101  maintenance  2025-01-28  received   2549.64     {}
+PO-2025-0045  SUP-101      Fournisseur 101  maintenance  2025-07-19  received   160.99      {}
+PO-2025-0046  SUP-101      Fournisseur 101  visserie     2025-02-21  received   666.34      {}
+PO-2025-0047  SUP-103      Fournisseur 103  maintenance  2025-12-11  received   2003.34     {}
+PO-2025-0048  SUP-104      Fournisseur 104  maintenance  2025-08-27  cancelled  2752.13     {}
+PO-2025-0049  SUP-101      Fournisseur 101  transport    2025-10-03  received   2456.69     {}
+PO-2025-0050  SUP-102      Fournisseur 102  visserie     2025-08-25  received   3111.07     {}
+PO-2025-0051  SUP-104      Fournisseur 104  transport    2025-01-12  received   1575.06     {}
+PO-2025-0052  SUP-102      Fournisseur 102  emballage    2025-06-22  received   4658.48     {}
+PO-2025-0053  SUP-104      Fournisseur 104  emballage    2025-06-13  received   3362.91     {}
+PO-2025-0054  SUP-102      Fournisseur 102  maintenance  2025-04-07  received   1983.65     {}
+PO-2025-0055  SUP-103      Fournisseur 103  emballage    2025-03-05  received   2532.69     {}
+PO-2025-0056  SUP-101      Fournisseur 101  visserie     2025-05-27  received   928.73      {}
+PO-2025-0057  SUP-104      Fournisseur 104  maintenance  2025-05-07  received   4171.39     {}
+PO-2025-0058  SUP-104      Fournisseur 104  maintenance  2025-11-11  received   3609.76     {}
+PO-2025-0059  SUP-104      Fournisseur 104  transport    2025-02-27  received   254.28      {}
+PO-2025-0060  SUP-101      Fournisseur 101  transport    2025-10-12  cancelled  1614.25     {}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm --context local entity get tenants_order_c --filter po_number=PO-2025-0001</span>
+<span class="out">PO_NUMBER     SUPPLIER_ID  SUPPLIER_NAME  CATEGORY  ORDER_DATE  STATUS    AMOUNT_EUR  _CONFLICTS
+PO-2025-0001  SUP-006      Fournisseur F  visserie  2025-06-30  received  12328.52    {}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm --context tenant-b entity get tenants_order_c --filter po_number=PO-2025-0001</span>
+<span class="out">PO_NUMBER     SUPPLIER_ID  SUPPLIER_NAME    CATEGORY     ORDER_DATE  STATUS    AMOUNT_EUR  _CONFLICTS
+PO-2025-0001  SUP-104      Fournisseur 104  maintenance  2025-08-17  received  4289.72     {}</span></code></pre></div><div role="tabpanel" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>tenant A</dt><dd>240 orders</dd><dt>tenant B</dt><dd>60 orders</dd><dt>PO-2025-0001, tenant A</dt><dd>SUP-006</dd><dt>PO-2025-0001, tenant B</dt><dd>SUP-104</dd></dl><p class="sources">preuves : replay.log, 01-a-entity.txt, 01-a-entity.json, 02-b-entity.txt, 02-b-entity.json, 03-a-po0001.txt, 03-a-po0001.json, 04-b-po0001.txt, 04-b-po0001.json, 05-a-cancelled.txt, 05-a-cancelled.json, 06-b-cancelled.txt, 06-b-cancelled.json, 07-b-run-of-a.txt · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="read-title">Chacun relit ses commandes, et seulement elles</h2>
+    <p>lm entity get rend 240 lignes au client A et 60 au client B. PO-2025-0001 existe chez les deux : SUP-006 chez A, SUP-104 chez B. Chaque ligne de la table porte son tenant_id, et la base filtre à la lecture.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>240 et 60</strong><p>Pas 300.</p></div></li><li><span class="n">2</span><div><strong>PO-2025-0001</strong><p>Une ligne chez chacun, la sienne.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le même numéro de commande désigne deux commandes différentes, une par client.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-ask" aria-labelledby="ask-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Demander"><button type="button" role="tab" id="ask-commands-tab" data-view="commands" aria-controls="ask-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="ask-result-tab" data-view="result" aria-controls="ask-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="ask-commands" aria-labelledby="ask-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm --context local ask --scope tenants-c --lang fr &quot;Combien de commandes ont été annulées ?&quot;</span>
+<span class="out">26 commandes ont été annulées.
+  data as of: 2026-10-23T14:23:53.119298Z (last completed run)
+
+  COUNT
+  26
+  1 row returned
+
+  SQL: SELECT COUNT(*) FROM &quot;connector&quot;.&quot;v_tenants_order_c&quot; WHERE &quot;status&quot; = &#x27;cancelled&#x27;
+LIMIT 500</span>
+
+<span class="cmd"><span class="prompt">$</span> lm --context tenant-b ask --scope tenants-c --lang fr &quot;Combien de commandes ont été annulées ?&quot;</span>
+<span class="out">5 commandes ont été annulées.
+  data as of: 2026-10-23T14:23:54.470671Z (last completed run)
+
+  COUNT
+  5
+  1 row returned
+
+  SQL: SELECT COUNT(*) FROM &quot;connector&quot;.&quot;v_tenants_order_c&quot; WHERE &quot;status&quot; = &#x27;cancelled&#x27;
+LIMIT 500</span></code></pre></div><div role="tabpanel" id="ask-result" aria-labelledby="ask-result-tab" tabindex="0" hidden><dl class="facts"><dt>tenant A</dt><dd>26 · SELECT COUNT(*) FROM &quot;connector&quot;.&quot;v_tenants_order_c&quot; WHERE &quot;status&quot; = &#x27;cancelled&#x27;</dd><dt>tenant B</dt><dd>5 · SELECT COUNT(*) FROM &quot;connector&quot;.&quot;v_tenants_order_c&quot; WHERE &quot;status&quot; = &#x27;cancelled&#x27;</dd></dl><p class="sources">preuves : replay.log, 01-a-entity.txt, 01-a-entity.json, 02-b-entity.txt, 02-b-entity.json, 03-a-po0001.txt, 03-a-po0001.json, 04-b-po0001.txt, 04-b-po0001.json, 05-a-cancelled.txt, 05-a-cancelled.json, 06-b-cancelled.txt, 06-b-cancelled.json, 07-b-run-of-a.txt · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="ask-title">La même question, le même SQL, deux réponses</h2>
+    <p>« Combien de commandes ont été annulées ? » Les deux clients reçoivent exactement le même SQL. Le client A obtient 26, le client B obtient 5. Le SQL généré par le modèle s&#x27;exécute sous le tenant du jeton, comme toute lecture.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>26 et 5</strong><p>Pas 31.</p></div></li><li><span class="n">2</span><div><strong>Un seul SQL</strong><p>Le cloisonnement n&#x27;est pas dans la requête.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une requête écrite par le modèle ne sort pas du tenant de celui qui pose la question.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-door" aria-labelledby="door-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Refuser"><button type="button" role="tab" id="door-commands-tab" data-view="commands" aria-controls="door-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="door-result-tab" data-view="result" aria-controls="door-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="door-commands" aria-labelledby="door-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm --context tenant-b run get 5ac4d058-c555-4f76-a203-7448ba724f7c</span>
+<span class="note">Error: API error 404: run 5ac4d058-c555-4f76-a203-7448ba724f7c not found</span></code></pre></div><div role="tabpanel" id="door-result" aria-labelledby="door-result-tab" tabindex="0" hidden><dl class="facts"><dt>tenant B</dt><dd>Error: API error 404: run 5ac4d058-c555-4f76-a203-7448ba724f7c not found</dd></dl><p class="sources">preuves : replay.log, 01-a-entity.txt, 01-a-entity.json, 02-b-entity.txt, 02-b-entity.json, 03-a-po0001.txt, 03-a-po0001.json, 04-b-po0001.txt, 04-b-po0001.json, 05-a-cancelled.txt, 05-a-cancelled.json, 06-b-cancelled.txt, 06-b-cancelled.json, 07-b-run-of-a.txt · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="door-title">Le client B demande la lecture du client A</h2>
+    <p>Le client B connaît l&#x27;identifiant de la lecture du client A et le demande : 404, comme pour un identifiant qui n&#x27;existe pas.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>404</strong><p>Pas 403 : rien n&#x27;est confirmé.</p></div></li><li><span class="n">2</span><div><strong>Par identifiant</strong><p>Pas seulement dans les listes.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un identifiant d&#x27;un autre client ne mène à rien, et la réponse ne dit pas qu&#x27;il existe.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Les deux clients sont deux utilisateurs Keycloak du même realm. Le tenant vient de leur attribut tenant_id ; le créer reste un geste d&#x27;administration.</li><li>Le compte du client A est aussi administrateur de son tenant. Aucun des deux n&#x27;est super-administrateur.</li><li>Commandes synthétiques ; une entité, une table, deux tenants.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
