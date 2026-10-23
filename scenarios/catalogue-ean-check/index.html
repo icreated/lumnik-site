@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le code-barres faux repéré à l&#x27;import : un script Kotlin fourni par l&#x27;opérateur, nommé par le manifeste. — lumnik</title>
+<meta name="description" content="Un export catalogue porte des codes EAN-13, dont certains faux. Aucun transformateur intégré ne calcule une clé de contrôle. L&#x27;opérateur du hub dépose un script Kotlin dans le répertoire de scripts du hub ; le manifeste le nomme, sans transporter de code. Un brouillon qui ne compile pas est refusé dès la validation, avec sa ligne et sa colonne.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/catalogue-ean-check/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/catalogue-ean-check/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Le code-barres faux repéré à l&#x27;import : un script Kotlin fourni par l&#x27;opérateur, nommé par le manifeste.</h1>
+    <p class="lede">Un export catalogue porte des codes EAN-13, dont certains faux. Aucun transformateur intégré ne calcule une clé de contrôle. L&#x27;opérateur du hub dépose un script Kotlin dans le répertoire de scripts du hub ; le manifeste le nomme, sans transporter de code. Un brouillon qui ne compile pas est refusé dès la validation, avec sa ligne et sa colonne.</p>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Commerce</li><li class="tag kind">Connector</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-scripts" data-step="scripts" aria-current="step"><span class="num">1 · Les scripts</span><span class="sub">Côté opérateur</span></a><a href="#step-refused" data-step="refused"><span class="num">2 · Le brouillon</span><span class="sub">Refusé</span></a><a href="#step-run" data-step="run"><span class="num">3 · L&#x27;import</span><span class="sub">10 produits</span></a></nav>
+  <section class="step" id="step-scripts" aria-labelledby="scripts-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Les scripts"><button type="button" role="tab" id="scripts-manifest-tab" data-view="manifest" aria-controls="scripts-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="scripts-commands-tab" data-view="commands" aria-controls="scripts-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="scripts-result-tab" data-view="result" aria-controls="scripts-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="scripts-manifest" aria-labelledby="scripts-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/ean-check.kts</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line">// Operator-provided: checks an EAN-13 bar code and says why one is wrong.</span><span class="line">@Suppress(<span class="str">&quot;UNCHECKED_CAST&quot;</span>)</span><span class="line">val cells = bindings[<span class="str">&quot;cells&quot;</span>] as MutableMap&lt;String, Any?&gt;</span><span class="line">val ean = (cells[<span class="str">&quot;ean&quot;</span>] as? String)?.trim().orEmpty()</span><span class="line">cells[<span class="str">&quot;ean_status&quot;</span>] = if (!Regex(<span class="str">&quot;\\d{13}&quot;</span>).matches(ean)) {</span><span class="line">    <span class="str">&quot;malformed&quot;</span></span><span class="line">} else {</span><span class="line">    val sum = ean.take(12).mapIndexed { i, c -&gt; (c - &#x27;0&#x27;) * (if (i % 2 == 0) 1 else 3) }.sum()</span><span class="line">    if ((10 - sum % 10) % 10 == ean[12] - &#x27;0&#x27;) <span class="str">&quot;valid&quot;</span> else <span class="str">&quot;wrong-check-digit&quot;</span></span><span class="line">}</span></code></pre><div class="file"><span class="filename">manifests/ean-draft.kts</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line">// Operator-provided: checks an EAN-13 bar code and says why one is wrong.</span><span class="line">@Suppress(<span class="str">&quot;UNCHECKED_CAST&quot;</span>)</span><span class="line">val cells = bindings[<span class="str">&quot;cells&quot;</span>] as MutableMap&lt;String, Any?&gt;</span><span class="line">val ean = (cells[<span class="str">&quot;ean&quot;</span>] as? String)?.trim().orEmpty()</span><span class="line">cells[<span class="str">&quot;ean_status&quot;</span>] = if (!Regex(<span class="str">&quot;\\d{13}&quot;</span>).matches(ean)) {</span><span class="line">    <span class="str">&quot;malformed&quot;</span></span><span class="line">} else {</span><span class="line">    val sum: Int = ean.take(12).mapIndexed { i, c -&gt; (c - &#x27;0&#x27;) * (if (i % 2 == 0) 1 else 3) }</span><span class="line">    if ((10 - sum % 10) % 10 == ean[12] - &#x27;0&#x27;) <span class="str">&quot;valid&quot;</span> else <span class="str">&quot;wrong-check-digit&quot;</span></span><span class="line">}</span></code></pre></div><div role="tabpanel" id="scripts-commands" aria-labelledby="scripts-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm hook scripts</span>
+<span class="out">NAME             SIZE  SHA256
+ean-check-c.kts  477   58c3d6b83a0df5c9ae779aada8604f6bd850db7c52ca258b5bc6dc45fd8ea23c
+ean-draft-c.kts  476   c8692d84859f810de8903ded14a03a1ec4db93e1282aa88b4fb9f5e42b6586ea</span></code></pre></div><div role="tabpanel" id="scripts-result" aria-labelledby="scripts-result-tab" tabindex="0" hidden><dl class="facts"><dt>ean-check-c.kts</dt><dd>SHA-256 58c3d6b83a0d…</dd><dt>ean-draft-c.kts</dt><dd>SHA-256 c8692d84859f…</dd></dl><p class="sources">preuves : replay.log, 01-hook-scripts.txt, 02-validate-draft.txt, 03-products.txt · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="scripts-title">L&#x27;opérateur dépose deux scripts, l&#x27;intégrateur les voit</h2>
+    <p>Un brouillon et le contrôle terminé sont copiés dans le répertoire de scripts du hub, monté en lecture seule. lm hook scripts les liste avec leur taille et leur empreinte SHA-256 : l&#x27;intégrateur sait quelle version le hub détient.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Lecture seule</strong><p>Le hub ne peut pas écrire un script.</p></div></li><li><span class="n">2</span><div><strong>SHA-256</strong><p>L&#x27;empreinte de chaque version.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un script arrive sans reconstruire le hub.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-refused" aria-labelledby="refused-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Le brouillon"><button type="button" role="tab" id="refused-manifest-tab" data-view="manifest" aria-controls="refused-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="refused-commands-tab" data-view="commands" aria-controls="refused-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="refused-result-tab" data-view="result" aria-controls="refused-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="refused-manifest" aria-labelledby="refused-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-catalogue.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-ean-b</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [catalogue]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/catalogue-ean-check/b/catalogue.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      <span class="dash">-</span> <span class="key">kotlin</span>:</span><span class="line hl">          <span class="key">script</span>: hooks:ean-check-b.kts   <span class="comment"># put in the hub&#x27;s hooks directory by the operator</span></span></code></pre></div><div role="tabpanel" id="refused-commands" aria-labelledby="refused-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm validate -f 10-catalogue.yaml</span>
+<span class="out">✗ 10-catalogue.yaml — 1 error(s), 0 warning(s)
+
+  ERROR    spec.mapping.cell[0].kotlin.script
+          kotlin hook: Kotlin script compilation failed for ean-draft-c.kts:
+ERROR Initializer type mismatch: expected &#x27;Int&#x27;, actual &#x27;List&lt;Int&gt;&#x27;. (ean-draft-c.kts:8:20)
+          → `lm hook scripts` lists the scripts of this hub&#x27;s hooks directory
+
+Fix errors above before running &#x27;lm apply -f 10-catalogue.yaml&#x27;.</span>
+<span class="note">Error: validation failed: 1 error(s)</span></code></pre></div><div role="tabpanel" id="refused-result" aria-labelledby="refused-result-tab" tabindex="0" hidden><dl class="facts"><dt>refused at</dt><dd>ean-draft-c.kts:8:20</dd></dl><p class="sources">preuves : replay.log, 01-hook-scripts.txt, 02-validate-draft.txt, 03-products.txt · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="refused-title">Un script qui ne compile pas est refusé avant tout import</h2>
+    <p>Le manifeste nomme d&#x27;abord le brouillon. lm validate compile le script et le refuse : ligne 8, colonne 20, une liste à la place d&#x27;un nombre. Aucun connecteur n&#x27;est créé.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>8:20</strong><p>La ligne et la colonne de l&#x27;erreur.</p></div></li><li><span class="n">2</span><div><strong>Aucun connecteur</strong><p>Rien n&#x27;est créé sur le hub.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une erreur de script se voit à la validation, pas au premier run.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-run" aria-labelledby="run-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="L&#x27;import"><button type="button" role="tab" id="run-manifest-tab" data-view="manifest" aria-controls="run-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="run-commands-tab" data-view="commands" aria-controls="run-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="run-result-tab" data-view="result" aria-controls="run-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="run-manifest" aria-labelledby="run-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-catalogue.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-ean-b</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [catalogue]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/catalogue-ean-check/b/catalogue.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      <span class="dash">-</span> <span class="key">kotlin</span>:</span><span class="line hl">          <span class="key">script</span>: hooks:ean-check-b.kts   <span class="comment"># put in the hub&#x27;s hooks directory by the operator</span></span></code></pre><div class="file"><span class="filename">manifests/20-products.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ean_product_b</span><span class="line"><span class="key">match</span>: [sku]</span><span class="line"><span class="key">scopes</span>: [catalogue]</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_ean_b</span><span class="line hl">    <span class="key">map</span>: { sku: sku, label: label, ean: ean, ean_status: ean_status }</span></code></pre></div><div role="tabpanel" id="run-commands" aria-labelledby="run-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-catalogue.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-ean-c&quot;,&quot;connectorId&quot;:&quot;53f29c88-ee46-422e-9930-f2c3f7d0b91d&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-ean-c</span>
+<span class="out">run scheduled: 4e20286f-9c80-4176-9932-f825844557eb</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 4e20286f-9c80-4176-9932-f825844557eb</span>
+<span class="out">ID        CONNECTOR       ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+4e20286f  scenario-ean-c  default   Completed  10  10   0        0             2026-10-23 15:23  2026-10-23 15:23  no</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-products.yaml</span>
+<span class="out">Applied entity &quot;ean_product_c&quot; → connector.&quot;v_ean_product_c&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get ean_product_c</span>
+<span class="out">SKU      LABEL               EAN            EAN_STATUS         _CONFLICTS
+ART-101  Plateau inox 30 cm  2001234000000  valid              {}
+ART-102  Bac gastro 1/1      2001234000017  valid              {}
+ART-103  Spatule silicone    2001234000024  valid              {}
+ART-104  Pince de service    2001234000032  wrong-check-digit  {}
+ART-105  Fouet 25 cm         2001234000048  valid              {}
+ART-106  Louche 12 cl        2001234000055  valid              {}
+ART-107  Planche à découper  2001234000062  valid              {}
+ART-108  Passoire 24 cm      2001234000074  wrong-check-digit  {}
+ART-109  Écumoire inox       2001234000086  valid              {}
+ART-110  Couteau d&#x27;office    200123400009   malformed          {}</span></code></pre></div><div role="tabpanel" id="run-result" aria-labelledby="run-result-tab" tabindex="0" hidden><dl class="facts"><dt>valid</dt><dd>7</dd><dt>wrong-check-digit</dt><dd>2</dd><dt>malformed</dt><dd>1</dd></dl><p class="sources">preuves : replay.log, 01-hook-scripts.txt, 02-validate-draft.txt, 03-products.txt · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="run-title">Chaque code-barres contrôlé à l&#x27;import</h2>
+    <p>Le manifeste nomme le script terminé. Le run lit les 10 produits ; le script calcule la clé de chaque EAN-13 et écrit son verdict dans une colonne ean_status. Deux clés fausses et un code de 12 chiffres ressortent.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>7 valides</strong><p>La clé correspond.</p></div></li><li><span class="n">2</span><div><strong>2 clés fausses</strong><p>Un chiffre de contrôle erroné.</p></div></li><li><span class="n">3</span><div><strong>1 mal formé</strong><p>12 chiffres au lieu de 13.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une règle métier absente des transformateurs s&#x27;ajoute sans toucher au hub.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Un script s&#x27;exécute avec tous les droits du hub : seul l&#x27;opérateur peut en installer un.</li><li>Un script remplacé s&#x27;applique au lot suivant, pas au milieu d&#x27;un lot.</li><li>Le script tourne sur les imports CSV.</li><li>Catalogue synthétique, codes au préfixe 200 réservé à l&#x27;usage interne.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>

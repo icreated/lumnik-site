@@ -2,6 +2,22 @@
   "locale": "fr",
   "scenarios": [
     {
+      "slug": "catalogue-ean-check",
+      "title": "Le code-barres faux repéré à l'import : un script Kotlin fourni par l'opérateur, nommé par le manifeste.",
+      "lede": "Un export catalogue porte des codes EAN-13, dont certains faux. Aucun transformateur intégré ne calcule une clé de contrôle. L'opérateur du hub dépose un script Kotlin dans le répertoire de scripts du hub ; le manifeste le nomme, sans transporter de code. Un brouillon qui ne compile pas est refusé dès la validation, avec sa ligne et sa colonne.",
+      "tags": {
+        "domain": [
+          "Commerce"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:7601cd1c0784a3622900254c1c6bb8e44fd336774836e31c0c3d051ca55d44b0"
+    },
+    {
       "slug": "deal-in-the-pocket",
       "title": "L'affaire avance pendant le dîner.",
       "lede": "Cinq exports d'entreprise et un catalogue, quatre entités, trois vues, un Process. Le CRM passe l'affaire à confirmer ; la décision arrive dans la PWA, « Traiter » part en webhook et l'email client suit.",
