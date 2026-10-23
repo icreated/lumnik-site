@@ -335,6 +335,24 @@
       "evidenceDigest": "sha256:4fc2a8f4570862eae39d0c4bfd265abf89722596a361e48f0b6173e021168859"
     },
     {
+      "slug": "purchasing-follow-up",
+      "title": "« Et SUP-004 ? » : une question de suite, répondue comme la question entière.",
+      "lede": "Un acheteur demande combien de commandes ont été annulées, puis « Et pour le fournisseur SUP-003 ? », puis « Et SUP-004 ? ». Il ne retape pas la question. Ask lit chaque suite avec la question d'avant, répond à la question complète et affiche celle qu'il a comprise.",
+      "tags": {
+        "domain": [
+          "Achats",
+          "IA"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:e78e1e66fedf9e58c79861c1caa836eadde835862d626e93e1be6b167302d6cf"
+    },
+    {
       "slug": "pwa-chat",
       "title": "Questionner 40 000 articles, SQL à l'appui.",
       "lede": "Deux exports CSV, une entité, une app réduite au chat. La question devient une requête en lecture seule ; la réponse montre son SQL.",
