@@ -203,6 +203,24 @@
       "evidenceDigest": "sha256:19279255a1f737e09bb4a5169bc241bba26a6a47c5b0f10017acd3ed6310324c"
     },
     {
+      "slug": "invoices-dead-letters",
+      "title": "Un montant illisible n'entre pas : la facture attend, corrigée à la source.",
+      "lede": "Un export de factures fournisseurs porte deux montants mal saisis et une facture de test. Au lieu d'écrire des factures sans montant, le hub les met de côté avec la ligne telle qu'elle a été lue. On écarte la facture de test, on corrige à la source, et chaque lettre est fermée par la lecture qui a apporté la bonne ligne.",
+      "tags": {
+        "domain": [
+          "Achats",
+          "Qualité des données"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:7bde61b7ab56d003546f3cf2465acde53578b2a40c5f09b6e093bde26c93d22b"
+    },
+    {
       "slug": "jdbc-merge-oracle-postgresql",
       "title": "Une fiche produit, deux bases : PostgreSQL et Oracle restent où elles sont.",
       "lede": "Les produits vivent dans PostgreSQL, leurs catégories dans Oracle. Deux connecteurs jdbc les lisent sans rien y écrire, et une entité les joint : 40 234 produits, chacun avec sa catégorie quand elle existe.",
