@@ -2,6 +2,24 @@
   "locale": "fr",
   "scenarios": [
     {
+      "slug": "business-log-orders",
+      "title": "Le log d'hier, lu comme une source : quelles commandes les erreurs ont touchées.",
+      "lede": "Des clients appellent : leur commande « n'est jamais passée ». Le serveur écrit un log texte, un fichier par jour. Le hub le lit ligne par ligne, garde les avertissements et les erreurs, en tire la commande, et la relie au client et au statut qu'il connaît déjà. Un log métier, pas un outil de supervision.",
+      "tags": {
+        "domain": [
+          "Ventes",
+          "Support"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:504241b86a19491ea48c0372bd9786bfdb907114dc29dcace40e6df16343e967"
+    },
+    {
       "slug": "catalogue-ean-check",
       "title": "Le code-barres faux repéré à l'import : un script Kotlin fourni par l'opérateur, nommé par le manifeste.",
       "lede": "Un export catalogue porte des codes EAN-13, dont certains faux. Aucun transformateur intégré ne calcule une clé de contrôle. L'opérateur du hub dépose un script Kotlin dans le répertoire de scripts du hub ; le manifeste le nomme, sans transporter de code. Un brouillon qui ne compile pas est refusé dès la validation, avec sa ligne et sa colonne.",
