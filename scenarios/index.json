@@ -184,6 +184,26 @@
       "evidenceDigest": "sha256:22d0e049052a29719d6ec0d48efcf410afde361223d9683819502906f2a1efc2"
     },
     {
+      "slug": "edi-order-cycle",
+      "title": "Où en est chaque ligne de commande : commande, accusé, date confirmée et livraison rapprochés.",
+      "lede": "Un fabricant et son logisticien s'échangent quatre fichiers à plat autour d'une même ligne de commande : la commande, l'accusé, la date de livraison confirmée, le bon de livraison. Le service ADV demande, ligne par ligne, où en est la commande : jamais accusée, confirmée mais pas livrée, livrée en quantité différente.",
+      "tags": {
+        "domain": [
+          "Logistique",
+          "EDI",
+          "ADV"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "Workflow"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:f03dace78e160c92d14797bd736750879805033594453db69da05dae10b2acb2"
+    },
+    {
       "slug": "entity-resolution",
       "title": "Un client, deux systèmes, aucun identifiant commun.",
       "lede": "Un ERP, un CRM, une Entity. L'email rapproche les fiches ; une boîte partagée ouvre une ambiguïté. lumnik ne tranche pas : un humain décide, et la décision tient au rejeu.",
