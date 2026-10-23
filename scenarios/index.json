@@ -395,6 +395,23 @@
       "evidenceDigest": "sha256:a4cdc366fbe1e7888345bbde65e66545842441a3b0fc28ff698830687fd06acc"
     },
     {
+      "slug": "saas-oauth2-orders",
+      "title": "Le SaaS derrière OAuth2 : des jetons de 30 secondes, un run de 40, aucune page perdue.",
+      "lede": "L'ERP ne bouge plus, mais une partie des commandes arrive par un SaaS récent. Ce SaaS ne prend plus de jeton fixe : il donne un identifiant client et un secret, et veut un jeton de courte durée à chaque appel. lumnik demande le jeton, le renouvelle avant qu'il expire, encaisse une rotation de clés en plein run, et dit pourquoi quand le secret est révoqué, sans jamais le montrer.",
+      "tags": {
+        "domain": [
+          "Commerce",
+          "Sécurité"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:0578ebee341d3e1e3630f4b1505befdddda630bcd1fcc36dfb56e82b30221666"
+    },
+    {
       "slug": "sftp-carrier-drop",
       "title": "Le dépôt SFTP du transporteur : chaque nuit lue, rangée, et rien sur parole.",
       "lede": "Un transporteur dépose chaque nuit livraisons.csv sur son serveur SFTP, toujours sous le même nom. lumnik relit une nuit de même taille, range chaque nuit sous son propre nom, dit sur le run un fichier qu'il n'a pas pu archiver, et refuse un serveur dont la clé a changé.",
