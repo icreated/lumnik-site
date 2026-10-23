@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Les contacts d&#x27;un vieux CRM, rendus joignables : noms réparés, un téléphone, un email valide. — lumnik</title>
+<meta name="description" content="L&#x27;équipe commerciale quitte un vieux CRM. Son export de contacts mélange majuscules, accents cassés par un aller-retour d&#x27;encodage, deux colonnes de téléphone dont une souvent vide, et des emails mal saisis. Le manifeste en fait une liste exploitable, et nomme les contacts qu&#x27;on ne peut pas joindre.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/crm-contacts-reachable/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/crm-contacts-reachable/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Les contacts d&#x27;un vieux CRM, rendus joignables : noms réparés, un téléphone, un email valide.</h1>
+    <p class="lede">L&#x27;équipe commerciale quitte un vieux CRM. Son export de contacts mélange majuscules, accents cassés par un aller-retour d&#x27;encodage, deux colonnes de téléphone dont une souvent vide, et des emails mal saisis. Le manifeste en fait une liste exploitable, et nomme les contacts qu&#x27;on ne peut pas joindre.</p>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Ventes</li><li class="tag">CRM</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-load" data-step="load" aria-current="step"><span class="num">1 · Charger</span><span class="sub">8 lus, 6 écrits</span></a><a href="#step-read" data-step="read"><span class="num">2 · Lire</span><span class="sub">6 contacts</span></a><a href="#step-letters" data-step="letters"><span class="num">3 · Lettres mortes</span><span class="sub">C002, C007</span></a></nav>
+  <section class="step" id="step-load" aria-labelledby="load-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Charger"><button type="button" role="tab" id="load-manifest-tab" data-view="manifest" aria-controls="load-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="load-commands-tab" data-view="commands" aria-controls="load-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="load-result-tab" data-view="result" aria-controls="load-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="load-manifest" aria-labelledby="load-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-contacts.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-crm-b</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [sales-b]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/crm-contacts-reachable/b/contacts.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line hl">    on-error:</span><span class="line">      <span class="key">fields</span>: { email: dlq }               <span class="comment"># a contact with an unreadable email goes to the dead letters</span></span><span class="line">    <span class="key">row</span>:</span><span class="line hl">      - map-columns:</span><span class="line">          <span class="key">rename</span>: { CUST_ID: customer_id, CUST_NM: company, CONTACT_NM: contact, EMAIL: email,</span><span class="line">                    <span class="key">TEL_MOB</span>: mobile, TEL_FIXE: landline }</span><span class="line hl">      <span class="dash">-</span> <span class="key">coalesce</span>: { column: phone, from: [mobile, landline] }    <span class="comment"># the mobile, else the landline</span></span><span class="line">    <span class="key">cell</span>:</span><span class="line hl">      - fix-mojibake: { columns: [company, contact] }            <span class="comment"># BÃ©nÃ©dicte -&gt; Bénédicte, before the case</span></span><span class="line">      <span class="dash">-</span> <span class="key">titlecase</span>: { columns: [company, contact] }               <span class="comment"># DUPONT  SARL -&gt; Dupont Sarl</span></span><span class="line">      - parse-email: { column: email, lower: true }</span><span class="line">      - parse-phone: { column: phone, default-region: FR }       <span class="comment"># without it, 06 12 34 56 78 is read as a US number</span></span></code></pre><div class="file"><span class="filename">manifests/20-contact.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: contact_b</span><span class="line"><span class="key">label</span>: Contact client</span><span class="line"><span class="key">description</span>: <span class="str">&quot;A customer contact taken over from the old CRM: company, contact person, one email and one phone in international format.&quot;</span></span><span class="line"><span class="key">match</span>: [customer_id]</span><span class="line"><span class="key">scopes</span>: [sales-b]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">customer_id</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Code client&quot;</span></span><span class="line">  <span class="key">company</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Société&quot;</span></span><span class="line">  <span class="key">contact</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Contact&quot;</span></span><span class="line">  <span class="key">email</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Email&quot;</span></span><span class="line">  <span class="key">phone</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Téléphone (international)&quot;</span></span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_crm_b</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">customer_id</span>: customer_id</span><span class="line">      <span class="key">company</span>: company</span><span class="line">      <span class="key">contact</span>: contact</span><span class="line">      <span class="key">email</span>: email</span><span class="line">      <span class="key">phone</span>: phone</span></code></pre></div><div role="tabpanel" id="load-commands" aria-labelledby="load-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-contacts.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-crm-d&quot;,&quot;connectorId&quot;:&quot;6969b750-4353-4bcc-afd4-5f4d1504bc13&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-crm-d</span>
+<span class="out">run scheduled: a0adfcb9-87fa-4ff8-99b2-a1a7385ac2a5</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get a0adfcb9-87fa-4ff8-99b2-a1a7385ac2a5</span>
+<span class="out">ID        CONNECTOR       ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+a0adfcb9  scenario-crm-d  default   Completed  8   6    2        2             2026-10-23 18:49  2026-10-23 18:49  no</span>
+<span class="note">⚠ 2 rows quarantined — see: lm dlq list --run a0adfcb9-87fa-4ff8-99b2-a1a7385ac2a5</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-contact.yaml</span>
+<span class="out">Applied entity &quot;contact_d&quot; → connector.&quot;v_contact_d&quot;</span></code></pre></div><div role="tabpanel" id="load-result" aria-labelledby="load-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 8 · OUT 6 · DEAD-LETTERS 2</dd></dl><p class="sources">preuves : replay.log, load-run.txt, 01-contacts.txt, 01-contacts.json, 02-letters.txt, 02-letters.json, 03-letter-c007.txt · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="load-title">L&#x27;export du CRM, transformé à l&#x27;entrée</h2>
+    <p>Au deuxième étage, map-columns renomme CUST_NM, CONTACT_NM, TEL_MOB et TEL_FIXE ; coalesce prend le mobile, sinon le fixe. Au troisième, fix-mojibake répare les accents avant que titlecase n&#x27;écrive les noms ; parse-email met l&#x27;email en minuscules et le valide ; parse-phone écrit le numéro en format international, en supposant la France. on-error envoie en lettre morte un contact dont l&#x27;email est illisible.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Deux étages</strong><p>Les lignes, puis les cellules.</p></div></li><li><span class="n">2</span><div><strong>default-region: FR</strong><p>Sans elle, 06 12 34 56 78 serait lu comme un numéro américain.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>8 = 6 + 2 : chaque contact est écrit propre ou nommé en lettre morte.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-read" aria-labelledby="read-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity get contact_d</span>
+<span class="out">CUSTOMER_ID  COMPANY              CONTACT           EMAIL                        PHONE         _CONFLICTS
+C001         Dupont Sarl          Bénédicte Martin  b.martin@dupont.fr           +33472000001  {}
+C003         Boulangerie Morel    Sophie Morel      sophie.morel@morel-pain.fr   +33698765432  {}
+C004         Garage Roux Et Fils  Marc Roux         marc.roux@garage-roux.fr                   {}
+C005         Café Du Port         Amélie Faure      contact@cafeduport.fr        +32470123456  {}
+C006         Nguyen Traiteur      Linh Nguyen       linh@nguyen-traiteur.fr      +33711223344  {}
+C008         Fleurs &amp; Co          Claire Durand     claire.durand@fleursetco.fr  +33655443322  {}</span></code></pre></div><div role="tabpanel" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>C001</dt><dd>Dupont Sarl · Bénédicte Martin · b.martin@dupont.fr · +33472000001</dd><dt>C004</dt><dd>Garage Roux Et Fils · Marc Roux · marc.roux@garage-roux.fr · —</dd><dt>C005</dt><dd>Café Du Port · Amélie Faure · contact@cafeduport.fr · +32470123456</dd></dl><p class="sources">preuves : replay.log, load-run.txt, 01-contacts.txt, 01-contacts.json, 02-letters.txt, 02-letters.json, 03-letter-c007.txt · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="read-title">Des contacts lisibles et joignables</h2>
+    <p>BÃ©nÃ©dicte MARTIN devient Bénédicte Martin, CAFÃ‰ DU PORT devient Café Du Port : les deux lectures fautives d&#x27;un export Windows sont réparées. Dupont n&#x27;a qu&#x27;un fixe : +33472000001. Le numéro belge +32 reste tel quel. Garage Roux n&#x27;a aucun téléphone : la case reste vide.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Café Du Port</strong><p>Réparé, puis mis en forme.</p></div></li><li><span class="n">2</span><div><strong>+33472000001</strong><p>Le fixe, faute de mobile.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un nom, un email, un téléphone par contact, au même format pour tous.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-letters" aria-labelledby="letters-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lettres mortes"><button type="button" role="tab" id="letters-commands-tab" data-view="commands" aria-controls="letters-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="letters-result-tab" data-view="result" aria-controls="letters-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="letters-commands" aria-labelledby="letters-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm dlq list --run a0adfcb9-87fa-4ff8-99b2-a1a7385ac2a5</span>
+<span class="out">ID        CONNECTOR       RUN       REASON         ATTEMPTS  RESOLUTION  MESSAGE
+550db09d  scenario-crm-d  a0adfcb9  MappingFailed  1                     email: parse-email could not read the value
+c22f12e4  scenario-crm-d  a0adfcb9  MappingFailed  1                     email: parse-email could not read the value</span>
+
+<span class="cmd"><span class="prompt">$</span> lm dlq get 550db09d-b9bf-455b-a548-641e23d42a4e</span>
+<span class="out">ID:        550db09d-b9bf-455b-a548-641e23d42a4e
+Connector: scenario-crm-d (6969b750-4353-4bcc-afd4-5f4d1504bc13)
+Run:       a0adfcb9-87fa-4ff8-99b2-a1a7385ac2a5
+Reason:    MappingFailed
+Attempts:  1
+Message:   email: parse-email could not read the value
+Detail:    {&quot;field&quot;:&quot;email&quot;,&quot;message&quot;:&quot;parse-email could not read the value&quot;}
+Payload:   {&quot;email&quot;:&quot;p.garnier@@pharmacie.fr&quot;,&quot;phone&quot;:&quot;04 74 10 20 30&quot;,&quot;mobile&quot;:null,&quot;company&quot;:&quot;PHARMACIE GARNIER&quot;,&quot;contact&quot;:&quot;PAUL GARNIER&quot;,&quot;landline&quot;:&quot;04 74 10 20 30&quot;,&quot;customer_id&quot;:&quot;C007&quot;}
+Resolution: open</span></code></pre></div><div role="tabpanel" id="letters-result" aria-labelledby="letters-result-tab" tabindex="0" hidden><dl class="facts"><dt>C002</dt><dd>jl.petit@lefevre</dd><dt>C007</dt><dd>p.garnier@@pharmacie.fr</dd></dl><p class="sources">preuves : replay.log, load-run.txt, 01-contacts.txt, 01-contacts.json, 02-letters.txt, 02-letters.json, 03-letter-c007.txt · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="letters-title">Les contacts qu&#x27;on ne peut pas joindre, nommés</h2>
+    <p>jl.petit@lefevre n&#x27;a pas de domaine, p.garnier@@pharmacie.fr a deux @. Les deux contacts sont en lettres mortes, avec leurs valeurs telles que lues avant l&#x27;étage des cellules : les colonnes y portent déjà leur nouveau nom.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>2 lettres</strong><p>Email illisible.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un contact injoignable n&#x27;entre pas en silence : il attend qu&#x27;on corrige la source.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>titlecase écrit Sarl et Et : il ne connaît ni les formes juridiques ni les mots courts.</li><li>La lettre morte garde la ligne d&#x27;avant l&#x27;étage des cellules, colonnes renommées.</li><li>Contacts synthétiques.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>

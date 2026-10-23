@@ -54,6 +54,24 @@
       "evidenceDigest": "sha256:7601cd1c0784a3622900254c1c6bb8e44fd336774836e31c0c3d051ca55d44b0"
     },
     {
+      "slug": "crm-contacts-reachable",
+      "title": "Les contacts d'un vieux CRM, rendus joignables : noms réparés, un téléphone, un email valide.",
+      "lede": "L'équipe commerciale quitte un vieux CRM. Son export de contacts mélange majuscules, accents cassés par un aller-retour d'encodage, deux colonnes de téléphone dont une souvent vide, et des emails mal saisis. Le manifeste en fait une liste exploitable, et nomme les contacts qu'on ne peut pas joindre.",
+      "tags": {
+        "domain": [
+          "Ventes",
+          "CRM"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:ad98251130ee5f08373937d5fdfd0a3d030450d15289a5ae0816d3602945c732"
+    },
+    {
       "slug": "deal-in-the-pocket",
       "title": "L'affaire avance pendant le dîner.",
       "lede": "Cinq exports d'entreprise et un catalogue, quatre entités, trois vues, un Process. Le CRM passe l'affaire à confirmer ; la décision arrive dans la PWA, « Traiter » part en webhook et l'email client suit.",
