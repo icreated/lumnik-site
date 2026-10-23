@@ -349,6 +349,24 @@
       "evidenceDigest": "sha256:c8f311c0fb15458e813e3953b2f5e5ccbcf37311ffc8541d21e8c70a2e594146"
     },
     {
+      "slug": "marketplace-order-items",
+      "title": "Les commandes d'une marketplace, une ligne par article à préparer : modèle, couleur, taille.",
+      "lede": "L'export de la marketplace donne une ligne par commande, les articles serrés dans une cellule, et une référence qui serre à son tour modèle, couleur et taille. La logistique veut une ligne par article, pour compter ce qu'il faut sortir du stock. Le manifeste découpe la commande, puis la référence, et refuse un fichier dont la colonne a changé de nom.",
+      "tags": {
+        "domain": [
+          "Logistique",
+          "E-commerce"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-23",
+      "evidenceDigest": "sha256:0c5b83354986a2a80be058fc89dbcfde39ab0775efbfa7b401a72e9317c2bdf5"
+    },
+    {
       "slug": "one-app-per-metier",
       "title": "Un hub, une app par métier.",
       "lede": "La maintenance et les achats partagent un ERP où chacun voit tout. Sur le même hub, lumnik compose une app par métier ; un technicien qui ne tient que le rôle scope:maintenance voit son app, ses ordres et ses décisions, et chaque porte des achats lui répond par un refus.",
