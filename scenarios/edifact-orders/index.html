@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Un message EDIFACT ORDERS : une ligne, découpée en segments, l&#x27;apostrophe échappée respectée. — lumnik</title>
+<meta name="description" content="La distribution et l&#x27;industrie échangent encore de l&#x27;EDIFACT : un message ORDERS de l&#x27;acheteur, souvent écrit sur une seule ligne, ses segments terminés par une apostrophe, ses éléments séparés par + et :. Une apostrophe dans un libellé s&#x27;écrit ?&#x27;. L&#x27;acheteur veut lire le message segment par segment.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/edifact-orders/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/edifact-orders/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Un message EDIFACT ORDERS : une ligne, découpée en segments, l&#x27;apostrophe échappée respectée.</h1>
+    <p class="lede">La distribution et l&#x27;industrie échangent encore de l&#x27;EDIFACT : un message ORDERS de l&#x27;acheteur, souvent écrit sur une seule ligne, ses segments terminés par une apostrophe, ses éléments séparés par + et :. Une apostrophe dans un libellé s&#x27;écrit ?&#x27;. L&#x27;acheteur veut lire le message segment par segment.</p>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Achats</li><li class="tag">EDI</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-load" data-step="load" aria-current="step"><span class="num">1 · Charger</span><span class="sub">1 message</span></a><a href="#step-segments" data-step="segments"><span class="num">2 · Segments</span><span class="sub">14</span></a><a href="#step-lines" data-step="lines"><span class="num">3 · Les lignes</span><span class="sub">LIN, QTY</span></a></nav>
+  <section class="step" id="step-load" aria-labelledby="load-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Charger"><button type="button" role="tab" id="load-manifest-tab" data-view="manifest" aria-controls="load-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="load-commands-tab" data-view="commands" aria-controls="load-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="load-result-tab" data-view="result" aria-controls="load-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="load-manifest" aria-labelledby="load-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-orders.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-edifact-b</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [purchasing-b]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/edifact-orders/b/*.edi   <span class="comment"># one ORDERS message per file</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">lines</span>: true                    <span class="comment"># the message is one line</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">row</span>:</span><span class="line hl">      - split-row: { by: line, sep: <span class="str">&quot;&#x27;&quot;</span>, escape: <span class="str">&quot;?&quot;</span>, position: seg_no }   <span class="comment"># one row per segment; ?&#x27; is an apostrophe</span></span><span class="line">    <span class="key">cell</span>:</span><span class="line">      - regex-extract:             <span class="comment"># the tag, then the segment&#x27;s elements</span></span><span class="line">          <span class="key">column</span>: line</span><span class="line">          <span class="key">required</span>: true</span><span class="line">          <span class="key">pattern</span>: <span class="str">&quot;^([A-Z]{3})\\+?(.*)$&quot;</span></span><span class="line">          <span class="key">groups</span>: { 1: tag, 2: elements }</span></code></pre></div><div role="tabpanel" id="load-commands" aria-labelledby="load-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-orders.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-edifact-b&quot;,&quot;connectorId&quot;:&quot;cf6d050b-1156-41ef-baa4-5769a0f16be6&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-edifact-b</span>
+<span class="out">run scheduled: 8b570bea-2245-46c3-9906-4129621528db</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 8b570bea-2245-46c3-9906-4129621528db</span>
+<span class="out">ID        CONNECTOR           ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+8b570bea  scenario-edifact-b  default   Completed  1   1    0        0             2026-10-23 23:40  2026-10-23 23:40  yes</span></code></pre></div><div role="tabpanel" id="load-result" aria-labelledby="load-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 1 · OUT 1</dd><dt>segments</dt><dd>14</dd></dl><p class="sources">preuves : replay.log, load-run.txt, segments.txt, segments.json, lin.txt, qty.txt · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="load-title">Une ligne, découpée en segments</h2>
+    <p>lines: true lit le message comme une seule ligne. split-row la découpe sur l&#x27;apostrophe, avec escape: &quot;?&quot; pour que ?&#x27; reste une apostrophe, et position numérote les segments dans l&#x27;ordre du message. regex-extract sépare l&#x27;étiquette du segment de ses éléments.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>?&#x27;</strong><p>Une apostrophe, pas une fin de segment.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un message sur une ligne devient quatorze segments, sans segment fantôme.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-segments" aria-labelledby="segments-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Segments"><button type="button" role="tab" id="segments-manifest-tab" data-view="manifest" aria-controls="segments-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="segments-commands-tab" data-view="commands" aria-controls="segments-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="segments-result-tab" data-view="result" aria-controls="segments-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="segments-manifest" aria-labelledby="segments-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-segment.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: edifact_segment_b</span><span class="line"><span class="key">label</span>: Segment EDIFACT</span><span class="line"><span class="key">description</span>: <span class="str">&quot;One segment of an ORDERS message, in message order: its tag and its elements.&quot;</span></span><span class="line"><span class="key">match</span>: [seg_no]</span><span class="line"><span class="key">scopes</span>: [purchasing-b]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">seg_no</span>: { label: <span class="str">&quot;N°&quot;</span> }</span><span class="line">  <span class="key">tag</span>: { label: <span class="str">&quot;Segment&quot;</span> }</span><span class="line">  <span class="key">elements</span>: { label: <span class="str">&quot;Éléments&quot;</span> }</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_edifact_b</span><span class="line">    <span class="key">map</span>: { seg_no: seg_no, tag: tag, elements: elements }</span></code></pre></div><div role="tabpanel" id="segments-commands" aria-labelledby="segments-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-segment.yaml</span>
+<span class="out">Applied entity &quot;edifact_segment_b&quot; → connector.&quot;v_edifact_segment_b&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get edifact_segment_b</span>
+<span class="out">SEG_NO  TAG  ELEMENTS                                                 _CONFLICTS
+1       UNA  :+.                                                      {}
+2       UNB  UNOC:3+3012345000004:14+3098765000002:14+261020:0930+42  {}
+3       UNH  1+ORDERS:D:96A:UN                                        {}
+4       BGM  220+PO-7001+9                                            {}
+5       DTM  137:20261020:102                                         {}
+6       NAD  BY+3012345000004::9                                      {}
+7       LIN  1++3012345000110:EN                                      {}
+8       IMD  F++:::Bâche d&#x27;hiver 10x5                                 {}
+9       QTY  21:12                                                    {}
+10      LIN  2++3012345000127:EN                                      {}
+11      QTY  21:6                                                     {}
+12      UNS  S                                                        {}
+13      UNT  10+1                                                     {}
+14      UNZ  1+42                                                     {}</span></code></pre></div><div role="tabpanel" id="segments-result" aria-labelledby="segments-result-tab" tabindex="0" hidden><dl class="facts"><dt>4 BGM</dt><dd>220+PO-7001+9</dd><dt>8 IMD</dt><dd>F++:::Bâche d&#x27;hiver 10x5</dd><dt>9 QTY</dt><dd>21:12</dd></dl><p class="sources">preuves : replay.log, load-run.txt, segments.txt, segments.json, lin.txt, qty.txt · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="segments-title">Le message, segment par segment, dans l&#x27;ordre</h2>
+    <p>BGM porte la commande PO-7001, LIN l&#x27;EAN d&#x27;une ligne, QTY sa quantité. Le libellé « Bâche d&#x27;hiver 10x5 » arrive entier : avant #1451, ?&#x27; le coupait en deux et créait un segment sans étiquette.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>Bâche d&#x27;hiver</strong><p>Entier, apostrophe comprise.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>L&#x27;acheteur lit chaque segment avec son rang.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-lines" aria-labelledby="lines-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Les lignes"><button type="button" role="tab" id="lines-commands-tab" data-view="commands" aria-controls="lines-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="lines-result-tab" data-view="result" aria-controls="lines-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="lines-commands" aria-labelledby="lines-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity get edifact_segment_b --filter tag=LIN</span>
+<span class="out">SEG_NO  TAG  ELEMENTS             _CONFLICTS
+7       LIN  1++3012345000110:EN  {}
+10      LIN  2++3012345000127:EN  {}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get edifact_segment_b --filter tag=QTY</span>
+<span class="out">SEG_NO  TAG  ELEMENTS  _CONFLICTS
+9       QTY  21:12     {}
+11      QTY  21:6      {}</span></code></pre></div><div role="tabpanel" id="lines-result" aria-labelledby="lines-result-tab" tabindex="0" hidden><dl class="facts"><dt>7 LIN</dt><dd>1++3012345000110:EN</dd><dt>9 QTY</dt><dd>21:12</dd><dt>10 LIN</dt><dd>2++3012345000127:EN</dd><dt>11 QTY</dt><dd>21:6</dd></dl><p class="sources">preuves : replay.log, load-run.txt, segments.txt, segments.json, lin.txt, qty.txt · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="lines-title">Une ligne de commande, deux segments</h2>
+    <p>Un filtre sur l&#x27;étiquette sort les deux LIN et les deux QTY. Chaque QTY suit son LIN, mais sur une ligne à lui : lumnik ne sait pas encore reporter l&#x27;EAN du LIN, ni le numéro du BGM, sur les segments qui suivent.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>#1452</strong><p>Reporter une valeur sur les lignes suivantes.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La lecture est faite ; l&#x27;appariement est la suite.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Une ligne de commande « commande, EAN, quantité » ne se reconstruit pas encore : il faut reporter la valeur d&#x27;un segment sur les suivants (#1452).</li><li>Le segment UNA, qui déclare les séparateurs, passe par le même échappement : il se lit « :+. ».</li><li>Un seul message par fichier ; numéros GLN et EAN fictifs.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
