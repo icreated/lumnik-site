@@ -54,6 +54,25 @@
       "evidenceDigest": "sha256:7601cd1c0784a3622900254c1c6bb8e44fd336774836e31c0c3d051ca55d44b0"
     },
     {
+      "slug": "cfonb-bank-statement",
+      "title": "Un relevé bancaire CFONB 120 : chaque mouvement signé, dans son relevé, avec ses compléments.",
+      "lede": "Les banques françaises envoient encore leurs relevés au format CFONB 120 : des enregistrements de 120 caractères, sans séparateur. 01 ouvre le relevé avec l'ancien solde, 04 est un mouvement, 05 complète le mouvement qui précède (payeur, référence de facture), 07 clôt avec le nouveau solde. Le dernier caractère du montant porte à la fois son dernier chiffre et son signe. La trésorerie veut chaque mouvement signé, dans son relevé, avec ses compléments.",
+      "tags": {
+        "domain": [
+          "Trésorerie",
+          "Banque",
+          "Comptabilité"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-24",
+      "evidenceDigest": "sha256:c345db6596e6d9b5edf6b22469510693de2950fd964d94569e18ae83444f8d4d"
+    },
+    {
       "slug": "crm-contacts-reachable",
       "title": "Les contacts d'un vieux CRM, rendus joignables : noms réparés, un téléphone, un email valide.",
       "lede": "L'équipe commerciale quitte un vieux CRM. Son export de contacts mélange majuscules, accents cassés par un aller-retour d'encodage, deux colonnes de téléphone dont une souvent vide, et des emails mal saisis. Le manifeste en fait une liste exploitable, et nomme les contacts qu'on ne peut pas joindre.",
