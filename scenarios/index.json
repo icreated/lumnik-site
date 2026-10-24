@@ -2,6 +2,24 @@
   "locale": "fr",
   "scenarios": [
     {
+      "slug": "aged-balance-print",
+      "title": "Une balance âgée imprimée : chaque facture avec son client, d'une page à l'autre.",
+      "lede": "La comptabilité imprime sa balance âgée dans un fichier spool : un en-tête par page, puis pour chaque client une ligne avec son compte et son nom, ses factures ouvertes en dessous, et un total. Les factures d'un client peuvent passer sur la page suivante. Le recouvrement veut chaque facture avec son client.",
+      "tags": {
+        "domain": [
+          "Recouvrement",
+          "Comptabilité"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-24",
+      "evidenceDigest": "sha256:4b5d35a43dea6ed789968d58b7ab43c9cf9ab4ae0d3b473500a8f3974d8ed3ee"
+    },
+    {
       "slug": "app-inventory-urls",
       "title": "Un inventaire d'URLs saisies à la main : serveur, port et environnement, sans toucher l'export.",
       "lede": "La DSI reprend un inventaire applicatif tenu des années dans un tableur. Une colonne porte l'URL de chaque application, tapée à la main : majuscules, espaces collés, ports tantôt là, tantôt absents. Elle veut savoir ce qui tourne sur un serveur et ce qui est encore en recette. Le manifeste découpe l'URL en colonnes, sans code.",
@@ -275,6 +293,24 @@
       "edition": "open",
       "replayedAt": "2026-10-21",
       "evidenceDigest": "sha256:783138b77fcaa6c26745e209244f7bc67c3cfce06ecfddd25fb63b25667ac76a"
+    },
+    {
+      "slug": "excel-merged-cells",
+      "title": "Un export Excel aux cellules fusionnées : chaque ligne avec sa région et son client.",
+      "lede": "Les ventes envoient chaque mois un rapport Excel : un groupe par client, la région et le client dans des cellules fusionnées, un sous-total sous chaque groupe. Enregistrée en CSV, une cellule fusionnée ne garde sa valeur que sur la première ligne du groupe ; les suivantes sont vides. Les ventes veulent chaque ligne avec sa région et son client.",
+      "tags": {
+        "domain": [
+          "Ventes",
+          "Reporting"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-24",
+      "evidenceDigest": "sha256:9515b1197282ecae8ac5fa281f972d4d5b45b212249b9472452b4421a770da36"
     },
     {
       "slug": "export-that-lies",
@@ -661,6 +697,25 @@
       "edition": "open",
       "replayedAt": "2026-10-23",
       "evidenceDigest": "sha256:0578ebee341d3e1e3630f4b1505befdddda630bcd1fcc36dfb56e82b30221666"
+    },
+    {
+      "slug": "sap-idoc-orders",
+      "title": "Des IDocs SAP ORDERS05 à plat : chaque ligne de commande avec sa commande client.",
+      "lede": "Le SAP d'un client envoie ses commandes en IDocs ORDERS05, écrits dans un fichier à plat : un enregistrement de contrôle EDI_DC40 par IDoc, puis des enregistrements de données à largeur fixe. Le numéro de commande est dans E2EDK02, la quantité dans le poste E2EDP01, notre article dans le E2EDP19 qui le suit. L'administration des ventes veut une ligne par ligne de commande.",
+      "tags": {
+        "domain": [
+          "Administration des ventes",
+          "EDI",
+          "SAP"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-24",
+      "evidenceDigest": "sha256:6ace3102303eb5e4e6995dc9088505bce1b14c5caaa4392fd00a9f4a6bf2e32c"
     },
     {
       "slug": "sftp-carrier-drop",

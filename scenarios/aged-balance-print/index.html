@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Une balance âgée imprimée : chaque facture avec son client, d&#x27;une page à l&#x27;autre. — lumnik</title>
+<meta name="description" content="La comptabilité imprime sa balance âgée dans un fichier spool : un en-tête par page, puis pour chaque client une ligne avec son compte et son nom, ses factures ouvertes en dessous, et un total. Les factures d&#x27;un client peuvent passer sur la page suivante. Le recouvrement veut chaque facture avec son client.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/aged-balance-print/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/aged-balance-print/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Une balance âgée imprimée : chaque facture avec son client, d&#x27;une page à l&#x27;autre.</h1>
+    <p class="lede">La comptabilité imprime sa balance âgée dans un fichier spool : un en-tête par page, puis pour chaque client une ligne avec son compte et son nom, ses factures ouvertes en dessous, et un total. Les factures d&#x27;un client peuvent passer sur la page suivante. Le recouvrement veut chaque facture avec son client.</p>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Recouvrement</li><li class="tag">Comptabilité</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-load" data-step="load" aria-current="step"><span class="num">1 · Lire</span><span class="sub">25 lignes</span></a><a href="#step-client" data-step="client"><span class="num">2 · Un client</span><span class="sub">5 factures, 2 pages</span></a><a href="#step-balance" data-step="balance"><span class="num">3 · Balance</span><span class="sub">12 factures</span></a></nav>
+  <section class="step" id="step-load" aria-labelledby="load-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="load-manifest-tab" data-view="manifest" aria-controls="load-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="load-commands-tab" data-view="commands" aria-controls="load-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="load-result-tab" data-view="result" aria-controls="load-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="load-manifest" aria-labelledby="load-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-aged-balance.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-agedbal-b</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [credit-b]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/aged-balance-print/b/*.lst   <span class="comment"># the accounting system&#x27;s print spool</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">lines</span>: true                    <span class="comment"># a printed report: one line per row, columns by position</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">dataset</span>:</span><span class="line hl">      - filter-where: { column: line, regex: <span class="str">&quot;411.*| {10}FA.*&quot;</span> }   <span class="comment"># a client&#x27;s header, an invoice; page headers and totals are not</span></span><span class="line">    <span class="key">cell</span>:</span><span class="line hl">      - regex-extract: { column: line, pattern: <span class="str">&quot;^(411\\S*)\\s+(.+?)\\s*$&quot;</span>, groups: { 1: client_code, 2: client_name } }</span><span class="line hl">      - regex-extract:             <span class="comment"># an invoice: piece, invoice date, due date, balance, days late</span></span><span class="line">          <span class="key">column</span>: line</span><span class="line">          <span class="key">pattern</span>: <span class="str">&quot;^ {10}(FA\\S+)\\s+(\\d{2}/\\d{2}/\\d{4}) (\\d{2}/\\d{2}/\\d{4})\\s+([\\d ]+,\\d{2})\\s+(\\d+)\\s*$&quot;</span></span><span class="line">          <span class="key">groups</span>: { 1: piece, 2: invoice_date, 3: due_date, 4: balance, 5: days_late }</span><span class="line">      - parse-date: { column: invoice_date, formats: [<span class="str">&quot;dd/MM/yyyy&quot;</span>] }</span><span class="line">      - parse-date: { column: due_date, formats: [<span class="str">&quot;dd/MM/yyyy&quot;</span>] }</span><span class="line">      - parse-number: { column: balance }</span><span class="line">      - parse-number: { column: days_late, integer: true }</span><span class="line">      - fill-down: { columns: [client_code, client_name] }   <span class="comment"># the client, on the invoices under its header — across a page break</span></span></code></pre></div><div role="tabpanel" id="load-commands" aria-labelledby="load-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-aged-balance.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-agedbal-d&quot;,&quot;connectorId&quot;:&quot;e1491cca-3015-4661-996d-9493973c8702&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-agedbal-d</span>
+<span class="out">run scheduled: e2f5f18c-2e1d-4ee1-af2d-eb8a2229ab75</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get e2f5f18c-2e1d-4ee1-af2d-eb8a2229ab75</span>
+<span class="out">ID        CONNECTOR           ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+e2f5f18c  scenario-agedbal-d  default   Completed  25  15   10       0             2026-10-24 19:27  2026-10-24 19:27  no</span></code></pre></div><div role="tabpanel" id="load-result" aria-labelledby="load-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 25 · OUT 15 · SKIPPED 10</dd></dl><p class="sources">preuves : replay.log, load-run.txt, client.txt, client.json, balance.txt, balance.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="load-title">Un état imprimé, sans sa mise en page</h2>
+    <p>lines: true lit chaque ligne de l&#x27;état. filter-where ne garde que les en-têtes de client et les factures : les en-têtes de page, les totaux et le total général sont écartés et comptés. Des regex-extract découpent le compte, le nom, la pièce, les dates, le solde et le retard.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>10 lignes</strong><p>Mise en page et totaux, comptés dans SKIPPED.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un état fait pour l&#x27;imprimante se lit comme une table.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-client" aria-labelledby="client-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Un client"><button type="button" role="tab" id="client-manifest-tab" data-view="manifest" aria-controls="client-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="client-commands-tab" data-view="commands" aria-controls="client-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="client-result-tab" data-view="result" aria-controls="client-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="client-manifest" aria-labelledby="client-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-receivable.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: receivable_b</span><span class="line"><span class="key">label</span>: Créance client</span><span class="line"><span class="key">description</span>: <span class="str">&quot;One line of the printed aged balance: a client&#x27;s header, or one of its open invoices with its due date, balance and days late.&quot;</span></span><span class="line"><span class="key">match</span>: [line]</span><span class="line"><span class="key">scopes</span>: [credit-b]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">line</span>: { label: <span class="str">&quot;Ligne&quot;</span> }</span><span class="line">  <span class="key">client_code</span>: { label: <span class="str">&quot;Compte&quot;</span> }</span><span class="line">  <span class="key">client_name</span>: { label: <span class="str">&quot;Client&quot;</span> }</span><span class="line">  <span class="key">piece</span>: { label: <span class="str">&quot;Pièce&quot;</span> }</span><span class="line">  <span class="key">invoice_date</span>: { label: <span class="str">&quot;Date facture&quot;</span> }</span><span class="line">  <span class="key">due_date</span>: { label: <span class="str">&quot;Échéance&quot;</span> }</span><span class="line">  <span class="key">balance</span>: { label: <span class="str">&quot;Solde&quot;</span> }</span><span class="line">  <span class="key">days_late</span>: { label: <span class="str">&quot;Retard (j)&quot;</span> }</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_agedbal_b</span><span class="line">    <span class="key">map</span>: { line: line, client_code: client_code, client_name: client_name, piece: piece, invoice_date: invoice_date,</span><span class="line">           <span class="key">due_date</span>: due_date, balance: balance, days_late: days_late }</span></code></pre></div><div role="tabpanel" id="client-commands" aria-labelledby="client-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-receivable.yaml</span>
+<span class="out">Applied entity &quot;receivable_d&quot; → connector.&quot;v_receivable_d&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get receivable_d --filter client_code=411ANSE</span>
+<span class="out">LINE                                                             CLIENT_CODE  CLIENT_NAME            PIECE      INVOICE_DATE  DUE_DATE    BALANCE  DAYS_LATE  _CONFLICTS
+411ANSE   BISCUITERIE DE L&#x27;ANSE                                  411ANSE      BISCUITERIE DE L&#x27;ANSE                                                           {}
+          FA26-0644   30/06/2026 30/07/2026     4 120,00     85  411ANSE      BISCUITERIE DE L&#x27;ANSE  FA26-0644  2026-06-30    2026-07-30  4120     85         {}
+          FA26-0708   08/07/2026 07/08/2026       985,40     77  411ANSE      BISCUITERIE DE L&#x27;ANSE  FA26-0708  2026-07-08    2026-08-07  985.4    77         {}
+          FA26-0810   14/08/2026 13/09/2026     1 276,30     40  411ANSE      BISCUITERIE DE L&#x27;ANSE  FA26-0810  2026-08-14    2026-09-13  1276.3   40         {}
+          FA26-0901   03/09/2026 03/10/2026       530,00     20  411ANSE      BISCUITERIE DE L&#x27;ANSE  FA26-0901  2026-09-03    2026-10-03  530      20         {}
+          FA26-0930   30/09/2026 30/10/2026     2 045,60      0  411ANSE      BISCUITERIE DE L&#x27;ANSE  FA26-0930  2026-09-30    2026-10-30  2045.6   0          {}</span></code></pre></div><div role="tabpanel" id="client-result" aria-labelledby="client-result-tab" tabindex="0" hidden><dl class="facts"><dt>FA26-0644</dt><dd>BISCUITERIE DE L&#x27;ANSE · 4120.00</dd><dt>FA26-0708</dt><dd>BISCUITERIE DE L&#x27;ANSE · 985.40</dd><dt>FA26-0810</dt><dd>BISCUITERIE DE L&#x27;ANSE · 1276.30</dd><dt>FA26-0901</dt><dd>BISCUITERIE DE L&#x27;ANSE · 530.00</dd><dt>FA26-0930</dt><dd>BISCUITERIE DE L&#x27;ANSE · 2045.60</dd></dl><p class="sources">preuves : replay.log, load-run.txt, client.txt, client.json, balance.txt, balance.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="client-title">Les factures d&#x27;un client, de part et d&#x27;autre d&#x27;un saut de page</h2>
+    <p>fill-down reporte le compte et le nom de chaque en-tête de client sur les factures qui le suivent. Les factures de 411ANSE commencent page 1 et continuent page 2, après un nouvel en-tête de page : les cinq portent le client. Leur somme, 8 957,30, est le total imprimé.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>FA26-0810</strong><p>Page 2, toujours 411ANSE.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un saut de page ne sépare pas un client de ses factures.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-balance" aria-labelledby="balance-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Balance"><button type="button" role="tab" id="balance-commands-tab" data-view="commands" aria-controls="balance-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="balance-result-tab" data-view="result" aria-controls="balance-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="balance-commands" aria-labelledby="balance-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity get receivable_d</span>
+<span class="out">LINE                                                             CLIENT_CODE  CLIENT_NAME               PIECE      INVOICE_DATE  DUE_DATE    BALANCE  DAYS_LATE  _CONFLICTS
+411ANSE   BISCUITERIE DE L&#x27;ANSE                                  411ANSE      BISCUITERIE DE L&#x27;ANSE                                                              {}
+411AULN   MOULIN DES AULNES                                      411AULN      MOULIN DES AULNES                                                                  {}
+411TILL   BOULANGERIE DES TILLEULS                               411TILL      BOULANGERIE DES TILLEULS                                                           {}
+          FA26-0644   30/06/2026 30/07/2026     4 120,00     85  411ANSE      BISCUITERIE DE L&#x27;ANSE     FA26-0644  2026-06-30    2026-07-30  4120     85         {}
+          FA26-0708   08/07/2026 07/08/2026       985,40     77  411ANSE      BISCUITERIE DE L&#x27;ANSE     FA26-0708  2026-07-08    2026-08-07  985.4    77         {}
+          FA26-0731   28/07/2026 27/08/2026     1 840,20     57  411TILL      BOULANGERIE DES TILLEULS  FA26-0731  2026-07-28    2026-08-27  1840.2   57         {}
+          FA26-0755   31/07/2026 30/08/2026     3 300,00     54  411AULN      MOULIN DES AULNES         FA26-0755  2026-07-31    2026-08-30  3300     54         {}
+          FA26-0802   11/08/2026 10/09/2026       612,00     43  411TILL      BOULANGERIE DES TILLEULS  FA26-0802  2026-08-11    2026-09-10  612      43         {}
+          FA26-0810   14/08/2026 13/09/2026     1 276,30     40  411ANSE      BISCUITERIE DE L&#x27;ANSE     FA26-0810  2026-08-14    2026-09-13  1276.3   40         {}
+          FA26-0822   22/08/2026 21/09/2026       742,15     32  411AULN      MOULIN DES AULNES         FA26-0822  2026-08-22    2026-09-21  742.15   32         {}
+          FA26-0901   03/09/2026 03/10/2026       530,00     20  411ANSE      BISCUITERIE DE L&#x27;ANSE     FA26-0901  2026-09-03    2026-10-03  530      20         {}
+          FA26-0911   11/09/2026 11/10/2026     1 508,90     12  411AULN      MOULIN DES AULNES         FA26-0911  2026-09-11    2026-10-11  1508.9   12         {}
+          FA26-0915   15/09/2026 15/10/2026     2 310,75      8  411TILL      BOULANGERIE DES TILLEULS  FA26-0915  2026-09-15    2026-10-15  2310.75  8          {}
+          FA26-0930   30/09/2026 30/10/2026     2 045,60      0  411ANSE      BISCUITERIE DE L&#x27;ANSE     FA26-0930  2026-09-30    2026-10-30  2045.6   0          {}
+          FA26-1003   03/10/2026 02/11/2026       264,00      0  411AULN      MOULIN DES AULNES         FA26-1003  2026-10-03    2026-11-02  264      0          {}</span></code></pre></div><div role="tabpanel" id="balance-result" aria-labelledby="balance-result-tab" tabindex="0" hidden><dl class="facts"><dt>411TILL</dt><dd>4762.95</dd><dt>411ANSE</dt><dd>8957.30</dd><dt>411AULN</dt><dd>5815.05</dd><dt>FA26-0644</dt><dd>411ANSE · 85 days late</dd><dt>FA26-0708</dt><dd>411ANSE · 77 days late</dd></dl><p class="sources">preuves : replay.log, load-run.txt, client.txt, client.json, balance.txt, balance.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="balance-title">Toute la balance, les totaux imprimés retrouvés</h2>
+    <p>Chaque facture a son client. Les factures de chaque client donnent son total imprimé : 4 762,95, 8 957,30 et 5 815,05. Deux factures ont plus de 60 jours de retard, toutes deux chez 411ANSE.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>85 et 77 jours</strong><p>FA26-0644 et FA26-0708.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le recouvrement lit ses retards sans ressaisir l&#x27;état.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Une ligne écartée par filter-where ne reporte rien : le filtre doit garder les en-têtes de client.</li><li>L&#x27;entité a pour clé la ligne imprimée : une facture réimprimée à l&#x27;identique est la même ligne.</li><li>Fichier synthétique, clients et factures fictifs.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>

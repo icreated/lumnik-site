@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Un export Excel aux cellules fusionnées : chaque ligne avec sa région et son client. — lumnik</title>
+<meta name="description" content="Les ventes envoient chaque mois un rapport Excel : un groupe par client, la région et le client dans des cellules fusionnées, un sous-total sous chaque groupe. Enregistrée en CSV, une cellule fusionnée ne garde sa valeur que sur la première ligne du groupe ; les suivantes sont vides. Les ventes veulent chaque ligne avec sa région et son client.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/excel-merged-cells/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/excel-merged-cells/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Un export Excel aux cellules fusionnées : chaque ligne avec sa région et son client.</h1>
+    <p class="lede">Les ventes envoient chaque mois un rapport Excel : un groupe par client, la région et le client dans des cellules fusionnées, un sous-total sous chaque groupe. Enregistrée en CSV, une cellule fusionnée ne garde sa valeur que sur la première ligne du groupe ; les suivantes sont vides. Les ventes veulent chaque ligne avec sa région et son client.</p>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Ventes</li><li class="tag">Reporting</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-load" data-step="load" aria-current="step"><span class="num">1 · Lire</span><span class="sub">2 exports, 1 112 lignes</span></a><a href="#step-client" data-step="client"><span class="num">2 · Un client</span><span class="sub">84 lignes</span></a><a href="#step-october" data-step="october"><span class="num">3 · Octobre</span><span class="sub">3 lignes orphelines</span></a></nav>
+  <section class="step" id="step-load" aria-labelledby="load-title">
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="load-manifest-tab" data-view="manifest" aria-controls="load-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="load-commands-tab" data-view="commands" aria-controls="load-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="load-result-tab" data-view="result" aria-controls="load-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="load-manifest" aria-labelledby="load-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-sales.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-excel-b</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [sales-b]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/excel-merged-cells/b/*.csv   <span class="comment"># one Excel sales export per month</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">dataset</span>:</span><span class="line hl">      - filter-where: { column: Date, regex: <span class="str">&quot;\\d{2}/\\d{2}/\\d{4}&quot;</span> }   <span class="comment"># the sale lines: a subtotal has no date</span></span><span class="line">    <span class="key">row</span>:</span><span class="line">      - map-columns:</span><span class="line">          <span class="key">rename</span>:</span><span class="line">            <span class="key">Région</span>: region</span><span class="line">            <span class="key">Client</span>: client</span><span class="line">            <span class="key">Date</span>: sale_date</span><span class="line">            <span class="key">Pièce</span>: piece</span><span class="line">            <span class="key">Article</span>: article</span><span class="line">            <span class="key">Quantité</span>: quantity</span><span class="line">            Montant HT: amount</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      - regex-extract: { column: sale_date, pattern: <span class="str">&quot;^\\d{2}/(\\d{2})/\\d{4}$&quot;</span>, groups: { 1: month } }</span><span class="line">      - parse-date: { column: sale_date, formats: [<span class="str">&quot;dd/MM/yyyy&quot;</span>] }</span><span class="line">      - parse-number: { column: quantity, integer: true }</span><span class="line">      - parse-number: { column: amount }</span><span class="line hl">      - fill-down: { columns: [region, client] }   <span class="comment"># a merged cell: written on its group&#x27;s first row only</span></span></code></pre></div><div role="tabpanel" id="load-commands" aria-labelledby="load-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-sales.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-excel-d&quot;,&quot;connectorId&quot;:&quot;78cde8f0-c605-48d9-a612-edfefa96d056&quot;,&quot;endpointsApplied&quot;:1}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-excel-d</span>
+<span class="out">run scheduled: a7e06157-317c-4180-93dc-03d8e32abddd</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get a7e06157-317c-4180-93dc-03d8e32abddd</span>
+<span class="out">ID        CONNECTOR         ENDPOINT  STATUS     IN    OUT   SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+a7e06157  scenario-excel-d  default   Completed  1112  1097  15       0             2026-10-24 19:27  2026-10-24 19:27  no</span></code></pre></div><div role="tabpanel" id="load-result" aria-labelledby="load-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 1112 · OUT 1097 · SKIPPED 15</dd></dl><p class="sources">preuves : replay.log, load-run.txt, client.txt, client.json, october.txt, october.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="load-title">Les lignes de vente, sans les sous-totaux</h2>
+    <p>filter-where ne garde que les lignes datées : les 15 sous-totaux sont écartés et comptés. map-columns renomme les en-têtes, parse-date et parse-number lisent dates et montants. fill-down reporte la région et le client de la première ligne d&#x27;un groupe sur les suivantes.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>15 sous-totaux</strong><p>Écartés, comptés dans SKIPPED.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un rapport mis en forme pour l&#x27;œil se lit comme une table.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-client" aria-labelledby="client-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Un client"><button type="button" role="tab" id="client-manifest-tab" data-view="manifest" aria-controls="client-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="client-commands-tab" data-view="commands" aria-controls="client-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="client-result-tab" data-view="result" aria-controls="client-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="client-manifest" aria-labelledby="client-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-sales-line.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: sales_line_b</span><span class="line"><span class="key">label</span>: Ligne de vente</span><span class="line"><span class="key">description</span>: <span class="str">&quot;One sale line of a monthly Excel export: its region and client, its date, invoice, article, quantity and amount.&quot;</span></span><span class="line"><span class="key">match</span>: [piece]</span><span class="line"><span class="key">scopes</span>: [sales-b]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">piece</span>: { label: <span class="str">&quot;Pièce&quot;</span> }</span><span class="line">  <span class="key">month</span>: { label: <span class="str">&quot;Mois&quot;</span> }</span><span class="line">  <span class="key">region</span>: { label: <span class="str">&quot;Région&quot;</span> }</span><span class="line">  <span class="key">client</span>: { label: <span class="str">&quot;Client&quot;</span> }</span><span class="line">  <span class="key">sale_date</span>: { label: <span class="str">&quot;Date&quot;</span> }</span><span class="line">  <span class="key">article</span>: { label: <span class="str">&quot;Article&quot;</span> }</span><span class="line">  <span class="key">quantity</span>: { label: <span class="str">&quot;Quantité&quot;</span> }</span><span class="line">  <span class="key">amount</span>: { label: <span class="str">&quot;Montant HT&quot;</span> }</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_excel_b</span><span class="line">    <span class="key">map</span>: { piece: piece, month: month, region: region, client: client, sale_date: sale_date, article: article, quantity: quantity, amount: amount }</span></code></pre></div><div role="tabpanel" id="client-commands" aria-labelledby="client-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-sales-line.yaml</span>
+<span class="out">Applied entity &quot;sales_line_d&quot; → connector.&quot;v_sales_line_d&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get sales_line_d --filter &quot;client=Biscuiterie de l&#x27;Anse&quot;</span>
+<span class="out">PIECE       MONTH  REGION  CLIENT                 SALE_DATE   ARTICLE                  QUANTITY  AMOUNT  _CONFLICTS
+FA26090456  09     Est     Biscuiterie de l&#x27;Anse  2026-09-06  Crème 35 % 5 L           6         136.5   {}
+FA26090457  09     Est     Biscuiterie de l&#x27;Anse  2026-09-09  Œufs plein air x180      1         39.6    {}
+FA26090458  09     Est     Biscuiterie de l&#x27;Anse  2026-09-12  Amandes effilées 1 kg    8         130.4   {}
+FA26090459  09     Est     Biscuiterie de l&#x27;Anse  2026-09-15  Farine T65 25 kg         3         55.2    {}
+FA26090460  09     Est     Biscuiterie de l&#x27;Anse  2026-09-18  Sucre semoule 10 kg      10        129     {}
+FA26090461  09     Est     Biscuiterie de l&#x27;Anse  2026-09-21  Beurre AOP 5 kg          5         207.5   {}
+FA26090462  09     Est     Biscuiterie de l&#x27;Anse  2026-09-24  Levure fraîche 1 kg      12        38.4    {}
+FA26090463  09     Est     Biscuiterie de l&#x27;Anse  2026-09-27  Chocolat noir 64 % 5 kg  7         406     {}
+FA26090464  09     Est     Biscuiterie de l&#x27;Anse  2026-09-02  Crème 35 % 5 L           2         45.5    {}
+FA26090465  09     Est     Biscuiterie de l&#x27;Anse  2026-09-05  Œufs plein air x180      9         356.4   {}
+FA26090466  09     Est     Biscuiterie de l&#x27;Anse  2026-09-08  Amandes effilées 1 kg    4         65.2    {}
+FA26090467  09     Est     Biscuiterie de l&#x27;Anse  2026-09-11  Farine T65 25 kg         11        202.4   {}
+FA26090468  09     Est     Biscuiterie de l&#x27;Anse  2026-09-14  Sucre semoule 10 kg      6         77.4    {}
+FA26090469  09     Est     Biscuiterie de l&#x27;Anse  2026-09-17  Beurre AOP 5 kg          1         41.5    {}
+FA26090470  09     Est     Biscuiterie de l&#x27;Anse  2026-09-20  Levure fraîche 1 kg      8         25.6    {}
+FA26090471  09     Est     Biscuiterie de l&#x27;Anse  2026-09-23  Chocolat noir 64 % 5 kg  3         174     {}
+FA26090472  09     Est     Biscuiterie de l&#x27;Anse  2026-09-26  Crème 35 % 5 L           10        227.5   {}
+FA26090473  09     Est     Biscuiterie de l&#x27;Anse  2026-09-01  Œufs plein air x180      5         198     {}
+FA26090474  09     Est     Biscuiterie de l&#x27;Anse  2026-09-04  Amandes effilées 1 kg    12        195.6   {}
+FA26090475  09     Est     Biscuiterie de l&#x27;Anse  2026-09-07  Farine T65 25 kg         7         128.8   {}
+FA26090476  09     Est     Biscuiterie de l&#x27;Anse  2026-09-10  Sucre semoule 10 kg      2         25.8    {}
+FA26090477  09     Est     Biscuiterie de l&#x27;Anse  2026-09-13  Beurre AOP 5 kg          9         373.5   {}
+FA26090478  09     Est     Biscuiterie de l&#x27;Anse  2026-09-16  Levure fraîche 1 kg      4         12.8    {}
+FA26090479  09     Est     Biscuiterie de l&#x27;Anse  2026-09-19  Chocolat noir 64 % 5 kg  11        638     {}
+FA26090480  09     Est     Biscuiterie de l&#x27;Anse  2026-09-22  Crème 35 % 5 L           6         136.5   {}
+FA26090481  09     Est     Biscuiterie de l&#x27;Anse  2026-09-25  Œufs plein air x180      1         39.6    {}
+FA26090482  09     Est     Biscuiterie de l&#x27;Anse  2026-09-28  Amandes effilées 1 kg    8         130.4   {}
+FA26090483  09     Est     Biscuiterie de l&#x27;Anse  2026-09-03  Farine T65 25 kg         3         55.2    {}
+FA26090484  09     Est     Biscuiterie de l&#x27;Anse  2026-09-06  Sucre semoule 10 kg      10        129     {}
+FA26090485  09     Est     Biscuiterie de l&#x27;Anse  2026-09-09  Beurre AOP 5 kg          5         207.5   {}
+FA26090486  09     Est     Biscuiterie de l&#x27;Anse  2026-09-12  Levure fraîche 1 kg      12        38.4    {}
+FA26090487  09     Est     Biscuiterie de l&#x27;Anse  2026-09-15  Chocolat noir 64 % 5 kg  7         406     {}
+FA26090488  09     Est     Biscuiterie de l&#x27;Anse  2026-09-18  Crème 35 % 5 L           2         45.5    {}
+FA26090489  09     Est     Biscuiterie de l&#x27;Anse  2026-09-21  Œufs plein air x180      9         356.4   {}
+FA26090490  09     Est     Biscuiterie de l&#x27;Anse  2026-09-24  Amandes effilées 1 kg    4         65.2    {}
+FA26090491  09     Est     Biscuiterie de l&#x27;Anse  2026-09-27  Farine T65 25 kg         11        202.4   {}
+FA26090492  09     Est     Biscuiterie de l&#x27;Anse  2026-09-02  Sucre semoule 10 kg      6         77.4    {}
+FA26090493  09     Est     Biscuiterie de l&#x27;Anse  2026-09-05  Beurre AOP 5 kg          1         41.5    {}
+FA26090494  09     Est     Biscuiterie de l&#x27;Anse  2026-09-08  Levure fraîche 1 kg      8         25.6    {}
+FA26090495  09     Est     Biscuiterie de l&#x27;Anse  2026-09-11  Chocolat noir 64 % 5 kg  3         174     {}
+FA26090496  09     Est     Biscuiterie de l&#x27;Anse  2026-09-14  Crème 35 % 5 L           10        227.5   {}
+FA26090497  09     Est     Biscuiterie de l&#x27;Anse  2026-09-17  Œufs plein air x180      5         198     {}
+FA26090498  09     Est     Biscuiterie de l&#x27;Anse  2026-09-20  Amandes effilées 1 kg    12        195.6   {}
+FA26090499  09     Est     Biscuiterie de l&#x27;Anse  2026-09-23  Farine T65 25 kg         7         128.8   {}
+FA26090500  09     Est     Biscuiterie de l&#x27;Anse  2026-09-26  Sucre semoule 10 kg      2         25.8    {}
+FA26090501  09     Est     Biscuiterie de l&#x27;Anse  2026-09-01  Beurre AOP 5 kg          9         373.5   {}
+FA26090502  09     Est     Biscuiterie de l&#x27;Anse  2026-09-04  Levure fraîche 1 kg      4         12.8    {}
+FA26090503  09     Est     Biscuiterie de l&#x27;Anse  2026-09-07  Chocolat noir 64 % 5 kg  11        638     {}
+FA26090504  09     Est     Biscuiterie de l&#x27;Anse  2026-09-10  Crème 35 % 5 L           6         136.5   {}
+FA26090505  09     Est     Biscuiterie de l&#x27;Anse  2026-09-13  Œufs plein air x180      1         39.6    {}
+FA26090506  09     Est     Biscuiterie de l&#x27;Anse  2026-09-16  Amandes effilées 1 kg    8         130.4   {}
+FA26090507  09     Est     Biscuiterie de l&#x27;Anse  2026-09-19  Farine T65 25 kg         3         55.2    {}
+FA26090508  09     Est     Biscuiterie de l&#x27;Anse  2026-09-22  Sucre semoule 10 kg      10        129     {}
+FA26090509  09     Est     Biscuiterie de l&#x27;Anse  2026-09-25  Beurre AOP 5 kg          5         207.5   {}
+FA26090510  09     Est     Biscuiterie de l&#x27;Anse  2026-09-28  Levure fraîche 1 kg      12        38.4    {}
+FA26090511  09     Est     Biscuiterie de l&#x27;Anse  2026-09-03  Chocolat noir 64 % 5 kg  7         406     {}
+FA26090512  09     Est     Biscuiterie de l&#x27;Anse  2026-09-06  Crème 35 % 5 L           2         45.5    {}
+FA26090513  09     Est     Biscuiterie de l&#x27;Anse  2026-09-09  Œufs plein air x180      9         356.4   {}
+FA26090514  09     Est     Biscuiterie de l&#x27;Anse  2026-09-12  Amandes effilées 1 kg    4         65.2    {}
+FA26090515  09     Est     Biscuiterie de l&#x27;Anse  2026-09-15  Farine T65 25 kg         11        202.4   {}
+FA26090516  09     Est     Biscuiterie de l&#x27;Anse  2026-09-18  Sucre semoule 10 kg      6         77.4    {}
+FA26090517  09     Est     Biscuiterie de l&#x27;Anse  2026-09-21  Beurre AOP 5 kg          1         41.5    {}
+FA26090518  09     Est     Biscuiterie de l&#x27;Anse  2026-09-24  Levure fraîche 1 kg      8         25.6    {}
+FA26090519  09     Est     Biscuiterie de l&#x27;Anse  2026-09-27  Chocolat noir 64 % 5 kg  3         174     {}
+FA26090520  09     Est     Biscuiterie de l&#x27;Anse  2026-09-02  Crème 35 % 5 L           10        227.5   {}
+FA26090521  09     Est     Biscuiterie de l&#x27;Anse  2026-09-05  Œufs plein air x180      5         198     {}
+FA26090522  09     Est     Biscuiterie de l&#x27;Anse  2026-09-08  Amandes effilées 1 kg    12        195.6   {}
+FA26090523  09     Est     Biscuiterie de l&#x27;Anse  2026-09-11  Farine T65 25 kg         7         128.8   {}
+FA26090524  09     Est     Biscuiterie de l&#x27;Anse  2026-09-14  Sucre semoule 10 kg      2         25.8    {}
+FA26090525  09     Est     Biscuiterie de l&#x27;Anse  2026-09-17  Beurre AOP 5 kg          9         373.5   {}
+FA26090526  09     Est     Biscuiterie de l&#x27;Anse  2026-09-20  Levure fraîche 1 kg      4         12.8    {}
+FA26090527  09     Est     Biscuiterie de l&#x27;Anse  2026-09-23  Chocolat noir 64 % 5 kg  11        638     {}
+FA26090528  09     Est     Biscuiterie de l&#x27;Anse  2026-09-26  Crème 35 % 5 L           6         136.5   {}
+FA26090529  09     Est     Biscuiterie de l&#x27;Anse  2026-09-01  Œufs plein air x180      1         39.6    {}
+FA26090530  09     Est     Biscuiterie de l&#x27;Anse  2026-09-04  Amandes effilées 1 kg    8         130.4   {}
+FA26090531  09     Est     Biscuiterie de l&#x27;Anse  2026-09-07  Farine T65 25 kg         3         55.2    {}
+FA26090532  09     Est     Biscuiterie de l&#x27;Anse  2026-09-10  Sucre semoule 10 kg      10        129     {}
+FA26090533  09     Est     Biscuiterie de l&#x27;Anse  2026-09-13  Beurre AOP 5 kg          5         207.5   {}
+FA26090534  09     Est     Biscuiterie de l&#x27;Anse  2026-09-16  Levure fraîche 1 kg      12        38.4    {}
+FA26090535  09     Est     Biscuiterie de l&#x27;Anse  2026-09-19  Chocolat noir 64 % 5 kg  7         406     {}
+FA26090536  09     Est     Biscuiterie de l&#x27;Anse  2026-09-22  Crème 35 % 5 L           2         45.5    {}
+FA26090537  09     Est     Biscuiterie de l&#x27;Anse  2026-09-25  Œufs plein air x180      9         356.4   {}
+FA26090538  09     Est     Biscuiterie de l&#x27;Anse  2026-09-28  Amandes effilées 1 kg    4         65.2    {}
+FA26090539  09     Est     Biscuiterie de l&#x27;Anse  2026-09-03  Farine T65 25 kg         11        202.4   {}</span></code></pre></div><div role="tabpanel" id="client-result" aria-labelledby="client-result-tab" tabindex="0" hidden><dl class="facts"><dt>lines</dt><dd>84</dd><dt>region</dt><dd>Est</dd><dt>quantity</dt><dd>546</dd><dt>amount</dt><dd>13603.90</dd></dl><p class="sources">preuves : replay.log, load-run.txt, client.txt, client.json, october.txt, october.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="client-title">Un client à cheval sur deux morceaux de 500 lignes</h2>
+    <p>Le hub lit un fichier par morceaux de 500 lignes. Biscuiterie de l&#x27;Anse occupe les lignes 461 à 544 : son groupe est coupé en deux. Ses 84 lignes portent toutes Est et le client ; 546 unités et 13 603,90, le sous-total de l&#x27;export.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>13 603,90</strong><p>Le sous-total de l&#x27;export, retrouvé.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La valeur reportée passe d&#x27;un morceau à l&#x27;autre.</p></div>
+  </aside>
+</section>
+<section class="step" id="step-october" aria-labelledby="october-title" data-inactive>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Octobre"><button type="button" role="tab" id="october-commands-tab" data-view="commands" aria-controls="october-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="october-result-tab" data-view="result" aria-controls="october-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" id="october-commands" aria-labelledby="october-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity get sales_line_d --filter month=10</span>
+<span class="out">PIECE       MONTH  REGION  CLIENT             SALE_DATE   ARTICLE                  QUANTITY  AMOUNT  _CONFLICTS
+FA26100001  10                                2026-10-01  Farine T65 25 kg         1         18.4    {}
+FA26100002  10                                2026-10-04  Sucre semoule 10 kg      8         103.2   {}
+FA26100003  10                                2026-10-07  Beurre AOP 5 kg          3         124.5   {}
+FA26100004  10     Est     Fromagerie du Val  2026-10-02  Sucre semoule 10 kg      2         25.8    {}
+FA26100005  10     Est     Fromagerie du Val  2026-10-05  Beurre AOP 5 kg          9         373.5   {}
+FA26100006  10     Est     Fromagerie du Val  2026-10-08  Levure fraîche 1 kg      4         12.8    {}
+FA26100007  10     Est     Fromagerie du Val  2026-10-11  Chocolat noir 64 % 5 kg  11        638     {}
+FA26100008  10     Est     Fromagerie du Val  2026-10-14  Crème 35 % 5 L           6         136.5   {}
+FA26100009  10     Ouest   Épicerie Lemoine   2026-10-03  Beurre AOP 5 kg          3         124.5   {}
+FA26100010  10     Ouest   Épicerie Lemoine   2026-10-06  Levure fraîche 1 kg      10        32      {}
+FA26100011  10     Ouest   Épicerie Lemoine   2026-10-09  Chocolat noir 64 % 5 kg  5         290     {}
+FA26100012  10     Ouest   Épicerie Lemoine   2026-10-12  Crème 35 % 5 L           12        273     {}</span></code></pre></div><div role="tabpanel" id="october-result" aria-labelledby="october-result-tab" tabindex="0" hidden><dl class="facts"><dt>FA26100001</dt><dd>— · —</dd><dt>FA26100002</dt><dd>— · —</dd><dt>FA26100003</dt><dd>— · —</dd><dt>FA26100004</dt><dd>Est · Fromagerie du Val</dd></dl><p class="sources">preuves : replay.log, load-run.txt, client.txt, client.json, october.txt, october.json · transform v1</p></div>
+  </div>
+  <aside class="explain">
+    <h2 id="october-title">Un export copié depuis une feuille filtrée</h2>
+    <p>En octobre, l&#x27;export a été copié depuis une feuille filtrée qui masquait la première ligne du premier groupe : ses trois premières lignes n&#x27;ont ni région ni client. Elles restent vides et n&#x27;héritent pas du dernier client de septembre : chaque fichier commence sans valeur reportée.</p>
+    <ol class="points"><li><span class="n">1</span><div><strong>FA26100001</strong><p>Ni région ni client, comme dans l&#x27;export.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une valeur ne passe jamais d&#x27;un fichier à l&#x27;autre.</p></div>
+  </aside>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>fill-down suit l&#x27;ordre du fichier : sort-by à côté est refusé.</li><li>Une ligne écartée par filter-where ne reporte rien : la première ligne d&#x27;un groupe ne doit pas être filtrée.</li><li>Fichiers synthétiques, clients fictifs.</li></ul></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
