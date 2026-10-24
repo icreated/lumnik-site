@@ -200,8 +200,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:f03dace78e160c92d14797bd736750879805033594453db69da05dae10b2acb2"
+      "replayedAt": "2026-10-24",
+      "evidenceDigest": "sha256:73eef16fb8a3e583290dc2c1240962786cdbdd4d1cef0e613e61978beef0d34f"
     },
     {
       "slug": "edifact-orders",
