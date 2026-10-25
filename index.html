@@ -88,19 +88,19 @@
       <a class="porte scenario" href="scenarios/dirty-order-statuses/">
         <span class="scenario-famille">Réparer un export <span class="edition">Open</span></span>
         <h3>Quatorze orthographes dans une colonne statut.</h3>
-        <span class="porte-dit">Le métier déclare quatre statuts. lumnik liste les orthographes qui restent à trancher.</span>
+        <span class="porte-dit">L'équipe déclare quatre statuts. lumnik liste les autres orthographes à traiter.</span>
         <span class="porte-lien">Voir le scénario →</span>
       </a>
       <a class="porte scenario" href="scenarios/entity-resolution/">
         <span class="scenario-famille">Rassembler les sources <span class="edition">Open</span></span>
         <h3>Un client, deux systèmes, aucun identifiant commun.</h3>
-        <span class="porte-dit">L'email rapproche les fiches. Un doute reste une question, tranchée par un humain.</span>
+        <span class="porte-dit">L'email rapproche les fiches. Si le lien reste incertain, une personne tranche.</span>
         <span class="porte-lien">Voir le scénario →</span>
       </a>
       <a class="porte scenario" href="scenarios/export-that-lies/">
-        <span class="scenario-famille">Ne rien perdre en silence <span class="edition">Open</span></span>
+        <span class="scenario-famille">Repérer les lignes rejetées <span class="edition">Open</span></span>
         <h3>L'export qui ment&nbsp;: une ligne illisible ne passe pas en silence.</h3>
-        <span class="porte-dit">La ligne cassée est mise de côté, avec ses valeurs. Le catalogue ne perd rien.</span>
+        <span class="porte-dit">La ligne illisible est mise de côté avec ses valeurs et la cause du rejet.</span>
         <span class="porte-lien">Voir le scénario →</span>
       </a>
       <a class="porte scenario" href="scenarios/orders-where-they-sleep/">
@@ -110,7 +110,7 @@
         <span class="porte-lien">Voir le scénario →</span>
       </a>
       <a class="porte scenario" href="scenarios/zombie-cmms/">
-        <span class="scenario-famille">Servir les métiers <span class="edition">Open</span></span>
+        <span class="scenario-famille">Servir les équipes <span class="edition">Open</span></span>
         <h3>Le système zombie&nbsp;: trente ans d'ordres de travail, la machine éteinte, le hub répond toujours.</h3>
         <span class="porte-dit">Une dernière lecture, et la vieille machine peut s'éteindre.</span>
         <span class="porte-lien">Voir le scénario →</span>
@@ -118,7 +118,7 @@
       <a class="porte scenario" href="scenarios/purchasing-ask-abstains/">
         <span class="scenario-famille">Interroger ses données <span class="edition">Pro</span></span>
         <h3>La question à laquelle Ask refuse de répondre&nbsp;: une marge sans coût, un «&nbsp;meilleur&nbsp;» sans critère.</h3>
-        <span class="porte-dit">Trois chiffres, chacun avec son SQL. Trois refus plutôt qu'un chiffre inventé.</span>
+        <span class="porte-dit">Chaque chiffre est accompagné de son SQL. Si les données manquent, Ask refuse de répondre.</span>
         <span class="porte-lien">Voir le scénario →</span>
       </a>
     </div>
@@ -139,7 +139,7 @@
       </div>
       <div class="geste" id="sens">
         <h3>Réparer</h3>
-        <p>Dates, accents, montants, formats anciens d'un export&nbsp;: la correction se déclare à l'entrée. Une ligne illisible est mise de côté, avec sa raison.</p>
+        <p>Dans un export, les dates, accents, montants et anciens formats sont corrigés pendant l'import. Une ligne illisible est mise de côté avec la cause du rejet.</p>
       </div>
       <div class="geste" id="faits">
         <h3>Rassembler</h3>
@@ -147,11 +147,11 @@
       </div>
       <div class="geste" id="temps">
         <h3>Surveiller</h3>
-        <p>Chaque lecture est datée. Ce qui dort au-delà du seuil déclaré arrive dans une boîte de décisions.</p>
+        <p>Chaque lecture est datée. Un dossier inchangé au-delà du délai prévu arrive dans la boîte de décisions.</p>
       </div>
       <div class="geste" id="servir">
         <h3>Servir</h3>
-        <p>Une app par métier sur le téléphone, une API, du SQL, des webhooks. Avec Pro, des questions en langage naturel.</p>
+        <p>Une app par équipe, une API, du SQL et des webhooks. Pro ajoute les questions en langage naturel.</p>
       </div>
     </div>
     <p class="serment"><b>Rien ne se perd sans être compté.</b> À chaque lecture, les lignes lues égalent les lignes écrites plus les lignes écartées.</p>
@@ -179,7 +179,7 @@
           <li>Des connecteurs&nbsp;: fichiers, bases PostgreSQL, REST, GraphQL, SOAP</li>
           <li>La fusion des fiches et le registre des désaccords</li>
           <li>Vues, processus, workflows et boîte de décisions</li>
-          <li>L'app des métiers, sur téléphone</li>
+          <li>Les apps d'équipe, sur téléphone</li>
           <li>Des webhooks signés et des emails</li>
           <li><code>lm</code>, la ligne de commande de l'intégrateur</li>
         </ul>
@@ -201,7 +201,7 @@
     <ul class="confiance-liste">
       <li><strong>Lecture seule.</strong> lumnik n'écrit jamais dans vos systèmes.</li>
       <li><strong>Isolation par la base.</strong> PostgreSQL cloisonne chaque ligne par organisation.</li>
-      <li><strong>Chez vous.</strong> Sur vos serveurs. L'IA de Pro peut tourner dans vos murs.</li>
+      <li><strong>Chez vous.</strong> Le hub tourne sur vos serveurs. Avec Pro, le modèle d'IA peut aussi y tourner.</li>
       <li><strong>Réversible.</strong> Des tables PostgreSQL ordinaires, un pg_dump standard.</li>
     </ul>
     <p class="confiance-liens">
@@ -212,7 +212,7 @@
     </p>
     <div class="portes-grille">
       <a class="porte" id="direction" href="scenarios/">
-        <span class="porte-qui">Direction &amp; métiers</span>
+        <span class="porte-qui">Direction &amp; équipes</span>
         <span class="porte-dit">Votre situation est peut-être déjà rejouée.</span>
         <span class="porte-lien">Les scénarios →</span>
       </a>
@@ -223,7 +223,7 @@
       </a>
       <a class="porte" id="integrateurs" href="https://docs.lumnik.io/integration-as-code/" rel="noopener">
         <span class="porte-qui">Intégrateurs &amp; ESN</span>
-        <span class="porte-dit">Décrivez un SI une fois en YAML. Rejouez-le chez le client suivant.</span>
+        <span class="porte-dit">Décrivez un SI en YAML. Réutilisez cette intégration chez le client suivant.</span>
         <span class="porte-lien">L'intégration comme du code →</span>
       </a>
     </div>

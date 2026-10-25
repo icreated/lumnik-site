@@ -53,7 +53,7 @@
         <div class="schema-blocs">
           <span>ERP &amp; gestion</span>
           <span>Exports &amp; fichiers</span>
-          <span>Applications métier</span>
+          <span>Applications d'équipe</span>
         </div>
       </div>
       <div class="fleche" aria-hidden="true">→</div>
@@ -70,7 +70,7 @@
       </div>
       <div class="fleche" aria-hidden="true">→</div>
       <div class="colonne">
-        <h3>Vos métiers</h3>
+        <h3>Vos équipes</h3>
         <div class="schema-blocs">
           <span>App sur téléphone</span>
           <span>API</span>
@@ -81,11 +81,11 @@
     </div>
     <div class="garanties" aria-label="Ce que la DSI peut vérifier">
       <p><strong>Lecture seule.</strong> Les connecteurs lisent. Aucun chemin n'écrit vers vos logiciels.</p>
-      <p><strong>L'isolation vit dans la base.</strong> PostgreSQL cloisonne ligne par ligne (Row-Level Security), par organisation.</p>
+      <p><strong>La base assure l'isolation.</strong> PostgreSQL sépare les lignes de chaque organisation avec la Row-Level Security.</p>
       <p><strong>Le SQL généré ne peut que lire.</strong> Avec Pro, la requête de l'IA s'exécute sous un rôle sans droit d'écriture, quoi que produise le modèle.</p>
-      <p><strong>Le journal d'audit ne se réécrit pas.</strong> Le rôle applicatif n'a ni UPDATE ni DELETE dessus. Une purge de rétention le taille au-delà de 365 jours par défaut, réglable.</p>
-      <p><strong>Chez vous.</strong> Le hub tourne sur vos serveurs. Avec Pro, le modèle d'IA peut tourner dans vos murs.</p>
-      <p><strong>Réversible.</strong> Des tables PostgreSQL ordinaires et un pg_dump standard. Aucune copie à réclamer chez un éditeur.</p>
+      <p><strong>L'application ne peut pas modifier le journal d'audit.</strong> Son rôle n'a ni UPDATE ni DELETE sur ce journal. Par défaut, une purge supprime les entrées de plus de 365 jours. Ce délai est réglable.</p>
+      <p><strong>Chez vous.</strong> Le hub tourne sur vos serveurs. Avec Pro, le modèle d'IA peut aussi y tourner.</p>
+      <p><strong>Réversible.</strong> Les données restent dans des tables PostgreSQL ordinaires. Vous pouvez les sauvegarder avec pg_dump sans demander d'export à un éditeur.</p>
     </div>
     <p class="confiance-liens">
       <a href="https://docs.lumnik.io/security/" rel="noopener">Le vérifier en cinq minutes</a>
