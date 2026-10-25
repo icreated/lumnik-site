@@ -6,39 +6,32 @@ import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = (
-    "index.html",
-    "produit.html",
-    "situations.html",
-    "pour-qui.html",
-    "architecture.html",
-    "offre.html",
-    "essai.html",
-    "pourquoi.html",
-)
+# The visitor's path (spec 2026-10-25): understand on the home, see a replayed scenario, try Open.
+PAGES = ("index.html", "essai.html", "offre.html", "architecture.html", "pourquoi.html")
 ALL_PAGES = PAGES + ("mentions.html", "dossier.html")
-# The navigation of issue #13: labels a visitor understands without knowing lumnik.
 TARGET_NAV = (
-    ("Produit", "produit.html"),
-    ("Situations", "situations.html"),
-    ("Pour qui", "pour-qui.html"),
-    ("Architecture", "architecture.html"),
-    ("Offre", "offre.html#offre"),
+    ("Scénarios", "scenarios/"),
+    ("Sécurité", "architecture.html"),
+    ("Offre", "offre.html"),
+    ("Docs", "https://docs.lumnik.io"),
     ("Essayer", "essai.html"),
-    ("Nous parler", "offre.html#contact"),
 )
-NAV_LABELS = tuple(label for label, _ in TARGET_NAV)
-# Issue #15: the three pages that became relays, where each now sends its visitor, and every
-# anchor they ever published — a bookmark or a search result must still land on its section.
+# GitHub Pages cannot redirect server-side: each retired page is a small relay. The fragments
+# listed are the ones its target still answers, so an old bookmark lands on its section.
 RELAYS = {
-    "gel.html": ("situations.html", ("probleme", "comparaison")),
-    "degel.html": ("produit.html", ("comment", "faits", "sens", "temps")),
-    "mouvement.html": ("situations.html", ("adaptateur", "cas", "industrie", "negoce", "services", "secteur-public")),
+    "produit.html": ("index.html", ("comment", "faits", "sens", "temps")),
+    "situations.html": ("scenarios/", ()),
+    "pour-qui.html": ("index.html", ("direction", "dsi", "integrateurs")),
+    "gel.html": ("pourquoi.html", ()),
+    "degel.html": ("index.html", ("comment", "faits", "sens", "temps")),
+    "mouvement.html": ("scenarios/", ()),
 }
-# Wordings the theses ruled out site-wide: absolutes, real-time, maturity copied away from its
-# single source, and a promise of French. Since lumnik#873 the answer follows the question's
-# language, but the deterministic messages (abstentions, refusals, `data as of`) stay English and
-# a terse question can still fall back to English (lumnik#879): "langage naturel" is what holds.
+# The five-second test of #13 never ran, and the hero they compared is gone.
+RETIRED = ("heros-a.html", "heros-b.html")
+# Wordings the theses ruled out, on the site and on the scenario pages alike: absolutes, real
+# time, maturity copied away from its single source, a promise of French (the deterministic
+# messages stay English, lumnik#879), citations the answer does not give (it shows its query,
+# lumnik#874), and security or permanence sold as guarantees.
 SITE_FORBIDDEN = (
     "temps réel",
     "zéro risque",
@@ -49,16 +42,47 @@ SITE_FORBIDDEN = (
     "personne d'extérieur",
     "lumnik Console",
     "console-preuve",
-    # The answer shows the query it ran; "sources" promised citations it does not give (lumnik#874).
     "sources citées",
     "sourcée",
     "avec ses sources",
     "en français",
-    # Security and permanence are mechanisms, never guarantees.
     "fuite de données",
     "pour toujours",
     "sans risque",
 )
+# On the site's own pages only: the virtue words, and every offer of a demo — there is none
+# for now (Sergey, 2026-10-25); the visitor installs lumnik Open alone.
+PAGE_FORBIDDEN = SITE_FORBIDDEN + (
+    "honnête",
+    "proxy",
+    "nettoie",
+    "gelée",
+    "Demander une démonstration",
+    "démonstration sur",
+    "Demander un pilote",
+    "bac à sable",
+    "Demander mes accès",
+    # Transformers repair a file export; a table or an API is read as it is (docs/wow.md).
+    "répare et rassemble leurs données",
+)
+HOME_SECTIONS = ("situations", "comment", "essayer", "confiance")
+# One replayed scenario per kind of problem; each card shows the title the catalogue serves.
+FEATURED = (
+    "dirty-order-statuses",
+    "entity-resolution",
+    "export-that-lies",
+    "orders-where-they-sleep",
+    "zombie-cmms",
+    "purchasing-ask-abstains",
+)
+HERO_H1 = "<h1>Vos logiciels restent en place.<br>Vos données <em>se remettent au travail</em>.</h1>"
+# The two commands and the result line of docs/deploy.md (lumnik monorepo), as up.sh prints them.
+CLONE = "git clone https://github.com/icreated/lumnik-open.git && cd lumnik-open"
+UP = "./deploy/selfhost/up.sh --build"
+HEALTHY = "==> hub is healthy"
+DOCS = "https://docs.lumnik.io/"
+FICHE = json.loads((ROOT / "donnees" / "p1008.json").read_text(encoding="utf-8"))
+CATALOGUE = {e["slug"]: e for e in json.loads((ROOT / "scenarios" / "index.json").read_text(encoding="utf-8"))["scenarios"]}
 
 
 class SitePage(HTMLParser):
@@ -69,7 +93,6 @@ class SitePage(HTMLParser):
         self.buttons = []
         self.menu_lists = []
         self.current_links = []
-        self.nav_text = []
         self.title_parts = []
         self.canonical = ""
         self.description = ""
@@ -79,7 +102,6 @@ class SitePage(HTMLParser):
         self.canonical_count = 0
         self.description_count = 0
         self.open_graph = {}
-        self._inside_nav = False
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -93,8 +115,6 @@ class SitePage(HTMLParser):
             self.buttons.append(attrs)
         if tag == "ul" and attrs.get("id") == "menu-principal":
             self.menu_lists.append(attrs)
-        if tag == "nav":
-            self._inside_nav = True
         if tag == "title":
             self._inside_title = True
             self.title_count += 1
@@ -110,14 +130,10 @@ class SitePage(HTMLParser):
             self.h1_count += 1
 
     def handle_endtag(self, tag):
-        if tag == "nav":
-            self._inside_nav = False
         if tag == "title":
             self._inside_title = False
 
     def handle_data(self, data):
-        if self._inside_nav and data.strip():
-            self.nav_text.append(data.strip())
         if self._inside_title:
             self.title_parts.append(data)
 
@@ -128,289 +144,8 @@ def load_page(name):
     return page
 
 
-class SiteStructureTest(unittest.TestCase):
-    def test_expected_pages_exist(self):
-        for name in ALL_PAGES:
-            with self.subTest(name=name):
-                self.assertTrue((ROOT / name).is_file())
-
-    def test_every_page_exposes_the_global_navigation(self):
-        for name in ALL_PAGES:
-            menu = between((ROOT / name).read_text(encoding="utf-8"), '<ul id="menu-principal">', "</ul>")
-            for label, href in TARGET_NAV:
-                with self.subTest(name=name, label=label):
-                    self.assertIn(f'href="{href}"', menu)
-                    self.assertIn(f">{label}</a>", menu)
-
-    def test_mobile_menu_contract_is_present(self):
-        for name in ALL_PAGES:
-            page = load_page(name)
-            menu_buttons = [
-                button
-                for button in page.buttons
-                if button.get("aria-controls") == "menu-principal"
-            ]
-            with self.subTest(name=name):
-                self.assertEqual(1, len(menu_buttons))
-                self.assertEqual("false", menu_buttons[0].get("aria-expanded"))
-                self.assertEqual(1, len(page.menu_lists))
-
-    def test_mobile_menu_script_supports_keyboard_close(self):
-        script = (ROOT / "site.js").read_text(encoding="utf-8")
-        self.assertIn('event.key === "Escape"', script)
-        self.assertIn('setAttribute("aria-expanded"', script)
-
-    def test_each_thematic_page_marks_its_global_link_as_current(self):
-        current_targets = {
-            "index.html": "index.html",
-            "produit.html": "produit.html",
-            "situations.html": "situations.html",
-            "pour-qui.html": "pour-qui.html",
-            "architecture.html": "architecture.html",
-            "offre.html": "offre.html#offre",
-            "essai.html": "essai.html",
-        }
-        for name, target in current_targets.items():
-            with self.subTest(name=name):
-                self.assertEqual([target], load_page(name).current_links)
-
-    def test_the_dossier_page_has_its_metadata_and_exactly_its_two_scripts(self):
-        page = load_page("dossier.html")
-        self.assertEqual(1, page.title_count)
-        self.assertEqual(1, page.h1_count)
-        self.assertEqual("https://lumnik.fr/dossier.html", page.canonical)
-        self.assertEqual(page.canonical, page.open_graph.get("og:url"))
-        self.assertIn("dossier-app", page.ids)
-        # Count the tags rather than look for one spelling: an inline block can carry attributes
-        # (<script type="module">…), and harmless reformatting must not fail the test.
-        text = (ROOT / "dossier.html").read_text(encoding="utf-8")
-        tags = re.findall(r"<script\b[^>]*>", text)
-        self.assertEqual(2, len(tags), tags)
-        sources = [re.search(r'\bsrc="([^"]+)"', tag) for tag in tags]
-        self.assertTrue(all(sources), f"an inline script: {tags}")
-        self.assertEqual(["site.js", "proposal/page.mjs"], [m.group(1) for m in sources])
-        self.assertEqual(["proposal/page.mjs"], [m.group(1) for tag, m in zip(tags, sources) if re.search(r'\btype="module"', tag)])
-
-    def test_every_thematic_page_has_unique_metadata(self):
-        pages = {name: load_page(name) for name in PAGES}
-        titles = []
-        descriptions = []
-
-        for name, page in pages.items():
-            title = "".join(page.title_parts).strip()
-            with self.subTest(name=name):
-                self.assertEqual(1, page.title_count)
-                self.assertTrue(title)
-                self.assertEqual(1, page.description_count)
-                self.assertTrue(page.description.strip())
-                self.assertEqual(title, page.open_graph.get("og:title"))
-                # The two descriptions may legitimately differ: the meta one is written
-                # for a SERP result, the Open Graph one for a social card.
-                self.assertTrue(page.open_graph.get("og:description", "").strip())
-                self.assertEqual(page.canonical, page.open_graph.get("og:url"))
-            titles.append(title)
-            descriptions.append(page.description)
-
-        self.assertEqual(len(PAGES), len(set(titles)))
-        self.assertEqual(len(PAGES), len(set(descriptions)))
-
-    def test_every_thematic_page_has_its_canonical_url(self):
-        canonical_urls = {
-            "index.html": "https://lumnik.fr/",
-            "produit.html": "https://lumnik.fr/produit.html",
-            "situations.html": "https://lumnik.fr/situations.html",
-            "pour-qui.html": "https://lumnik.fr/pour-qui.html",
-            "architecture.html": "https://lumnik.fr/architecture.html",
-            "offre.html": "https://lumnik.fr/offre.html",
-            "essai.html": "https://lumnik.fr/essai.html",
-            "pourquoi.html": "https://lumnik.fr/pourquoi.html",
-        }
-        for name, expected_url in canonical_urls.items():
-            page = load_page(name)
-            with self.subTest(name=name):
-                self.assertEqual(1, page.canonical_count)
-                self.assertEqual(expected_url, page.canonical)
-
-    def test_every_thematic_page_has_one_h1_and_a_working_skip_link(self):
-        for name in PAGES:
-            page = load_page(name)
-            with self.subTest(name=name):
-                self.assertEqual(1, page.h1_count)
-                self.assertIn("contenu", page.ids)
-                self.assertIn("#contenu", page.links)
-
-    def test_local_html_links_and_fragments_resolve(self):
-        for source_name in ALL_PAGES:
-            source = load_page(source_name)
-            for href in source.links:
-                if href.startswith(("http://", "https://", "mailto:", "#")):
-                    target_name = source_name
-                    fragment = href[1:] if href.startswith("#") else ""
-                elif ".html" in href:
-                    target, _, fragment = href.partition("#")
-                    target_name = target
-                else:
-                    continue
-                with self.subTest(source=source_name, href=href):
-                    self.assertTrue((ROOT / target_name).is_file())
-                    if fragment:
-                        self.assertIn(fragment, load_page(target_name).ids)
-
-    def test_moved_sections_have_one_owner(self):
-        owners = {relayed: target for target, anchors in RELAYS.values() for relayed in anchors}
-        owners.update({
-            "architecture": "architecture.html",
-            # offre.html keeps the old fragment as a signpost to the page the personas moved to.
-            "pour-qui": "offre.html",
-            "direction": "pour-qui.html",
-            "dsi": "pour-qui.html",
-            "integrateurs": "pour-qui.html",
-            "offre": "offre.html",
-            "contact": "offre.html",
-            "manifeste": "index.html",
-        })
-        parsed = {name: load_page(name) for name in PAGES}
-        for section_id, owner in owners.items():
-            found = [name for name, page in parsed.items() if section_id in page.ids]
-            with self.subTest(section_id=section_id):
-                self.assertEqual([owner], found)
-
-    def test_comparison_table_becomes_readable_cards_on_phone(self):
-        styles = (ROOT / "styles.css").read_text(encoding="utf-8")
-        gel = (ROOT / "situations.html").read_text(encoding="utf-8")
-
-        self.assertIn("@media (max-width: 600px)", styles)
-        self.assertIn(".comparaison tr {", styles)
-        self.assertIn(".comparaison td::before", styles)
-        self.assertIn('data-label="L\'alternative classique"', gel)
-        self.assertIn('data-label="Ce qu\'elle exige"', gel)
-        self.assertIn('data-label="lumnik"', gel)
-
-    def test_fragment_destinations_clear_the_sticky_navigation(self):
-        """Anchor geometry is one calculation, not three independent numbers.
-
-        A fragment inside a .reveal is scrolled to while the reveal still holds
-        its content down; the class lands a moment later and lifts everything.
-        Without reserving that lift in the scroll-margin, the heading rises under
-        the sticky bar — which is what happened to #faits, #sens and the Usages
-        cards.
-        """
-        styles = (ROOT / "styles.css").read_text(encoding="utf-8")
-
-        self.assertIn("--nav-h: 64px;", styles)
-        self.assertIn("--anchor-gap: 20px;", styles)
-        self.assertIn("--reveal-lift: 30px;", styles)
-        self.assertIn(
-            "[id] { scroll-margin-top: calc(var(--nav-h) + var(--anchor-gap)); }",
-            styles,
-        )
-        self.assertIn(
-            ".reveal [id] { scroll-margin-top: "
-            "calc(var(--nav-h) + var(--anchor-gap) + var(--reveal-lift)); }",
-            styles,
-        )
-        # The bar and the reveal must read the very variables they are compensated by.
-        self.assertIn("height: var(--nav-h);", styles)
-        self.assertIn("transform: translateY(var(--reveal-lift));", styles)
-        # Reduced motion drops the lift, so it has to drop the reserve with it.
-        reduced = styles.split("@media (prefers-reduced-motion: reduce) {", 1)[1]
-        self.assertIn(":root { --reveal-lift: 0px; }", reduced)
-
-    def test_the_pages_carry_what_the_landing_page_proved(self):
-        """The split moved sections; it must not roll their copy back.
-
-        Splitting one page into seven copies text by hand, and a branch cut before
-        a content merge silently restores the older wording. These are the claims
-        whose loss is not cosmetic: the invented console that was replaced by a real
-        `lm` session, the four verifiable mechanisms, the beta admission, and the
-        freeze grid that stopped being 100% legacy.
-        """
-        architecture = (ROOT / "architecture.html").read_text(encoding="utf-8")
-        gel = (ROOT / "situations.html").read_text(encoding="utf-8")
-        degel = (ROOT / "produit.html").read_text(encoding="utf-8")
-        offre = (ROOT / "pour-qui.html").read_text(encoding="utf-8")
-
-        # The terminal is a real lm session, and it says what it accounts for.
-        self.assertIn("$ lm login", architecture)
-        self.assertIn("IN = OUT + SKIPPED", architecture)
-        # "La forme exacte des sorties": SqlGuard puts its bound on a line of its own, and lm
-        # prints it.
-        self.assertIn("WHERE city = 'Lyon' AND segment = 'GOLD'\nLIMIT 500</pre>", architecture)
-        # The four mechanisms a RSSI can check, and the invitation to check them.
-        self.assertIn('class="garanties"', architecture)
-        self.assertIn("docs.lumnik.io/security/", architecture)
-        # Maturity is stated, not implied — once, as a link to its single source; and only the
-        # Open edition is called open source.
-        self.assertIn("lumnik Open · Apache-2.0", architecture)
-        self.assertIn("https://docs.lumnik.io/where-lumnik-stands/", architecture)
-        # The gel grid illustrates the four causes the paragraph claims, not only age.
-        self.assertIn("SaaS métier fermé", gel)
-        self.assertIn("CRM + ERP flambant neufs", gel)
-        # The worked cases are illustrations, and say so before a reader takes them for clients.
-        self.assertIn("Exemples illustratifs", between(gel, 'id="cas"', '<div class="cas-grille">'))
-        # The three dead ends and the three refusals.
-        self.assertIn('class="impasses"', gel)
-        self.assertIn('class="principes"', degel)
-        # Reversibility and integration-as-code are what each persona is here for.
-        self.assertIn("docs.lumnik.io/reversibility/", offre)
-        self.assertIn("docs.lumnik.io/integration-as-code/", offre)
-
-        # The invented console had figures from no real installation. It is gone — and the
-        # other ruled-out wordings with it (SITE_FORBIDDEN).
-        for name in ALL_PAGES:
-            page_text = (ROOT / name).read_text(encoding="utf-8")
-            for word in SITE_FORBIDDEN:
-                with self.subTest(name=name, word=word):
-                    self.assertNotIn(word, page_text)
-
-    def test_every_footer_leads_to_the_why(self):
-        for name in ALL_PAGES:
-            footer = between((ROOT / name).read_text(encoding="utf-8"), "<footer>", "</footer>")
-            with self.subTest(name=name):
-                self.assertIn('href="pourquoi.html"', footer)
-
-    def test_no_page_links_to_a_relay(self):
-        for name in ALL_PAGES + HERO_VARIANTS:
-            for href in load_page(name).links:
-                with self.subTest(name=name, href=href):
-                    self.assertNotIn(href.partition("#")[0], RELAYS)
-
-    def test_the_personas_moved_but_their_old_fragment_still_answers(self):
-        stub = between((ROOT / "offre.html").read_text(encoding="utf-8"), 'id="pour-qui"', "</p>")
-        self.assertIn('href="pour-qui.html"', stub)
-
-    def test_no_public_page_links_to_the_hero_variants(self):
-        for name in ALL_PAGES:
-            with self.subTest(name=name):
-                for href in load_page(name).links:
-                    self.assertNotIn(href.partition("#")[0], HERO_VARIANTS)
-
-    def test_only_homepage_announces_language_alternates(self):
-        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
-        self.assertIn('hreflang="fr"', homepage)
-        self.assertIn('hreflang="en"', homepage)
-        self.assertIn('hreflang="x-default"', homepage)
-
-        for name in PAGES[1:]:
-            with self.subTest(name=name):
-                self.assertNotIn(
-                    "hreflang=",
-                    (ROOT / name).read_text(encoding="utf-8"),
-                )
-
-
-# --- Issue #13: the two hero variants of the five-second test -----------------------------
-#
-# Two pages that differ by one variable only: which of "category" and "visible object" is the
-# H1 and which is the eyebrow. Everything else — sub-title, proofs, the fused record, the
-# buttons — is byte-identical, so the test measures the title and nothing else. The record is
-# the demo desk's P-1008 as `lm entity get acmecustomer` prints it in docs/entities.md: real
-# output on fictional data, never a customer's.
-
-HERO_VARIANTS = ("heros-a.html", "heros-b.html")
-CATEGORY = "La couche de lecture de vos logiciels"
-OBJECT = "Une seule fiche client, lisible partout"
-FORBIDDEN = ("temps réel", "zéro risque", "honnête", "proxy", "nettoie", "Personne ne", "gelée")
+def text_of(name):
+    return (ROOT / name).read_text(encoding="utf-8")
 
 
 def between(text, start, end):
@@ -423,222 +158,364 @@ def between(text, start, end):
     return body
 
 
-class HeroVariantTest(unittest.TestCase):
-    def text(self, name):
-        return (ROOT / name).read_text(encoding="utf-8")
+def section(name, section_id):
+    return between(text_of(name), f'id="{section_id}"', "</section>")
 
-    def test_both_variants_exist_and_stay_out_of_search_engines(self):
-        for name in HERO_VARIANTS:
+
+def visible(fragment, sep=""):
+    """The text a reader sees: tags dropped (or replaced by `sep`), entities decoded."""
+    return html.unescape(re.sub(r"<[^>]+>", sep, fragment))
+
+
+def resolves(source, href):
+    """A local href names a file, or a directory GitHub Pages serves through its index.html."""
+    target = (ROOT / source).parent / href.partition("#")[0]
+    return target.is_file() or (target / "index.html").is_file()
+
+
+class SiteStructureTest(unittest.TestCase):
+    def test_expected_pages_and_relays_exist(self):
+        for name in ALL_PAGES + tuple(RELAYS):
             with self.subTest(name=name):
-                text = self.text(name)
-                self.assertIn('<meta name="robots" content="noindex, nofollow">', text)
-                self.assertNotIn("hreflang=", text)
-                self.assertNotIn('rel="canonical"', text)
+                self.assertTrue((ROOT / name).is_file())
 
-    def test_each_variant_has_one_h1_a_skip_link_and_the_mobile_menu(self):
-        for name in HERO_VARIANTS:
+    def test_the_retired_pages_are_gone(self):
+        for name in RETIRED:
+            with self.subTest(name=name):
+                self.assertFalse((ROOT / name).exists())
+
+    def test_every_page_exposes_the_global_navigation_in_order(self):
+        for name in ALL_PAGES:
+            menu = between(text_of(name), '<ul id="menu-principal">', "</ul>")
+            items = [(label, href) for href, label in re.findall(r'<a\b[^>]*\bhref="([^"]+)"[^>]*>([^<]+)</a>', menu)]
+            with self.subTest(name=name):
+                self.assertEqual(list(TARGET_NAV), items)
+
+    def test_the_light_pill_is_the_try_link(self):
+        for name in ALL_PAGES:
+            menu = between(text_of(name), '<ul id="menu-principal">', "</ul>")
+            pills = re.findall(r'<a class="btn btn-lumiere nav-contact" href="([^"]+)"', menu)
+            with self.subTest(name=name):
+                self.assertEqual(["essai.html"], pills)
+
+    def test_mobile_menu_contract_is_present(self):
+        for name in ALL_PAGES:
+            page = load_page(name)
+            menu_buttons = [b for b in page.buttons if b.get("aria-controls") == "menu-principal"]
+            with self.subTest(name=name):
+                self.assertEqual(1, len(menu_buttons))
+                self.assertEqual("false", menu_buttons[0].get("aria-expanded"))
+                self.assertEqual(1, len(page.menu_lists))
+
+    def test_mobile_menu_script_supports_keyboard_close(self):
+        script = text_of("site.js")
+        self.assertIn('event.key === "Escape"', script)
+        self.assertIn('setAttribute("aria-expanded"', script)
+
+    def test_each_page_marks_its_own_link_as_current(self):
+        current = {
+            "index.html": ["index.html"],
+            "essai.html": ["essai.html"],
+            "offre.html": ["offre.html"],
+            "architecture.html": ["architecture.html"],
+            "pourquoi.html": [],
+            "mentions.html": [],
+            "dossier.html": [],
+        }
+        for name, expected in current.items():
+            with self.subTest(name=name):
+                self.assertEqual(expected, load_page(name).current_links)
+
+    def test_every_page_has_unique_metadata(self):
+        titles, descriptions = [], []
+        for name in PAGES:
+            page = load_page(name)
+            title = "".join(page.title_parts).strip()
+            with self.subTest(name=name):
+                self.assertEqual(1, page.title_count)
+                self.assertTrue(title)
+                self.assertEqual(1, page.description_count)
+                self.assertTrue(page.description.strip())
+                self.assertEqual(title, page.open_graph.get("og:title"))
+                # The meta description is written for a search result, the Open Graph one for
+                # a social card: they may differ.
+                self.assertTrue(page.open_graph.get("og:description", "").strip())
+                self.assertEqual(page.canonical, page.open_graph.get("og:url"))
+            titles.append(title)
+            descriptions.append(page.description)
+        self.assertEqual(len(PAGES), len(set(titles)))
+        self.assertEqual(len(PAGES), len(set(descriptions)))
+
+    def test_every_page_has_its_canonical_url(self):
+        for name in PAGES + ("dossier.html",):
+            expected = "https://lumnik.fr/" + ("" if name == "index.html" else name)
+            page = load_page(name)
+            with self.subTest(name=name):
+                self.assertEqual(1, page.canonical_count)
+                self.assertEqual(expected, page.canonical)
+
+    def test_every_page_has_one_h1_and_a_working_skip_link(self):
+        for name in ALL_PAGES:
             page = load_page(name)
             with self.subTest(name=name):
                 self.assertEqual(1, page.h1_count)
-                self.assertEqual(1, page.title_count)
                 self.assertIn("contenu", page.ids)
                 self.assertIn("#contenu", page.links)
-                self.assertEqual(1, len(page.menu_lists))
-
-    def test_the_category_and_the_object_swap_places(self):
-        a, b = (self.text(name) for name in HERO_VARIANTS)
-        self.assertIn(f"<h1>{CATEGORY}.</h1>", a)
-        self.assertIn(f'<p class="surtitre">{OBJECT}</p>', a)
-        self.assertIn(f"<h1>{OBJECT}.</h1>", b)
-        self.assertIn(f'<p class="surtitre">{CATEGORY}</p>', b)
-
-    def test_the_variants_differ_by_the_title_alone(self):
-        def without_title(text):
-            text = re.sub(r"<title>.*?</title>", "", text, flags=re.S)
-            text = re.sub(r'<p class="surtitre">.*?</p>', "", text, flags=re.S)
-            return re.sub(r"<h1>.*?</h1>", "", text, flags=re.S)
-
-        a, b = (without_title(self.text(name)) for name in HERO_VARIANTS)
-        self.assertEqual(a, b)
-
-    def test_the_record_is_the_demo_desk_p1008(self):
-        record = between(self.text("heros-a.html"), "<!-- fiche:debut -->", "<!-- fiche:fin -->")
-        # The ERP and the CRM agree on the name, disagree on the city, and only the CRM has
-        # the email — a fusion and a disagreement in one record (docs/entities.md).
-        for value in ("P-1008", "Filtration Lyon 1008", "Lyon", "Villeurbanne", "GOLD",
-                      "contact@filtration-lyon.example"):
-            with self.subTest(value=value):
-                self.assertIn(value, record)
-        self.assertIn("https://docs.lumnik.io/entities/", record)
-        self.assertIn("fictives", record)
-
-    def test_the_target_navigation_points_at_pages_that_exist(self):
-        for name in HERO_VARIANTS:
-            text = between(self.text(name), '<ul id="menu-principal">', "</ul>")
-            for label, href in TARGET_NAV:
-                with self.subTest(name=name, label=label):
-                    self.assertIn(f'href="{href}"', text)
-                    self.assertIn(f">{label}</a>", text)
 
     def test_local_links_and_fragments_resolve(self):
-        for name in HERO_VARIANTS:
+        for name in ALL_PAGES:
             for href in load_page(name).links:
                 if href.startswith(("http://", "https://", "mailto:")):
                     continue
                 target, _, fragment = href.partition("#")
                 target = target or name
                 with self.subTest(name=name, href=href):
-                    # A directory URL serves its index.html, as GitHub Pages does (scenarios/).
-                    self.assertTrue((ROOT / target).is_file() or (ROOT / target / "index.html").is_file())
+                    self.assertTrue(resolves(name, target))
                     if fragment:
                         self.assertIn(fragment, load_page(target).ids)
 
-    def test_the_copy_avoids_the_words_the_theses_ruled_out(self):
-        for name in HERO_VARIANTS:
-            text = self.text(name)
-            for word in FORBIDDEN:
+    def test_no_page_links_a_relay_or_a_retired_page(self):
+        for name in ALL_PAGES:
+            for href in load_page(name).links:
+                with self.subTest(name=name, href=href):
+                    self.assertNotIn(href.partition("#")[0], tuple(RELAYS) + RETIRED)
+
+    def test_no_page_links_the_dossier(self):
+        """The proposal questionnaire stays served, linked from nowhere (Sergey, 2026-10-25)."""
+        for name in ALL_PAGES:
+            for href in load_page(name).links:
+                with self.subTest(name=name, href=href):
+                    self.assertNotEqual("dossier.html", href.partition("#")[0])
+
+    def test_only_the_homepage_announces_language_alternates(self):
+        home = text_of("index.html")
+        for lang in ('hreflang="fr"', 'hreflang="en"', 'hreflang="x-default"'):
+            self.assertIn(lang, home)
+        for name in ALL_PAGES[1:]:
+            with self.subTest(name=name):
+                self.assertNotIn("hreflang=", text_of(name))
+
+    def test_every_footer_leads_to_the_scenarios_the_try_page_and_the_why(self):
+        for name in ALL_PAGES:
+            footer = between(text_of(name), "<footer>", "</footer>")
+            for href in ("scenarios/", "essai.html", "pourquoi.html", "mentions.html"):
+                with self.subTest(name=name, href=href):
+                    self.assertIn(f'href="{href}"', footer)
+
+    def test_fragment_destinations_clear_the_sticky_navigation(self):
+        """Anchor geometry is one calculation, not three independent numbers.
+
+        A fragment inside a .reveal is scrolled to while the reveal still holds its content
+        down; the class lands a moment later and lifts everything. Without reserving that lift
+        in the scroll-margin, the heading rises under the sticky bar.
+        """
+        styles = text_of("styles.css")
+        self.assertIn("--nav-h: 64px;", styles)
+        self.assertIn("--anchor-gap: 20px;", styles)
+        self.assertIn("--reveal-lift: 30px;", styles)
+        self.assertIn("[id] { scroll-margin-top: calc(var(--nav-h) + var(--anchor-gap)); }", styles)
+        self.assertIn(
+            ".reveal [id] { scroll-margin-top: "
+            "calc(var(--nav-h) + var(--anchor-gap) + var(--reveal-lift)); }",
+            styles,
+        )
+        self.assertIn("height: var(--nav-h);", styles)
+        self.assertIn("transform: translateY(var(--reveal-lift));", styles)
+        reduced = styles.split("@media (prefers-reduced-motion: reduce) {", 1)[1]
+        self.assertIn(":root { --reveal-lift: 0px; }", reduced)
+
+    def test_the_pill_keeps_dark_text_on_its_own_page(self):
+        """The pill now points at essai.html, which can be the current page.
+
+        `nav a[aria-current="page"]` paints the light yellow and outranks `nav .nav-contact`
+        on specificity: on essai.html the pill would read yellow on yellow. lumnik.io met it
+        on contact.html; the same rule, after the current-page one, keeps the text dark.
+        """
+        styles = text_of("styles.css")
+        self.assertIn('nav .nav-contact,\nnav a.nav-contact[aria-current="page"] { color: var(--nuit); }', styles)
+        self.assertLess(
+            styles.index('nav a[aria-current="page"] {'),
+            styles.index('nav a.nav-contact[aria-current="page"]'),
+        )
+
+    def test_the_copy_avoids_the_ruled_out_wordings(self):
+        for name in ALL_PAGES:
+            page_text = text_of(name)
+            for word in PAGE_FORBIDDEN:
                 with self.subTest(name=name, word=word):
-                    self.assertNotIn(word, text)
+                    self.assertNotIn(word, page_text)
 
+    def test_french_punctuation_never_follows_a_plain_space(self):
+        """U+00A0 before `:`, U+202F before `;` `!` `?` — a plain space lets the sign wrap alone onto
+        the next line, in the page and in a search snippet."""
+        for name in PAGES:
+            for line_no, line in enumerate(text_of(name).splitlines(), 1):
+                for match in re.finditer(r"[\w»)] [:;!?]", line):
+                    with self.subTest(name=name, line=line_no):
+                        self.fail(f"plain space before punctuation: {match.group(0)!r}")
 
-# --- Issue #14: the homepage built around hero B -------------------------------------------
-#
-# Every value a window shows comes from donnees/p1008.json, itself copied from real outputs on
-# the demo desk (each block names its source). The windows are checked against that one file,
-# so a value edited in one window and not the others fails here.
+    def test_the_directory_is_sold_with_enterprise_only(self):
+        """The identity directory is an Enterprise promise on the offer page; a "Pro adds" list that
+        also names it would leave a buyer asking which tier to choose."""
+        self.assertIn("annuaire", between(text_of("offre.html"), "<h3>Enterprise</h3>", "</ul>"))
+        for name, part in (("index.html", section("index.html", "essayer")), ("essai.html", text_of("essai.html"))):
+            with self.subTest(name=name):
+                self.assertNotIn("annuaire", part)
 
-FICHE = json.loads((ROOT / "donnees" / "p1008.json").read_text(encoding="utf-8"))
-HOME_SECTIONS = ("fenetres", "fusion", "avant-apres", "immobile", "portes", "confiance", "manifeste")
+    def test_the_dossier_page_has_its_metadata_and_exactly_its_two_scripts(self):
+        page = load_page("dossier.html")
+        self.assertEqual(1, page.title_count)
+        self.assertEqual("https://lumnik.fr/dossier.html", page.canonical)
+        self.assertEqual(page.canonical, page.open_graph.get("og:url"))
+        self.assertIn("dossier-app", page.ids)
+        tags = re.findall(r"<script\b[^>]*>", text_of("dossier.html"))
+        self.assertEqual(2, len(tags), tags)
+        sources = [re.search(r'\bsrc="([^"]+)"', tag) for tag in tags]
+        self.assertTrue(all(sources), f"an inline script: {tags}")
+        self.assertEqual(["site.js", "proposal/page.mjs"], [m.group(1) for m in sources])
+        self.assertEqual(["proposal/page.mjs"],
+                         [m.group(1) for tag, m in zip(tags, sources) if re.search(r'\btype="module"', tag)])
 
 
 class HomepageTest(unittest.TestCase):
     def home(self):
-        return (ROOT / "index.html").read_text(encoding="utf-8")
+        return text_of("index.html")
 
-    def block(self, name):
-        return between(self.home(), f"<!-- fenetre:{name} -->", f"<!-- /fenetre:{name} -->")
+    def hero(self):
+        return between(self.home(), '<header class="heros">', "</header>")
 
-    def test_the_hero_is_variant_b_unchanged(self):
-        hero = lambda text: between(text, '<header class="heros">', "</header>")
-        self.assertEqual(hero(self.text_of("heros-b.html")), hero(self.home()))
+    def test_the_sections_follow_the_journey(self):
+        after_hero = self.home().split("</header>", 1)[1]
+        self.assertEqual(list(HOME_SECTIONS), re.findall(r'<section[^>]*\bid="([^"]+)"', after_hero))
 
-    def text_of(self, name):
-        return (ROOT / name).read_text(encoding="utf-8")
+    def test_the_hero_says_why_and_opens_both_doors(self):
+        hero = self.hero()
+        self.assertIn(HERO_H1, hero)
+        ctas = between(hero, '<div class="heros-ctas">', "</div>")
+        self.assertIn('href="scenarios/"', ctas)
+        self.assertIn('href="essai.html"', ctas)
 
-    def test_the_three_windows_come_right_after_the_hero(self):
-        after_hero = self.home().split('<header class="heros">', 1)[1].split("</header>", 1)[1]
-        first_section = re.search(r'<section[^>]*\bid="([^"]+)"', after_hero)
-        self.assertEqual("fenetres", first_section.group(1))
-
-    def test_the_sections_follow_the_order_of_issue_14(self):
-        ids = re.findall(r'<section[^>]*\bid="([^"]+)"', self.home())
-        self.assertEqual(list(HOME_SECTIONS), ids)
-
-    def test_the_api_window_shows_the_real_row(self):
-        api = self.block("api")
-        self.assertIn(FICHE["api"]["requete"], api)
-        for key, value in FICHE["api"]["ligne"].items():
-            with self.subTest(key=key):
-                self.assertIn(f'"{key}": {json.dumps(value, ensure_ascii=False)}', api)
-
-    def test_the_phone_window_shows_the_pwa_detail(self):
-        pwa = self.block("pwa")
-        self.assertIn(FICHE["pwa"]["titre"], pwa)
-        self.assertIn(FICHE["pwa"]["cle"], pwa)
-        for label, value in FICHE["pwa"]["champs"]:
-            with self.subTest(label=label):
-                self.assertIn(f'<div class="lbl">{label}</div>', pwa)
-                self.assertIn(f'<div class="val">{value}</div>', pwa)
-        self.assertIn(FICHE["pwa"]["divergences_titre"], pwa)
-        for conflict in FICHE["pwa"]["divergences"]:
-            self.assertIn(conflict["colonne"], pwa)
-            for src, value in conflict["sources"]:
-                self.assertIn(f"{src} : <b>{value}</b>", pwa)
-
-    def test_each_window_says_which_edition_carries_it(self):
-        self.assertIn('class="edition">Hub<', self.block("pwa"))
-        self.assertIn('class="edition">Hub<', self.block("api"))
-
-    def test_the_ai_window_is_the_real_transcript_and_names_the_disputed_record(self):
-        """The homepage shows P-1008's disputed city, so the AI window may not count P-1008 in
-        silence. Since lumnik#874 the answer names it; the window is the real run, line for line.
-        """
-        question = self.block("question")
-        pre = html.unescape(re.sub(r"</?span[^>]*>", "", between(question, "<pre>", "</pre>")))
-        self.assertEqual(FICHE["question"]["transcription"], pre.split("\n"))
-        self.assertIn("P-1008  city = 'Lyon'  counted", pre)
-        self.assertIn("t_acme_desk_crm: Villeurbanne", pre)
-        self.assertIn('class="edition">Pro<', question)
-
-    def test_the_fusion_section_shows_both_sources_and_the_kept_disagreement(self):
-        fusion = between(self.home(), 'id="fusion"', "</section>")
+    def test_the_hero_record_is_the_demo_desk_p1008(self):
+        """The record is the demo desk's P-1008 as lumnik fuses it (docs/entities.md): the ERP
+        and the CRM agree on the name, disagree on the city, and only the CRM has the email."""
+        record = between(self.hero(), "<!-- fiche:debut -->", "<!-- fiche:fin -->")
         erp, crm = FICHE["sources"]["t_acme_desk_erp"], FICHE["sources"]["t_acme_desk_crm"]
-        for value in (erp["name"], erp["city"], erp["segment"], crm["town"], crm["email"]):
+        for value in (erp["code"], erp["name"], erp["city"], erp["segment"], crm["town"], crm["email"]):
             with self.subTest(value=value):
-                self.assertIn(value, fusion)
+                self.assertIn(value, record)
+        self.assertIn("fictives", record)
+        self.assertIn(DOCS + "entities/", record)
 
-    def test_the_time_section_shows_the_same_order_in_every_export(self):
-        time = between(self.home(), 'id="immobile"', "</section>")
-        order = FICHE["commande"]
-        self.assertEqual(order["exports"], time.count('class="jour"'))
-        self.assertEqual(order["exports"], time.count(order["order_no"]))
-        self.assertIn(order["status"], time)
-        self.assertIn(order["code"], time)
+    def test_the_featured_scenarios_are_published_and_titled_as_served(self):
+        cards = dict(re.findall(r'<a class="porte scenario" href="scenarios/([a-z0-9-]+)/">(.*?)</a>',
+                                section("index.html", "situations"), re.S))
+        self.assertEqual(sorted(FEATURED), sorted(cards))
+        for slug in FEATURED:
+            card, served = cards[slug], CATALOGUE[slug]
+            with self.subTest(slug=slug):
+                self.assertTrue(resolves("index.html", f"scenarios/{slug}/"))
+                self.assertEqual(served["title"], visible(between(card, "<h3>", "</h3>")))
+                self.assertIn(f'<span class="edition">{served["edition"].capitalize()}</span>', card)
 
-    def test_maturity_is_a_link_to_its_single_source(self):
-        confiance = between(self.home(), 'id="confiance"', "</section>")
-        self.assertIn("https://docs.lumnik.io/where-lumnik-stands/", confiance)
-        self.assertIn("https://docs.lumnik.io/security/", confiance)
-        self.assertNotIn("personne d'extérieur", self.home())
+    def test_the_situations_lead_to_the_whole_catalogue(self):
+        self.assertIn('<a class="btn btn-givre" href="scenarios/">', section("index.html", "situations"))
 
-    def test_the_homepage_avoids_the_words_the_theses_ruled_out(self):
-        home = self.home()
-        for word in FORBIDDEN:
-            with self.subTest(word=word):
-                self.assertNotIn(word, home)
+    def test_the_repair_move_is_scoped_to_an_export(self):
+        repair = between(section("index.html", "comment"), 'id="sens"', "</div>")
+        self.assertIn("export", repair)
+
+    def test_the_five_moves_answer_the_old_product_fragments(self):
+        how = section("index.html", "comment")
+        for verb in ("Lire", "Réparer", "Rassembler", "Surveiller", "Servir"):
+            with self.subTest(verb=verb):
+                self.assertIn(f"<h3>{verb}</h3>", how)
+        for fragment in ("faits", "sens", "temps"):
+            with self.subTest(fragment=fragment):
+                self.assertIn(f'id="{fragment}"', how)
+
+    def test_the_no_write_promise_names_the_software_not_the_premises(self):
+        """lumnik writes into its own PostgreSQL, installed on the client's machines: a promise of
+        no write on the premises would contradict "installed on your machines". It is about the
+        client's software."""
+        heading = visible(between(section("index.html", "comment"), "<h2>", "</h2>"))
+        self.assertNotIn("chez vous", heading)
+        self.assertIn("dans vos logiciels", heading)
+
+    def test_the_try_section_shows_the_real_install(self):
+        try_section = visible(section("index.html", "essayer"))
+        for line in (CLONE, UP, HEALTHY):
+            with self.subTest(line=line):
+                self.assertIn(line, try_section)
+        self.assertIn('href="essai.html"', section("index.html", "essayer"))
+
+    def test_trust_links_to_its_sources_and_opens_three_doors(self):
+        trust = section("index.html", "confiance")
+        for href in (DOCS + "security/", DOCS + "where-lumnik-stands/", DOCS + "integration-as-code/",
+                     "https://github.com/icreated/lumnik-open", "scenarios/", "architecture.html"):
+            with self.subTest(href=href):
+                self.assertIn(f'href="{href}"', trust)
+        for door in ("direction", "dsi", "integrateurs"):
+            with self.subTest(door=door):
+                self.assertIn(f'id="{door}"', trust)
+
+
+class TryPageTest(unittest.TestCase):
+    def test_the_try_page_walks_the_real_install(self):
+        page = text_of("essai.html")
+        for line in (CLONE, UP, HEALTHY):
+            with self.subTest(line=line):
+                self.assertIn(line, visible(page))
+        for href in ("https://github.com/icreated/lumnik-open/releases/latest",
+                     DOCS + "quickstart/prerequisites/", DOCS + "quickstart/installer/", DOCS + "wow/",
+                     "scenarios/", "offre.html"):
+            with self.subTest(href=href):
+                self.assertIn(f'href="{href}"', page)
+
+    def test_the_try_page_asks_for_nothing(self):
+        self.assertNotIn("<form", text_of("essai.html"))
+
+
+class OfferPageTest(unittest.TestCase):
+    def test_three_tiers_then_the_contact_form(self):
+        offre = text_of("offre.html")
+        self.assertEqual(3, offre.count('<div class="tier'))
+        self.assertIn('action="https://formspree.io/f/xqpzpwow"', offre)
+        self.assertIn('id="contact"', offre)
+        hub = re.search(r'<div class="tier">(.*?)<div class="tier pro">', offre, re.S).group(1)
+        self.assertIn('href="essai.html"', hub)
+
+
+class SecurityPageTest(unittest.TestCase):
+    def test_the_guarantees_a_dsi_can_check(self):
+        page = text_of("architecture.html")
+        self.assertIn('class="garanties"', page)
+        # The audit trail cannot be rewritten by the application, and a retention purge trims it:
+        # the page says both (the theses found "ne s'efface pas" false).
+        self.assertIn("365 jours", page)
+        for href in (DOCS + "security/", DOCS + "reversibility/", DOCS + "where-lumnik-stands/",
+                     "https://github.com/icreated/lumnik-open"):
+            with self.subTest(href=href):
+                self.assertIn(f'href="{href}"', page)
 
 
 class RelayTest(unittest.TestCase):
-    """GitHub Pages cannot redirect server-side: each old page is a small relay that sends its
-    visitor on, fragment included, and tells search engines where the page went."""
-
     def test_each_relay_sends_its_visitor_on_with_the_fragment(self):
         for old, (target, _) in RELAYS.items():
-            text = (ROOT / old).read_text(encoding="utf-8")
+            text = text_of(old)
             with self.subTest(old=old):
                 self.assertIn(f'<meta http-equiv="refresh" content="0; url={target}">', text)
-                self.assertIn(f'<link rel="canonical" href="https://lumnik.fr/{target}">', text)
+                canonical = "https://lumnik.fr/" + ("" if target == "index.html" else target)
+                self.assertIn(f'<link rel="canonical" href="{canonical}">', text)
                 self.assertIn('<meta name="robots" content="noindex">', text)
                 self.assertIn(f'location.replace("{target}" + location.hash)', text)
                 self.assertIn(f'href="{target}"', text)
+                self.assertTrue(resolves(old, target))
 
-    def test_every_published_anchor_lands_on_its_section(self):
+    def test_every_kept_fragment_lands_on_its_section(self):
         for old, (target, anchors) in RELAYS.items():
-            ids = load_page(target).ids
             for anchor in anchors:
                 with self.subTest(old=f"{old}#{anchor}"):
-                    self.assertIn(anchor, ids)
-
-
-class AlertTest(unittest.TestCase):
-    """The product and situations pages show a dormancy alert in its real shape — the one
-    WorkflowDormancySweep emits — for P-1008's order SO-000006, from donnees/p1008.json. The
-    demo's one-minute threshold is said where it shows, so nobody reads it as the product's."""
-
-    def test_the_product_page_shows_the_exact_alert_message(self):
-        produit = (ROOT / "produit.html").read_text(encoding="utf-8")
-        self.assertIn(FICHE["alerte"]["message"], produit)
-        self.assertIn("une minute", produit)
-
-    def test_the_situations_page_shows_the_exact_event(self):
-        situations = (ROOT / "situations.html").read_text(encoding="utf-8")
-        alerte = FICHE["alerte"]
-        self.assertIn(f"X-Lumnik-Event: {alerte['evenement']}", situations)
-        for key in ("message", "workflow", "doc_key", "state", "since", "first_observed_at", "threshold"):
-            with self.subTest(key=key):
-                self.assertIn(f'"{key}": {json.dumps(alerte[key], ensure_ascii=False)}', situations)
-        self.assertIn("une minute", situations)
-        self.assertNotIn("commande_immobile", situations)
+                    self.assertIn(anchor, load_page(target).ids)
 
 
 # --- scenarios/: replayed scenarios, a publication artefact of lumnik-scenario -------------------
@@ -650,46 +527,27 @@ SCENARIO_PAGES = sorted(p.relative_to(ROOT).as_posix() for p in (ROOT / "scenari
 
 
 class ScenarioPagesTest(unittest.TestCase):
-    def test_situations_lead_to_the_replayed_scenarios(self):
-        self.assertIn("scenarios/", load_page("situations.html").links)
-
     def test_every_published_scenario_has_its_page(self):
-        index = json.loads((ROOT / "scenarios" / "index.json").read_text(encoding="utf-8"))
-        for entry in index["scenarios"]:
-            with self.subTest(slug=entry["slug"]):
-                self.assertIn(f"scenarios/{entry['slug']}/index.html", SCENARIO_PAGES)
+        for slug in CATALOGUE:
+            with self.subTest(slug=slug):
+                self.assertIn(f"scenarios/{slug}/index.html", SCENARIO_PAGES)
 
     def test_local_links_resolve(self):
         for name in SCENARIO_PAGES:
-            page = load_page(name)
-            hrefs = page.links + re.findall(r'<(?:script|link)[^>]+(?:src|href)="([^"]+)"',
-                                            (ROOT / name).read_text(encoding="utf-8"))
+            hrefs = load_page(name).links + re.findall(r'<(?:script|link)[^>]+(?:src|href)="([^"]+)"', text_of(name))
             for href in hrefs:
-                if href.startswith(("http://", "https://", "mailto:")) or href.startswith("#"):
+                if href.startswith(("http://", "https://", "mailto:", "#")):
                     continue
-                target = (ROOT / name).parent / href.partition("#")[0]
                 with self.subTest(name=name, href=href):
-                    self.assertTrue(target.is_file() or (target / "index.html").is_file())
+                    self.assertTrue(resolves(name, href))
 
     def test_the_copy_avoids_the_words_the_theses_ruled_out(self):
         for name in SCENARIO_PAGES:
-            text = html.unescape(re.sub(r"<[^>]+>", " ", (ROOT / name).read_text(encoding="utf-8")))
+            text = visible(text_of(name), " ").lower()
             for word in SITE_FORBIDDEN:
                 with self.subTest(name=name, word=word):
-                    self.assertNotIn(word.lower(), text.lower())
+                    self.assertNotIn(word.lower(), text)
 
-    def test_every_footer_leads_to_the_replayed_scenarios(self):
-        for path in sorted(ROOT.glob("*.html")):
-            footers = re.findall(r"<footer.*?</footer>", path.read_text(encoding="utf-8"), re.S)
-            for footer in footers:
-                with self.subTest(page=path.name):
-                    self.assertIn('href="scenarios/"', footer)
 
-    def test_the_adapter_section_leads_to_a_published_scenario(self):
-        text = (ROOT / "situations.html").read_text(encoding="utf-8")
-        section = re.search(r'<section id="adaptateur">.*?</section>', text, re.S).group(0)
-        targets = re.findall(r'href="(scenarios/[a-z0-9-]+/)"', section)
-        self.assertTrue(targets, "the adapter section names no replayed scenario")
-        for href in targets:
-            with self.subTest(href=href):
-                self.assertTrue((ROOT / href / "index.html").is_file())
+if __name__ == "__main__":
+    unittest.main()

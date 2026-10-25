@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Architecture — lumnik</title>
-  <meta name="description" content="Simple à comprendre, sérieux en dessous : l'architecture de lumnik.">
+  <title>Sécurité — lumnik</title>
+  <meta name="description" content="Lecture seule, isolation par la base, SQL généré en lecture seule, journal d'audit, réversibilité&nbsp;: ce que votre DSI peut vérifier, et où.">
   <link rel="canonical" href="https://lumnik.fr/architecture.html">
-  <meta property="og:title" content="Architecture — lumnik">
-  <meta property="og:description" content="Simple à comprendre, sérieux en dessous : l'architecture de lumnik.">
+  <meta property="og:title" content="Sécurité — lumnik">
+  <meta property="og:description" content="Six garanties qui tiennent à la construction de lumnik, chacune avec sa vérification.">
   <meta property="og:url" content="https://lumnik.fr/architecture.html">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="fr_FR">
@@ -31,13 +31,11 @@
       <span class="menu-toggle-label">Menu</span>
     </button>
     <ul id="menu-principal">
-      <li><a href="produit.html">Produit</a></li>
-      <li><a href="situations.html">Situations</a></li>
-      <li><a href="pour-qui.html">Pour qui</a></li>
-      <li><a href="architecture.html" aria-current="page">Architecture</a></li>
-      <li><a href="offre.html#offre">Offre</a></li>
-      <li><a href="essai.html">Essayer</a></li>
-      <li><a class="btn btn-lumiere nav-contact" href="offre.html#contact">Nous parler</a></li>
+      <li><a href="scenarios/">Scénarios</a></li>
+      <li><a href="architecture.html" aria-current="page">Sécurité</a></li>
+      <li><a href="offre.html">Offre</a></li>
+      <li><a href="https://docs.lumnik.io" rel="noopener">Docs</a></li>
+      <li><a class="btn btn-lumiere nav-contact" href="essai.html">Essayer</a></li>
     </ul>
   </div>
 </nav>
@@ -46,17 +44,9 @@
 
 <section class="archi" id="architecture">
   <div class="wrap reveal">
-    <p class="kicker">L'architecture, en clair</p>
-    <h1>Simple à comprendre. <em>Sérieux</em> en dessous.</h1>
-    <p class="lede">
-      Pas de magie : trois étages, et des choix d'ingénierie faits pour une DSI exigeante.
-    </p>
-    <nav class="local-nav" aria-label="Dans Architecture">
-      <a href="#vue-ensemble">Vue d'ensemble</a>
-      <a href="#pilotage">Pilotage</a>
-      <a href="#garde-fous">Garde-fous</a>
-      <a href="#doc">Code &amp; documentation</a>
-    </nav>
+    <p class="kicker">Sécurité</p>
+    <h1>Ce que votre DSI peut <em>vérifier</em>.</h1>
+    <p class="lede">Ces garanties tiennent à la construction de lumnik, pas à un réglage. La documentation donne la vérification de chacune.</p>
     <div class="schema" id="vue-ensemble">
       <div class="colonne">
         <h3>Vos systèmes</h3>
@@ -72,7 +62,7 @@
         <div class="schema-blocs centre">
           <span>Lecture seule</span>
           <span>Fusion</span>
-          <span>Mémoire temporelle</span>
+          <span>Mémoire datée</span>
           <span>Cloisonnement</span>
           <span>Garde-fous</span>
           <span>IA locale possible</span>
@@ -82,103 +72,27 @@
       <div class="colonne">
         <h3>Vos métiers</h3>
         <div class="schema-blocs">
-          <span>Questions en langage naturel</span>
+          <span>App sur téléphone</span>
           <span>API</span>
           <span>SQL / tableaux</span>
           <span>Webhooks / alertes</span>
         </div>
       </div>
     </div>
-    <div class="fenetre terminal" id="pilotage" role="group" aria-label="Une session lm : connexion, validation, application, exécution, question">
-      <div class="barre">
-        <span class="rond"></span><span class="rond"></span><span class="rond"></span>
-        &nbsp;lm — le terminal de l'intégrateur
-      </div>
-      <pre><span class="cmd">$ lm login</span>
-To sign in, open:
-  http://localhost:8180/realms/lumnik/device?user_code=EYQP-LLJN
-and enter code: EYQP-LLJN
-
-<span class="cmd">$ lm validate -f connecteurs/sage-clients.yaml</span>
-<span class="ok">✓</span> connecteurs/sage-clients.yaml — valid
-<span class="cmd">$ lm apply -f connecteurs/sage-clients.yaml</span>
-{"name":"sage-clients","connectorId":"8e01c813-7f57-4222-8d7b-e637dfcc94c3","endpointsApplied":1}
-<span class="cmd">$ lm connector run sage-clients</span>
-run scheduled: e9cd433e-3a57-43ff-9ea7-737f2718be0a
-
-<span class="cmd">$ lm run list</span>
-ID        CONNECTOR        ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-e9cd433e  sage-clients     default   Completed  12  12   0        0             2026-09-05 05:38  2026-09-05 05:38
-f0466804  cegid-commandes  default   Completed  10  8    2        2             2026-09-05 05:38  2026-09-05 05:38
-
-<span class="cmd">$ lm ask --scope ventes "Combien de clients GOLD à Lyon ?"</span>
-2 clients GOLD à Lyon.
-  data as of: 2026-09-13T00:39:29Z (last completed run)
-
-  SQL: SELECT COUNT(*) FROM "connector"."v_client"
-WHERE city = 'Lyon' AND segment = 'GOLD'
-LIMIT 500</pre>
+    <div class="garanties" aria-label="Ce que la DSI peut vérifier">
+      <p><strong>Lecture seule.</strong> Les connecteurs lisent. Aucun chemin n'écrit vers vos logiciels.</p>
+      <p><strong>L'isolation vit dans la base.</strong> PostgreSQL cloisonne ligne par ligne (Row-Level Security), par organisation.</p>
+      <p><strong>Le SQL généré ne peut que lire.</strong> Avec Pro, la requête de l'IA s'exécute sous un rôle sans droit d'écriture, quoi que produise le modèle.</p>
+      <p><strong>Le journal d'audit ne se réécrit pas.</strong> Le rôle applicatif n'a ni UPDATE ni DELETE dessus. Une purge de rétention le taille au-delà de 365 jours par défaut, réglable.</p>
+      <p><strong>Chez vous.</strong> Le hub tourne sur vos serveurs. Avec Pro, le modèle d'IA peut tourner dans vos murs.</p>
+      <p><strong>Réversible.</strong> Des tables PostgreSQL ordinaires et un pg_dump standard. Aucune copie à réclamer chez un éditeur.</p>
     </div>
-    <h3 class="sous-titre" style="margin-top:34px">Une infrastructure complexe. Une commande pour la piloter.</h3>
-    <p class="lede">
-      Connecteurs, entités, pipelines, API, RAG&nbsp;: tout se déclare en YAML et se pilote depuis
-      <code>lm</code> — un peu comme Docker, pour l'expérience.
-      <strong>La tuyauterie devient une interface.</strong>
-    </p>
-    <p class="lede" style="margin-top:14px">
-      Ces écrans ont la forme exacte des sorties de <code>lm</code> aujourd'hui&nbsp;; seuls les
-      noms des connecteurs sont d'illustration. Rien n'est perdu sans être compté&nbsp;:
-      <code>IN = OUT + SKIPPED</code> tient sur chaque ligne.
-    </p>
-    <p class="serment" id="garde-fous">
-      <b>Trois engagements d'architecture&nbsp;:</b><br>
-      lumnik n'écrit jamais dans vos systèmes.<br>
-      L'isolation entre organisations est appliquée par la base de données, pas par du code applicatif.<br>
-      L'IA peut fonctionner entièrement <b>dans vos murs</b> — aucune donnée n'a besoin de sortir.
-    </p>
-    <div class="garanties" aria-label="Ce que le RSSI peut vérifier">
-      <p><strong>L'isolation vit dans la base.</strong> PostgreSQL cloisonne ligne par ligne
-      (Row-Level Security), par organisation.</p>
-      <p><strong>Le SQL généré ne peut que lire.</strong> Il s'exécute sous un rôle sans droit
-      d'écriture, quoi que produise le modèle.</p>
-      <p><strong>Le journal d'audit ne se réécrit pas.</strong> Le rôle applicatif n'a ni UPDATE ni
-      DELETE dessus — révoqués dans la base. Une purge de rétention le taille au-delà de 365 jours
-      par défaut, réglable.</p>
-      <p><strong>Réversible.</strong> Des tables PostgreSQL ordinaires et un pg_dump standard.
-      Il n'y a aucune copie chez un éditeur à réclamer.</p>
-    </div>
-    <p class="lede" style="margin-top:26px">
-      Chaque affirmation a sa commande&nbsp;:
-      <a href="https://docs.lumnik.io/security/" rel="noopener" style="color:var(--lumiere)">vérifiez-le vous-même, en cinq minutes</a>.
-      Le reste vit dans la
-      <a href="https://docs.lumnik.io" rel="noopener" style="color:var(--lumiere)">documentation</a>,
-      pour qui veut vérifier avant de faire confiance.
-    </p>
-  </div>
-</section>
-
-<section id="doc">
-  <div class="wrap reveal">
-    <p class="kicker">Aller au fond</p>
-    <h2>La documentation est publique. Le code de l'édition Open aussi.<br><em>Vérifiez avant de croire.</em></h2>
-    <p class="lede">Les connecteurs, les cinq garde-fous d'honnêteté, le modèle de données,
-    l'installation en une commande — tout est écrit, et lisible sans nous parler. Le substrat
-    complet est ouvert sous licence <strong>Apache-2.0</strong> : vous pouvez lire ce que le
-    produit fait, pas seulement ce que nous en disons. Aucun appel commercial entre vous et la
-    vérité technique.</p>
-    <div class="ctas">
-      <a class="btn btn-lumiere" href="https://docs.lumnik.io" rel="noopener">Lire la documentation</a>
-      <a class="btn btn-givre" href="https://github.com/icreated/lumnik-open" rel="noopener">Voir le code</a>
-    </div>
-    <p style="margin-top:52px"><span class="badge-bientot">Beta</span>
-    <a href="https://github.com/icreated/lumnik-open" rel="noopener" style="color:var(--lumiere)">lumnik Open · Apache-2.0</a></p>
-    <p class="lede">
-      <strong>Où en est lumnik&nbsp;?</strong> En beta&nbsp;: ce qui est fait, ce qui manque exprès,
-      et ce que nous ne savons pas encore tiennent sur une seule page.
-    </p>
-    <p class="lede" style="margin-top:14px">
-      <a href="https://docs.lumnik.io/where-lumnik-stands/" rel="noopener" style="color:var(--lumiere)">Où en est lumnik, page par page</a> ·
-      <a href="https://docs.lumnik.io/parcours/" rel="noopener" style="color:var(--lumiere)">le parcours guidé, trois demi-journées</a>
+    <p class="confiance-liens">
+      <a href="https://docs.lumnik.io/security/" rel="noopener">Le vérifier en cinq minutes</a>
+      <a href="https://docs.lumnik.io/reversibility/" rel="noopener">La réversibilité</a>
+      <a href="https://github.com/icreated/lumnik-open" rel="noopener">Le code de lumnik Open</a>
+      <span class="badge-bientot">Beta</span>
+      <a href="https://docs.lumnik.io/where-lumnik-stands/" rel="noopener">Où en est lumnik</a>
     </p>
   </div>
 </section>
@@ -188,7 +102,7 @@ LIMIT 500</pre>
 <footer>
   <div class="wrap">
     <div>lumnik — édité par icreated · Châtillon d'Azergues, France</div>
-    <div><a href="pourquoi.html">Pourquoi lumnik</a> · <a href="mentions.html">Mentions légales</a> · <a href="https://docs.lumnik.io" rel="noopener">Documentation</a> · <a href="scenarios/">Scénarios rejoués</a> · <a href="essai.html">Essai en ligne</a></div>
+    <div><a href="scenarios/">Scénarios</a> · <a href="essai.html">Essayer</a> · <a href="pourquoi.html">Pourquoi lumnik</a> · <a href="https://docs.lumnik.io" rel="noopener">Documentation</a> · <a href="mentions.html">Mentions légales</a></div>
   </div>
 </footer>
 

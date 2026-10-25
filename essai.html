@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Essai en ligne — lumnik</title>
-  <meta name="description" content="Essayez lumnik dans un bac à sable cloud : un ERP fictif déjà gelé, un assistant métier prêt à interroger. Accès sur demande — écrivez-nous.">
+  <title>Essayer lumnik Open — lumnik</title>
+  <meta name="description" content="Installez lumnik Open chez vous&nbsp;: une commande démarre le hub, sa base et son serveur de connexion. Gratuit et open source, sous licence Apache-2.0.">
   <link rel="canonical" href="https://lumnik.fr/essai.html">
-  <meta property="og:title" content="Essai en ligne — lumnik">
-  <meta property="og:description" content="Essayez lumnik dans un bac à sable cloud : un ERP fictif déjà gelé, un assistant métier prêt à interroger. Accès sur demande — écrivez-nous.">
+  <meta property="og:title" content="Essayer lumnik Open — lumnik">
+  <meta property="og:description" content="lumnik Open s'installe en une commande. Le chemin complet, du premier export au premier scénario rejoué.">
   <meta property="og:url" content="https://lumnik.fr/essai.html">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="fr_FR">
@@ -31,13 +31,11 @@
       <span class="menu-toggle-label">Menu</span>
     </button>
     <ul id="menu-principal">
-      <li><a href="produit.html">Produit</a></li>
-      <li><a href="situations.html">Situations</a></li>
-      <li><a href="pour-qui.html">Pour qui</a></li>
-      <li><a href="architecture.html">Architecture</a></li>
-      <li><a href="offre.html#offre">Offre</a></li>
-      <li><a href="essai.html" aria-current="page">Essayer</a></li>
-      <li><a class="btn btn-lumiere nav-contact" href="offre.html#contact">Nous parler</a></li>
+      <li><a href="scenarios/">Scénarios</a></li>
+      <li><a href="architecture.html">Sécurité</a></li>
+      <li><a href="offre.html">Offre</a></li>
+      <li><a href="https://docs.lumnik.io" rel="noopener">Docs</a></li>
+      <li><a class="btn btn-lumiere nav-contact" href="essai.html" aria-current="page">Essayer</a></li>
     </ul>
   </div>
 </nav>
@@ -46,61 +44,66 @@
 
 <header class="essai-hero">
   <div class="wrap">
-    <div class="badge-bientot">Accès sur demande</div>
-    <h1>Essayez le dégel, <span class="degel">sans rien installer</span>.</h1>
-    <p class="sous" style="max-width:56ch">
-      Un bac à sable cloud avec un ERP fictif déjà gelé dedans : branchez-vous,
-      posez vos questions en langage naturel, voyez la requête exécutée et l'abstention —
-      en dix minutes, depuis votre navigateur. Le bac à sable tourne déjà : les accès
-      s'ouvrent à la demande, le temps que le libre-service arrive.
-    </p>
-
-    <form class="essai-form" action="https://formspree.io/f/xqpzpwow" method="POST">
-      <input type="hidden" name="objet" value="Inscription essai cloud">
-      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <div>
-        <label for="email-essai">Email professionnel</label>
-        <input type="email" id="email-essai" name="email" required autocomplete="email"
-               placeholder="vous@entreprise.fr">
-      </div>
-      <div>
-        <label for="profil-essai">Vous êtes</label>
-        <select id="profil-essai" name="profil">
-          <option>Dirigeant / métier</option>
-          <option>Direction informatique</option>
-          <option>Intégrateur / ESN</option>
-          <option>Curieux de passage</option>
-        </select>
-      </div>
-      <button class="btn btn-lumiere" type="submit">Demander mes accès</button>
-    </form>
+    <div class="badge-bientot">Gratuit · Apache-2.0</div>
+    <h1>Essayez lumnik Open, <span class="degel">chez vous</span>.</h1>
+    <p class="sous" style="max-width:56ch">Une commande installe le hub, sa base et son serveur de connexion. Ensuite, chargez un premier export.</p>
 
     <div class="essai-etapes">
       <div class="essai-etape">
         <div class="num">1</div>
         <div>
-          <h2>Vous recevez vos accès</h2>
-          <p>Un lien, un identifiant — le bac à sable tourne déjà, avec un ERP fictif
-          de PME (clients, commandes, stocks) gelé dedans pour vous.</p>
+          <h2>Préparez la machine</h2>
+          <p>Docker et Docker Compose, avec curl, python3, openssl et awk. Linux ou macOS. Sous Windows, passez par WSL2.</p>
+          <p class="essai-liens"><a href="https://docs.lumnik.io/quickstart/prerequisites/" rel="noopener">Les prérequis</a> · <a href="https://docs.lumnik.io/deploy-windows/" rel="noopener">Sous Windows</a></p>
         </div>
       </div>
       <div class="essai-etape">
         <div class="num">2</div>
         <div>
-          <h2>Vous posez de vraies questions</h2>
-          <p>« Quels clients n'ont pas commandé depuis six mois ? » — la réponse arrive
-          avec la requête qui l'a produite. Demandez l'impossible : vous verrez l'abstention au travail.</p>
+          <h2>Lancez le hub</h2>
+          <p>Le script crée les secrets de l'installation, puis démarre le hub.</p>
+          <div class="fenetre terminal" role="group" aria-label="L'installation de lumnik Open">
+            <div class="barre"><span class="rond"></span><span class="rond"></span><span class="rond"></span>&nbsp;installer lumnik Open</div>
+            <pre><span class="cmd">$ git clone https://github.com/icreated/lumnik-open.git &amp;&amp; cd lumnik-open</span>
+<span class="cmd">$ ./deploy/selfhost/up.sh --build</span>
+…
+<span class="ok">==&gt; hub is healthy</span>
+  Hub:       http://localhost:8080   (health: /q/health)
+  Keycloak:  http://localhost:8180/realms/lumnik</pre>
+          </div>
+          <p class="essai-liens"><a href="https://docs.lumnik.io/deploy/" rel="noopener">Le déploiement en détail</a></p>
         </div>
       </div>
       <div class="essai-etape">
         <div class="num">3</div>
         <div>
-          <h2>Vous imaginez vos propres données à la place</h2>
-          <p>C'est généralement le moment où l'on nous écrit. La marche suivante :
-          une démonstration sur un échantillon de <strong>vos</strong> données,
-          chez vous, en lecture seule.</p>
+          <h2>Installez <code>lm</code></h2>
+          <p><code>lm</code> pilote le hub depuis le terminal. Prenez l'archive de votre système sur la page des versions.</p>
+          <p class="essai-liens"><a href="https://github.com/icreated/lumnik-open/releases/latest" rel="noopener">La page des versions</a></p>
         </div>
       </div>
+      <div class="essai-etape">
+        <div class="num">4</div>
+        <div>
+          <h2>Chargez un premier export</h2>
+          <p>Le démarrage rapide charge un fichier CSV et affiche ses lignes. Puis le WOW&nbsp;: deux logiciels deviennent un seul client, une vue, une décision.</p>
+          <p class="essai-liens"><a href="https://docs.lumnik.io/quickstart/installer/" rel="noopener">Le démarrage rapide</a> · <a href="https://docs.lumnik.io/wow/" rel="noopener">Le WOW</a></p>
+        </div>
+      </div>
+      <div class="essai-etape">
+        <div class="num">5</div>
+        <div>
+          <h2>Rejouez un scénario</h2>
+          <p>Chaque scénario montre ses manifestes, ses commandes et ses résultats. Le badge Open signale ceux qui tournent sur cette édition.</p>
+          <p class="essai-liens"><a href="scenarios/">Les scénarios</a></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="essai-pro">
+      <h2>Ce que Pro ajoute</h2>
+      <p>Les questions en langage naturel&nbsp;: la réponse montre sa requête, ou s'abstient. Et Kafka, Oracle et la recherche.</p>
+      <a class="btn btn-givre" href="offre.html">Voir l'offre</a>
     </div>
   </div>
 </header>
@@ -110,7 +113,7 @@
 <footer>
   <div class="wrap">
     <div>lumnik — édité par icreated · Châtillon d'Azergues, France</div>
-    <div><a href="pourquoi.html">Pourquoi lumnik</a> · <a href="mentions.html">Mentions légales</a> · <a href="https://docs.lumnik.io" rel="noopener">Documentation</a> · <a href="scenarios/">Scénarios rejoués</a> · <a href="index.html">Retour au site</a></div>
+    <div><a href="scenarios/">Scénarios</a> · <a href="essai.html">Essayer</a> · <a href="pourquoi.html">Pourquoi lumnik</a> · <a href="https://docs.lumnik.io" rel="noopener">Documentation</a> · <a href="mentions.html">Mentions légales</a></div>
   </div>
 </footer>
 
