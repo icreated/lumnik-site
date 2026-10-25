@@ -71,8 +71,8 @@ cannot be erased" (a retention purge runs at 365 days), the invented `quote_unmo
 1. **Hero.** Eyebrow « La couche de lecture de vos logiciels ».
    H1 « Vos logiciels restent en place. Vos données se remettent au travail. »
    (EN « Your software stays put. Your data gets back to work. »)
-   One sentence: lumnik reads ERP, exports and APIs without writing to them, repairs and merges
-   their data, serves it to teams and tools. Chips: lecture seule · installé chez vous · open
+   One sentence: lumnik reads ERP, exports and APIs without writing to them, merges their data,
+   repairs the exports (transformers act on file exports only), serves it all to teams and tools. Chips: lecture seule · installé chez vous · open
    source. Buttons: « Voir les scénarios » (primary), « Essayer lumnik Open ». Visual: the P-1008
    record, Lyon ≠ Villeurbanne, as today.
 2. **Vous reconnaissez ?** (`#situations`) Six scenario cards: the family as kicker, the

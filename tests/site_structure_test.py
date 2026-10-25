@@ -62,6 +62,8 @@ PAGE_FORBIDDEN = SITE_FORBIDDEN + (
     "Demander un pilote",
     "bac à sable",
     "Demander mes accès",
+    # Transformers repair a file export; a table or an API is read as it is (docs/wow.md).
+    "répare et rassemble leurs données",
 )
 HOME_SECTIONS = ("situations", "comment", "essayer", "confiance")
 # One replayed scenario per kind of problem; each card shows the title the catalogue serves.
@@ -343,6 +345,23 @@ class SiteStructureTest(unittest.TestCase):
                 with self.subTest(name=name, word=word):
                     self.assertNotIn(word, page_text)
 
+    def test_french_punctuation_never_follows_a_plain_space(self):
+        """U+00A0 before `:`, U+202F before `;` `!` `?` — a plain space lets the sign wrap alone onto
+        the next line, in the page and in a search snippet."""
+        for name in PAGES:
+            for line_no, line in enumerate(text_of(name).splitlines(), 1):
+                for match in re.finditer(r"[\w»)] [:;!?]", line):
+                    with self.subTest(name=name, line=line_no):
+                        self.fail(f"plain space before punctuation: {match.group(0)!r}")
+
+    def test_the_directory_is_sold_with_enterprise_only(self):
+        """The identity directory is an Enterprise promise on the offer page; a "Pro adds" list that
+        also names it would leave a buyer asking which tier to choose."""
+        self.assertIn("annuaire", between(text_of("offre.html"), "<h3>Enterprise</h3>", "</ul>"))
+        for name, part in (("index.html", section("index.html", "essayer")), ("essai.html", text_of("essai.html"))):
+            with self.subTest(name=name):
+                self.assertNotIn("annuaire", part)
+
     def test_the_dossier_page_has_its_metadata_and_exactly_its_two_scripts(self):
         page = load_page("dossier.html")
         self.assertEqual(1, page.title_count)
@@ -400,6 +419,10 @@ class HomepageTest(unittest.TestCase):
 
     def test_the_situations_lead_to_the_whole_catalogue(self):
         self.assertIn('<a class="btn btn-givre" href="scenarios/">', section("index.html", "situations"))
+
+    def test_the_repair_move_is_scoped_to_an_export(self):
+        repair = between(section("index.html", "comment"), 'id="sens"', "</div>")
+        self.assertIn("export", repair)
 
     def test_the_five_moves_answer_the_old_product_fragments(self):
         how = section("index.html", "comment")

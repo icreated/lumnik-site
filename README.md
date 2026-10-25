@@ -1,7 +1,7 @@
 # lumnik.fr — site vitrine
 
-Site statique, zéro framework, zéro build : cinq pages HTML, une feuille de style,
-un script. Se déploie sur n'importe quel hébergeur statique.
+Site statique, zéro framework, zéro build : sept pages HTML (cinq pour le parcours), six
+relais, une feuille de style, un script. Se déploie sur n'importe quel hébergeur statique.
 
 Le parcours du visiteur (spec `docs/superpowers/specs/2026-10-25-sites-simplification-design.md`) :
 comprendre sur l'accueil, voir un scénario rejoué, installer lumnik Open. Aucune démo n'est proposée.
