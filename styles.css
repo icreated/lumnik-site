@@ -1795,6 +1795,7 @@ section.fenetres { padding-top: 24px; }
    deux feuilles (lumnik.fr et lumnik.io) : le copier, ne pas le retaper.
    ========================================================================== */
 .heros h1 em { font-style: italic; color: var(--lumiere); }
+h1 + .lede { margin-top: 22px; }
 
 /* --- les scénarios mis en avant : la famille, le titre servi, l'édition --- */
 .scenarios-grille .porte { gap: 12px; }
@@ -1824,7 +1825,7 @@ section.fenetres { padding-top: 24px; }
 .essayer-grille {
   margin-top: 40px;
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
   gap: 32px;
   align-items: start;
 }
@@ -1840,6 +1841,7 @@ section.fenetres { padding-top: 24px; }
 /* --- la page essayer : un pas, un geste --- */
 .essai-etape > div { min-width: 0; }
 .essai-etape .terminal { margin-top: 14px; }
+.essai-etape .terminal pre { font-size: 0.72rem; }
 .essai-liens { margin-top: 8px; font-size: 0.92rem; }
 .essai-liens a,
 .tier a:not(.btn) { color: var(--lumiere); }
