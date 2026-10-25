@@ -1,34 +1,38 @@
 # lumnik.fr — site vitrine
 
-Site statique, zéro framework, zéro build : huit pages HTML, une feuille de style,
+Site statique, zéro framework, zéro build : cinq pages HTML, une feuille de style,
 un script. Se déploie sur n'importe quel hébergeur statique.
+
+Le parcours du visiteur (spec `docs/superpowers/specs/2026-10-25-sites-simplification-design.md`) :
+comprendre sur l'accueil, voir un scénario rejoué, installer lumnik Open. Aucune démo n'est proposée.
 
 ## Structure
 
 ```
-index.html      l'accueil : la fiche P-1008 de section en section
-produit.html    faits · sens · temps — la fusion, la réponse qui montre sa requête, l'immobilité
-situations.html les situations reconnaissables, les cas concrets, l'adaptateur, la comparaison
-pour-qui.html   direction, DSI, intégrateurs
-architecture.html l'architecture et ses garde-fous
-offre.html      l'offre (Hub · Pro · Enterprise) et le formulaire de contact
-essai.html      inscription à l'essai cloud (bac à sable — ouverture prochaine)
-pourquoi.html   le manifeste : gel → dégel → mouvement, et le nom (lié depuis le pied de page)
-gel.html, degel.html, mouvement.html   relais vers les nouvelles pages, ancre comprise (#15)
-mentions.html   mentions légales, hébergeur, données personnelles (RGPD)
-dossier.html    le questionnaire guidé : un dossier de proposition à télécharger (client seul)
-heros-a.html    variante A du premier écran, pour le test des cinq secondes (#13) — non indexée, liée nulle part
-heros-b.html    variante B (retenue, provisoirement) — son héros est recopié tel quel dans index.html
-donnees/        p1008.json : la fiche de démonstration et sa provenance — seule source des valeurs de l'accueil
-proposal/       les modules ES du questionnaire (.mjs, zéro build) ; page.mjs est le seul code DOM
-catalogue/      les catalogues publiés (<version>.json) — ARTEFACTS DE PUBLICATION
-scenarios/      les scénarios rejoués (une page par scénario + catalogue) — ARTEFACT DE PUBLICATION
+index.html        l'accueil : le héros (fiche P-1008), six scénarios, cinq gestes, essayer, confiance
+essai.html        installer lumnik Open, pas à pas — aucun formulaire
+offre.html        Hub (lumnik Open, gratuit) · Pro · Enterprise, puis le formulaire de contact
+architecture.html « Sécurité » : les garanties qu'une DSI peut vérifier, et où
+pourquoi.html     le manifeste : gel → dégel → mouvement, et le nom (pied de page)
+mentions.html     mentions légales, hébergeur, données personnelles (RGPD)
+dossier.html      le questionnaire guidé (dossier de proposition, client seul) — servi, lié de nulle part
+produit.html, situations.html, pour-qui.html, gel.html, degel.html, mouvement.html
+                  relais vers l'accueil, les scénarios ou Pourquoi, fragment compris
+donnees/          p1008.json : la fiche de démonstration et sa provenance — seule source des valeurs du héros
+proposal/         les modules ES du questionnaire (.mjs, zéro build) ; page.mjs est le seul code DOM
+catalogue/        les catalogues publiés (<version>.json) — ARTEFACTS DE PUBLICATION
+scenarios/        les scénarios rejoués (une page par scénario + catalogue) — ARTEFACT DE PUBLICATION
 catalogue-index.json  les versions servies et leurs empreintes — ARTEFACT DE PUBLICATION
-tests/js/       tests node:test — `node --test 'tests/js/*.test.mjs'` (forme glob, sans npm)
-tests/fixtures/ le corpus de dossiers vendu depuis le monorepo — ARTEFACT DE PUBLICATION
-styles.css      « la lumière dans le congélateur » — nuit glaciaire + jaune de lumière
-site.js         barre de dégel (progression) + révélation au défilement
+tests/site_structure_test.py  le contrat de structure — `python3 -m unittest tests/site_structure_test.py`
+tests/js/         tests node:test — `node --test 'tests/js/*.test.mjs'` (forme glob, sans npm)
+tests/fixtures/   le corpus de dossiers vendu depuis le monorepo — ARTEFACT DE PUBLICATION
+styles.css        « la lumière dans le congélateur » — nuit glaciaire + jaune de lumière
+site.js           barre de dégel (progression) + révélation au défilement + menu mobile
 ```
+
+Les six scénarios de l'accueil affichent le titre que sert `scenarios/index.json` : un scénario
+renommé ou retiré fait échouer le test de structure. Lancer les deux suites avant chaque PR —
+aucun CI ne le fait.
 
 ## Artefacts de publication — ne jamais les éditer ici
 
@@ -60,15 +64,14 @@ ne verrait pas.
 ## À faire avant la mise en ligne
 
 1. ~~**Formulaire** : créer un formulaire sur formspree.io et remplacer
-   l'ID de formulaire placeholder.~~ Fait — les deux pages à formulaire
-   (`offre.html`, `essai.html`) postent vers le formulaire Formspree réel.
-2. ~~**Email**~~ Décision : le formulaire reste l'unique canal de contact sur les
-   pages marketing (`offre.html`, `essai.html`) ; l'adresse email légale
-   n'apparaît que sur `mentions.html`, comme contact de l'éditeur.
+   l'ID de formulaire placeholder.~~ Fait — `offre.html` poste vers le formulaire
+   Formspree réel.
+2. ~~**Email**~~ Décision : le formulaire d'`offre.html` reste l'unique canal de contact
+   des pages marketing ; l'adresse email légale n'apparaît que sur `mentions.html`,
+   comme contact de l'éditeur.
 3. ~~Page mentions légales~~ Fait — `mentions.html`, liée depuis le pied des
    pages marketing.
-4. **Essai cloud** : quand le bac à sable existera, `essai.html` accueillera le lien
-   d'accès à la place du badge « ouverture prochaine ».
+4. ~~Essai cloud~~ Retiré (2026-10-25) : `essai.html` installe lumnik Open chez soi.
 5. **Mise en ligne** : `CNAME` (`lumnik.fr`) → GitHub Pages, DNS (4×A + `www` CNAME),
    HTTPS enforcement — hors périmètre de ce dépôt de contenu, traité au moment de
    la publication.
