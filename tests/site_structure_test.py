@@ -433,6 +433,14 @@ class HomepageTest(unittest.TestCase):
             with self.subTest(fragment=fragment):
                 self.assertIn(f'id="{fragment}"', how)
 
+    def test_the_no_write_promise_names_the_software_not_the_premises(self):
+        """lumnik writes into its own PostgreSQL, installed on the client's machines: a promise of
+        no write on the premises would contradict "installed on your machines". It is about the
+        client's software."""
+        heading = visible(between(section("index.html", "comment"), "<h2>", "</h2>"))
+        self.assertNotIn("chez vous", heading)
+        self.assertIn("dans vos logiciels", heading)
+
     def test_the_try_section_shows_the_real_install(self):
         try_section = visible(section("index.html", "essayer"))
         for line in (CLONE, UP, HEALTHY):
