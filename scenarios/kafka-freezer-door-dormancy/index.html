@@ -172,6 +172,7 @@ scenario-freezer-door-d  DOOR-17  CLOSED  2026-10-22 00:11  </span></code></pre>
   </aside>
 </section>
   <section class="limits"><h2>Limites</h2><ul><li>Le workflow connaît le dernier événement reçu : un OPEN qui dure peut aussi être un CLOSED perdu avant le broker. Il détecte un silence, pas l&#x27;état physique de la porte.</li><li>La dormance se compte à partir de la première observation par lumnik, pas de l&#x27;occurred_at du capteur.</li><li>Pour la démonstration, le balayage tourne toutes les 5 secondes ; il tourne toutes les 15 minutes par défaut. Le seuil métier reste le minimum accepté, 1 minute.</li><li>Données synthétiques.</li></ul></section>
+  <section class="try"><p>Ce scénario demande lumnik Pro.</p><a class="try-button" href="../../offre.html">Voir l&#x27;offre →</a></section>
 </main>
 <script src="../assets/scenario.js" defer></script>
 </body>

@@ -191,6 +191,7 @@ f4ff1279  scenario-energy-readings-n  default   Completed  3   3    0        0  
   </aside>
 </section>
   <section class="limits"><h2>Limites</h2><ul><li>Une politique ne voit que les colonnes de la lecture Kafka : le responsable et le contexte, venus du CSV, ne peuvent pas entrer dans le message de décision en v1.</li><li>Le destinataire est une règle statique pour ce type de décision ; lumnik ne lit pas l&#x27;adresse dans l&#x27;entité.</li><li>lumnik compare une mesure à un seuil déclaré ; il ne diagnostique pas la cause. period=CLOSED vient de la source.</li><li>Grafana interroge postgres toutes les 5 secondes ; ce n&#x27;est pas du streaming.</li><li>Données synthétiques.</li></ul></section>
+  <section class="try"><p>Ce scénario demande lumnik Pro.</p><a class="try-button" href="../../offre.html">Voir l&#x27;offre →</a></section>
 </main>
 <script src="../assets/scenario.js" defer></script>
 </body>

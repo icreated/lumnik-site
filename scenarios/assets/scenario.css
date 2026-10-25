@@ -147,3 +147,21 @@ th { color: var(--brume); font: 500 12px var(--mono); }
 .ribbon-pro { background: var(--lumiere); border-color: var(--lumiere); color: var(--nuit); }
 .card p { color: var(--brume); margin: 0; }
 .card .open { margin-top: auto; color: var(--lumiere); font-size: 14px; }
+
+/* The catalogue's head: how many scenarios, how many on the free edition, and the families. */
+.count { color: var(--neige); margin: 0 0 16px; }
+.count a { color: var(--lumiere); text-underline-offset: 3px; }
+.families { display: flex; flex-wrap: wrap; gap: 8px; }
+.families a { border: 1px solid var(--givre); border-radius: 999px; padding: 4px 12px; color: var(--neige);
+  text-decoration: none; font-size: 14px; }
+.families a:hover, .families a:focus-visible { border-color: var(--lumiere); color: var(--lumiere); }
+.group-line { color: var(--brume); margin: -8px 0 16px; max-width: 760px; }
+
+/* The closing block of a scenario page: where to try what the page showed. */
+.try { margin: -24px 0 64px; max-width: 760px; padding: 20px 24px; border: 1px solid rgba(255, 210, 74, 0.4);
+  border-radius: var(--radius); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 12px 24px; }
+.try p { margin: 0; color: var(--neige); }
+.try-button { display: inline-block; padding: 10px 18px; border-radius: 999px; background: var(--lumiere);
+  color: var(--nuit); font-weight: 600; text-decoration: none; }
+.try-button:hover, .try-button:focus-visible { box-shadow: 0 0 24px var(--lueur); }
