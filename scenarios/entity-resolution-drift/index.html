@@ -24,9 +24,17 @@
   </section>
   <nav class="steps-nav" aria-label="Étapes"><a href="#step-import" data-step="import" aria-current="step"><span class="num">1 · Importer</span><span class="sub">Jour 1</span></a><a href="#step-resolve" data-step="resolve"><span class="num">2 · Résoudre</span><span class="sub">Le lien</span></a><a href="#step-drift" data-step="drift"><span class="num">3 · Dériver</span><span class="sub">Jour 2</span></a><a href="#step-correct" data-step="correct"><span class="num">4 · Corriger</span><span class="sub">La décision</span></a><a href="#step-replay" data-step="replay"><span class="num">5 · Rejouer</span><span class="sub">Encore une fois</span></a></nav>
   <section class="step" id="step-import" aria-labelledby="import-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="import-title">Deux comptes ERP, un contact CRM</h2>
+      <p>AC-700 Nova Pumps et AC-800 Helios Valves côté ERP ; CC-42 côté CRM, avec l&#x27;email de service de Nova Pumps.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Fichiers</strong><p>Le connecteur CRM lit crm-contact-*.csv : chaque jour dépose son fichier.</p></div></li><li><span class="n">2</span><div><strong>Périmètre</strong><p>Les deux sources vont au périmètre entity-resolution.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Les deux exports du jour 1 sont lus tels quels.</p></div>
+  </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Importer"><button type="button" role="tab" id="import-manifest-tab" data-view="manifest" aria-controls="import-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="import-commands-tab" data-view="commands" aria-controls="import-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="import-result-tab" data-view="result" aria-controls="import-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" id="import-manifest" aria-labelledby="import-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-erp.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-resolution-drift-erp-d</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [entity-resolution]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/entity-resolution-drift/d/erp-customers.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre><div class="file"><span class="filename">manifests/20-crm.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-resolution-drift-crm-d</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [entity-resolution]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/entity-resolution-drift/d/crm-contact-*.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre></div><div role="tabpanel" id="import-commands" aria-labelledby="import-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm validate -f manifests/10-erp.yaml</span>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="import-manifest" aria-labelledby="import-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-erp.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-resolution-drift-erp-d</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [entity-resolution]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/entity-resolution-drift/d/erp-customers.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre><div class="file"><span class="filename">manifests/20-crm.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-resolution-drift-crm-d</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [entity-resolution]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/entity-resolution-drift/d/crm-contact-*.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="import-commands" aria-labelledby="import-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm validate -f manifests/10-erp.yaml</span>
 <span class="out">✓ 10-erp.yaml — valid</span>
 
 <span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-erp.yaml</span>
@@ -50,19 +58,21 @@ acde2a35  scenario-resolution-drift-erp-d  default   Completed  2   2    0      
 
 <span class="cmd"><span class="prompt">$</span> lm run get f72a8204-df91-4922-acb7-dfb850da4ed9</span>
 <span class="out">ID        CONNECTOR                        ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-f72a8204  scenario-resolution-drift-crm-d  default   Completed  1   1    0        0             2026-10-21 19:51  2026-10-21 19:51</span></code></pre></div><div role="tabpanel" id="import-result" aria-labelledby="import-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-resolution-drift-erp-d</dt><dd>2</dd><dt>scenario-resolution-drift-crm-d</dt><dd>1</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+f72a8204  scenario-resolution-drift-crm-d  default   Completed  1   1    0        0             2026-10-21 19:51  2026-10-21 19:51</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="import-result" aria-labelledby="import-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-resolution-drift-erp-d</dt><dd>2</dd><dt>scenario-resolution-drift-crm-d</dt><dd>1</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
   </div>
-  <aside class="explain">
-    <h2 id="import-title">Deux comptes ERP, un contact CRM</h2>
-    <p>AC-700 Nova Pumps et AC-800 Helios Valves côté ERP ; CC-42 côté CRM, avec l&#x27;email de service de Nova Pumps.</p>
-    <ol class="points"><li><span class="n">1</span><div><strong>Fichiers</strong><p>Le connecteur CRM lit crm-contact-*.csv : chaque jour dépose son fichier.</p></div></li><li><span class="n">2</span><div><strong>Périmètre</strong><p>Les deux sources vont au périmètre entity-resolution.</p></div></li></ol>
-    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Les deux exports du jour 1 sont lus tels quels.</p></div>
-  </aside>
 </section>
 <section class="step" id="step-resolve" aria-labelledby="resolve-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="resolve-title">CC-42 rejoint AC-700</h2>
+      <p>L&#x27;Entity rapproche par email, en minuscules ; CC-42 et AC-700 partagent service@nova-pumps.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Règle</strong><p>Une seule règle : email exact, normalize: [lower].</p></div></li><li><span class="n">2</span><div><strong>Historique</strong><p>Le rapprochement entre dans le registre, règle email.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le lien jour 1 est établi par la règle déclarée.</p></div>
+  </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Résoudre"><button type="button" role="tab" id="resolve-manifest-tab" data-view="manifest" aria-controls="resolve-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="resolve-commands-tab" data-view="commands" aria-controls="resolve-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="resolve-result-tab" data-view="result" aria-controls="resolve-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" id="resolve-manifest" aria-labelledby="resolve-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-customer.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ScenarioResolutionDriftD</span><span class="line"><span class="key">description</span>: <span class="str">&quot;A resolved CRM contact whose matching data later contradicts its established identity.&quot;</span></span><span class="line"><span class="key">scopes</span>: [entity-resolution]</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_resolution_drift_erp_d</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">account_code</span>: account_code</span><span class="line">      <span class="key">company_name</span>: name</span><span class="line">      <span class="key">email</span>: email</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_resolution_drift_crm_d</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">contact_code</span>: crm_id</span><span class="line">      <span class="key">display_name</span>: name</span><span class="line">      <span class="key">email</span>: email</span><span class="line">      <span class="key">phone</span>: phone</span><span class="line"><span class="key">resolution</span>:</span><span class="line">  <span class="key">identity</span>:</span><span class="line">    <span class="key">t_scenario_resolution_drift_erp_d</span>: account_code</span><span class="line">    <span class="key">t_scenario_resolution_drift_crm_d</span>: crm_id</span><span class="line hl">  <span class="key">cascade</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: email</span><span class="line">      <span class="key">exact</span>:</span><span class="line">        <span class="key">fields</span>: [email]</span><span class="line hl">        <span class="key">normalize</span>: [lower]</span></code></pre></div><div role="tabpanel" id="resolve-commands" aria-labelledby="resolve-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f manifests/30-customer.yaml</span>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="resolve-manifest" aria-labelledby="resolve-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-customer.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ScenarioResolutionDriftD</span><span class="line"><span class="key">description</span>: <span class="str">&quot;A resolved CRM contact whose matching data later contradicts its established identity.&quot;</span></span><span class="line"><span class="key">scopes</span>: [entity-resolution]</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_resolution_drift_erp_d</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">account_code</span>: account_code</span><span class="line">      <span class="key">company_name</span>: name</span><span class="line">      <span class="key">email</span>: email</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_resolution_drift_crm_d</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">contact_code</span>: crm_id</span><span class="line">      <span class="key">display_name</span>: name</span><span class="line">      <span class="key">email</span>: email</span><span class="line">      <span class="key">phone</span>: phone</span><span class="line"><span class="key">resolution</span>:</span><span class="line">  <span class="key">identity</span>:</span><span class="line">    <span class="key">t_scenario_resolution_drift_erp_d</span>: account_code</span><span class="line">    <span class="key">t_scenario_resolution_drift_crm_d</span>: crm_id</span><span class="line hl">  <span class="key">cascade</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: email</span><span class="line">      <span class="key">exact</span>:</span><span class="line">        <span class="key">fields</span>: [email]</span><span class="line hl">        <span class="key">normalize</span>: [lower]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="resolve-commands" aria-labelledby="resolve-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f manifests/30-customer.yaml</span>
 <span class="out">Applied entity &quot;ScenarioResolutionDriftD&quot; → connector.&quot;v_scenarioresolutiondriftd&quot;</span>
 
 <span class="cmd"><span class="prompt">$</span> lm entity resolve ScenarioResolutionDriftD</span>
@@ -87,19 +97,21 @@ rule hits:
     &quot;phone&quot;: &quot;+33 4 72 42 42 42&quot;,
     &quot;_conflicts&quot;: &quot;{}&quot;
   }
-]</span></code></pre></div><div role="tabpanel" id="resolve-result" aria-labelledby="resolve-result-tab" tabindex="0" hidden><dl class="facts"><dt>ScenarioResolutionDriftD</dt><dd>v_scenarioresolutiondriftd</dd><dt>resolve</dt><dd>resolved 3 · ambiguous 0 · rule email 3</dd><dt>CC-42</dt><dd>CC-42 → account_code=&quot;AC-700&quot;</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="resolve-result" aria-labelledby="resolve-result-tab" tabindex="0" hidden><dl class="facts"><dt>ScenarioResolutionDriftD</dt><dd>v_scenarioresolutiondriftd</dd><dt>resolve</dt><dd>resolved 3 · ambiguous 0 · rule email 3</dd><dt>CC-42</dt><dd>CC-42 → account_code=&quot;AC-700&quot;</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
   </div>
-  <aside class="explain">
-    <h2 id="resolve-title">CC-42 rejoint AC-700</h2>
-    <p>L&#x27;Entity rapproche par email, en minuscules ; CC-42 et AC-700 partagent service@nova-pumps.</p>
-    <ol class="points"><li><span class="n">1</span><div><strong>Règle</strong><p>Une seule règle : email exact, normalize: [lower].</p></div></li><li><span class="n">2</span><div><strong>Historique</strong><p>Le rapprochement entre dans le registre, règle email.</p></div></li></ol>
-    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le lien jour 1 est établi par la règle déclarée.</p></div>
-  </aside>
 </section>
 <section class="step" id="step-drift" aria-labelledby="drift-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="drift-title">L&#x27;email change ; le lien ne bouge pas</h2>
+      <p>Le CRM livre CC-42 avec l&#x27;email de Helios Valves. Le run suffit : CC-42 devient ambigu entre Nova Pumps et Helios Valves.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Refus</strong><p>Un lien établi ne passe jamais à une autre entité sans décision humaine.</p></div></li><li><span class="n">2</span><div><strong>Trace</strong><p>L&#x27;historique garde le lien d&#x27;hier, puis l&#x27;ambiguïté.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La contradiction devient une ambiguïté, jamais un déplacement silencieux.</p></div>
+  </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Dériver"><button type="button" role="tab" id="drift-commands-tab" data-view="commands" aria-controls="drift-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="drift-result-tab" data-view="result" aria-controls="drift-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" id="drift-commands" aria-labelledby="drift-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-resolution-drift-crm-d</span>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="drift-commands" aria-labelledby="drift-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-resolution-drift-crm-d</span>
 <span class="out">run scheduled: 6681d5f4-ab45-442b-944f-4e86f767d101</span>
 
 <span class="cmd"><span class="prompt">$</span> lm run get 6681d5f4-ab45-442b-944f-4e86f767d101</span>
@@ -172,19 +184,21 @@ rule hits:
     &quot;phone&quot;: &quot;+33 4 72 42 42 42&quot;,
     &quot;_conflicts&quot;: &quot;{}&quot;
   }
-]</span></code></pre></div><div role="tabpanel" id="drift-result" aria-labelledby="drift-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-resolution-drift-crm-d</dt><dd>1</dd><dt>Historique</dt><dd>RESOLVED · 1 → AMBIGUOUS · 2</dd><dt>CC-42</dt><dd>CC-42 → account_code=null</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="drift-result" aria-labelledby="drift-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-resolution-drift-crm-d</dt><dd>1</dd><dt>Historique</dt><dd>RESOLVED · 1 → AMBIGUOUS · 2</dd><dt>CC-42</dt><dd>CC-42 → account_code=null</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
   </div>
-  <aside class="explain">
-    <h2 id="drift-title">L&#x27;email change ; le lien ne bouge pas</h2>
-    <p>Le CRM livre CC-42 avec l&#x27;email de Helios Valves. Le run suffit : CC-42 devient ambigu entre Nova Pumps et Helios Valves.</p>
-    <ol class="points"><li><span class="n">1</span><div><strong>Refus</strong><p>Un lien établi ne passe jamais à une autre entité sans décision humaine.</p></div></li><li><span class="n">2</span><div><strong>Trace</strong><p>L&#x27;historique garde le lien d&#x27;hier, puis l&#x27;ambiguïté.</p></div></li></ol>
-    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La contradiction devient une ambiguïté, jamais un déplacement silencieux.</p></div>
-  </aside>
 </section>
 <section class="step" id="step-correct" aria-labelledby="correct-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="correct-title">Un humain tranche</h2>
+      <p>assert-same relie CC-42 à AC-700 : l&#x27;email a été changé par erreur.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Effet</strong><p>Plus d&#x27;ambiguïté ; CC-42 rejoint AC-700.</p></div></li><li><span class="n">2</span><div><strong>Conflit visible</strong><p>_conflicts garde les deux emails, ERP et CRM.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La correction humaine rétablit Nova Pumps.</p></div>
+  </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Corriger"><button type="button" role="tab" id="correct-commands-tab" data-view="commands" aria-controls="correct-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="correct-result-tab" data-view="result" aria-controls="correct-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" id="correct-commands" aria-labelledby="correct-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity assert-same ScenarioResolutionDriftD --left t_scenario_resolution_drift_crm_d:CC-42 --right t_scenario_resolution_drift_erp_d:AC-700 --reason &quot;The CRM email was changed in error; the contact remains Nova Pumps&quot;</span>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="correct-commands" aria-labelledby="correct-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity assert-same ScenarioResolutionDriftD --left t_scenario_resolution_drift_crm_d:CC-42 --right t_scenario_resolution_drift_erp_d:AC-700 --reason &quot;The CRM email was changed in error; the contact remains Nova Pumps&quot;</span>
 <span class="out">recorded: t_scenario_resolution_drift_crm_d:CC-42 and t_scenario_resolution_drift_erp_d:AC-700 are same</span>
 
 <span class="cmd"><span class="prompt">$</span> lm entity resolve ScenarioResolutionDriftD</span>
@@ -212,19 +226,21 @@ rule hits:
     &quot;phone&quot;: &quot;+33 4 72 42 42 42&quot;,
     &quot;_conflicts&quot;: &quot;{\&quot;email\&quot;: [{\&quot;src\&quot;: \&quot;t_scenario_resolution_drift_erp_d\&quot;, \&quot;value\&quot;: \&quot;service@nova-pumps.example\&quot;}, {\&quot;src\&quot;: \&quot;t_scenario_resolution_drift_crm_d\&quot;, \&quot;value\&quot;: \&quot;maintenance@helios-valves.example\&quot;}]}&quot;
   }
-]</span></code></pre></div><div role="tabpanel" id="correct-result" aria-labelledby="correct-result-tab" tabindex="0" hidden><dl class="facts"><dt>resolve</dt><dd>resolved 3 · ambiguous 0 · rule email 2</dd><dt>CC-42</dt><dd>CC-42 → account_code=&quot;AC-700&quot;</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="correct-result" aria-labelledby="correct-result-tab" tabindex="0" hidden><dl class="facts"><dt>resolve</dt><dd>resolved 3 · ambiguous 0 · rule email 2</dd><dt>CC-42</dt><dd>CC-42 → account_code=&quot;AC-700&quot;</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
   </div>
-  <aside class="explain">
-    <h2 id="correct-title">Un humain tranche</h2>
-    <p>assert-same relie CC-42 à AC-700 : l&#x27;email a été changé par erreur.</p>
-    <ol class="points"><li><span class="n">1</span><div><strong>Effet</strong><p>Plus d&#x27;ambiguïté ; CC-42 rejoint AC-700.</p></div></li><li><span class="n">2</span><div><strong>Conflit visible</strong><p>_conflicts garde les deux emails, ERP et CRM.</p></div></li></ol>
-    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La correction humaine rétablit Nova Pumps.</p></div>
-  </aside>
 </section>
 <section class="step" id="step-replay" aria-labelledby="replay-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="replay-title">La décision tient, avec son auteur</h2>
+      <p>Une nouvelle résolution complète garde CC-42 sur AC-700. L&#x27;historique nomme l&#x27;auteur et la raison.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Audit</strong><p>decidedBy asserted, le login de l&#x27;intégrateur et la raison.</p></div></li><li><span class="n">2</span><div><strong>Stable</strong><p>La règle email compte autant qu&#x27;à la passe précédente.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La correction survit au rejeu et reste lisible.</p></div>
+  </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Rejouer"><button type="button" role="tab" id="replay-commands-tab" data-view="commands" aria-controls="replay-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="replay-result-tab" data-view="result" aria-controls="replay-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" id="replay-commands" aria-labelledby="replay-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity resolve ScenarioResolutionDriftD</span>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="replay-commands" aria-labelledby="replay-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity resolve ScenarioResolutionDriftD</span>
 <span class="out">rows seen: 3
 resolved: 3
 ambiguous: 0
@@ -319,14 +335,8 @@ rule hits:
     &quot;assertedByLogin&quot;: &quot;integrator&quot;,
     &quot;reason&quot;: &quot;The CRM email was changed in error; the contact remains Nova Pumps&quot;
   }
-]</span></code></pre></div><div role="tabpanel" id="replay-result" aria-labelledby="replay-result-tab" tabindex="0" hidden><dl class="facts"><dt>resolve</dt><dd>resolved 3 · ambiguous 0 · rule email 2</dd><dt>CC-42</dt><dd>CC-42 → account_code=&quot;AC-700&quot;</dd><dt>decidedBy</dt><dd>asserted · integrator</dd><dt>Raison</dt><dd>The CRM email was changed in error; the contact remains Nova Pumps</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="replay-result" aria-labelledby="replay-result-tab" tabindex="0" hidden><dl class="facts"><dt>resolve</dt><dd>resolved 3 · ambiguous 0 · rule email 2</dd><dt>CC-42</dt><dd>CC-42 → account_code=&quot;AC-700&quot;</dd><dt>decidedBy</dt><dd>asserted · integrator</dd><dt>Raison</dt><dd>The CRM email was changed in error; the contact remains Nova Pumps</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
   </div>
-  <aside class="explain">
-    <h2 id="replay-title">La décision tient, avec son auteur</h2>
-    <p>Une nouvelle résolution complète garde CC-42 sur AC-700. L&#x27;historique nomme l&#x27;auteur et la raison.</p>
-    <ol class="points"><li><span class="n">1</span><div><strong>Audit</strong><p>decidedBy asserted, le login de l&#x27;intégrateur et la raison.</p></div></li><li><span class="n">2</span><div><strong>Stable</strong><p>La règle email compte autant qu&#x27;à la passe précédente.</p></div></li></ol>
-    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La correction survit au rejeu et reste lisible.</p></div>
-  </aside>
 </section>
   <section class="limits"><h2>Limites</h2><ul><li>Le scénario protège contre un déplacement ; il ne dit pas pourquoi le CRM a changé.</li><li>Les assertions et les curseurs de source sont durables : un rejeu complet demande une nouvelle instance.</li><li>Données synthétiques.</li></ul></section>
   <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>

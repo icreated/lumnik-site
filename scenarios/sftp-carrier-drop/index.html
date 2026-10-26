@@ -24,92 +24,110 @@
   </section>
   <nav class="steps-nav" aria-label="Étapes"><a href="#step-connect" data-step="connect" aria-current="step"><span class="num">1 · Brancher</span><span class="sub">Clé épinglée</span></a><a href="#step-night1" data-step="night1"><span class="num">2 · Nuit 1</span><span class="sub">Six expéditions</span></a><a href="#step-night2" data-step="night2"><span class="num">3 · Nuit 2</span><span class="sub">Même nom, même taille</span></a><a href="#step-night3" data-step="night3"><span class="num">4 · Nuit 3</span><span class="sub">Archive en lecture seule</span></a><a href="#step-hostkey" data-step="hostkey"><span class="num">5 · Réinstallation</span><span class="sub">Nouvelle clé</span></a><a href="#step-repin" data-step="repin"><span class="num">6 · Réépingler</span><span class="sub">Clé confirmée</span></a></nav>
   <section class="step" id="step-connect" aria-labelledby="connect-title">
-  <div class="views">
-    <div role="tablist" class="view-tabs" aria-label="Brancher"><button type="button" role="tab" id="connect-manifest-tab" data-view="manifest" aria-controls="connect-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="connect-commands-tab" data-view="commands" aria-controls="connect-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="connect-result-tab" data-view="result" aria-controls="connect-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" id="connect-manifest" aria-labelledby="connect-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-carrier.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-carrier-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [transport]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: sftp</span><span class="line">    <span class="key">host</span>: host.docker.internal</span><span class="line">    <span class="key">port</span>: 2223</span><span class="line">    <span class="key">user</span>: carrier</span><span class="line">    <span class="key">path</span>: /out/*.csv</span><span class="line">    <span class="key">password_env</span>: SCENARIO_CARRIER_A_SFTP</span><span class="line">    <span class="comment"># The fingerprint the carrier&#x27;s server presents, read out of band (ssh-keyscan | ssh-keygen -lf -).</span></span><span class="line hl">    <span class="key">host_key_fingerprint</span>: <span class="str">&quot;SHA256:FINGERPRINT_READ_AT_REPLAY&quot;</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line hl">  <span class="key">after_process</span>: archive</span><span class="line">  <span class="key">archive_path</span>: /archive/</span></code></pre></div><div role="tabpanel" id="connect-commands" aria-labelledby="connect-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f /var/folders/18/2psk9q652gsflqx5mvzr3nsh0000gn/T//lumnik-carrier.wRuSfT/10-carrier.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;scenario-carrier-d&quot;,&quot;connectorId&quot;:&quot;94623382-1c2a-4a4f-a512-490463c3b5eb&quot;,&quot;endpointsApplied&quot;:1}</span></code></pre></div><div role="tabpanel" id="connect-result" aria-labelledby="connect-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-carrier-d</dt><dd>1 endpoint, host key pinned</dd></dl><p class="sources">preuves : replay.log, 01-folders-night1.txt, 02-folders-night2.txt, 03-folders-night3.txt, 04-run-night3.json, 05-hostkey-refusal.txt, 06-folders-repin.txt · transform v1</p></div>
-  </div>
   <aside class="explain">
-    <h2 id="connect-title">Le serveur du transporteur, sa clé vérifiée</h2>
-    <p>Un connecteur CSV sur le SFTP du transporteur. L&#x27;empreinte de sa clé est relevée hors bande puis épinglée ; le mot de passe est un secret du hub, jamais dans le manifeste.</p>
+    <div class="explain-intro">
+      <h2 id="connect-title">Le serveur du transporteur, sa clé vérifiée</h2>
+      <p>Un connecteur CSV sur le SFTP du transporteur. L&#x27;empreinte de sa clé est relevée hors bande puis épinglée ; le mot de passe est un secret du hub, jamais dans le manifeste.</p>
+    </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Confiance</strong><p>Le hub ne parle qu&#x27;au serveur dont il connaît la clé.</p></div></li><li><span class="n">2</span><div><strong>Archivage</strong><p>after_process: archive vide le dossier de dépôt.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le transport est déclaré, la confiance aussi.</p></div>
   </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Brancher"><button type="button" role="tab" id="connect-manifest-tab" data-view="manifest" aria-controls="connect-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="connect-commands-tab" data-view="commands" aria-controls="connect-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="connect-result-tab" data-view="result" aria-controls="connect-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="connect-manifest" aria-labelledby="connect-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-carrier.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-carrier-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [transport]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: sftp</span><span class="line">    <span class="key">host</span>: host.docker.internal</span><span class="line">    <span class="key">port</span>: 2223</span><span class="line">    <span class="key">user</span>: carrier</span><span class="line">    <span class="key">path</span>: /out/*.csv</span><span class="line">    <span class="key">password_env</span>: SCENARIO_CARRIER_A_SFTP</span><span class="line">    <span class="comment"># The fingerprint the carrier&#x27;s server presents, read out of band (ssh-keyscan | ssh-keygen -lf -).</span></span><span class="line hl">    <span class="key">host_key_fingerprint</span>: <span class="str">&quot;SHA256:FINGERPRINT_READ_AT_REPLAY&quot;</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line hl">  <span class="key">after_process</span>: archive</span><span class="line">  <span class="key">archive_path</span>: /archive/</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="connect-commands" aria-labelledby="connect-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f /var/folders/18/2psk9q652gsflqx5mvzr3nsh0000gn/T//lumnik-carrier.wRuSfT/10-carrier.yaml</span>
+<span class="out">{&quot;name&quot;:&quot;scenario-carrier-d&quot;,&quot;connectorId&quot;:&quot;94623382-1c2a-4a4f-a512-490463c3b5eb&quot;,&quot;endpointsApplied&quot;:1}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="connect-result" aria-labelledby="connect-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-carrier-d</dt><dd>1 endpoint, host key pinned</dd></dl><p class="sources">preuves : replay.log, 01-folders-night1.txt, 02-folders-night2.txt, 03-folders-night3.txt, 04-run-night3.json, 05-hostkey-refusal.txt, 06-folders-repin.txt · transform v1</p></div>
+  </div>
 </section>
 <section class="step" id="step-night1" aria-labelledby="night1-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="night1-title">Lu, puis archivé sous son nom et son heure</h2>
+      <p>livraisons.csv est lu ; le fichier part dans archive/ avec l&#x27;heure de son export dans le nom.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Lu</strong><p>IN 6, OUT 6.</p></div></li><li><span class="n">2</span><div><strong>Archivé</strong><p>livraisons.&lt;heure&gt;.csv, le dossier de dépôt vide.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une nuit lue est une nuit rangée.</p></div>
+  </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Nuit 1"><button type="button" role="tab" id="night1-commands-tab" data-view="commands" aria-controls="night1-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="night1-result-tab" data-view="result" aria-controls="night1-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" id="night1-commands" aria-labelledby="night1-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-carrier-d</span>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="night1-commands" aria-labelledby="night1-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-carrier-d</span>
 <span class="out">run scheduled: 6864a207-c4bf-4cdb-a59d-d8cf2117509c</span>
 
 <span class="cmd"><span class="prompt">$</span> lm run get 6864a207-c4bf-4cdb-a59d-d8cf2117509c</span>
 <span class="out">ID        CONNECTOR           ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
-6864a207  scenario-carrier-d  default   Completed  6   6    0        0             2026-10-22 20:43  2026-10-22 20:43  yes</span></code></pre></div><div role="tabpanel" id="night1-result" aria-labelledby="night1-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 6 · OUT 6</dd><dt>out/</dt><dd>empty</dd><dt>archive/</dt><dd>livraisons.20261020T220000Z.csv</dd></dl><p class="sources">preuves : replay.log, 01-folders-night1.txt, 02-folders-night2.txt, 03-folders-night3.txt, 04-run-night3.json, 05-hostkey-refusal.txt, 06-folders-repin.txt · transform v1</p></div>
+6864a207  scenario-carrier-d  default   Completed  6   6    0        0             2026-10-22 20:43  2026-10-22 20:43  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="night1-result" aria-labelledby="night1-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 6 · OUT 6</dd><dt>out/</dt><dd>empty</dd><dt>archive/</dt><dd>livraisons.20261020T220000Z.csv</dd></dl><p class="sources">preuves : replay.log, 01-folders-night1.txt, 02-folders-night2.txt, 03-folders-night3.txt, 04-run-night3.json, 05-hostkey-refusal.txt, 06-folders-repin.txt · transform v1</p></div>
   </div>
-  <aside class="explain">
-    <h2 id="night1-title">Lu, puis archivé sous son nom et son heure</h2>
-    <p>livraisons.csv est lu ; le fichier part dans archive/ avec l&#x27;heure de son export dans le nom.</p>
-    <ol class="points"><li><span class="n">1</span><div><strong>Lu</strong><p>IN 6, OUT 6.</p></div></li><li><span class="n">2</span><div><strong>Archivé</strong><p>livraisons.&lt;heure&gt;.csv, le dossier de dépôt vide.</p></div></li></ol>
-    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une nuit lue est une nuit rangée.</p></div>
-  </aside>
 </section>
 <section class="step" id="step-night2" aria-labelledby="night2-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="night2-title">Relu, archivé à côté de la nuit 1</h2>
+      <p>Le transporteur réécrit livraisons.csv avec d&#x27;autres statuts et le même nombre d&#x27;octets. Le fichier est relu et rangé sous son propre nom : la nuit 1 reste dans l&#x27;archive.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Relu</strong><p>Une date plus récente suffit, même à taille égale.</p></div></li><li><span class="n">2</span><div><strong>Deux archives</strong><p>Aucune nuit n&#x27;en remplace une autre.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un nom qui revient chaque nuit ne se confond pas avec la veille.</p></div>
+  </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Nuit 2"><button type="button" role="tab" id="night2-commands-tab" data-view="commands" aria-controls="night2-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="night2-result-tab" data-view="result" aria-controls="night2-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" id="night2-commands" aria-labelledby="night2-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-carrier-d</span>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="night2-commands" aria-labelledby="night2-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-carrier-d</span>
 <span class="out">run scheduled: 40105895-b8fe-4682-917f-ee7e12ff0e9a</span>
 
 <span class="cmd"><span class="prompt">$</span> lm run get 40105895-b8fe-4682-917f-ee7e12ff0e9a</span>
 <span class="out">ID        CONNECTOR           ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
-40105895  scenario-carrier-d  default   Completed  6   6    0        0             2026-10-22 20:43  2026-10-22 20:43  no</span></code></pre></div><div role="tabpanel" id="night2-result" aria-labelledby="night2-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 6 · OUT 6</dd><dt>out/</dt><dd>empty</dd><dt>archive/</dt><dd>livraisons.20261020T220000Z.csv, livraisons.20261021T220000Z.csv</dd></dl><p class="sources">preuves : replay.log, 01-folders-night1.txt, 02-folders-night2.txt, 03-folders-night3.txt, 04-run-night3.json, 05-hostkey-refusal.txt, 06-folders-repin.txt · transform v1</p></div>
+40105895  scenario-carrier-d  default   Completed  6   6    0        0             2026-10-22 20:43  2026-10-22 20:43  no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="night2-result" aria-labelledby="night2-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 6 · OUT 6</dd><dt>out/</dt><dd>empty</dd><dt>archive/</dt><dd>livraisons.20261020T220000Z.csv, livraisons.20261021T220000Z.csv</dd></dl><p class="sources">preuves : replay.log, 01-folders-night1.txt, 02-folders-night2.txt, 03-folders-night3.txt, 04-run-night3.json, 05-hostkey-refusal.txt, 06-folders-repin.txt · transform v1</p></div>
   </div>
-  <aside class="explain">
-    <h2 id="night2-title">Relu, archivé à côté de la nuit 1</h2>
-    <p>Le transporteur réécrit livraisons.csv avec d&#x27;autres statuts et le même nombre d&#x27;octets. Le fichier est relu et rangé sous son propre nom : la nuit 1 reste dans l&#x27;archive.</p>
-    <ol class="points"><li><span class="n">1</span><div><strong>Relu</strong><p>Une date plus récente suffit, même à taille égale.</p></div></li><li><span class="n">2</span><div><strong>Deux archives</strong><p>Aucune nuit n&#x27;en remplace une autre.</p></div></li></ol>
-    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un nom qui revient chaque nuit ne se confond pas avec la veille.</p></div>
-  </aside>
 </section>
 <section class="step" id="step-night3" aria-labelledby="night3-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="night3-title">Lu, et le run dit qu&#x27;il n&#x27;a pas pu l&#x27;archiver</h2>
+      <p>Côté transporteur, le dossier d&#x27;archive n&#x27;accepte plus d&#x27;écriture. Les lignes sont lues ; le fichier reste dans out/, et lm run get le dit.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Dit sur le run</strong><p>Pas seulement dans le journal du hub.</p></div></li><li><span class="n">2</span><div><strong>Rien de perdu</strong><p>Les lignes sont dans le hub.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un dossier qui ne se vide plus se voit.</p></div>
+  </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Nuit 3"><button type="button" role="tab" id="night3-commands-tab" data-view="commands" aria-controls="night3-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="night3-result-tab" data-view="result" aria-controls="night3-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" id="night3-commands" aria-labelledby="night3-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-carrier-d</span>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="night3-commands" aria-labelledby="night3-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-carrier-d</span>
 <span class="out">run scheduled: 4823633e-f4df-4243-837f-54970c85073c</span>
 
 <span class="cmd"><span class="prompt">$</span> lm run get 4823633e-f4df-4243-837f-54970c85073c</span>
 <span class="out">ID        CONNECTOR           ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
 4823633e  scenario-carrier-d  default   Completed  2   2    0        0             2026-10-22 20:43  2026-10-22 20:44  no</span>
-<span class="note">• 1 file(s) read but not archived — still in the source folder (after_process failed; see the hub log)</span></code></pre></div><div role="tabpanel" id="night3-result" aria-labelledby="night3-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 2 · OUT 2</dd><dt>said</dt><dd>1 file(s) read but not archived — still in the source folder (after_process failed; see the hub log)</dd><dt>out/</dt><dd>livraisons.csv</dd><dt>archive/</dt><dd>livraisons.20261020T220000Z.csv, livraisons.20261021T220000Z.csv</dd></dl><p class="sources">preuves : replay.log, 01-folders-night1.txt, 02-folders-night2.txt, 03-folders-night3.txt, 04-run-night3.json, 05-hostkey-refusal.txt, 06-folders-repin.txt · transform v1</p></div>
+<span class="note">• 1 file(s) read but not archived — still in the source folder (after_process failed; see the hub log)</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="night3-result" aria-labelledby="night3-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 2 · OUT 2</dd><dt>said</dt><dd>1 file(s) read but not archived — still in the source folder (after_process failed; see the hub log)</dd><dt>out/</dt><dd>livraisons.csv</dd><dt>archive/</dt><dd>livraisons.20261020T220000Z.csv, livraisons.20261021T220000Z.csv</dd></dl><p class="sources">preuves : replay.log, 01-folders-night1.txt, 02-folders-night2.txt, 03-folders-night3.txt, 04-run-night3.json, 05-hostkey-refusal.txt, 06-folders-repin.txt · transform v1</p></div>
   </div>
-  <aside class="explain">
-    <h2 id="night3-title">Lu, et le run dit qu&#x27;il n&#x27;a pas pu l&#x27;archiver</h2>
-    <p>Côté transporteur, le dossier d&#x27;archive n&#x27;accepte plus d&#x27;écriture. Les lignes sont lues ; le fichier reste dans out/, et lm run get le dit.</p>
-    <ol class="points"><li><span class="n">1</span><div><strong>Dit sur le run</strong><p>Pas seulement dans le journal du hub.</p></div></li><li><span class="n">2</span><div><strong>Rien de perdu</strong><p>Les lignes sont dans le hub.</p></div></li></ol>
-    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un dossier qui ne se vide plus se voit.</p></div>
-  </aside>
 </section>
 <section class="step" id="step-hostkey" aria-labelledby="hostkey-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="hostkey-title">Refusé, les deux empreintes nommées</h2>
+      <p>Le transporteur réinstalle son serveur : sa clé change. Le run échoue avant toute lecture et nomme l&#x27;empreinte présentée et celle déclarée.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Refus</strong><p>Une autre clé, c&#x27;est peut-être un autre serveur.</p></div></li><li><span class="n">2</span><div><strong>Le geste</strong><p>Confirmer l&#x27;empreinte avec le transporteur, puis l&#x27;épingler.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le hub ne fait pas confiance à une clé qu&#x27;il ne connaît pas.</p></div>
+  </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Réinstallation"><button type="button" role="tab" id="hostkey-commands-tab" data-view="commands" aria-controls="hostkey-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="hostkey-result-tab" data-view="result" aria-controls="hostkey-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" id="hostkey-commands" aria-labelledby="hostkey-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-carrier-d</span>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="hostkey-commands" aria-labelledby="hostkey-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-carrier-d</span>
 <span class="out">run scheduled: bc7df8c4-f546-41a8-9ab5-4ce1eba4c618</span>
 
 <span class="cmd"><span class="prompt">$</span> lm run get bc7df8c4-f546-41a8-9ab5-4ce1eba4c618</span>
 <span class="out">ID        CONNECTOR           ENDPOINT  STATUS  IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
 bc7df8c4  scenario-carrier-d  default   Failed  0   0    0        0             2026-10-22 20:44  2026-10-22 20:44  no</span>
-<span class="note">✖ run failed: SFTP host key refused for host.docker.internal:2223 — the server presented SHA256:z0s2KEWB7fEsBsd/JTIbxr5YwdTbZLCJNtG9UWmafe8, and it does not match the declared SHA256:FZMB2WwJKm87XB3fpEhOPieZ3XZW5VAolwo6+MX+iHg. Confirm that fingerprint out of band (ssh-keyscan -p 2223 host.docker.internal | ssh-keygen -lf -), then set host_key_fingerprint: &quot;SHA256:z0s2KEWB7fEsBsd/JTIbxr5YwdTbZLCJNtG9UWmafe8&quot; in the transport block. Setting strict_host_key: false connects without checking at all — which accepts an impostor as readily as the real server. — Server key did not validate</span></code></pre></div><div role="tabpanel" id="hostkey-result" aria-labelledby="hostkey-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Failed · IN 0 · OUT 0</dd><dt>refusal</dt><dd>SFTP host key refused for host.docker.internal:2223 — the server presented SHA256:z0s2KEWB7fEsBsd/JTIbxr5YwdTbZLCJNtG9UWmafe8, and it does not match the declared SHA256:FZMB2WwJKm87XB3fpEhOPieZ3XZW5VAolwo6+MX+iHg. Confirm that fingerprint out of band (ssh-keyscan -p 2223 host.docker.internal | ssh-keygen -lf -), then set host_key_fingerprint: &quot;SHA256:z0s2KEWB7fEsBsd/JTIbxr5YwdTbZLCJNtG9UWmafe8&quot; in the transport block. Setting strict_host_key: false connects without checking at all — which accepts an impostor as readily as the real server. — Server key did not validate</dd></dl><p class="sources">preuves : replay.log, 01-folders-night1.txt, 02-folders-night2.txt, 03-folders-night3.txt, 04-run-night3.json, 05-hostkey-refusal.txt, 06-folders-repin.txt · transform v1</p></div>
+<span class="note">✖ run failed: SFTP host key refused for host.docker.internal:2223 — the server presented SHA256:z0s2KEWB7fEsBsd/JTIbxr5YwdTbZLCJNtG9UWmafe8, and it does not match the declared SHA256:FZMB2WwJKm87XB3fpEhOPieZ3XZW5VAolwo6+MX+iHg. Confirm that fingerprint out of band (ssh-keyscan -p 2223 host.docker.internal | ssh-keygen -lf -), then set host_key_fingerprint: &quot;SHA256:z0s2KEWB7fEsBsd/JTIbxr5YwdTbZLCJNtG9UWmafe8&quot; in the transport block. Setting strict_host_key: false connects without checking at all — which accepts an impostor as readily as the real server. — Server key did not validate</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="hostkey-result" aria-labelledby="hostkey-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Failed · IN 0 · OUT 0</dd><dt>refusal</dt><dd>SFTP host key refused for host.docker.internal:2223 — the server presented SHA256:z0s2KEWB7fEsBsd/JTIbxr5YwdTbZLCJNtG9UWmafe8, and it does not match the declared SHA256:FZMB2WwJKm87XB3fpEhOPieZ3XZW5VAolwo6+MX+iHg. Confirm that fingerprint out of band (ssh-keyscan -p 2223 host.docker.internal | ssh-keygen -lf -), then set host_key_fingerprint: &quot;SHA256:z0s2KEWB7fEsBsd/JTIbxr5YwdTbZLCJNtG9UWmafe8&quot; in the transport block. Setting strict_host_key: false connects without checking at all — which accepts an impostor as readily as the real server. — Server key did not validate</dd></dl><p class="sources">preuves : replay.log, 01-folders-night1.txt, 02-folders-night2.txt, 03-folders-night3.txt, 04-run-night3.json, 05-hostkey-refusal.txt, 06-folders-repin.txt · transform v1</p></div>
   </div>
-  <aside class="explain">
-    <h2 id="hostkey-title">Refusé, les deux empreintes nommées</h2>
-    <p>Le transporteur réinstalle son serveur : sa clé change. Le run échoue avant toute lecture et nomme l&#x27;empreinte présentée et celle déclarée.</p>
-    <ol class="points"><li><span class="n">1</span><div><strong>Refus</strong><p>Une autre clé, c&#x27;est peut-être un autre serveur.</p></div></li><li><span class="n">2</span><div><strong>Le geste</strong><p>Confirmer l&#x27;empreinte avec le transporteur, puis l&#x27;épingler.</p></div></li></ol>
-    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le hub ne fait pas confiance à une clé qu&#x27;il ne connaît pas.</p></div>
-  </aside>
 </section>
 <section class="step" id="step-repin" aria-labelledby="repin-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="repin-title">La nuit suivante lue, puis archivée</h2>
+      <p>L&#x27;empreinte confirmée est épinglée. La nuit 4, déposée sous le même nom que la nuit 3 jamais archivée, est lue puis archivée : elle n&#x27;est pas rangée sans avoir été lue.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Lue d&#x27;abord</strong><p>Seule la version lue est archivée.</p></div></li><li><span class="n">2</span><div><strong>Archive</strong><p>livraisons.&lt;heure&gt;.csv pour la nuit 4.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un fichier n&#x27;est jamais archivé sans avoir été lu.</p></div>
+  </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Réépingler"><button type="button" role="tab" id="repin-commands-tab" data-view="commands" aria-controls="repin-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="repin-result-tab" data-view="result" aria-controls="repin-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" id="repin-commands" aria-labelledby="repin-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f /var/folders/18/2psk9q652gsflqx5mvzr3nsh0000gn/T//lumnik-carrier.wRuSfT/10-carrier.yaml</span>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="repin-commands" aria-labelledby="repin-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f /var/folders/18/2psk9q652gsflqx5mvzr3nsh0000gn/T//lumnik-carrier.wRuSfT/10-carrier.yaml</span>
 <span class="out">{&quot;name&quot;:&quot;scenario-carrier-d&quot;,&quot;connectorId&quot;:&quot;94623382-1c2a-4a4f-a512-490463c3b5eb&quot;,&quot;endpointsApplied&quot;:1}</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run scenario-carrier-d</span>
@@ -117,14 +135,8 @@ bc7df8c4  scenario-carrier-d  default   Failed  0   0    0        0             
 
 <span class="cmd"><span class="prompt">$</span> lm run get bb6640f7-8e36-4ea2-8dbc-ef5389fa352f</span>
 <span class="out">ID        CONNECTOR           ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
-bb6640f7  scenario-carrier-d  default   Completed  1   1    0        0             2026-10-22 20:44  2026-10-22 20:44  no</span></code></pre></div><div role="tabpanel" id="repin-result" aria-labelledby="repin-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 1 · OUT 1</dd><dt>out/</dt><dd>empty</dd><dt>archive/</dt><dd>livraisons.20261023T220000Z.csv</dd></dl><p class="sources">preuves : replay.log, 01-folders-night1.txt, 02-folders-night2.txt, 03-folders-night3.txt, 04-run-night3.json, 05-hostkey-refusal.txt, 06-folders-repin.txt · transform v1</p></div>
+bb6640f7  scenario-carrier-d  default   Completed  1   1    0        0             2026-10-22 20:44  2026-10-22 20:44  no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="repin-result" aria-labelledby="repin-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 1 · OUT 1</dd><dt>out/</dt><dd>empty</dd><dt>archive/</dt><dd>livraisons.20261023T220000Z.csv</dd></dl><p class="sources">preuves : replay.log, 01-folders-night1.txt, 02-folders-night2.txt, 03-folders-night3.txt, 04-run-night3.json, 05-hostkey-refusal.txt, 06-folders-repin.txt · transform v1</p></div>
   </div>
-  <aside class="explain">
-    <h2 id="repin-title">La nuit suivante lue, puis archivée</h2>
-    <p>L&#x27;empreinte confirmée est épinglée. La nuit 4, déposée sous le même nom que la nuit 3 jamais archivée, est lue puis archivée : elle n&#x27;est pas rangée sans avoir été lue.</p>
-    <ol class="points"><li><span class="n">1</span><div><strong>Lue d&#x27;abord</strong><p>Seule la version lue est archivée.</p></div></li><li><span class="n">2</span><div><strong>Archive</strong><p>livraisons.&lt;heure&gt;.csv pour la nuit 4.</p></div></li></ol>
-    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un fichier n&#x27;est jamais archivé sans avoir été lu.</p></div>
-  </aside>
 </section>
   <section class="limits"><h2>Limites</h2><ul><li>La vérification avant le déplacement n&#x27;est pas atomique : un fichier déposé dans les millisecondes entre les deux est encore déplacé.</li><li>Un transporteur qui écrit sous un autre nom puis renomme n&#x27;est jamais pris dans cet intervalle.</li><li>Serveur SFTP simulé ; données synthétiques.</li></ul></section>
   <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
