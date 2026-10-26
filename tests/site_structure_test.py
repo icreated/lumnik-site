@@ -4,6 +4,7 @@ from pathlib import Path
 import json
 import re
 import unittest
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 # The visitor's path (spec 2026-10-25): understand on the home, see a replayed scenario, try Open.
@@ -136,6 +137,21 @@ class SitePage(HTMLParser):
     def handle_data(self, data):
         if self._inside_title:
             self.title_parts.append(data)
+
+
+class DiscoveryTest(unittest.TestCase):
+    def test_the_sitemap_exposes_every_public_entry_page_and_no_relay(self):
+        root = ET.parse(ROOT / "sitemap.xml").getroot()
+        namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+        urls = {node.text for node in root.findall("sm:url/sm:loc", namespace)}
+        expected = {"https://lumnik.fr/", "https://lumnik.fr/scenarios/"}
+        expected.update(f"https://lumnik.fr/{page}" for page in ALL_PAGES if page != "index.html")
+        self.assertEqual(expected, urls)
+        self.assertTrue(all(f"https://lumnik.fr/{relay}" not in urls for relay in RELAYS))
+
+    def test_robots_announces_the_sitemap(self):
+        robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
+        self.assertIn("Sitemap: https://lumnik.fr/sitemap.xml", robots.splitlines())
 
 
 def load_page(name):
