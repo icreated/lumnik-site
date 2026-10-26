@@ -13,6 +13,7 @@
   --mono: "IBM Plex Mono", ui-monospace, monospace;
   --maxw: 1120px;
   --radius: 14px;
+  --stage-height: clamp(460px, 65svh, 680px);
 }
 
 * { box-sizing: border-box; }
@@ -49,15 +50,19 @@ h1 { font: 500 clamp(32px, 5vw, 52px)/1.1 var(--serif); margin: 0 0 20px; }
 .steps-nav .num { font-weight: 600; font-size: 14px; }
 .steps-nav .sub { color: var(--brume); font-size: 13px; }
 
-.step { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-  border: 1px solid var(--givre); border-top: 0; margin-bottom: 24px; }
+.step { overflow: hidden; border: 1px solid var(--givre); border-top: 0; margin-bottom: 24px; }
 .js .step[data-inactive] { display: none; }
-.views { min-width: 0; border-right: 1px solid var(--givre); }
-.view-tabs { display: flex; gap: 4px; padding: 0 12px; border-bottom: 1px solid var(--givre); }
+.views { display: grid; grid-template-rows: auto minmax(0, 1fr); min-width: 0; min-height: 0;
+  height: var(--stage-height); }
+.view-tabs { display: flex; gap: 4px; min-width: 0; overflow-x: auto; padding: 0 12px;
+  border-bottom: 1px solid var(--givre); }
 .view-tabs button { background: none; border: 0; color: var(--brume); font: 500 14px var(--sans);
-  padding: 14px 10px; border-bottom: 2px solid transparent; cursor: pointer; }
+  flex: none; padding: 14px 10px; border-bottom: 2px solid transparent; cursor: pointer; }
 .view-tabs button[aria-selected="true"] { color: var(--lumiere); border-bottom-color: var(--lumiere); }
-[role="tabpanel"] { padding: 16px 20px 20px; min-width: 0; }
+.view-panel { min-width: 0; min-height: 0; overflow: auto; padding: 16px 20px 20px;
+  scrollbar-gutter: stable; }
+.view-panel-commands { background: var(--glace); padding: 0; }
+.view-panel-commands .terminal { min-height: 100%; border-radius: 0; padding: 18px 0; }
 
 .file { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .filename { font: 13px var(--mono); color: var(--brume); }
@@ -96,7 +101,8 @@ th { color: var(--brume); font: 500 12px var(--mono); }
 .code + .file { margin-top: 20px; }
 .sources { color: var(--brume); font: 12px var(--mono); margin: 16px 0 0; overflow-wrap: anywhere; }
 
-.explain { padding: 20px 24px; min-width: 0; }
+.explain { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, .8fr);
+  align-items: start; gap: 24px; min-width: 0; padding: 20px 24px; border-bottom: 1px solid var(--givre); }
 .explain h2 { font: 500 26px/1.2 var(--serif); margin: 0 0 12px; }
 .explain p { color: var(--brume); margin: 0 0 16px; }
 .points { list-style: none; padding: 0; margin: 0 0 16px; }
@@ -104,7 +110,7 @@ th { color: var(--brume); font: 500 12px var(--mono); }
 .points .n { flex: none; width: 24px; height: 24px; border: 1px solid var(--lumiere); border-radius: 50%;
   color: var(--lumiere); font-size: 13px; display: grid; place-items: center; }
 .points p { margin: 2px 0 0; font-size: 14px; }
-.proves { border-top: 1px solid var(--givre); padding-top: 12px; }
+.proves { border-left: 1px solid var(--givre); padding-left: 20px; }
 .proves h3 { font: 600 13px var(--sans); color: var(--lumiere); margin: 0 0 6px; text-transform: uppercase; letter-spacing: .04em; }
 
 .limits { margin: 40px 0 64px; max-width: 760px; }
@@ -112,12 +118,14 @@ th { color: var(--brume); font: 500 12px var(--mono); }
 .limits li { color: var(--brume); margin-bottom: 8px; }
 
 @media (max-width: 860px) {
-  .step { grid-template-columns: minmax(0, 1fr); }
-  .views { border-right: 0; border-bottom: 1px solid var(--givre); }
+  .step { overflow: visible; }
+  .views { height: min(520px, 60svh); }
   .steps-nav { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(120px, 1fr);
     overflow-x: auto; }
-  [role="tabpanel"] { padding: 12px; }
-  .explain { padding: 16px; }
+  .view-panel { padding: 12px; }
+  .view-panel-commands { padding: 0; }
+  .explain { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 16px; }
+  .proves { border-left: 0; border-top: 1px solid var(--givre); padding: 12px 0 0; }
   /* phone = cards: a record reads top to bottom instead of scrolling sideways */
   table, tbody, tr, td { display: block; min-width: 0; }
   thead { display: none; }
