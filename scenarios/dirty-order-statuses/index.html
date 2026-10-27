@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Quatorze orthographes dans une colonne statut. — lumnik</title>
-<meta name="description" content="Quinze ans de saisie à la main ont laissé EC, Livré, LIV, ANNUL… dans l&#x27;export des commandes. lumnik ne touche pas l&#x27;ERP : un Workflow déclare quatre statuts et leurs orthographes, et chaque apply dit ce qui reste non déclaré.">
+<meta name="description" content="Quinze ans de saisie à la main ont laissé EC, Livré, LIV, ANNUL… dans l&#x27;export des commandes. lumnik ne touche pas l&#x27;ERP : un Workflow déclare quatre statuts et leurs orthographes, et chaque import revérifie la colonne.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -19,10 +19,10 @@
 <main>
   <section class="hero">
     <h1>Quatorze orthographes dans une colonne statut.</h1>
-    <p class="lede">Quinze ans de saisie à la main ont laissé EC, Livré, LIV, ANNUL… dans l&#x27;export des commandes. lumnik ne touche pas l&#x27;ERP : un Workflow déclare quatre statuts et leurs orthographes, et chaque apply dit ce qui reste non déclaré.</p>
+    <p class="lede">Quinze ans de saisie à la main ont laissé EC, Livré, LIV, ANNUL… dans l&#x27;export des commandes. lumnik ne touche pas l&#x27;ERP : un Workflow déclare quatre statuts et leurs orthographes, et chaque import revérifie la colonne.</p>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Distribution</li><li class="tag">Commandes</li><li class="tag kind">Connector</li><li class="tag kind">Workflow</li></ul>
   </section>
-  <nav class="steps-nav" aria-label="Étapes"><a href="#step-sources" data-step="sources" aria-current="step"><span class="num">1 · Charger</span><span class="sub">Nuit 1</span></a><a href="#step-declare" data-step="declare"><span class="num">2 · Déclarer</span><span class="sub">Ce que l&#x27;on sait</span></a><a href="#step-complete" data-step="complete"><span class="num">3 · Compléter</span><span class="sub">Ce que le bureau confirme</span></a><a href="#step-nextnight" data-step="nextnight"><span class="num">4 · Revérifier</span><span class="sub">Nuit 2</span></a></nav>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-sources" data-step="sources" aria-current="step"><span class="num">1 · Charger</span><span class="sub">Nuit 1</span></a><a href="#step-declare" data-step="declare"><span class="num">2 · Déclarer</span><span class="sub">Ce que l&#x27;on sait</span></a><a href="#step-complete" data-step="complete"><span class="num">3 · Compléter</span><span class="sub">Ce que le bureau confirme</span></a><a href="#step-wire" data-step="wire"><span class="num">4 · Brancher</span><span class="sub">Avant la nuit 2</span></a><a href="#step-nextnight" data-step="nextnight"><span class="num">5 · Alerter</span><span class="sub">Nuit 2</span></a><a href="#step-thirdnight" data-step="thirdnight"><span class="num">6 · Se taire</span><span class="sub">Nuit 3</span></a></nav>
   <section class="step" id="step-sources" aria-labelledby="sources-title">
   <aside class="explain">
     <div class="explain-intro">
@@ -35,14 +35,14 @@
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Charger"><button type="button" role="tab" id="sources-manifest-tab" data-view="manifest" aria-controls="sources-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="sources-commands-tab" data-view="commands" aria-controls="sources-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="sources-result-tab" data-view="result" aria-controls="sources-result" aria-selected="false" tabindex="-1">Résultat</button></div>
     <div role="tabpanel" class="view-panel view-panel-manifest" id="sources-manifest" aria-labelledby="sources-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-orders.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-orders-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [order-desk]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/dirty-order-statuses/a/orders.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="sources-commands" aria-labelledby="sources-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-orders.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;scenario-orders-a&quot;,&quot;connectorId&quot;:&quot;4046ca2a-26a6-40d2-b89c-3b6a37555ba0&quot;,&quot;endpointsApplied&quot;:1}</span>
+<span class="out">Applied connector &quot;scenario-orders-a&quot; — 1 endpoint</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run scenario-orders-a</span>
-<span class="out">run scheduled: 98637210-9b9c-46ba-a42e-4b06176ad979</span>
+<span class="out">run scheduled: ac4dd42a-183e-4ab1-bf3b-300461eaca65</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 98637210-9b9c-46ba-a42e-4b06176ad979</span>
+<span class="cmd"><span class="prompt">$</span> lm run get ac4dd42a-183e-4ab1-bf3b-300461eaca65</span>
 <span class="out">ID        CONNECTOR          ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
-98637210  scenario-orders-a  default   Completed  40  40   0        0             2026-10-22 07:59  2026-10-22 07:59  no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="sources-result" aria-labelledby="sources-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-orders-a</dt><dd>IN 40 · OUT 40</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+ac4dd42a  scenario-orders-a  default   Completed  40  40   0        0             2026-10-27 23:33  2026-10-27 23:33  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="sources-result" aria-labelledby="sources-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-orders-a</dt><dd>IN 40 · OUT 40</dd></dl><p class="sources">preuves : replay.log, webhook-events.jsonl · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-declare" aria-labelledby="declare-title" data-inactive>
@@ -56,8 +56,52 @@
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="declare-manifest-tab" data-view="manifest" aria-controls="declare-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="declare-commands-tab" data-view="commands" aria-controls="declare-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="declare-result-tab" data-view="result" aria-controls="declare-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-manifest" id="declare-manifest" aria-labelledby="declare-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-order-status.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Workflow</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-order-status-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: order-desk</span><span class="line">  <span class="key">provenance</span>: declared</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">table</span>: connector.t_scenario_orders_a</span><span class="line">    <span class="key">column</span>: status</span><span class="line">  <span class="key">states</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: SAISIE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Saisie&quot;</span></span><span class="line">      <span class="key">initial</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: EN_COURS</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;En cours&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;En cours&quot;</span>, <span class="str">&quot;encours&quot;</span>]</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: LIVREE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Livrée&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;Livrée&quot;</span>]</span><span class="line">      <span class="key">terminal</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: ANNULEE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Annulée&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;Annulée&quot;</span>]</span><span class="line">      <span class="key">terminal</span>: true</span><span class="line">  <span class="key">transitions</span>:</span><span class="line">    - { from: [SAISIE], to: EN_COURS }</span><span class="line">    - { from: [EN_COURS], to: LIVREE }</span><span class="line">    - { from: [SAISIE, EN_COURS], to: ANNULEE }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="declare-commands" aria-labelledby="declare-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm workflow apply -f manifests/20-order-status.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;scenario-order-status-a&quot;,&quot;scope&quot;:&quot;order-desk&quot;,&quot;table&quot;:&quot;connector.t_scenario_orders_a&quot;,&quot;column&quot;:&quot;status&quot;,&quot;dataTruth&quot;:{&quot;undeclared&quot;:[{&quot;value&quot;:&quot;EC&quot;,&quot;rows&quot;:4},{&quot;value&quot;:&quot;Livré&quot;,&quot;rows&quot;:3},{&quot;value&quot;:&quot;ANNUL&quot;,&quot;rows&quot;:2},{&quot;value&quot;:&quot;EN ATT&quot;,&quot;rows&quot;:2},{&quot;value&quot;:&quot;LIV&quot;,&quot;rows&quot;:2},{&quot;value&quot;:&quot;SAI&quot;,&quot;rows&quot;:2}],&quot;unobserved&quot;:[],&quot;nullOrBlank&quot;:1,&quot;tableMissing&quot;:false,&quot;keyColumnMissing&quot;:false,&quot;keyNullOrBlank&quot;:null,&quot;checkUnavailable&quot;:false,&quot;unavailableReason&quot;:null}}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="declare-result" aria-labelledby="declare-result-tab" tabindex="0" hidden><dl class="facts"><dt>undeclared</dt><dd>EC 4 · Livré 3 · ANNUL 2 · EN ATT 2 · LIV 2 · SAI 2</dd><dt>blank</dt><dd>1</dd><dt>unobserved</dt><dd>none</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="declare-manifest" aria-labelledby="declare-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-order-status.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Workflow</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-order-status-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: order-desk</span><span class="line">  <span class="key">provenance</span>: declared</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">table</span>: connector.t_scenario_orders_a</span><span class="line">    <span class="key">column</span>: status</span><span class="line">  <span class="key">check</span>:</span><span class="line">    <span class="key">trigger</span>: ingestion</span><span class="line">  <span class="key">states</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: SAISIE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Saisie&quot;</span></span><span class="line">      <span class="key">initial</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: EN_COURS</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;En cours&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;En cours&quot;</span>, <span class="str">&quot;encours&quot;</span>]</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: LIVREE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Livrée&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;Livrée&quot;</span>]</span><span class="line">      <span class="key">terminal</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: ANNULEE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Annulée&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;Annulée&quot;</span>]</span><span class="line">      <span class="key">terminal</span>: true</span><span class="line">  <span class="key">transitions</span>:</span><span class="line">    - { from: [SAISIE], to: EN_COURS }</span><span class="line">    - { from: [EN_COURS], to: LIVREE }</span><span class="line">    - { from: [SAISIE, EN_COURS], to: ANNULEE }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="declare-commands" aria-labelledby="declare-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm workflow apply -f manifests/20-order-status.yaml -o json</span>
+<span class="out">{
+  &quot;name&quot;: &quot;scenario-order-status-a&quot;,
+  &quot;scope&quot;: &quot;order-desk&quot;,
+  &quot;table&quot;: &quot;connector.t_scenario_orders_a&quot;,
+  &quot;column&quot;: &quot;status&quot;,
+  &quot;dataTruth&quot;: {
+    &quot;undeclared&quot;: [
+      {
+        &quot;value&quot;: &quot;EC&quot;,
+        &quot;rows&quot;: 4
+      },
+      {
+        &quot;value&quot;: &quot;Livré&quot;,
+        &quot;rows&quot;: 3
+      },
+      {
+        &quot;value&quot;: &quot;ANNUL&quot;,
+        &quot;rows&quot;: 2
+      },
+      {
+        &quot;value&quot;: &quot;EN ATT&quot;,
+        &quot;rows&quot;: 2
+      },
+      {
+        &quot;value&quot;: &quot;LIV&quot;,
+        &quot;rows&quot;: 2
+      },
+      {
+        &quot;value&quot;: &quot;SAI&quot;,
+        &quot;rows&quot;: 2
+      }
+    ],
+    &quot;unobserved&quot;: [],
+    &quot;nullOrBlank&quot;: 1,
+    &quot;tableMissing&quot;: false,
+    &quot;keyColumnMissing&quot;: false,
+    &quot;keyNullOrBlank&quot;: null,
+    &quot;checkUnavailable&quot;: false,
+    &quot;unavailableReason&quot;: null,
+    &quot;dueProblem&quot;: null,
+    &quot;invalidOrderValues&quot;: null,
+    &quot;keysWithSeveralRows&quot;: null,
+    &quot;columnsUnverified&quot;: []
+  }
+}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="declare-result" aria-labelledby="declare-result-tab" tabindex="0" hidden><dl class="facts"><dt>undeclared</dt><dd>EC 4 · Livré 3 · ANNUL 2 · EN ATT 2 · LIV 2 · SAI 2</dd><dt>blank</dt><dd>1</dd><dt>unobserved</dt><dd>none</dd></dl><p class="sources">preuves : replay.log, webhook-events.jsonl · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-complete" aria-labelledby="complete-title" data-inactive>
@@ -71,34 +115,88 @@
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Compléter"><button type="button" role="tab" id="complete-manifest-tab" data-view="manifest" aria-controls="complete-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="complete-commands-tab" data-view="commands" aria-controls="complete-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="complete-result-tab" data-view="result" aria-controls="complete-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-manifest" id="complete-manifest" aria-labelledby="complete-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-order-status-completed.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Workflow</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-order-status-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: order-desk</span><span class="line">  <span class="key">provenance</span>: declared</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">table</span>: connector.t_scenario_orders_a</span><span class="line">    <span class="key">column</span>: status</span><span class="line">  <span class="key">states</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: SAISIE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Saisie&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;SAI&quot;</span>]</span><span class="line">      <span class="key">initial</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: EN_COURS</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;En cours&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;En cours&quot;</span>, <span class="str">&quot;encours&quot;</span>, <span class="str">&quot;EC&quot;</span>]</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: LIVREE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Livrée&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;Livrée&quot;</span>, <span class="str">&quot;Livré&quot;</span>, <span class="str">&quot;LIV&quot;</span>]</span><span class="line">      <span class="key">terminal</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: ANNULEE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Annulée&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;Annulée&quot;</span>, <span class="str">&quot;ANNUL&quot;</span>]</span><span class="line">      <span class="key">terminal</span>: true</span><span class="line">  <span class="key">transitions</span>:</span><span class="line">    - { from: [SAISIE], to: EN_COURS }</span><span class="line">    - { from: [EN_COURS], to: LIVREE }</span><span class="line">    - { from: [SAISIE, EN_COURS], to: ANNULEE }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="complete-commands" aria-labelledby="complete-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm workflow apply -f manifests/30-order-status-completed.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;scenario-order-status-a&quot;,&quot;scope&quot;:&quot;order-desk&quot;,&quot;table&quot;:&quot;connector.t_scenario_orders_a&quot;,&quot;column&quot;:&quot;status&quot;,&quot;dataTruth&quot;:{&quot;undeclared&quot;:[{&quot;value&quot;:&quot;EN ATT&quot;,&quot;rows&quot;:2}],&quot;unobserved&quot;:[],&quot;nullOrBlank&quot;:1,&quot;tableMissing&quot;:false,&quot;keyColumnMissing&quot;:false,&quot;keyNullOrBlank&quot;:null,&quot;checkUnavailable&quot;:false,&quot;unavailableReason&quot;:null}}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="complete-result" aria-labelledby="complete-result-tab" tabindex="0" hidden><dl class="facts"><dt>undeclared</dt><dd>EN ATT 2</dd><dt>blank</dt><dd>1</dd><dt>unobserved</dt><dd>none</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="complete-manifest" aria-labelledby="complete-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-order-status-completed.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Workflow</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-order-status-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: order-desk</span><span class="line">  <span class="key">provenance</span>: declared</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">table</span>: connector.t_scenario_orders_a</span><span class="line">    <span class="key">column</span>: status</span><span class="line">  <span class="key">check</span>:</span><span class="line">    <span class="key">trigger</span>: ingestion</span><span class="line">  <span class="key">states</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: SAISIE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Saisie&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;SAI&quot;</span>]</span><span class="line">      <span class="key">initial</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: EN_COURS</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;En cours&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;En cours&quot;</span>, <span class="str">&quot;encours&quot;</span>, <span class="str">&quot;EC&quot;</span>]</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: LIVREE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Livrée&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;Livrée&quot;</span>, <span class="str">&quot;Livré&quot;</span>, <span class="str">&quot;LIV&quot;</span>]</span><span class="line">      <span class="key">terminal</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: ANNULEE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Annulée&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;Annulée&quot;</span>, <span class="str">&quot;ANNUL&quot;</span>]</span><span class="line">      <span class="key">terminal</span>: true</span><span class="line">  <span class="key">transitions</span>:</span><span class="line">    - { from: [SAISIE], to: EN_COURS }</span><span class="line">    - { from: [EN_COURS], to: LIVREE }</span><span class="line">    - { from: [SAISIE, EN_COURS], to: ANNULEE }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="complete-commands" aria-labelledby="complete-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm workflow apply -f manifests/30-order-status-completed.yaml -o json</span>
+<span class="out">{
+  &quot;name&quot;: &quot;scenario-order-status-a&quot;,
+  &quot;scope&quot;: &quot;order-desk&quot;,
+  &quot;table&quot;: &quot;connector.t_scenario_orders_a&quot;,
+  &quot;column&quot;: &quot;status&quot;,
+  &quot;dataTruth&quot;: {
+    &quot;undeclared&quot;: [
+      {
+        &quot;value&quot;: &quot;EN ATT&quot;,
+        &quot;rows&quot;: 2
+      }
+    ],
+    &quot;unobserved&quot;: [],
+    &quot;nullOrBlank&quot;: 1,
+    &quot;tableMissing&quot;: false,
+    &quot;keyColumnMissing&quot;: false,
+    &quot;keyNullOrBlank&quot;: null,
+    &quot;checkUnavailable&quot;: false,
+    &quot;unavailableReason&quot;: null,
+    &quot;dueProblem&quot;: null,
+    &quot;invalidOrderValues&quot;: null,
+    &quot;keysWithSeveralRows&quot;: null,
+    &quot;columnsUnverified&quot;: []
+  }
+}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="complete-result" aria-labelledby="complete-result-tab" tabindex="0" hidden><dl class="facts"><dt>undeclared</dt><dd>EN ATT 2</dd><dt>blank</dt><dd>1</dd><dt>unobserved</dt><dd>none</dd></dl><p class="sources">preuves : replay.log, webhook-events.jsonl · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-wire" aria-labelledby="wire-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="wire-title">Un webhook signé pour les orthographes nouvelles</h2>
+      <p>L&#x27;intégration reçoit workflow.undeclared.&lt;nom&gt;. Le Workflow déclare check.trigger: ingestion : la colonne est revérifiée après chaque import.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Signé</strong><p>Chaque envoi porte une signature HMAC.</p></div></li><li><span class="n">2</span><div><strong>Hors inbox</strong><p>Ce n&#x27;est pas une décision : l&#x27;événement va à ce qui s&#x27;y abonne.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La vérification ne dépend plus d&#x27;un apply.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Brancher"><button type="button" role="tab" id="wire-commands-tab" data-view="commands" aria-controls="wire-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="wire-result-tab" data-view="result" aria-controls="wire-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="wire-commands" aria-labelledby="wire-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm integration add scenario-orders-a --url http://host.docker.internal:9212/events --events workflow.undeclared.scenario-order-status-a --secret-stdin</span>
+<span class="out">registered: scenario-orders-a (id 1045) — forwards subscribed events from now on</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="wire-result" aria-labelledby="wire-result-tab" tabindex="0" hidden><dl class="facts"><dt>integration</dt><dd>scenario-orders-a</dd></dl><p class="sources">preuves : replay.log, webhook-events.jsonl · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-nextnight" aria-labelledby="nextnight-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
-      <h2 id="nextnight-title">Une nouvelle orthographe, vue au prochain apply</h2>
-      <p>Le nouveau formulaire web de l&#x27;ERP écrit « En-cours ». Le connecteur relit l&#x27;export ; le même manifeste, réappliqué, la fait apparaître.</p>
+      <h2 id="nextnight-title">L&#x27;alerte arrive seule</h2>
+      <p>Le nouveau formulaire web de l&#x27;ERP écrit « En-cours ». Le connecteur relit l&#x27;export ; aucun apply n&#x27;est relancé. Un seul événement arrive.</p>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>Rechargé</strong><p>5 commandes ont changé : leurs anciennes lignes sont retirées.</p></div></li><li><span class="n">2</span><div><strong>Revérifier</strong><p>Réappliquer un manifeste inchangé refait le rapport.</p></div></li></ol>
-    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une dérive de la donnée se voit au prochain apply.</p></div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Nommé</strong><p>En-cours, 2 commandes.</p></div></li><li><span class="n">2</span><div><strong>Pas répété</strong><p>EN ATT, déjà signalé à l&#x27;apply, est compté mais pas renommé.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une dérive de la donnée se voit au run qui l&#x27;apporte.</p></div>
   </aside>
   <div class="views">
-    <div role="tablist" class="view-tabs" aria-label="Revérifier"><button type="button" role="tab" id="nextnight-commands-tab" data-view="commands" aria-controls="nextnight-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="nextnight-result-tab" data-view="result" aria-controls="nextnight-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tablist" class="view-tabs" aria-label="Alerter"><button type="button" role="tab" id="nextnight-commands-tab" data-view="commands" aria-controls="nextnight-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="nextnight-result-tab" data-view="result" aria-controls="nextnight-result" aria-selected="false" tabindex="-1">Résultat</button></div>
     <div role="tabpanel" class="view-panel view-panel-commands" id="nextnight-commands" aria-labelledby="nextnight-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-orders-a</span>
-<span class="out">run scheduled: 66afca1d-4eab-41cd-919d-08cab66770a6</span>
+<span class="out">run scheduled: 2d835173-9ce9-4c73-8b02-daa497564d18</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 66afca1d-4eab-41cd-919d-08cab66770a6</span>
+<span class="cmd"><span class="prompt">$</span> lm run get 2d835173-9ce9-4c73-8b02-daa497564d18</span>
 <span class="out">ID        CONNECTOR          ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
-66afca1d  scenario-orders-a  default   Completed  40  40   0        0             2026-10-22 07:59  2026-10-22 07:59  no</span>
-<span class="note">• 5 row(s) removed — the source no longer holds them</span>
-
-<span class="cmd"><span class="prompt">$</span> lm workflow apply -f manifests/30-order-status-completed.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;scenario-order-status-a&quot;,&quot;scope&quot;:&quot;order-desk&quot;,&quot;table&quot;:&quot;connector.t_scenario_orders_a&quot;,&quot;column&quot;:&quot;status&quot;,&quot;dataTruth&quot;:{&quot;undeclared&quot;:[{&quot;value&quot;:&quot;EN ATT&quot;,&quot;rows&quot;:2},{&quot;value&quot;:&quot;En-cours&quot;,&quot;rows&quot;:2}],&quot;unobserved&quot;:[],&quot;nullOrBlank&quot;:1,&quot;tableMissing&quot;:false,&quot;keyColumnMissing&quot;:false,&quot;keyNullOrBlank&quot;:null,&quot;checkUnavailable&quot;:false,&quot;unavailableReason&quot;:null}}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="nextnight-result" aria-labelledby="nextnight-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-orders-a</dt><dd>IN 40 · OUT 40 · 5 removed</dd><dt>undeclared</dt><dd>EN ATT 2 · En-cours 2</dd><dt>blank</dt><dd>1</dd><dt>unobserved</dt><dd>none</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+2d835173  scenario-orders-a  default   Completed  40  40   0        0             2026-10-27 23:33  2026-10-27 23:33  no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="nextnight-result" aria-labelledby="nextnight-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-orders-a</dt><dd>IN 40 · OUT 40</dd><dt>event</dt><dd>workflow.undeclared.scenario-order-status-a</dd><dt>new</dt><dd>En-cours 2</dd><dt>undeclared</dt><dd>2</dd></dl><p class="sources">preuves : replay.log, webhook-events.jsonl · transform v1</p></div>
   </div>
 </section>
-  <section class="limits"><h2>Limites</h2><ul><li>Le rapport est calculé à l&#x27;apply ; entre deux applies, aucune alerte ne signale une nouvelle orthographe.</li><li>Les alias ignorent la casse et les espaces autour, pas les accents : « Livré » et « Livre » sont deux orthographes.</li><li>Un statut vide est compté à part, pas comme une orthographe.</li><li>lumnik ne corrige pas l&#x27;ERP ; EN ATT reste à trancher par le métier.</li><li>Données synthétiques.</li></ul></section>
+<section class="step" id="step-thirdnight" aria-labelledby="thirdnight-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="thirdnight-title">Rien de nouveau, rien n&#x27;est envoyé</h2>
+      <p>Une commande de plus, au statut EN ATT. Le connecteur lit 41 lignes ; aucune orthographe n&#x27;est nouvelle.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Relu</strong><p>Le run écrit la table : la vérification a lieu.</p></div></li><li><span class="n">2</span><div><strong>Silence</strong><p>Le récepteur tient toujours un seul événement.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une valeur est signalée une fois, pas à chaque nuit.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Se taire"><button type="button" role="tab" id="thirdnight-commands-tab" data-view="commands" aria-controls="thirdnight-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="thirdnight-result-tab" data-view="result" aria-controls="thirdnight-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="thirdnight-commands" aria-labelledby="thirdnight-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-orders-a</span>
+<span class="out">run scheduled: 9f640342-16f3-4e5d-b513-e543c20d7962</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 9f640342-16f3-4e5d-b513-e543c20d7962</span>
+<span class="out">ID        CONNECTOR          ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+9f640342  scenario-orders-a  default   Completed  41  41   0        0             2026-10-27 23:33  2026-10-27 23:33  no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="thirdnight-result" aria-labelledby="thirdnight-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-orders-a</dt><dd>IN 41 · OUT 41</dd><dt>events</dt><dd>1</dd></dl><p class="sources">preuves : replay.log, webhook-events.jsonl · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>La vérification coûte un GROUP BY sur la colonne par import ; un fichier inchangé n&#x27;est pas relu, donc pas revérifié.</li><li>Les alias ignorent la casse et les espaces autour, pas les accents : « Livré » et « Livre » sont deux orthographes.</li><li>Un statut vide est compté à part, pas comme une orthographe.</li><li>lumnik ne corrige pas l&#x27;ERP ; EN ATT reste à trancher par le métier.</li><li>Données synthétiques.</li></ul></section>
   <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
 </main>
 <script src="../assets/scenario.js" defer></script>
