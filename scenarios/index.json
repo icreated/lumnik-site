@@ -331,8 +331,8 @@
     },
     {
       "slug": "gmao-candy-line-incident",
-      "title": "Un incident critique sans technicien arrive dans la boîte du responsable.",
-      "lede": "Un export CSV de GMAO, un Connector, un Workflow, un Process. Une décision, une seule ; l'affectation la fait avancer.",
+      "title": "Un incident critique, aucun technicien",
+      "lede": "Une GMAO exporte ses incidents en CSV. Le convoyeur de la ligne de bonbons gélifiés est à l'arrêt, sans technicien. La GMAO ne prévient personne.\n- un Workflow suit le statut de chaque incident\n- un Process signale l'incident critique non affecté\n- une seule décision; l'affectation la fait avancer.",
       "tags": {
         "domain": [
           "Industrie",
@@ -345,8 +345,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-21T06:11:02.847466Z",
-      "evidenceDigest": "sha256:4fa6c732414b8257ba8c19f14c0143a871610106a3a373508100f637b0b66187"
+      "replayedAt": "2026-10-28T16:18:29.969543Z",
+      "evidenceDigest": "sha256:3b5823508f0bdfedc3dc2ab3cb7df8f43ebb3be94b3839b4b50168e6798416ea"
     },
     {
       "slug": "graphql-insurance-bff",

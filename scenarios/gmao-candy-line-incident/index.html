@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Un incident critique sans technicien arrive dans la boîte du responsable. — lumnik</title>
-<meta name="description" content="Un export CSV de GMAO, un Connector, un Workflow, un Process. Une décision, une seule ; l&#x27;affectation la fait avancer.">
+<title>Un incident critique, aucun technicien — lumnik</title>
+<meta name="description" content="Une GMAO exporte ses incidents en CSV. Le convoyeur de la ligne de bonbons gélifiés est à l&#x27;arrêt, sans technicien. La GMAO ne prévient personne. Un Workflow suit le statut de chaque incident. Un Process signale l&#x27;incident critique non affecté. Une seule décision; l&#x27;affectation la fait avancer.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -18,101 +18,140 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/gmao-candy-line-incident/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>Un incident critique sans technicien arrive dans la boîte du responsable.</h1>
-    <p class="lede">Un export CSV de GMAO, un Connector, un Workflow, un Process. Une décision, une seule ; l&#x27;affectation la fait avancer.</p>
+    <h1>Un incident critique, aucun technicien</h1>
+    <p class="lede">Une GMAO exporte ses incidents en CSV. Le convoyeur de la ligne de bonbons gélifiés est à l&#x27;arrêt, sans technicien. La GMAO ne prévient personne.</p><ul class="lede-list"><li>un Workflow suit le statut de chaque incident</li><li>un Process signale l&#x27;incident critique non affecté</li><li>une seule décision; l&#x27;affectation la fait avancer.</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Industrie</li><li class="tag">Maintenance</li><li class="tag kind">Connector</li><li class="tag kind">Workflow</li><li class="tag kind">Process</li></ul>
   </section>
+  <div role="tablist" class="page-tabs" aria-label="Un incident critique, aucun technicien">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
   <nav class="steps-nav" aria-label="Étapes"><a href="#step-situation" data-step="situation" aria-current="step"><span class="num">1 · Situation</span><span class="sub">L&#x27;export</span></a><a href="#step-import" data-step="import"><span class="num">2 · Importer</span><span class="sub">Le CSV</span></a><a href="#step-follow" data-step="follow"><span class="num">3 · Suivre</span><span class="sub">Le cycle de vie</span></a><a href="#step-decide" data-step="decide"><span class="num">4 · Décider</span><span class="sub">L&#x27;alerte</span></a><a href="#step-verify" data-step="verify"><span class="num">5 · Vérifier</span><span class="sub">La preuve</span></a></nav>
   <section class="step" id="step-situation" aria-labelledby="situation-title">
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="situation-title">Un CSV, aucune alerte</h2>
-      <p>La GMAO écrit l&#x27;incident INC-2026-0042 dans son export : critique, déclaré, sans technicien.</p>
+      <p>La GMAO écrit l&#x27;incident INC-2026-0042 dans son export.</p><ul class="prose-list"><li>Critique</li><li>Déclaré</li><li>Sans technicien</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Entrée</strong><p>Le fichier, tel quel.</p></div></li><li><span class="n">2</span><div><strong>Aucun événement</strong><p>La GMAO ne notifie rien.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Tout part de cette ligne.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Situation"><button type="button" role="tab" id="situation-result-tab" data-view="result" aria-controls="situation-result" aria-selected="true" tabindex="0">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-result" id="situation-result" aria-labelledby="situation-result-tab" tabindex="0"><div class="table-wrap"><table><thead><tr><th>incident_id</th><th>ligne_id</th><th>ligne_nom</th><th>equipement_id</th><th>equipement_nom</th><th>severite</th><th>statut</th><th>technicien_id</th><th>signale_le</th><th>resume</th></tr></thead><tbody><tr><td data-label="incident_id">INC-2026-0042</td><td data-label="ligne_id">CANDY-LINE-07</td><td data-label="ligne_nom">Ligne de moulage des bonbons gélifiés</td><td data-label="equipement_id">CNV-07-TRANSFER</td><td data-label="equipement_nom">Convoyeur de transfert</td><td data-label="severite">CRITIQUE</td><td data-label="statut">DECLARE</td><td data-label="technicien_id">NON_AFFECTE</td><td data-label="signale_le">2026-10-19T06:15:00Z</td><td data-label="resume">Convoyeur de transfert à l&#x27;arrêt : la mouleuse ne peut plus évacuer ses plateaux</td></tr></tbody></table></div><p class="sources">preuves : incidents-declared.csv · transform v1</p></div>
+    <div role="tabpanel" class="view-panel view-panel-result" id="situation-result" aria-labelledby="situation-result-tab" tabindex="0"><div class="table-wrap"><table><thead><tr><th>incident_id</th><th>ligne_id</th><th>ligne_nom</th><th>equipement_id</th><th>equipement_nom</th><th>severite</th><th>statut</th><th>technicien_id</th><th>signale_le</th><th>resume</th></tr></thead><tbody><tr><td data-label="incident_id">INC-2026-0042</td><td data-label="ligne_id">CANDY-LINE-07</td><td data-label="ligne_nom">Ligne de moulage des bonbons gélifiés</td><td data-label="equipement_id">CNV-07-TRANSFER</td><td data-label="equipement_nom">Convoyeur de transfert</td><td data-label="severite">CRITIQUE</td><td data-label="statut">DECLARE</td><td data-label="technicien_id">NON_AFFECTE</td><td data-label="signale_le">2026-10-19T06:15:00Z</td><td data-label="resume">Convoyeur de transfert à l&#x27;arrêt: la mouleuse ne peut plus évacuer ses plateaux</td></tr></tbody></table></div><p class="sources">preuves: incidents-declared.csv · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-import" aria-labelledby="import-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
-      <h2 id="import-title">Un Connector pour l&#x27;export</h2>
-      <p>Le Connector lit le fichier et l&#x27;associe au périmètre maintenance. Un premier export d&#x27;étalonnage crée la table ; Workflow et Process en ont besoin.</p>
+      <h2 id="import-title">Un Connecteur pour l&#x27;export</h2>
+      <p>Connecteur lit le fichier, périmètre maintenance.</p><ul class="prose-list"><li>Premier export d&#x27;étalonnage: crée la table</li><li>Workflow et Process en ont besoin</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>Lecture seule</strong><p>lumnik n&#x27;écrit jamais dans la GMAO.</p></div></li><li><span class="n">2</span><div><strong>Rafraîchissement complet</strong><p>refresh.max_removed : off ici ; garder la garde de 30 % sur une vraie source.</p></div></li></ol>
-    <div class="proves"><h3>Ce que prouve cette étape</h3><p>L&#x27;export suffit.</p></div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Lecture seule</strong><p>lumnik n&#x27;écrit jamais dans la GMAO.</p></div></li><li><span class="n">2</span><div><strong>Rafraîchissement complet</strong><p>refresh.max_removed: off ici. Sur une vraie source, garder la garde de 30%.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Export suffit.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Importer"><button type="button" role="tab" id="import-manifest-tab" data-view="manifest" aria-controls="import-manifest" aria-selected="true" tabindex="0">Manifeste</button><button type="button" role="tab" id="import-commands-tab" data-view="commands" aria-controls="import-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="import-result-tab" data-view="result" aria-controls="import-result" aria-selected="false" tabindex="-1">Résultat</button></div>
     <div role="tabpanel" class="view-panel view-panel-manifest" id="import-manifest" aria-labelledby="import-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-incidents.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-gmao-incidents</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line hl">  <span class="key">scopes</span>: [maintenance]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/gmao-candy-line-incident/incidents.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">refresh</span>:</span><span class="line hl">    <span class="key">max_removed</span>: <span class="str">&quot;off&quot;</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="import-commands" aria-labelledby="import-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm validate -f manifests/10-incidents.yaml</span>
 <span class="out">✓ 10-incidents.yaml — valid</span>
 
-<span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-incidents.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;scenario-gmao-incidents&quot;,&quot;connectorId&quot;:&quot;46316962-cece-4cce-b5ef-ac70da26609b&quot;,&quot;endpointsApplied&quot;:1}</span>
+<span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-incidents.yaml -o json</span>
+<span class="out">{
+  &quot;name&quot;: &quot;scenario-gmao-incidents&quot;,
+  &quot;connectorId&quot;: &quot;53f8e43d-7f41-4946-9f8d-7ea9f1c5be3b&quot;,
+  &quot;endpointsApplied&quot;: 1
+}</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run scenario-gmao-incidents</span>
-<span class="out">run scheduled: 1034d6f1-44fb-44af-9f6b-1cfc1dd74d4c</span>
+<span class="out">run scheduled: 40ba09d0-ecf1-4641-83e2-f223a3a1bfca</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 1034d6f1-44fb-44af-9f6b-1cfc1dd74d4c</span>
-<span class="out">ID        CONNECTOR                    ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-1034d6f1  scenario-gmao-incidents      default   Completed  3   3    0        0             2026-10-21 08:10  2026-10-21 08:10</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="import-result" aria-labelledby="import-result-tab" tabindex="0" hidden><dl class="facts"><dt>Statut du run</dt><dd>Completed</dd><dt>Lignes lues</dt><dd>3</dd><dt>Lignes écrites</dt><dd>3</dd></dl><p class="sources">preuves : 02-calibration-run.json · transform v1</p></div>
+<span class="cmd"><span class="prompt">$</span> lm run get 40ba09d0-ecf1-4641-83e2-f223a3a1bfca</span>
+<span class="out">ID        CONNECTOR                    ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+40ba09d0  scenario-gmao-incidents      default   Completed  3   3    0        0             2026-10-28 17:18  2026-10-28 17:18  no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="import-result" aria-labelledby="import-result-tab" tabindex="0" hidden><dl class="facts"><dt>Statut du run</dt><dd>Completed</dd><dt>Lignes lues</dt><dd>3</dd><dt>Lignes écrites</dt><dd>3</dd></dl><p class="sources">preuves: 02-calibration-run.json · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-follow" aria-labelledby="follow-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="follow-title">Déclarer la colonne de statut</h2>
-      <p>Le Workflow donne un cycle de vie à statut ; chaque incident est suivi par incident_id.</p>
+      <p>Workflow donne un cycle de vie à statut.</p><ul class="prose-list"><li>Cinq états, de DECLARE à CLOS</li><li>Chaque incident suivi par incident_id</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>Graphe déclaré</strong><p>États et transitions, écrits une fois.</p></div></li><li><span class="n">2</span><div><strong>Vérifié à l&#x27;application</strong><p>Le hub confirme la table et la clé.</p></div></li></ol>
-    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le cycle de vie est confronté à la vraie table.</p></div>
+    <ol class="points"><li><span class="n">1</span><div><strong>États déclarés</strong><p>Écrits une fois, dans l&#x27;ordre.</p></div></li><li><span class="n">2</span><div><strong>Vérifié à l&#x27;apply</strong><p>Le hub confirme la table et la clé.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Cycle de vie confronté à la vraie table.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Suivre"><button type="button" role="tab" id="follow-manifest-tab" data-view="manifest" aria-controls="follow-manifest" aria-selected="true" tabindex="0">Manifeste</button><button type="button" role="tab" id="follow-commands-tab" data-view="commands" aria-controls="follow-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="follow-result-tab" data-view="result" aria-controls="follow-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-manifest" id="follow-manifest" aria-labelledby="follow-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-incident-workflow.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Workflow</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-gmao-incident-lifecycle</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: maintenance</span><span class="line">  <span class="key">provenance</span>: declared</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">table</span>: connector.t_scenario_gmao_incidents</span><span class="line hl">    <span class="key">column</span>: statut</span><span class="line hl">    <span class="key">key</span>: incident_id</span><span class="line">  <span class="key">dormancy</span>:</span><span class="line hl">    <span class="key">after</span>: 1m</span><span class="line">  <span class="key">states</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: DECLARE</span><span class="line">      <span class="key">label</span>: Déclaré</span><span class="line">      <span class="key">initial</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: AFFECTE</span><span class="line">      <span class="key">label</span>: Affecté</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: EN_COURS</span><span class="line">      <span class="key">label</span>: En cours</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: RESOLU</span><span class="line">      <span class="key">label</span>: Résolu</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: CLOS</span><span class="line">      <span class="key">label</span>: Clos</span><span class="line">      <span class="key">terminal</span>: true</span><span class="line">  <span class="key">transitions</span>:</span><span class="line">    - { from: [DECLARE], to: AFFECTE }</span><span class="line">    - { from: [AFFECTE], to: EN_COURS }</span><span class="line">    - { from: [EN_COURS], to: RESOLU }</span><span class="line">    - { from: [RESOLU], to: CLOS }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="follow-commands" aria-labelledby="follow-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm workflow apply -f manifests/20-incident-workflow.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;scenario-gmao-incident-lifecycle&quot;,&quot;scope&quot;:&quot;maintenance&quot;,&quot;table&quot;:&quot;connector.t_scenario_gmao_incidents&quot;,&quot;column&quot;:&quot;statut&quot;,&quot;dataTruth&quot;:{&quot;undeclared&quot;:[],&quot;unobserved&quot;:[&quot;EN_COURS&quot;,&quot;RESOLU&quot;,&quot;CLOS&quot;],&quot;nullOrBlank&quot;:0,&quot;tableMissing&quot;:false,&quot;keyColumnMissing&quot;:false,&quot;keyNullOrBlank&quot;:0,&quot;checkUnavailable&quot;:false,&quot;unavailableReason&quot;:null}}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="follow-result" aria-labelledby="follow-result-tab" tabindex="0" hidden><dl class="facts"><dt>Table</dt><dd>connector.t_scenario_gmao_incidents</dd><dt>Colonne de statut</dt><dd>statut</dd><dt>Clé métier trouvée dans les données</dt><dd>incident_id</dd><dt>États déclarés, pas encore vus</dt><dd>EN_COURS, RESOLU, CLOS</dd></dl><p class="sources">preuves : 03-workflow-apply.json, 20-incident-workflow.yaml · transform v1</p></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="follow-manifest" aria-labelledby="follow-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-incident-workflow.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Workflow</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-gmao-incident-lifecycle</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: maintenance</span><span class="line">  <span class="key">provenance</span>: declared</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">table</span>: connector.t_scenario_gmao_incidents</span><span class="line hl">    <span class="key">column</span>: statut</span><span class="line hl">    <span class="key">key</span>: incident_id</span><span class="line">  <span class="key">dormancy</span>:</span><span class="line hl">    <span class="key">after</span>: 1m</span><span class="line">  <span class="key">states</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: DECLARE</span><span class="line">      <span class="key">label</span>: Déclaré</span><span class="line">      <span class="key">initial</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: AFFECTE</span><span class="line">      <span class="key">label</span>: Affecté</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: EN_COURS</span><span class="line">      <span class="key">label</span>: En cours</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: RESOLU</span><span class="line">      <span class="key">label</span>: Résolu</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: CLOS</span><span class="line">      <span class="key">label</span>: Clos</span><span class="line">      <span class="key">terminal</span>: true</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="follow-commands" aria-labelledby="follow-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm workflow apply -f manifests/20-incident-workflow.yaml -o json</span>
+<span class="out">{
+  &quot;name&quot;: &quot;scenario-gmao-incident-lifecycle&quot;,
+  &quot;scope&quot;: &quot;maintenance&quot;,
+  &quot;table&quot;: &quot;connector.t_scenario_gmao_incidents&quot;,
+  &quot;column&quot;: &quot;statut&quot;,
+  &quot;dataTruth&quot;: {
+    &quot;undeclared&quot;: [],
+    &quot;unobserved&quot;: [
+      &quot;EN_COURS&quot;,
+      &quot;RESOLU&quot;,
+      &quot;CLOS&quot;
+    ],
+    &quot;nullOrBlank&quot;: 0,
+    &quot;tableMissing&quot;: false,
+    &quot;keyColumnMissing&quot;: false,
+    &quot;keyNullOrBlank&quot;: 0,
+    &quot;checkUnavailable&quot;: false,
+    &quot;unavailableReason&quot;: null,
+    &quot;dueProblem&quot;: null,
+    &quot;invalidOrderValues&quot;: null,
+    &quot;keysWithSeveralRows&quot;: null,
+    &quot;columnsUnverified&quot;: []
+  }
+}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="follow-result" aria-labelledby="follow-result-tab" tabindex="0" hidden><dl class="facts"><dt>Table</dt><dd>connector.t_scenario_gmao_incidents</dd><dt>Colonne de statut</dt><dd>statut</dd><dt>Clé métier trouvée dans les données</dt><dd>incident_id</dd><dt>États déclarés, pas encore vus</dt><dd>EN_COURS, RESOLU, CLOS</dd></dl><p class="sources">preuves: 03-workflow-apply.json, 20-incident-workflow.yaml · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-decide" aria-labelledby="decide-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="decide-title">Une règle, trois conditions</h2>
-      <p>Le Process réagit à une ligne CRITIQUE, DECLARE et NON_AFFECTE ; il émet une décision.</p>
+      <p>Process réagit à une ligne qui réunit les trois:</p><ul class="prose-list"><li>CRITIQUE</li><li>DECLARE</li><li>NON_AFFECTE</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>Précise</strong><p>L&#x27;étalonnage ne réunit jamais les trois.</p></div></li><li><span class="n">2</span><div><strong>Lisible</strong><p>Le message nomme l&#x27;incident, l&#x27;équipement, la ligne.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>Précis</strong><p>L&#x27;étalonnage ne réunit jamais les trois.</p></div></li><li><span class="n">2</span><div><strong>Lisible</strong><p>Le message nomme l&#x27;incident, l&#x27;équipement, la ligne.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une décision, une seule.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Décider"><button type="button" role="tab" id="decide-manifest-tab" data-view="manifest" aria-controls="decide-manifest" aria-selected="true" tabindex="0">Manifeste</button><button type="button" role="tab" id="decide-commands-tab" data-view="commands" aria-controls="decide-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="decide-result-tab" data-view="result" aria-controls="decide-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-manifest" id="decide-manifest" aria-labelledby="decide-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-unassigned-critical-process.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-gmao-critical-unassigned</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: maintenance</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">event</span>: data.row.changed</span><span class="line">    <span class="key">table</span>: connector.t_scenario_gmao_incidents</span><span class="line">  <span class="key">when</span>:</span><span class="line hl">    - severite=CRITIQUE</span><span class="line hl">    - statut=DECLARE</span><span class="line hl">    - technicien_id=NON_AFFECTE</span><span class="line">  <span class="key">emit</span>:</span><span class="line hl">    <span class="key">type</span>: decision.gmao-critical-unassigned</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;Incident critique {incident_id} : {equipement_nom} à l&#x27;arrêt sur {ligne_nom} ; aucun technicien n&#x27;est affecté&quot;</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="decide-commands" aria-labelledby="decide-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm process apply -f manifests/30-unassigned-critical-process.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;scenario-gmao-critical-unassigned&quot;,&quot;table&quot;:&quot;connector.t_scenario_gmao_incidents&quot;,&quot;emit&quot;:&quot;decision.gmao-critical-unassigned&quot;}</span>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="decide-manifest" aria-labelledby="decide-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-unassigned-critical-process.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-gmao-critical-unassigned</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: maintenance</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">event</span>: data.row.changed</span><span class="line">    <span class="key">table</span>: connector.t_scenario_gmao_incidents</span><span class="line">  <span class="key">when</span>:</span><span class="line hl">    - severite=CRITIQUE</span><span class="line hl">    - statut=DECLARE</span><span class="line hl">    - technicien_id=NON_AFFECTE</span><span class="line">  <span class="key">emit</span>:</span><span class="line hl">    <span class="key">type</span>: decision.gmao-critical-unassigned</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;Incident critique {incident_id}: {equipement_nom} à l&#x27;arrêt sur {ligne_nom}; aucun technicien n&#x27;est affecté&quot;</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="decide-commands" aria-labelledby="decide-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm process apply -f manifests/30-unassigned-critical-process.yaml -o json</span>
+<span class="out">{
+  &quot;name&quot;: &quot;scenario-gmao-critical-unassigned&quot;,
+  &quot;table&quot;: &quot;connector.t_scenario_gmao_incidents&quot;,
+  &quot;emit&quot;: &quot;decision.gmao-critical-unassigned&quot;
+}</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run scenario-gmao-incidents</span>
-<span class="out">run scheduled: 4b366f8c-7d65-499c-83ca-97a5f3ab48fd</span>
+<span class="out">run scheduled: 9cdc44c6-a40e-4d13-9d4d-f8883d01807f</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 4b366f8c-7d65-499c-83ca-97a5f3ab48fd</span>
-<span class="out">ID        CONNECTOR                    ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-4b366f8c  scenario-gmao-incidents      default   Completed  1   1    0        0             2026-10-21 08:11  2026-10-21 08:11</span>
-<span class="note">• 3 row(s) removed — the source no longer holds them</span>
+<span class="cmd"><span class="prompt">$</span> lm run get 9cdc44c6-a40e-4d13-9d4d-f8883d01807f</span>
+<span class="out">ID        CONNECTOR                    ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+9cdc44c6  scenario-gmao-incidents      default   Completed  1   1    0        0             2026-10-28 17:18  2026-10-28 17:18  no</span>
+<span class="note">• 2 row(s) removed — the source no longer holds them</span>
 
 <span class="cmd"><span class="prompt">$</span> lm inbox</span>
-<span class="out">ID     WHEN       PROCESS                                        MESSAGE                                                                                                                                                               ENTITY_KEY
-16907  just now   scenario-gmao-critical-unassigned              Incident critique INC-2026-0042 : Convoyeur de transfert à l&#x27;arrêt sur Ligne de moulage des bonbons gélifiés ; aucun technicien n&#x27;est affecté                         a4ee295efbcbe0dd6c6d4211680aaf70ad8b809fee22901e2677d6810d2a1771</span>
+<span class="out">ID     WHEN      PROCESS                                        MESSAGE                                                                                                                                                     ENTITY_KEY
+20217  just now  scenario-gmao-critical-unassigned              Incident critique INC-2026-0042: Convoyeur de transfert à l&#x27;arrêt sur Ligne de moulage des bonbons gélifiés; aucun technicien n&#x27;est affecté                 28da6a300d4e7beedec591c3e409963de837c6782c5e83598ab3977f81279464</span>
 
 <span class="cmd"><span class="prompt">$</span> lm observations list --limit 1000</span>
 <span class="out">WORKFLOW                              DOC            STATE      SINCE             ALERTED
-scenario-gmao-incident-lifecycle      INC-2026-0042  DECLARE    2026-10-21 08:11  </span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="decide-result" aria-labelledby="decide-result-tab" tabindex="0" hidden><dl class="facts"><dt>Process</dt><dd>scenario-gmao-critical-unassigned</dd><dt>Décision</dt><dd>Incident critique INC-2026-0042 : Convoyeur de transfert à l&#x27;arrêt sur Ligne de moulage des bonbons gélifiés ; aucun technicien n&#x27;est affecté</dd><dt>État observé</dt><dd>DECLARE</dd></dl><p class="sources">preuves : 07-inbox.json, 12-observations-declared.json · transform v1</p></div>
+scenario-gmao-incident-lifecycle      CAL-0001       AFFECTE    2026-10-28 17:18  
+scenario-gmao-incident-lifecycle      CAL-0002       DECLARE    2026-10-28 17:18  
+scenario-gmao-incident-lifecycle      CAL-0003       AFFECTE    2026-10-28 17:18  
+scenario-gmao-incident-lifecycle      INC-2026-0042  DECLARE    2026-10-28 17:18  </span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="decide-result" aria-labelledby="decide-result-tab" tabindex="0" hidden><dl class="facts"><dt>Process</dt><dd>scenario-gmao-critical-unassigned</dd><dt>Décision</dt><dd>Incident critique INC-2026-0042: Convoyeur de transfert à l&#x27;arrêt sur Ligne de moulage des bonbons gélifiés; aucun technicien n&#x27;est affecté</dd><dt>État observé</dt><dd>DECLARE</dd></dl><p class="sources">preuves: 07-inbox.json, 12-observations-declared.json · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-verify" aria-labelledby="verify-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
-      <h2 id="verify-title">L&#x27;affectation, sans seconde alerte</h2>
-      <p>L&#x27;export suivant affecte l&#x27;incident à TECH-SMARTIN. Le Workflow observe DECLARE puis AFFECTE ; le Process se tait.</p>
+      <h2 id="verify-title">Affecté, sans seconde alerte</h2>
+      <p>L&#x27;export suivant affecte l&#x27;incident à TECH-SMARTIN.</p><ul class="prose-list"><li>Workflow observe DECLARE, puis AFFECTE</li><li>Process se tait</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Même document</strong><p>Date de première vue conservée.</p></div></li><li><span class="n">2</span><div><strong>Une décision</strong><p>La boîte n&#x27;en contient pas d&#x27;autre.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une décision, puis un passage observé à AFFECTE.</p></div>
@@ -120,23 +159,34 @@ scenario-gmao-incident-lifecycle      INC-2026-0042  DECLARE    2026-10-21 08:11
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Vérifier"><button type="button" role="tab" id="verify-commands-tab" data-view="commands" aria-controls="verify-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="verify-result-tab" data-view="result" aria-controls="verify-result" aria-selected="false" tabindex="-1">Résultat</button></div>
     <div role="tabpanel" class="view-panel view-panel-commands" id="verify-commands" aria-labelledby="verify-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-gmao-incidents</span>
-<span class="out">run scheduled: 880f25bb-384d-45f2-afeb-90ad93a76bdc</span>
+<span class="out">run scheduled: 805d5c6c-dae6-4921-905d-2e10a185c9c3</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 880f25bb-384d-45f2-afeb-90ad93a76bdc</span>
-<span class="out">ID        CONNECTOR                    ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-880f25bb  scenario-gmao-incidents      default   Completed  1   1    0        0             2026-10-21 08:11  2026-10-21 08:11</span>
-<span class="note">• 1 row(s) removed — the source no longer holds them</span>
+<span class="cmd"><span class="prompt">$</span> lm run get 805d5c6c-dae6-4921-905d-2e10a185c9c3</span>
+<span class="out">ID        CONNECTOR                    ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+805d5c6c  scenario-gmao-incidents      default   Completed  1   1    0        0             2026-10-28 17:18  2026-10-28 17:18  no</span>
 
 <span class="cmd"><span class="prompt">$</span> lm observations list --limit 1000</span>
 <span class="out">WORKFLOW                              DOC            STATE      SINCE             ALERTED
-scenario-gmao-incident-lifecycle      INC-2026-0042  AFFECTE    2026-10-21 08:11  </span>
+scenario-gmao-incident-lifecycle      CAL-0001       AFFECTE    2026-10-28 17:18  
+scenario-gmao-incident-lifecycle      CAL-0002       DECLARE    2026-10-28 17:18  
+scenario-gmao-incident-lifecycle      CAL-0003       AFFECTE    2026-10-28 17:18  
+scenario-gmao-incident-lifecycle      INC-2026-0042  AFFECTE    2026-10-28 17:18  </span>
 
 <span class="cmd"><span class="prompt">$</span> lm inbox</span>
-<span class="out">ID     WHEN       PROCESS                                        MESSAGE                                                                                                                                                               ENTITY_KEY
-16907  just now   scenario-gmao-critical-unassigned              Incident critique INC-2026-0042 : Convoyeur de transfert à l&#x27;arrêt sur Ligne de moulage des bonbons gélifiés ; aucun technicien n&#x27;est affecté                         a4ee295efbcbe0dd6c6d4211680aaf70ad8b809fee22901e2677d6810d2a1771</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="verify-result" aria-labelledby="verify-result-tab" tabindex="0" hidden><div class="transition"><span class="doc">Incident INC-2026-0042</span><span class="state">DECLARE</span><span class="arrow" aria-hidden="true">→</span><span class="state now">AFFECTE</span></div><dl class="facts"><dt>Décisions dans la boîte</dt><dd>1</dd></dl><p class="sources">preuves : 12-observations-declared.json, 13-observations-assigned.json, 07-inbox.json · transform v1</p></div>
+<span class="out">ID     WHEN      PROCESS                                        MESSAGE                                                                                                                                                     ENTITY_KEY
+20217  just now  scenario-gmao-critical-unassigned              Incident critique INC-2026-0042: Convoyeur de transfert à l&#x27;arrêt sur Ligne de moulage des bonbons gélifiés; aucun technicien n&#x27;est affecté                 28da6a300d4e7beedec591c3e409963de837c6782c5e83598ab3977f81279464</span>
+
+<span class="cmd"><span class="prompt">$</span> lm observations transitions --workflow scenario-gmao-incident-lifecycle --doc INC-2026-0042</span>
+<span class="out">WORKFLOW                              DOC            FROM     TO       ENTERED           OBSERVED          IN_FROM_S
+scenario-gmao-incident-lifecycle      INC-2026-0042  DECLARE  AFFECTE  2026-10-28 17:18  2026-10-28 17:18  4</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="verify-result" aria-labelledby="verify-result-tab" tabindex="0" hidden><div class="transition"><span class="doc">Incident INC-2026-0042</span><span class="state">DECLARE</span><span class="arrow" aria-hidden="true">→</span><span class="state now">AFFECTE</span></div><dl class="facts"><dt>Décisions dans la boîte</dt><dd>1</dd></dl><p class="sources">preuves: 12-observations-declared.json, 13-observations-assigned.json, 07-inbox.json · transform v1</p></div>
   </div>
 </section>
-  <section class="limits"><h2>Limites</h2><ul><li>Lecture seule ; aucune affectation réécrite dans la GMAO.</li><li>Le Process signale ; il ne dépêche ni ne relance personne.</li><li>Seuil de dormance déclaré, alerte de dormance non montrée.</li><li>La ligne de transition est vérifiée au rejeu ; aucune commande lm ne la lit encore.</li><li>Données fictives.</li></ul></section>
+  <section class="limits"><h2>Limites</h2><ul><li>Lecture seule: aucune affectation réécrite dans la GMAO.</li><li>Process signale. Il ne dépêche ni ne relance personne.</li><li>Seuil de dormance déclaré, alerte de dormance non montrée.</li><li>Données fictives.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Maintenance · GMAO</p><h2>Un convoyeur s&#x27;arrête. Le responsable n&#x27;est pas prévenu.</h2><p class="brief-lead">Incident critique, déclaré, sans technicien.</p><p>Ligne de moulage des bonbons gélifiés.</p><p class="brief-note">Usine fictive · données synthétiques</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>La GMAO enregistre. Elle n&#x27;alerte pas.</h2><ul class="brief-list tone-cyan"><li>L&#x27;incident est dans l&#x27;export CSV.</li><li>Aucun technicien n&#x27;est affecté.</li><li>Le responsable maintenance ne le sait pas.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Rien n&#x27;est modifié</p><h2>La GMAO reste telle quelle.</h2><ul class="brief-list tone-green"><li>lumnik lit l&#x27;export.</li><li>Il n&#x27;écrit pas dans la GMAO.</li><li>La règle est déclarée dans lumnik.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>when:
+  - severite=CRITIQUE
+  - statut=DECLARE
+  - technicien_id=NON_AFFECTE</code></pre><h2>Trois conditions, une décision.</h2><p>Le scénario complet tient en 3 fichiers de déclaration, 57 lignes.</p></section><section class="brief-slide"><p class="brief-kicker">Ce que reçoit le responsable</p><h2>Une décision, une seule.</h2><figure class="brief-quote"><figcaption>Boîte de décisions</figcaption><blockquote>Incident critique INC-2026-0042: Convoyeur de transfert à l&#x27;arrêt sur Ligne de moulage des bonbons gélifiés; aucun technicien n&#x27;est affecté</blockquote></figure><p class="brief-note">Message réel, rejeu du 28 octobre 2026.</p></section><section class="brief-slide"><p class="brief-kicker">L&#x27;export suivant</p><h2>Technicien affecté. Pas de seconde alerte.</h2><ul class="brief-list tone-green"><li>L&#x27;incident passe de DECLARE à AFFECTE.</li><li>lumnik observe le passage.</li><li>Le Process se tait.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Les limites</p><h2>lumnik signale. L&#x27;humain agit.</h2><ul class="brief-list tone-yellow"><li>Aucune affectation écrite dans la GMAO.</li><li>Aucun technicien dépêché ni relancé.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue de bout en bout.</h2><p>Export, déclaration, décision, affectation: chaque étape est publiée avec sa sortie.</p></section></article>
   <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
 </main>
 <script src="../assets/scenario.js" defer></script>
