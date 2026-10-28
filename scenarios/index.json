@@ -771,8 +771,8 @@
     },
     {
       "slug": "siem-bank-account-change",
-      "title": "Un changement de RIB fournisseur, silencieux dans l'ERP, arrive au SIEM.",
-      "lede": "L'ERP exporte ses fournisseurs en CSV et n'émet aucun événement. lumnik relit l'export sur planning, émet une décision signée par webhook, et le SIEM corrèle : un seul changement de compte, une alerte haute. L'inbox, elle, ne montre jamais le compte.",
+      "title": "Un RIB changé que le SIEM ne voit pas",
+      "lede": "L'ERP exporte ses fournisseurs en CSV. Il n'émet aucun événement. Un changement de RIB passe inaperçu jusqu'au prochain paiement.\n- lumnik relit l'export chaque minute\n- une décision signée part au SIEM par webhook\n- le SIEM alerte sur le compte qui change\n- l'inbox ne montre jamais le compte.",
       "tags": {
         "domain": [
           "Sécurité",
