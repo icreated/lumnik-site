@@ -456,8 +456,8 @@
         ]
       },
       "edition": "pro",
-      "replayedAt": "2026-10-26",
-      "evidenceDigest": "sha256:8d712749fafeff7a28cd05f7ea57a0a8ee531d9a6099d6d65ab15efa9f88bbdd"
+      "replayedAt": "2026-10-28",
+      "evidenceDigest": "sha256:011475bb49e03bdfe8a987e15f9e9e98503d0adb249c38a7c2dfca69b03616f6"
     },
     {
       "slug": "legacy-sales-grafana",
