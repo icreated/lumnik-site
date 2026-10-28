@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Où dorment les commandes. — lumnik</title>
-<meta name="description" content="L&#x27;ERP ne garde que le statut du jour : hier En cours, aujourd&#x27;hui Livrée, sans rien sur l&#x27;attente entre les deux. lumnik surveille la colonne, inscrit chaque changement dans un journal, et dit combien de temps chaque commande est restée dans chaque état.">
+<title>Audit des durées de statut des commandes — lumnik</title>
+<meta name="description" content="L&#x27;ERP ne garde que le statut du jour: hier En cours, aujourd&#x27;hui Livrée. Rien sur l&#x27;attente entre les deux. L&#x27;ERP ne peut pas être modifié. Un Workflow suit chaque commande par sa clé. Chaque changement de statut entre dans un journal, daté. Une commande immobile trop longtemps alerte. Le journal dit combien de temps chaque commande est restée dans chaque état.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -18,220 +18,272 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/orders-where-they-sleep/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>Où dorment les commandes.</h1>
-    <p class="lede">L&#x27;ERP ne garde que le statut du jour : hier En cours, aujourd&#x27;hui Livrée, sans rien sur l&#x27;attente entre les deux. lumnik surveille la colonne, inscrit chaque changement dans un journal, et dit combien de temps chaque commande est restée dans chaque état.</p>
+    <h1>Audit des durées de statut des commandes</h1>
+    <p class="lede">L&#x27;ERP ne garde que le statut du jour: hier En cours, aujourd&#x27;hui Livrée. Rien sur l&#x27;attente entre les deux. L&#x27;ERP ne peut pas être modifié.</p><ul class="lede-list"><li>un Workflow suit chaque commande par sa clé</li><li>chaque changement de statut entre dans un journal, daté</li><li>une commande immobile trop longtemps alerte</li><li>le journal dit combien de temps chaque commande est restée dans chaque état.</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Distribution</li><li class="tag">Commandes</li><li class="tag kind">Connector</li><li class="tag kind">Workflow</li></ul>
   </section>
+  <div role="tablist" class="page-tabs" aria-label="Audit des durées de statut des commandes">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
   <nav class="steps-nav" aria-label="Étapes"><a href="#step-sources" data-step="sources" aria-current="step"><span class="num">1 · Charger</span><span class="sub">Nuit 1</span></a><a href="#step-watch" data-step="watch"><span class="num">2 · Surveiller</span><span class="sub">Clé + dormance</span></a><a href="#step-night2" data-step="night2"><span class="num">3 · Nuit 2</span><span class="sub">Quatre mouvements</span></a><a href="#step-night3" data-step="night3"><span class="num">4 · Nuit 3</span><span class="sub">Trois de plus</span></a><a href="#step-dormant" data-step="dormant"><span class="num">5 · Dormance</span><span class="sub">25 minutes</span></a><a href="#step-declare" data-step="declare"><span class="num">6 · Déclarer</span><span class="sub">Tard</span></a><a href="#step-journal" data-step="journal"><span class="num">7 · Journal</span><span class="sub">Où elles dorment</span></a></nav>
   <section class="step" id="step-sources" aria-labelledby="sources-title">
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="sources-title">Douze commandes, l&#x27;export tel quel</h2>
-      <p>Un seul fichier local : chaque nuit, l&#x27;export remplace la table.</p>
+      <p>Un seul fichier local: chaque nuit, l&#x27;export remplace la table.</p><ul class="prose-list"><li>refresh.max_removed: 50%: un export qui perdrait plus de la moitié des lignes est refusé</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Fichier unique</strong><p>Les lignes que le fichier ne porte plus sont retirées.</p></div></li><li><span class="n">2</span><div><strong>ERP intact</strong><p>Rien n&#x27;est écrit côté ERP.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le statut du jour arrive, sans son histoire.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Charger"><button type="button" role="tab" id="sources-manifest-tab" data-view="manifest" aria-controls="sources-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="sources-commands-tab" data-view="commands" aria-controls="sources-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="sources-result-tab" data-view="result" aria-controls="sources-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-manifest" id="sources-manifest" aria-labelledby="sources-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-orders.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-sleep-orders-d</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [order-desk]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/orders-where-they-sleep/d/orders.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">refresh</span>:</span><span class="line hl">    <span class="key">max_removed</span>: 50%</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="sources-commands" aria-labelledby="sources-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-orders.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;scenario-sleep-orders-d&quot;,&quot;connectorId&quot;:&quot;8fdb8d5f-da59-44b4-aa19-b48a162926bd&quot;,&quot;endpointsApplied&quot;:1}</span>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="sources-manifest" aria-labelledby="sources-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-orders.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-sleep-orders-d</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [order-desk]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/orders-where-they-sleep/d/orders.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">refresh</span>:</span><span class="line hl">    <span class="key">max_removed</span>: 50%</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="sources-commands" aria-labelledby="sources-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f /var/folders/18/2psk9q652gsflqx5mvzr3nsh0000gn/T//lumnik-sleep.rxK1kw/10-orders.yaml</span>
+<span class="out">Applied connector &quot;scenario-sleep-orders-e&quot; — 1 endpoint</span>
 
-<span class="cmd"><span class="prompt">$</span> lm connector run scenario-sleep-orders-d</span>
-<span class="out">run scheduled: 0b8510f9-7492-4013-bb3d-00c6b454a59b</span>
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-sleep-orders-e</span>
+<span class="out">run scheduled: 28b98a00-8f53-4d4f-8fb2-22ea66398e42</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 0b8510f9-7492-4013-bb3d-00c6b454a59b</span>
+<span class="cmd"><span class="prompt">$</span> lm run get 28b98a00-8f53-4d4f-8fb2-22ea66398e42</span>
 <span class="out">ID        CONNECTOR                ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
-0b8510f9  scenario-sleep-orders-d  default   Completed  12  12   0        0             2026-10-22 11:54  2026-10-22 11:54  no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="sources-result" aria-labelledby="sources-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-sleep-orders-d</dt><dd>IN 12 · OUT 12</dd></dl><p class="sources">preuves : replay.log, 03-before-declare.json, 05-after-declare.json, 06-journal.json · transform v1</p></div>
+28b98a00  scenario-sleep-orders-e  default   Completed  12  12   0        0             2026-10-28 21:17  2026-10-28 21:17  no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="sources-result" aria-labelledby="sources-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-sleep-orders-e</dt><dd>IN 12 · OUT 12</dd></dl><p class="sources">preuves: replay.log, 03-before-declare.json, 05-after-declare.json, 06-journal.json · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-watch" aria-labelledby="watch-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="watch-title">Chaque commande suivie par sa clé</h2>
-      <p>on.key : order_id fait du Workflow une surveillance : à chaque passage du sweep, le hub compare le statut de chaque commande à celui qu&#x27;il a vu la fois précédente. EN ATT n&#x27;est pas encore déclaré.</p>
+      <p>Le Workflow surveille la colonne status.</p><ul class="prose-list"><li>key: order_id: une observation par commande</li><li>dormancy.after: 25m: alerte après 25 minutes sans mouvement</li><li>aliases: les orthographes connues de chaque statut</li><li>EN ATT n&#x27;est pas encore déclaré</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>Passage</strong><p>Le sweep du hub tourne toutes les 15 minutes ; aucun runner ne le déclenche.</p></div></li><li><span class="n">2</span><div><strong>Non déclaré</strong><p>EN ATT est suivi tel quel : un état inconnu n&#x27;est jamais terminal.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>Passage</strong><p>Le balayage du hub tourne toutes les 15 minutes. Aucun runner ne le déclenche.</p></div></li><li><span class="n">2</span><div><strong>Pourquoi key</strong><p>Sans clé, le hub voit une colonne. Avec order_id, il compare chaque commande à son état précédent.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>La colonne statut devient un suivi par commande.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Surveiller"><button type="button" role="tab" id="watch-manifest-tab" data-view="manifest" aria-controls="watch-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="watch-commands-tab" data-view="commands" aria-controls="watch-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="watch-result-tab" data-view="result" aria-controls="watch-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-manifest" id="watch-manifest" aria-labelledby="watch-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-order-watch.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Workflow</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-order-sleep-d</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: order-desk</span><span class="line">  <span class="key">provenance</span>: declared</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">table</span>: connector.t_scenario_sleep_orders_d</span><span class="line">    <span class="key">column</span>: status</span><span class="line hl">    <span class="key">key</span>: order_id</span><span class="line">  <span class="key">dormancy</span>:</span><span class="line hl">    <span class="key">after</span>: 25m</span><span class="line">  <span class="key">states</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: SAISIE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Saisie&quot;</span></span><span class="line">      <span class="key">aliases</span>: [<span class="str">&quot;SAI&quot;</span>]</span><span class="line">      <span class="key">initial</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: EN_COURS</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;En cours&quot;</span></span><span class="line">      <span class="key">aliases</span>: [<span class="str">&quot;En cours&quot;</span>, <span class="str">&quot;encours&quot;</span>, <span class="str">&quot;EC&quot;</span>]</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: LIVREE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Livrée&quot;</span></span><span class="line">      <span class="key">aliases</span>: [<span class="str">&quot;Livrée&quot;</span>, <span class="str">&quot;Livré&quot;</span>, <span class="str">&quot;LIV&quot;</span>]</span><span class="line">      <span class="key">terminal</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: ANNULEE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Annulée&quot;</span></span><span class="line">      <span class="key">aliases</span>: [<span class="str">&quot;Annulée&quot;</span>, <span class="str">&quot;ANNUL&quot;</span>]</span><span class="line">      <span class="key">terminal</span>: true</span><span class="line">  <span class="key">transitions</span>:</span><span class="line">    - { from: [SAISIE], to: EN_COURS }</span><span class="line">    - { from: [EN_COURS], to: LIVREE }</span><span class="line">    - { from: [SAISIE, EN_COURS], to: ANNULEE }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="watch-commands" aria-labelledby="watch-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm workflow apply -f manifests/20-order-watch.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;scenario-order-sleep-d&quot;,&quot;scope&quot;:&quot;order-desk&quot;,&quot;table&quot;:&quot;connector.t_scenario_sleep_orders_d&quot;,&quot;column&quot;:&quot;status&quot;,&quot;dataTruth&quot;:{&quot;undeclared&quot;:[{&quot;value&quot;:&quot;EN ATT&quot;,&quot;rows&quot;:2}],&quot;unobserved&quot;:[],&quot;nullOrBlank&quot;:0,&quot;tableMissing&quot;:false,&quot;keyColumnMissing&quot;:false,&quot;keyNullOrBlank&quot;:0,&quot;checkUnavailable&quot;:false,&quot;unavailableReason&quot;:null}}</span>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="watch-manifest" aria-labelledby="watch-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-order-watch.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Workflow</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-order-sleep-d</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: order-desk</span><span class="line">  <span class="key">provenance</span>: declared</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">table</span>: connector.t_scenario_sleep_orders_d</span><span class="line">    <span class="key">column</span>: status</span><span class="line hl">    <span class="key">key</span>: order_id</span><span class="line">  <span class="key">dormancy</span>:</span><span class="line hl">    <span class="key">after</span>: 25m</span><span class="line">  <span class="key">states</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: SAISIE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Saisie&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;SAI&quot;</span>]</span><span class="line">      <span class="key">initial</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: EN_COURS</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;En cours&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;En cours&quot;</span>, <span class="str">&quot;encours&quot;</span>, <span class="str">&quot;EC&quot;</span>]</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: LIVREE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Livrée&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;Livrée&quot;</span>, <span class="str">&quot;Livré&quot;</span>, <span class="str">&quot;LIV&quot;</span>]</span><span class="line">      <span class="key">terminal</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: ANNULEE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Annulée&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;Annulée&quot;</span>, <span class="str">&quot;ANNUL&quot;</span>]</span><span class="line">      <span class="key">terminal</span>: true</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="watch-commands" aria-labelledby="watch-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm workflow apply -f /var/folders/18/2psk9q652gsflqx5mvzr3nsh0000gn/T//lumnik-sleep.rxK1kw/20-order-watch.yaml -o json</span>
+<span class="out">{
+  &quot;name&quot;: &quot;scenario-order-sleep-e&quot;,
+  &quot;scope&quot;: &quot;order-desk&quot;,
+  &quot;table&quot;: &quot;connector.t_scenario_sleep_orders_e&quot;,
+  &quot;column&quot;: &quot;status&quot;,
+  &quot;dataTruth&quot;: {
+    &quot;undeclared&quot;: [
+      {
+        &quot;value&quot;: &quot;EN ATT&quot;,
+        &quot;rows&quot;: 2
+      }
+    ],
+    &quot;unobserved&quot;: [],
+    &quot;nullOrBlank&quot;: 0,
+    &quot;tableMissing&quot;: false,
+    &quot;keyColumnMissing&quot;: false,
+    &quot;keyNullOrBlank&quot;: 0,
+    &quot;checkUnavailable&quot;: false,
+    &quot;unavailableReason&quot;: null,
+    &quot;dueProblem&quot;: null,
+    &quot;invalidOrderValues&quot;: null,
+    &quot;keysWithSeveralRows&quot;: null,
+    &quot;columnsUnverified&quot;: []
+  }
+}</span>
 
-<span class="cmd"><span class="prompt">$</span> lm observations list --workflow scenario-order-sleep-d</span>
+<span class="cmd"><span class="prompt">$</span> lm observations list --workflow scenario-order-sleep-e</span>
 <span class="out">WORKFLOW                DOC   STATE     SINCE             ALERTED
-scenario-order-sleep-d  C-01  SAISIE    2026-10-22 11:56  
-scenario-order-sleep-d  C-02  SAISIE    2026-10-22 11:56  
-scenario-order-sleep-d  C-03  EN_COURS  2026-10-22 11:56  
-scenario-order-sleep-d  C-04  EN_COURS  2026-10-22 11:56  
-scenario-order-sleep-d  C-05  EN_COURS  2026-10-22 11:56  
-scenario-order-sleep-d  C-06  EN_COURS  2026-10-22 11:56  
-scenario-order-sleep-d  C-07  LIVREE    2026-10-22 11:56  
-scenario-order-sleep-d  C-08  EN ATT    2026-10-22 11:56  
-scenario-order-sleep-d  C-09  EN ATT    2026-10-22 11:56  
-scenario-order-sleep-d  C-10  SAISIE    2026-10-22 11:56  
-scenario-order-sleep-d  C-11  EN_COURS  2026-10-22 11:56  
-scenario-order-sleep-d  C-12  ANNULEE   2026-10-22 11:56  </span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="watch-result" aria-labelledby="watch-result-tab" tabindex="0" hidden><dl class="facts"><dt>undeclared</dt><dd>EN ATT 2</dd><dt>tape</dt><dd>ANNULEE 1 · EN ATT 2 · EN_COURS 5 · LIVREE 1 · SAISIE 3</dd></dl><p class="sources">preuves : replay.log, 03-before-declare.json, 05-after-declare.json, 06-journal.json · transform v1</p></div>
+scenario-order-sleep-e  C-01  SAISIE    2026-10-28 21:31  
+scenario-order-sleep-e  C-02  SAISIE    2026-10-28 21:31  
+scenario-order-sleep-e  C-03  EN_COURS  2026-10-28 21:31  
+scenario-order-sleep-e  C-04  EN_COURS  2026-10-28 21:31  
+scenario-order-sleep-e  C-05  EN_COURS  2026-10-28 21:31  
+scenario-order-sleep-e  C-06  EN_COURS  2026-10-28 21:31  
+scenario-order-sleep-e  C-07  LIVREE    2026-10-28 21:31  
+scenario-order-sleep-e  C-08  EN ATT    2026-10-28 21:31  
+scenario-order-sleep-e  C-09  EN ATT    2026-10-28 21:31  
+scenario-order-sleep-e  C-10  SAISIE    2026-10-28 21:31  
+scenario-order-sleep-e  C-11  EN_COURS  2026-10-28 21:31  
+scenario-order-sleep-e  C-12  ANNULEE   2026-10-28 21:31  </span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="watch-result" aria-labelledby="watch-result-tab" tabindex="0" hidden><dl class="facts"><dt>undeclared</dt><dd>EN ATT 2</dd><dt>tape</dt><dd>ANNULEE 1 · EN ATT 2 · EN_COURS 5 · LIVREE 1 · SAISIE 3</dd></dl><p class="sources">preuves: replay.log, 03-before-declare.json, 05-after-declare.json, 06-journal.json · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-night2" aria-labelledby="night2-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
-      <h2 id="night2-title">Le sweep voit ce qui a bougé</h2>
-      <p>Quatre commandes avancent. Au passage suivant, chacune change d&#x27;état sur la bande, et le mouvement entre au journal.</p>
+      <h2 id="night2-title">Le balayage voit ce qui a bougé</h2>
+      <p>Quatre commandes avancent.</p><ul class="prose-list"><li>Au passage suivant, chacune change d&#x27;état sur la bande</li><li>Le mouvement entre au journal</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>Rechargé</strong><p>4 lignes remplacées par l&#x27;export.</p></div></li><li><span class="n">2</span><div><strong>Résolu</strong><p>EC, LIV : chaque orthographe lue sous son code déclaré.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>Rechargé</strong><p>4 lignes remplacées par l&#x27;export.</p></div></li><li><span class="n">2</span><div><strong>Résolu</strong><p>EC, LIV: chaque orthographe lue sous son code déclaré.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un changement de statut devient un mouvement daté.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Nuit 2"><button type="button" role="tab" id="night2-commands-tab" data-view="commands" aria-controls="night2-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="night2-result-tab" data-view="result" aria-controls="night2-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-commands" id="night2-commands" aria-labelledby="night2-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-sleep-orders-d</span>
-<span class="out">run scheduled: 7339563f-f104-461f-a81f-01cfc137ec37</span>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="night2-commands" aria-labelledby="night2-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-sleep-orders-e</span>
+<span class="out">run scheduled: 5a999b08-fcfa-4e1b-9868-9870b9cf00d3</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 7339563f-f104-461f-a81f-01cfc137ec37</span>
+<span class="cmd"><span class="prompt">$</span> lm run get 5a999b08-fcfa-4e1b-9868-9870b9cf00d3</span>
 <span class="out">ID        CONNECTOR                ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
-7339563f  scenario-sleep-orders-d  default   Completed  12  12   0        0             2026-10-22 11:56  2026-10-22 11:56  no</span>
-<span class="note">• 4 row(s) removed — the source no longer holds them</span>
+5a999b08  scenario-sleep-orders-e  default   Completed  12  12   0        0             2026-10-28 21:31  2026-10-28 21:31  no</span>
 
-<span class="cmd"><span class="prompt">$</span> lm observations list --workflow scenario-order-sleep-d</span>
+<span class="cmd"><span class="prompt">$</span> lm observations list --workflow scenario-order-sleep-e</span>
 <span class="out">WORKFLOW                DOC   STATE     SINCE             ALERTED
-scenario-order-sleep-d  C-02  SAISIE    2026-10-22 11:56  
-scenario-order-sleep-d  C-05  EN_COURS  2026-10-22 11:56  
-scenario-order-sleep-d  C-06  EN_COURS  2026-10-22 11:56  
-scenario-order-sleep-d  C-07  LIVREE    2026-10-22 11:56  
-scenario-order-sleep-d  C-08  EN ATT    2026-10-22 11:56  
-scenario-order-sleep-d  C-09  EN ATT    2026-10-22 11:56  
-scenario-order-sleep-d  C-11  EN_COURS  2026-10-22 11:56  
-scenario-order-sleep-d  C-12  ANNULEE   2026-10-22 11:56  
-scenario-order-sleep-d  C-01  EN_COURS  2026-10-22 12:11  
-scenario-order-sleep-d  C-03  LIVREE    2026-10-22 12:11  
-scenario-order-sleep-d  C-04  LIVREE    2026-10-22 12:11  
-scenario-order-sleep-d  C-10  EN_COURS  2026-10-22 12:11  </span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="night2-result" aria-labelledby="night2-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-sleep-orders-d</dt><dd>IN 12 · OUT 12 · 4 removed</dd><dt>tape</dt><dd>ANNULEE 1 · EN ATT 2 · EN_COURS 5 · LIVREE 3 · SAISIE 1</dd></dl><p class="sources">preuves : replay.log, 03-before-declare.json, 05-after-declare.json, 06-journal.json · transform v1</p></div>
+scenario-order-sleep-e  C-02  SAISIE    2026-10-28 21:31  
+scenario-order-sleep-e  C-05  EN_COURS  2026-10-28 21:31  
+scenario-order-sleep-e  C-06  EN_COURS  2026-10-28 21:31  
+scenario-order-sleep-e  C-07  LIVREE    2026-10-28 21:31  
+scenario-order-sleep-e  C-08  EN ATT    2026-10-28 21:31  
+scenario-order-sleep-e  C-09  EN ATT    2026-10-28 21:31  
+scenario-order-sleep-e  C-11  EN_COURS  2026-10-28 21:31  
+scenario-order-sleep-e  C-12  ANNULEE   2026-10-28 21:31  
+scenario-order-sleep-e  C-01  EN_COURS  2026-10-28 21:46  
+scenario-order-sleep-e  C-03  LIVREE    2026-10-28 21:46  
+scenario-order-sleep-e  C-04  LIVREE    2026-10-28 21:46  
+scenario-order-sleep-e  C-10  EN_COURS  2026-10-28 21:46  </span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="night2-result" aria-labelledby="night2-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-sleep-orders-e</dt><dd>IN 12 · OUT 12</dd><dt>tape</dt><dd>ANNULEE 1 · EN ATT 2 · EN_COURS 5 · LIVREE 3 · SAISIE 1</dd></dl><p class="sources">preuves: replay.log, 03-before-declare.json, 05-after-declare.json, 06-journal.json · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-night3" aria-labelledby="night3-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="night3-title">La même commande peut bouger deux fois</h2>
-      <p>C-01 passe en livraison une nuit après être passée en cours ; C-02 est annulée, C-05 livrée.</p>
+      <p>Nuit 3:</p><ul class="prose-list"><li>C-01 livrée, une nuit après être passée en cours</li><li>C-02 annulée</li><li>C-05 livrée</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>Deux mouvements</strong><p>C-01 : SAISIE → EN_COURS, puis EN_COURS → LIVREE.</p></div></li><li><span class="n">2</span><div><strong>Terminal</strong><p>LIVREE et ANNULEE ne dorment jamais.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>Deux mouvements</strong><p>C-01: SAISIE → EN_COURS, puis EN_COURS → LIVREE.</p></div></li><li><span class="n">2</span><div><strong>Terminal</strong><p>LIVREE et ANNULEE ne dorment jamais.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le journal garde la suite des états, pas seulement le dernier.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Nuit 3"><button type="button" role="tab" id="night3-commands-tab" data-view="commands" aria-controls="night3-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="night3-result-tab" data-view="result" aria-controls="night3-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-commands" id="night3-commands" aria-labelledby="night3-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-sleep-orders-d</span>
-<span class="out">run scheduled: 1af97bda-fe16-4d21-a195-e4e7f5e11384</span>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="night3-commands" aria-labelledby="night3-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-sleep-orders-e</span>
+<span class="out">run scheduled: 60d66e4c-3b3f-4c09-a535-127929c3171c</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 1af97bda-fe16-4d21-a195-e4e7f5e11384</span>
+<span class="cmd"><span class="prompt">$</span> lm run get 60d66e4c-3b3f-4c09-a535-127929c3171c</span>
 <span class="out">ID        CONNECTOR                ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
-1af97bda  scenario-sleep-orders-d  default   Completed  12  12   0        0             2026-10-22 12:11  2026-10-22 12:11  no</span>
-<span class="note">• 3 row(s) removed — the source no longer holds them</span>
+60d66e4c  scenario-sleep-orders-e  default   Completed  12  12   0        0             2026-10-28 21:46  2026-10-28 21:46  no</span>
 
-<span class="cmd"><span class="prompt">$</span> lm observations list --workflow scenario-order-sleep-d</span>
+<span class="cmd"><span class="prompt">$</span> lm observations list --workflow scenario-order-sleep-e</span>
 <span class="out">WORKFLOW                DOC   STATE     SINCE             ALERTED
-scenario-order-sleep-d  C-06  EN_COURS  2026-10-22 11:56  2026-10-22 12:26
-scenario-order-sleep-d  C-07  LIVREE    2026-10-22 11:56  
-scenario-order-sleep-d  C-08  EN ATT    2026-10-22 11:56  2026-10-22 12:26
-scenario-order-sleep-d  C-09  EN ATT    2026-10-22 11:56  2026-10-22 12:26
-scenario-order-sleep-d  C-11  EN_COURS  2026-10-22 11:56  2026-10-22 12:26
-scenario-order-sleep-d  C-12  ANNULEE   2026-10-22 11:56  
-scenario-order-sleep-d  C-03  LIVREE    2026-10-22 12:11  
-scenario-order-sleep-d  C-04  LIVREE    2026-10-22 12:11  
-scenario-order-sleep-d  C-10  EN_COURS  2026-10-22 12:11  
-scenario-order-sleep-d  C-01  LIVREE    2026-10-22 12:26  
-scenario-order-sleep-d  C-02  ANNULEE   2026-10-22 12:26  
-scenario-order-sleep-d  C-05  LIVREE    2026-10-22 12:26  </span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="night3-result" aria-labelledby="night3-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-sleep-orders-d</dt><dd>IN 12 · OUT 12 · 3 removed</dd><dt>tape</dt><dd>ANNULEE 2 · EN ATT 2 · EN_COURS 3 · LIVREE 5</dd></dl><p class="sources">preuves : replay.log, 03-before-declare.json, 05-after-declare.json, 06-journal.json · transform v1</p></div>
+scenario-order-sleep-e  C-06  EN_COURS  2026-10-28 21:31  2026-10-28 22:01
+scenario-order-sleep-e  C-07  LIVREE    2026-10-28 21:31  
+scenario-order-sleep-e  C-08  EN ATT    2026-10-28 21:31  2026-10-28 22:01
+scenario-order-sleep-e  C-09  EN ATT    2026-10-28 21:31  2026-10-28 22:01
+scenario-order-sleep-e  C-11  EN_COURS  2026-10-28 21:31  2026-10-28 22:01
+scenario-order-sleep-e  C-12  ANNULEE   2026-10-28 21:31  
+scenario-order-sleep-e  C-03  LIVREE    2026-10-28 21:46  
+scenario-order-sleep-e  C-04  LIVREE    2026-10-28 21:46  
+scenario-order-sleep-e  C-10  EN_COURS  2026-10-28 21:46  
+scenario-order-sleep-e  C-01  LIVREE    2026-10-28 22:01  
+scenario-order-sleep-e  C-02  ANNULEE   2026-10-28 22:01  
+scenario-order-sleep-e  C-05  LIVREE    2026-10-28 22:01  </span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="night3-result" aria-labelledby="night3-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-sleep-orders-e</dt><dd>IN 12 · OUT 12</dd><dt>tape</dt><dd>ANNULEE 2 · EN ATT 2 · EN_COURS 3 · LIVREE 5</dd></dl><p class="sources">preuves: replay.log, 03-before-declare.json, 05-after-declare.json, 06-journal.json · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-dormant" aria-labelledby="dormant-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="dormant-title">Les commandes immobiles alertent</h2>
-      <p>Passé le seuil déclaré, les commandes immobiles dans un état non terminal deviennent des décisions dans l&#x27;inbox, EN ATT compris.</p>
+      <p>Passé 25 minutes, les commandes immobiles dans un état non terminal deviennent des décisions dans l&#x27;inbox.</p><ul class="prose-list"><li>EN ATT compris, même non déclaré</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>Inbox</strong><p>lm inbox --process ne montre que ce workflow.</p></div></li><li><span class="n">2</span><div><strong>Une fois</strong><p>Une commande alerte une fois par immobilité.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>Inbox</strong><p>lm inbox --process ne montre que ce Workflow.</p></div></li><li><span class="n">2</span><div><strong>Une fois</strong><p>Une commande alerte une fois par immobilité.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>L&#x27;absence de mouvement devient visible.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Dormance"><button type="button" role="tab" id="dormant-commands-tab" data-view="commands" aria-controls="dormant-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="dormant-result-tab" data-view="result" aria-controls="dormant-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-commands" id="dormant-commands" aria-labelledby="dormant-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm observations list --workflow scenario-order-sleep-d</span>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="dormant-commands" aria-labelledby="dormant-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm observations list --workflow scenario-order-sleep-e</span>
 <span class="out">WORKFLOW                DOC   STATE     SINCE             ALERTED
-scenario-order-sleep-d  C-06  EN_COURS  2026-10-22 11:56  2026-10-22 12:26
-scenario-order-sleep-d  C-07  LIVREE    2026-10-22 11:56  
-scenario-order-sleep-d  C-08  EN ATT    2026-10-22 11:56  2026-10-22 12:26
-scenario-order-sleep-d  C-09  EN ATT    2026-10-22 11:56  2026-10-22 12:26
-scenario-order-sleep-d  C-11  EN_COURS  2026-10-22 11:56  2026-10-22 12:26
-scenario-order-sleep-d  C-12  ANNULEE   2026-10-22 11:56  
-scenario-order-sleep-d  C-03  LIVREE    2026-10-22 12:11  
-scenario-order-sleep-d  C-04  LIVREE    2026-10-22 12:11  
-scenario-order-sleep-d  C-10  EN_COURS  2026-10-22 12:11  
-scenario-order-sleep-d  C-01  LIVREE    2026-10-22 12:26  
-scenario-order-sleep-d  C-02  ANNULEE   2026-10-22 12:26  
-scenario-order-sleep-d  C-05  LIVREE    2026-10-22 12:26  </span>
+scenario-order-sleep-e  C-06  EN_COURS  2026-10-28 21:31  2026-10-28 22:01
+scenario-order-sleep-e  C-07  LIVREE    2026-10-28 21:31  
+scenario-order-sleep-e  C-08  EN ATT    2026-10-28 21:31  2026-10-28 22:01
+scenario-order-sleep-e  C-09  EN ATT    2026-10-28 21:31  2026-10-28 22:01
+scenario-order-sleep-e  C-11  EN_COURS  2026-10-28 21:31  2026-10-28 22:01
+scenario-order-sleep-e  C-12  ANNULEE   2026-10-28 21:31  
+scenario-order-sleep-e  C-03  LIVREE    2026-10-28 21:46  
+scenario-order-sleep-e  C-04  LIVREE    2026-10-28 21:46  
+scenario-order-sleep-e  C-10  EN_COURS  2026-10-28 21:46  
+scenario-order-sleep-e  C-01  LIVREE    2026-10-28 22:01  
+scenario-order-sleep-e  C-02  ANNULEE   2026-10-28 22:01  
+scenario-order-sleep-e  C-05  LIVREE    2026-10-28 22:01  </span>
 
-<span class="cmd"><span class="prompt">$</span> lm inbox --process workflow:scenario-order-sleep-d</span>
+<span class="cmd"><span class="prompt">$</span> lm inbox --process workflow:scenario-order-sleep-e</span>
 <span class="out">ID     WHEN      PROCESS                          MESSAGE                                                                                                                               ENTITY_KEY
-17700  just now  workflow:scenario-order-sleep-d  C-11: observed unmoved in &quot;EN_COURS&quot; since 2026-10-22 (first observed 2026-10-22) — declared threshold 25m in scenario-order-sleep-d  C-11
-17699  just now  workflow:scenario-order-sleep-d  C-09: observed unmoved in &quot;EN ATT&quot; since 2026-10-22 (first observed 2026-10-22) — declared threshold 25m in scenario-order-sleep-d    C-09
-17698  just now  workflow:scenario-order-sleep-d  C-08: observed unmoved in &quot;EN ATT&quot; since 2026-10-22 (first observed 2026-10-22) — declared threshold 25m in scenario-order-sleep-d    C-08
-17697  just now  workflow:scenario-order-sleep-d  C-06: observed unmoved in &quot;EN_COURS&quot; since 2026-10-22 (first observed 2026-10-22) — declared threshold 25m in scenario-order-sleep-d  C-06</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="dormant-result" aria-labelledby="dormant-result-tab" tabindex="0" hidden><dl class="facts"><dt>alerted</dt><dd>C-06, C-08, C-09, C-11</dd></dl><p class="sources">preuves : replay.log, 03-before-declare.json, 05-after-declare.json, 06-journal.json · transform v1</p></div>
+20332  just now  workflow:scenario-order-sleep-e  C-11: observed unmoved in &quot;EN_COURS&quot; since 2026-10-28 (first observed 2026-10-28) — declared threshold 25m in scenario-order-sleep-e  C-11
+20331  just now  workflow:scenario-order-sleep-e  C-09: observed unmoved in &quot;EN ATT&quot; since 2026-10-28 (first observed 2026-10-28) — declared threshold 25m in scenario-order-sleep-e    C-09
+20330  just now  workflow:scenario-order-sleep-e  C-08: observed unmoved in &quot;EN ATT&quot; since 2026-10-28 (first observed 2026-10-28) — declared threshold 25m in scenario-order-sleep-e    C-08
+20329  just now  workflow:scenario-order-sleep-e  C-06: observed unmoved in &quot;EN_COURS&quot; since 2026-10-28 (first observed 2026-10-28) — declared threshold 25m in scenario-order-sleep-e  C-06</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="dormant-result" aria-labelledby="dormant-result-tab" tabindex="0" hidden><dl class="facts"><dt>alerted</dt><dd>C-06, C-08, C-09, C-11</dd></dl><p class="sources">preuves: replay.log, 03-before-declare.json, 05-after-declare.json, 06-journal.json · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-declare" aria-labelledby="declare-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
-      <h2 id="declare-title">EN ATT veut dire en cours : un sens, pas un mouvement</h2>
-      <p>Le bureau tranche : EN ATT est un alias de EN_COURS. Au passage suivant, C-08 et C-09 sont renommées sur la bande ; leur horloge et leur alerte restent, le journal ne reçoit rien.</p>
+      <h2 id="declare-title">EN ATT veut dire en cours: un sens, pas un mouvement</h2>
+      <p>Le métier tranche: EN ATT est un alias de EN_COURS.</p><ul class="prose-list"><li>Au passage suivant, C-08 et C-09 sont renommées sur la bande</li><li>Leur horloge et leur alerte restent</li><li>Le journal ne reçoit rien</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Même nom</strong><p>Le même metadata.name met à jour la déclaration.</p></div></li><li><span class="n">2</span><div><strong>Horloge</strong><p>Déclarer ne remet pas une commande dormante à zéro.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Corriger la déclaration ne fabrique pas d&#x27;histoire.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="declare-manifest-tab" data-view="manifest" aria-controls="declare-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="declare-commands-tab" data-view="commands" aria-controls="declare-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="declare-result-tab" data-view="result" aria-controls="declare-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-manifest" id="declare-manifest" aria-labelledby="declare-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-order-watch-en-att.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Workflow</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-order-sleep-d</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: order-desk</span><span class="line">  <span class="key">provenance</span>: declared</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">table</span>: connector.t_scenario_sleep_orders_d</span><span class="line">    <span class="key">column</span>: status</span><span class="line">    <span class="key">key</span>: order_id</span><span class="line">  <span class="key">dormancy</span>:</span><span class="line">    <span class="key">after</span>: 25m</span><span class="line">  <span class="key">states</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: SAISIE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Saisie&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;SAI&quot;</span>]</span><span class="line">      <span class="key">initial</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: EN_COURS</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;En cours&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;En cours&quot;</span>, <span class="str">&quot;encours&quot;</span>, <span class="str">&quot;EC&quot;</span>, <span class="str">&quot;EN ATT&quot;</span>]</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: LIVREE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Livrée&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;Livrée&quot;</span>, <span class="str">&quot;Livré&quot;</span>, <span class="str">&quot;LIV&quot;</span>]</span><span class="line">      <span class="key">terminal</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: ANNULEE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Annulée&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;Annulée&quot;</span>, <span class="str">&quot;ANNUL&quot;</span>]</span><span class="line">      <span class="key">terminal</span>: true</span><span class="line">  <span class="key">transitions</span>:</span><span class="line">    - { from: [SAISIE], to: EN_COURS }</span><span class="line">    - { from: [EN_COURS], to: LIVREE }</span><span class="line">    - { from: [SAISIE, EN_COURS], to: ANNULEE }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="declare-commands" aria-labelledby="declare-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm workflow apply -f manifests/30-order-watch-en-att.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;scenario-order-sleep-d&quot;,&quot;scope&quot;:&quot;order-desk&quot;,&quot;table&quot;:&quot;connector.t_scenario_sleep_orders_d&quot;,&quot;column&quot;:&quot;status&quot;,&quot;dataTruth&quot;:{&quot;undeclared&quot;:[],&quot;unobserved&quot;:[&quot;SAISIE&quot;],&quot;nullOrBlank&quot;:0,&quot;tableMissing&quot;:false,&quot;keyColumnMissing&quot;:false,&quot;keyNullOrBlank&quot;:0,&quot;checkUnavailable&quot;:false,&quot;unavailableReason&quot;:null}}</span>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="declare-manifest" aria-labelledby="declare-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-order-watch-en-att.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Workflow</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-order-sleep-d</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: order-desk</span><span class="line">  <span class="key">provenance</span>: declared</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">table</span>: connector.t_scenario_sleep_orders_d</span><span class="line">    <span class="key">column</span>: status</span><span class="line">    <span class="key">key</span>: order_id</span><span class="line">  <span class="key">dormancy</span>:</span><span class="line">    <span class="key">after</span>: 25m</span><span class="line">  <span class="key">states</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: SAISIE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Saisie&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;SAI&quot;</span>]</span><span class="line">      <span class="key">initial</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: EN_COURS</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;En cours&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;En cours&quot;</span>, <span class="str">&quot;encours&quot;</span>, <span class="str">&quot;EC&quot;</span>, <span class="str">&quot;EN ATT&quot;</span>]</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: LIVREE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Livrée&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;Livrée&quot;</span>, <span class="str">&quot;Livré&quot;</span>, <span class="str">&quot;LIV&quot;</span>]</span><span class="line">      <span class="key">terminal</span>: true</span><span class="line">    <span class="dash">-</span> <span class="key">code</span>: ANNULEE</span><span class="line">      <span class="key">label</span>: <span class="str">&quot;Annulée&quot;</span></span><span class="line hl">      <span class="key">aliases</span>: [<span class="str">&quot;Annulée&quot;</span>, <span class="str">&quot;ANNUL&quot;</span>]</span><span class="line">      <span class="key">terminal</span>: true</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="declare-commands" aria-labelledby="declare-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm workflow apply -f /var/folders/18/2psk9q652gsflqx5mvzr3nsh0000gn/T//lumnik-sleep.rxK1kw/30-order-watch-en-att.yaml -o json</span>
+<span class="out">{
+  &quot;name&quot;: &quot;scenario-order-sleep-e&quot;,
+  &quot;scope&quot;: &quot;order-desk&quot;,
+  &quot;table&quot;: &quot;connector.t_scenario_sleep_orders_e&quot;,
+  &quot;column&quot;: &quot;status&quot;,
+  &quot;dataTruth&quot;: {
+    &quot;undeclared&quot;: [],
+    &quot;unobserved&quot;: [
+      &quot;SAISIE&quot;
+    ],
+    &quot;nullOrBlank&quot;: 0,
+    &quot;tableMissing&quot;: false,
+    &quot;keyColumnMissing&quot;: false,
+    &quot;keyNullOrBlank&quot;: 0,
+    &quot;checkUnavailable&quot;: false,
+    &quot;unavailableReason&quot;: null,
+    &quot;dueProblem&quot;: null,
+    &quot;invalidOrderValues&quot;: null,
+    &quot;keysWithSeveralRows&quot;: null,
+    &quot;columnsUnverified&quot;: []
+  }
+}</span>
 
-<span class="cmd"><span class="prompt">$</span> lm observations list --workflow scenario-order-sleep-d</span>
+<span class="cmd"><span class="prompt">$</span> lm observations list --workflow scenario-order-sleep-e</span>
 <span class="out">WORKFLOW                DOC   STATE     SINCE             ALERTED
-scenario-order-sleep-d  C-06  EN_COURS  2026-10-22 11:56  2026-10-22 12:26
-scenario-order-sleep-d  C-07  LIVREE    2026-10-22 11:56  
-scenario-order-sleep-d  C-08  EN_COURS  2026-10-22 11:56  2026-10-22 12:26
-scenario-order-sleep-d  C-09  EN_COURS  2026-10-22 11:56  2026-10-22 12:26
-scenario-order-sleep-d  C-11  EN_COURS  2026-10-22 11:56  2026-10-22 12:26
-scenario-order-sleep-d  C-12  ANNULEE   2026-10-22 11:56  
-scenario-order-sleep-d  C-03  LIVREE    2026-10-22 12:11  
-scenario-order-sleep-d  C-04  LIVREE    2026-10-22 12:11  
-scenario-order-sleep-d  C-10  EN_COURS  2026-10-22 12:11  2026-10-22 12:41
-scenario-order-sleep-d  C-01  LIVREE    2026-10-22 12:26  
-scenario-order-sleep-d  C-02  ANNULEE   2026-10-22 12:26  
-scenario-order-sleep-d  C-05  LIVREE    2026-10-22 12:26  </span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="declare-result" aria-labelledby="declare-result-tab" tabindex="0" hidden><dl class="facts"><dt>C-08</dt><dd>EN ATT → EN_COURS · since and alert unchanged</dd><dt>C-09</dt><dd>EN ATT → EN_COURS · since and alert unchanged</dd></dl><p class="sources">preuves : replay.log, 03-before-declare.json, 05-after-declare.json, 06-journal.json · transform v1</p></div>
+scenario-order-sleep-e  C-06  EN_COURS  2026-10-28 21:31  2026-10-28 22:01
+scenario-order-sleep-e  C-07  LIVREE    2026-10-28 21:31  
+scenario-order-sleep-e  C-08  EN_COURS  2026-10-28 21:31  2026-10-28 22:01
+scenario-order-sleep-e  C-09  EN_COURS  2026-10-28 21:31  2026-10-28 22:01
+scenario-order-sleep-e  C-11  EN_COURS  2026-10-28 21:31  2026-10-28 22:01
+scenario-order-sleep-e  C-12  ANNULEE   2026-10-28 21:31  
+scenario-order-sleep-e  C-03  LIVREE    2026-10-28 21:46  
+scenario-order-sleep-e  C-04  LIVREE    2026-10-28 21:46  
+scenario-order-sleep-e  C-10  EN_COURS  2026-10-28 21:46  2026-10-28 22:16
+scenario-order-sleep-e  C-01  LIVREE    2026-10-28 22:01  
+scenario-order-sleep-e  C-02  ANNULEE   2026-10-28 22:01  
+scenario-order-sleep-e  C-05  LIVREE    2026-10-28 22:01  </span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="declare-result" aria-labelledby="declare-result-tab" tabindex="0" hidden><dl class="facts"><dt>C-08</dt><dd>EN ATT → EN_COURS · since and alert unchanged</dd><dt>C-09</dt><dd>EN ATT → EN_COURS · since and alert unchanged</dd></dl><p class="sources">preuves: replay.log, 03-before-declare.json, 05-after-declare.json, 06-journal.json · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-journal" aria-labelledby="journal-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="journal-title">Chaque mouvement, et le temps passé avant</h2>
-      <p>lm observations transitions liste les mouvements, du plus récent au plus ancien, avec ENTERED, OBSERVED et IN_FROM_S : les secondes passées dans l&#x27;état quitté.</p>
+      <p>lm observations transitions liste les mouvements, du plus récent au plus ancien.</p><ul class="prose-list"><li>ENTERED: l&#x27;entrée dans l&#x27;état quitté</li><li>OBSERVED: le passage qui a vu le mouvement</li><li>IN_FROM_S: les secondes passées dans l&#x27;état quitté</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>Borne basse</strong><p>Pour un premier mouvement, le temps compte depuis la première observation.</p></div></li><li><span class="n">2</span><div><strong>Filtrer</strong><p>--workflow, --doc : l&#x27;histoire d&#x27;une seule commande.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>Borne basse</strong><p>Pour un premier mouvement, le temps compte depuis la première observation.</p></div></li><li><span class="n">2</span><div><strong>Filtrer</strong><p>--workflow, --doc: l&#x27;histoire d&#x27;une seule commande.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le temps passé par état se lit sans SQL.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Journal"><button type="button" role="tab" id="journal-commands-tab" data-view="commands" aria-controls="journal-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="journal-result-tab" data-view="result" aria-controls="journal-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-commands" id="journal-commands" aria-labelledby="journal-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm observations transitions --workflow scenario-order-sleep-d</span>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="journal-commands" aria-labelledby="journal-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm observations transitions --workflow scenario-order-sleep-e</span>
 <span class="out">WORKFLOW                DOC   FROM      TO        ENTERED           OBSERVED          IN_FROM_S
-scenario-order-sleep-d  C-05  EN_COURS  LIVREE    2026-10-22 11:56  2026-10-22 12:26  1800
-scenario-order-sleep-d  C-02  SAISIE    ANNULEE   2026-10-22 11:56  2026-10-22 12:26  1800
-scenario-order-sleep-d  C-01  EN_COURS  LIVREE    2026-10-22 12:11  2026-10-22 12:26  899
-scenario-order-sleep-d  C-10  SAISIE    EN_COURS  2026-10-22 11:56  2026-10-22 12:11  900
-scenario-order-sleep-d  C-04  EN_COURS  LIVREE    2026-10-22 11:56  2026-10-22 12:11  900
-scenario-order-sleep-d  C-03  EN_COURS  LIVREE    2026-10-22 11:56  2026-10-22 12:11  900
-scenario-order-sleep-d  C-01  SAISIE    EN_COURS  2026-10-22 11:56  2026-10-22 12:11  900</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="journal-result" aria-labelledby="journal-result-tab" tabindex="0" hidden><dl class="facts"><dt>C-01</dt><dd>SAISIE → EN_COURS · 15 min in SAISIE</dd><dt>C-03</dt><dd>EN_COURS → LIVREE · 15 min in EN_COURS</dd><dt>C-04</dt><dd>EN_COURS → LIVREE · 15 min in EN_COURS</dd><dt>C-10</dt><dd>SAISIE → EN_COURS · 15 min in SAISIE</dd><dt>C-01</dt><dd>EN_COURS → LIVREE · 15 min in EN_COURS</dd><dt>C-02</dt><dd>SAISIE → ANNULEE · 30 min in SAISIE</dd><dt>C-05</dt><dd>EN_COURS → LIVREE · 30 min in EN_COURS</dd></dl><p class="sources">preuves : replay.log, 03-before-declare.json, 05-after-declare.json, 06-journal.json · transform v1</p></div>
+scenario-order-sleep-e  C-05  EN_COURS  LIVREE    2026-10-28 21:31  2026-10-28 22:01  1799
+scenario-order-sleep-e  C-02  SAISIE    ANNULEE   2026-10-28 21:31  2026-10-28 22:01  1799
+scenario-order-sleep-e  C-01  EN_COURS  LIVREE    2026-10-28 21:46  2026-10-28 22:01  899
+scenario-order-sleep-e  C-10  SAISIE    EN_COURS  2026-10-28 21:31  2026-10-28 21:46  899
+scenario-order-sleep-e  C-04  EN_COURS  LIVREE    2026-10-28 21:31  2026-10-28 21:46  899
+scenario-order-sleep-e  C-03  EN_COURS  LIVREE    2026-10-28 21:31  2026-10-28 21:46  899
+scenario-order-sleep-e  C-01  SAISIE    EN_COURS  2026-10-28 21:31  2026-10-28 21:46  899</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="journal-result" aria-labelledby="journal-result-tab" tabindex="0" hidden><dl class="facts"><dt>C-01</dt><dd>SAISIE → EN_COURS · 15 min in SAISIE</dd><dt>C-03</dt><dd>EN_COURS → LIVREE · 15 min in EN_COURS</dd><dt>C-04</dt><dd>EN_COURS → LIVREE · 15 min in EN_COURS</dd><dt>C-10</dt><dd>SAISIE → EN_COURS · 15 min in SAISIE</dd><dt>C-01</dt><dd>EN_COURS → LIVREE · 15 min in EN_COURS</dd><dt>C-02</dt><dd>SAISIE → ANNULEE · 30 min in SAISIE</dd><dt>C-05</dt><dd>EN_COURS → LIVREE · 30 min in EN_COURS</dd></dl><p class="sources">preuves: replay.log, 03-before-declare.json, 05-after-declare.json, 06-journal.json · transform v1</p></div>
   </div>
 </section>
-  <section class="limits"><h2>Limites</h2><ul><li>Les mouvements sont vus au rythme du sweep : une durée est un multiple du passage, et deux mouvements entre deux passages n&#x27;en font qu&#x27;un.</li><li>Pour le premier mouvement d&#x27;une commande, le temps compte depuis sa première observation : c&#x27;est une borne basse.</li><li>Le rejeu comprime les nuits en passages de 15 minutes ; les durées sont des minutes.</li><li>Données synthétiques.</li></ul></section>
+  <section class="limits"><h2>Limites</h2><ul><li>Mouvements vus au rythme du balayage: une durée est un multiple du passage, et deux mouvements entre deux passages n&#x27;en font qu&#x27;un.</li><li>Pour le premier mouvement d&#x27;une commande, le temps compte depuis sa première observation: une borne basse.</li><li>Le rejeu comprime les nuits en passages de 15 minutes. Les durées sont des minutes.</li><li>Données synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Commandes · ERP</p><h2>Une commande traîne. Dans quel état?</h2><p class="brief-lead">L&#x27;ERP ne garde que le statut du jour.</p><p>Hier En cours, aujourd&#x27;hui Livrée. Rien sur l&#x27;attente entre les deux.</p><p class="brief-note">Commandes fictives · données synthétiques</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Le statut n&#x27;a pas d&#x27;histoire.</h2><ul class="brief-list tone-cyan"><li>L&#x27;export de la nuit remplace celui de la veille.</li><li>Le temps passé dans un état est perdu.</li><li>L&#x27;ERP ne peut pas être modifié.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Rien n&#x27;est modifié</p><h2>lumnik compare chaque nuit à la précédente.</h2><ul class="brief-list tone-green"><li>Chaque commande est suivie par son numéro.</li><li>Chaque changement de statut entre dans un journal, daté.</li><li>Rien n&#x27;est écrit dans l&#x27;ERP.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>key: order_id
+dormancy:
+  after: 25m</code></pre><h2>Une commande suivie, une alerte si elle ne bouge plus.</h2><p>Le scénario complet tient en 3 fichiers de déclaration, 73 lignes.</p></section><section class="brief-slide"><p class="brief-kicker">Le journal</p><h2>7 mouvements, chacun avec son temps d&#x27;attente.</h2><ul class="brief-list tone-yellow"><li>C-01: saisie, puis en cours, puis livrée.</li><li>C-02: annulée.</li><li>Chaque ligne dit le temps passé dans l&#x27;état quitté.</li></ul><p class="brief-note">Valeurs réelles, rejeu du 28 octobre 2026.</p></section><section class="brief-slide"><p class="brief-kicker">Les commandes immobiles</p><h2>4 commandes n&#x27;ont pas bougé. Elles alertent.</h2><ul class="brief-list tone-yellow"><li>C-06, C-08, C-09, C-11.</li><li>Une alerte par immobilité, pas à chaque passage.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le métier décide</p><h2>EN ATT veut dire en cours. Ce n&#x27;est pas un mouvement.</h2><ul class="brief-list tone-green"><li>Le métier déclare EN ATT comme alias.</li><li>C-08 et C-09 sont renommées.</li><li>Leur horloge et leur alerte restent.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue de bout en bout.</h2><p>Trois nuits, une déclaration, le journal: chaque étape est publiée avec sa sortie.</p></section></article>
   <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
 </main>
 <script src="../assets/scenario.js" defer></script>

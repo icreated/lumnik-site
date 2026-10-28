@@ -519,8 +519,8 @@
     },
     {
       "slug": "orders-where-they-sleep",
-      "title": "Où dorment les commandes.",
-      "lede": "L'ERP ne garde que le statut du jour : hier En cours, aujourd'hui Livrée, sans rien sur l'attente entre les deux. lumnik surveille la colonne, inscrit chaque changement dans un journal, et dit combien de temps chaque commande est restée dans chaque état.",
+      "title": "Audit des durées de statut des commandes",
+      "lede": "L'ERP ne garde que le statut du jour: hier En cours, aujourd'hui Livrée. Rien sur l'attente entre les deux. L'ERP ne peut pas être modifié.\n- un Workflow suit chaque commande par sa clé\n- chaque changement de statut entre dans un journal, daté\n- une commande immobile trop longtemps alerte\n- le journal dit combien de temps chaque commande est restée dans chaque état.",
       "tags": {
         "domain": [
           "Distribution",
@@ -532,8 +532,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:5d627d31ca5cfbc41db716211f8c9bdcc47c856b741b9b3add95e12822d43810"
+      "replayedAt": "2026-10-28",
+      "evidenceDigest": "sha256:b480783fa4804a91c2db3b7f6906db0d7983031d81a64149119cbce138306271"
     },
     {
       "slug": "purchasing-ask-abstains",
