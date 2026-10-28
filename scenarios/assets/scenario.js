@@ -19,6 +19,16 @@ links.forEach((a) =>
 );
 showStep(location.hash.replace("#step-", "") || links[0]?.dataset.step);
 
+// The page tabs: the walkthrough first, the brief when the link asks for it (#brief).
+const brief = document.getElementById("brief");
+if (brief) {
+  const onBrief = location.hash === "#brief";
+  brief.hidden = !onBrief;
+  document.getElementById("walkthrough").hidden = onBrief;
+  document.getElementById("brief-tab").setAttribute("aria-selected", String(onBrief));
+  document.getElementById("walkthrough-tab").setAttribute("aria-selected", String(!onBrief));
+}
+
 document.querySelectorAll('[role="tablist"]').forEach((list) => {
   const tabs = [...list.querySelectorAll('[role="tab"]')];
   const select = (tab) => {

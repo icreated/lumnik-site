@@ -173,3 +173,40 @@ th { color: var(--brume); font: 500 12px var(--mono); }
 .try-button { display: inline-block; padding: 10px 18px; border-radius: 999px; background: var(--lumiere);
   color: var(--nuit); font-weight: 600; text-decoration: none; }
 .try-button:hover, .try-button:focus-visible { box-shadow: 0 0 24px var(--lueur); }
+
+/* Page tabs: the walkthrough and the brief. Without the script both panels show, one after the other. */
+.page-tabs { display: flex; gap: 4px; margin-top: 8px; border-bottom: 1px solid var(--givre); }
+.page-tabs button { background: none; border: 0; color: var(--brume); font: 600 15px var(--sans);
+  padding: 12px 14px; border-bottom: 3px solid transparent; cursor: pointer; }
+.page-tabs button[aria-selected="true"] { color: var(--neige); border-bottom-color: var(--lumiere); }
+.page-tabs button:hover { color: var(--neige); }
+
+.brief { max-width: 760px; padding: 8px 0 24px; }
+.brief-slide { padding: 28px 0; border-bottom: 1px solid var(--givre); }
+.brief-slide:last-child { border-bottom: 0; }
+.brief-kicker { color: var(--lumiere); font: 600 13px var(--sans); letter-spacing: 0.08em;
+  text-transform: uppercase; margin: 0 0 8px; }
+.brief h2 { font: 500 clamp(24px, 3.4vw, 32px)/1.2 var(--serif); margin: 0 0 12px; }
+.brief h3 { font: 500 22px/1.3 var(--serif); margin: 16px 0 8px; }
+.brief p { margin: 0 0 12px; font-size: 17px; }
+.brief-lead { color: var(--lumiere); font-size: 19px; }
+.brief-note { color: var(--brume); font-size: 14px; }
+.brief-list { margin: 8px 0 12px; padding-left: 22px; font-size: 17px; }
+.brief-list li { margin: 6px 0; }
+.brief-list.tone-green li::marker { color: #62e39b; }
+.brief-list.tone-yellow li::marker { color: var(--lumiere); }
+.brief-list.tone-cyan li::marker { color: #82ddf5; }
+.brief-code { background: var(--glace); border: 1px solid var(--lumiere); border-radius: var(--radius);
+  padding: 14px 18px; overflow-x: auto; font: 500 15px/1.5 var(--mono); color: var(--lumiere); margin: 8px 0 14px; }
+.brief-quote { margin: 8px 0 14px; padding: 16px 20px; border: 1px solid var(--lumiere); border-radius: var(--radius);
+  background: var(--glace); }
+.brief-quote figcaption { color: var(--lumiere); font: 600 13px var(--sans); text-transform: uppercase;
+  letter-spacing: 0.08em; margin-bottom: 6px; }
+.brief-quote blockquote { margin: 0; font: 400 16px/1.5 var(--mono); }
+.lede-list { color: var(--brume); font-size: 18px; margin: -12px 0 20px; padding-left: 22px; }
+.lede-list li { margin: 2px 0; }
+.lede-list li::marker { color: var(--lumiere); }
+.prose-list { margin: 4px 0 8px; padding-left: 20px; }
+.prose-list li { margin: 2px 0; }
+.prose-list li::marker { color: var(--lumiere); }
+.explain .prose-list { color: var(--brume); margin: -8px 0 16px; }
