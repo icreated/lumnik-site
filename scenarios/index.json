@@ -57,8 +57,8 @@
     },
     {
       "slug": "catalogue-ean-check",
-      "title": "Le code-barres faux repéré à l'import : un script Kotlin fourni par l'opérateur, nommé par le manifeste.",
-      "lede": "Un export catalogue porte des codes EAN-13, dont certains faux. Aucun transformateur intégré ne calcule une clé de contrôle. L'opérateur du hub dépose un script Kotlin dans le répertoire de scripts du hub ; le manifeste le nomme, sans transporter de code. Un brouillon qui ne compile pas est refusé dès la validation, avec sa ligne et sa colonne.",
+      "title": "Le code-barres faux repéré à l'import",
+      "lede": "Un export catalogue porte des codes EAN-13, dont certains faux. Aucun transformateur intégré ne calcule la clé de contrôle.\n- l'opérateur du hub dépose un script Kotlin\n- le manifeste le nomme, sans transporter de code\n- un brouillon qui ne compile pas est refusé à la validation\n- chaque code reçoit un verdict à l'import.",
       "tags": {
         "domain": [
           "Commerce"
@@ -68,8 +68,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:7601cd1c0784a3622900254c1c6bb8e44fd336774836e31c0c3d051ca55d44b0"
+      "replayedAt": "2026-10-28",
+      "evidenceDigest": "sha256:6f73d03fb6625de25984e6b2924f6e7c03f5f5cf21edca050c953442f42b7717"
     },
     {
       "slug": "cfonb-bank-statement",
