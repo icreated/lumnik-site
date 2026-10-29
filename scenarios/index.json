@@ -39,8 +39,8 @@
     },
     {
       "slug": "business-log-orders",
-      "title": "Le log d'hier, lu comme une source : quelles commandes les erreurs ont touchées.",
-      "lede": "Des clients appellent : leur commande « n'est jamais passée ». Le serveur écrit un log texte, un fichier par jour. Le hub le lit ligne par ligne, garde les avertissements et les erreurs, en tire la commande, et la relie au client et au statut qu'il connaît déjà. Un log métier, pas un outil de supervision.",
+      "title": "Les commandes en erreur cachées dans les logs",
+      "lede": "Des clients appellent: leur commande «n'est jamais passée».\n- le serveur écrit un log texte, un fichier par jour;\n- l'ERP connaît les commandes, leur client, leur statut;\n- aucun outil ne les rapproche.\nUn log métier, pas un outil de supervision.",
       "tags": {
         "domain": [
           "Ventes",
