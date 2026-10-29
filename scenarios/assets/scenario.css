@@ -98,7 +98,7 @@ th { color: var(--brume); font: 500 12px var(--mono); }
 .transition .state.now { border-color: var(--lumiere); color: var(--lumiere); }
 .transition .arrow { color: var(--lumiere); }
 .shot { margin: 0 0 20px; }
-.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--givre); border-radius: 10px; }
+.shot img { display: block; width: auto; max-width: 100%; height: auto; border: 1px solid var(--givre); border-radius: 10px; }
 .shot figcaption { color: var(--brume); font-size: 13px; margin-top: 6px; }
 .code + .file { margin-top: 20px; }
 .sources { color: var(--brume); font: 12px var(--mono); margin: 16px 0 0; overflow-wrap: anywhere; }
