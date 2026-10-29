@@ -34,6 +34,8 @@ body { margin: 0; font: 16px/1.6 var(--sans); background: var(--nuit); }
 .hero { padding: 48px 0 24px; max-width: 760px; }
 h1 { font: 500 clamp(32px, 5vw, 52px)/1.1 var(--serif); margin: 0 0 20px; }
 .lede { color: var(--brume); font-size: 18px; margin: 0 0 20px; }
+.goal { font-size: 19px; margin: 0 0 20px; padding: 10px 14px; border-left: 3px solid var(--lumiere); background: rgba(255, 210, 74, 0.06); }
+.goal strong { color: var(--lumiere); font-weight: 600; margin-right: 6px; }
 .tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0; }
 .tag { border: 1px solid var(--givre); border-radius: 999px; padding: 2px 12px; font-size: 13px; }
 .tag.kind { color: var(--lumiere); border-color: rgba(255, 210, 74, 0.4); }
@@ -210,3 +212,8 @@ th { color: var(--brume); font: 500 12px var(--mono); }
 .prose-list li { margin: 2px 0; }
 .prose-list li::marker { color: var(--lumiere); }
 .explain .prose-list { color: var(--brume); margin: -8px 0 16px; }
+
+.source { margin: 0 0 16px; }
+.source figcaption { font: 500 13px var(--mono, monospace); color: var(--lumiere); margin: 0 0 6px; }
+.source pre { overflow-x: auto; white-space: pre; margin: 0; }
+.source-more { color: var(--brume); font-size: 13px; margin: 6px 0 0; }

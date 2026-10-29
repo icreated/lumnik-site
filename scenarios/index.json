@@ -222,8 +222,8 @@
     },
     {
       "slug": "edi-order-cycle",
-      "title": "Où en est chaque ligne de commande : commande, accusé, date confirmée et livraison rapprochés.",
-      "lede": "Un fabricant et son logisticien s'échangent quatre fichiers à plat autour d'une même ligne de commande : la commande, l'accusé, la date de livraison confirmée, le bon de livraison. Le service ADV demande, ligne par ligne, où en est la commande : jamais accusée, confirmée mais pas livrée, livrée en quantité différente.",
+      "title": "Quatre fichiers EDI pour une seule ligne de commande",
+      "lede": "Un fabricant et son logisticien s'échangent quatre fichiers à plat autour d'une ligne de commande: la commande, l'accusé, la date confirmée, le bon de livraison.\nL'ADV demande, ligne par ligne:\n- jamais accusée?\n- confirmée mais pas livrée?\n- livrée dans une autre quantité?",
       "tags": {
         "domain": [
           "Logistique",
@@ -237,8 +237,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-24",
-      "evidenceDigest": "sha256:73eef16fb8a3e583290dc2c1240962786cdbdd4d1cef0e613e61978beef0d34f"
+      "replayedAt": "2026-10-28",
+      "evidenceDigest": "sha256:bcb26e8c4a56118304fb4ef1c9f102830e5fffe59d4096e08922058f43173165"
     },
     {
       "slug": "edifact-orders",
