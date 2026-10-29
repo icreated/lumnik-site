@@ -92,8 +92,8 @@
     },
     {
       "slug": "crm-contacts-reachable",
-      "title": "Les contacts d'un vieux CRM, rendus joignables : noms réparés, un téléphone, un email valide.",
-      "lede": "L'équipe commerciale quitte un vieux CRM. Son export de contacts mélange majuscules, accents cassés par un aller-retour d'encodage, deux colonnes de téléphone dont une souvent vide, et des emails mal saisis. Le manifeste en fait une liste exploitable, et nomme les contacts qu'on ne peut pas joindre.",
+      "title": "Un export CRM aux accents cassés et aux emails faux",
+      "lede": "L'équipe commerciale quitte un vieux CRM. Son export de contacts mélange:\n- majuscules et accents cassés (BÃ©nÃ©dicte);\n- deux colonnes de téléphone, dont une souvent vide;\n- des emails mal saisis.\nLe manifeste en fait une liste exploitable.",
       "tags": {
         "domain": [
           "Ventes",
