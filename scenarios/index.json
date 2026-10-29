@@ -21,8 +21,8 @@
     },
     {
       "slug": "app-inventory-urls",
-      "title": "Un inventaire d'URLs saisies à la main : serveur, port et environnement, sans toucher l'export.",
-      "lede": "La DSI reprend un inventaire applicatif tenu des années dans un tableur. Une colonne porte l'URL de chaque application, tapée à la main : majuscules, espaces collés, ports tantôt là, tantôt absents. Elle veut savoir ce qui tourne sur un serveur et ce qui est encore en recette. Le manifeste découpe l'URL en colonnes, sans code.",
+      "title": "Un inventaire applicatif aux URLs tapées à la main",
+      "lede": "La DSI reprend un inventaire applicatif tenu des années dans un tableur.\nLa colonne URL est tapée à la main:\n- majuscules et minuscules mêlées;\n- espaces collés autour;\n- port tantôt là, tantôt absent.\nLe manifeste découpe l'URL en colonnes, sans code.",
       "tags": {
         "domain": [
           "DSI",
