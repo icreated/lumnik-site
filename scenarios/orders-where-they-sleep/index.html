@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Audit des durées de statut des commandes — lumnik</title>
-<meta name="description" content="L&#x27;ERP ne garde que le statut du jour: hier En cours, aujourd&#x27;hui Livrée. Rien sur l&#x27;attente entre les deux. L&#x27;ERP ne peut pas être modifié. Un Workflow suit chaque commande par sa clé. Chaque changement de statut entre dans un journal, daté. Une commande immobile trop longtemps alerte. Le journal dit combien de temps chaque commande est restée dans chaque état.">
+<meta name="description" content="Savoir combien de temps chaque commande reste dans chaque statut, et lesquelles ne bougent plus. L&#x27;ERP ne garde que le statut du jour: hier En cours, aujourd&#x27;hui Livrée. Rien sur l&#x27;attente entre les deux. L&#x27;ERP ne peut pas être modifié. Un Workflow suit chaque commande par sa clé. Chaque changement de statut entre dans un journal, daté. Une commande immobile trop longtemps alerte. Le journal dit combien de temps chaque commande est restée dans chaque état.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -19,6 +19,7 @@
 <main>
   <section class="hero">
     <h1>Audit des durées de statut des commandes</h1>
+    <p class="goal"><strong>Objectif</strong> Savoir combien de temps chaque commande reste dans chaque statut, et lesquelles ne bougent plus.</p>
     <p class="lede">L&#x27;ERP ne garde que le statut du jour: hier En cours, aujourd&#x27;hui Livrée. Rien sur l&#x27;attente entre les deux. L&#x27;ERP ne peut pas être modifié.</p><ul class="lede-list"><li>un Workflow suit chaque commande par sa clé</li><li>chaque changement de statut entre dans un journal, daté</li><li>une commande immobile trop longtemps alerte</li><li>le journal dit combien de temps chaque commande est restée dans chaque état.</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Distribution</li><li class="tag">Commandes</li><li class="tag kind">Connector</li><li class="tag kind">Workflow</li></ul>
   </section>
@@ -38,8 +39,20 @@
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le statut du jour arrive, sans son histoire.</p></div>
   </aside>
   <div class="views">
-    <div role="tablist" class="view-tabs" aria-label="Charger"><button type="button" role="tab" id="sources-manifest-tab" data-view="manifest" aria-controls="sources-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="sources-commands-tab" data-view="commands" aria-controls="sources-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="sources-result-tab" data-view="result" aria-controls="sources-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-manifest" id="sources-manifest" aria-labelledby="sources-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-orders.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-sleep-orders-d</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [order-desk]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/orders-where-they-sleep/d/orders.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">refresh</span>:</span><span class="line hl">    <span class="key">max_removed</span>: 50%</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="sources-commands" aria-labelledby="sources-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f /var/folders/18/2psk9q652gsflqx5mvzr3nsh0000gn/T//lumnik-sleep.rxK1kw/10-orders.yaml</span>
+    <div role="tablist" class="view-tabs" aria-label="Charger"><button type="button" role="tab" id="sources-source-tab" data-view="source" aria-controls="sources-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="sources-manifest-tab" data-view="manifest" aria-controls="sources-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="sources-commands-tab" data-view="commands" aria-controls="sources-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="sources-result-tab" data-view="result" aria-controls="sources-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="sources-source" aria-labelledby="sources-source-tab" tabindex="0"><figure class="source"><figcaption>orders-night1.csv</figcaption><pre class="code">order_id;customer;agency;status
+C-01;CLI-003;Lyon;Saisie
+C-02;CLI-004;Grenoble;SAI
+C-03;CLI-005;Valence;En cours
+C-04;CLI-006;Lyon;EC
+C-05;CLI-007;Grenoble;encours
+C-06;CLI-008;Valence;EN COURS
+C-07;CLI-009;Lyon;Livrée
+C-08;CLI-010;Grenoble;EN ATT
+C-09;CLI-011;Valence;EN ATT
+C-10;CLI-012;Lyon;Saisie
+C-11;CLI-013;Grenoble;EC
+C-12;CLI-014;Valence;Annulée</pre></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="sources-manifest" aria-labelledby="sources-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/10-orders.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-sleep-orders-d</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [order-desk]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/orders-where-they-sleep/d/orders.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">refresh</span>:</span><span class="line hl">    <span class="key">max_removed</span>: 50%</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="sources-commands" aria-labelledby="sources-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f /var/folders/18/2psk9q652gsflqx5mvzr3nsh0000gn/T//lumnik-sleep.rxK1kw/10-orders.yaml</span>
 <span class="out">Applied connector &quot;scenario-sleep-orders-e&quot; — 1 endpoint</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run scenario-sleep-orders-e</span>
@@ -114,8 +127,20 @@ scenario-order-sleep-e  C-12  ANNULEE   2026-10-28 21:31  </span></code></pre></
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un changement de statut devient un mouvement daté.</p></div>
   </aside>
   <div class="views">
-    <div role="tablist" class="view-tabs" aria-label="Nuit 2"><button type="button" role="tab" id="night2-commands-tab" data-view="commands" aria-controls="night2-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="night2-result-tab" data-view="result" aria-controls="night2-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-commands" id="night2-commands" aria-labelledby="night2-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-sleep-orders-e</span>
+    <div role="tablist" class="view-tabs" aria-label="Nuit 2"><button type="button" role="tab" id="night2-source-tab" data-view="source" aria-controls="night2-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="night2-commands-tab" data-view="commands" aria-controls="night2-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="night2-result-tab" data-view="result" aria-controls="night2-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="night2-source" aria-labelledby="night2-source-tab" tabindex="0"><figure class="source"><figcaption>orders-night2.csv</figcaption><pre class="code">order_id;customer;agency;status
+C-01;CLI-003;Lyon;En cours
+C-02;CLI-004;Grenoble;SAI
+C-03;CLI-005;Valence;Livrée
+C-04;CLI-006;Lyon;LIV
+C-05;CLI-007;Grenoble;encours
+C-06;CLI-008;Valence;EN COURS
+C-07;CLI-009;Lyon;Livrée
+C-08;CLI-010;Grenoble;EN ATT
+C-09;CLI-011;Valence;EN ATT
+C-10;CLI-012;Lyon;EC
+C-11;CLI-013;Grenoble;EC
+C-12;CLI-014;Valence;Annulée</pre></figure></div><div role="tabpanel" class="view-panel view-panel-commands" id="night2-commands" aria-labelledby="night2-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-sleep-orders-e</span>
 <span class="out">run scheduled: 5a999b08-fcfa-4e1b-9868-9870b9cf00d3</span>
 
 <span class="cmd"><span class="prompt">$</span> lm run get 5a999b08-fcfa-4e1b-9868-9870b9cf00d3</span>
@@ -148,8 +173,20 @@ scenario-order-sleep-e  C-10  EN_COURS  2026-10-28 21:46  </span></code></pre></
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le journal garde la suite des états, pas seulement le dernier.</p></div>
   </aside>
   <div class="views">
-    <div role="tablist" class="view-tabs" aria-label="Nuit 3"><button type="button" role="tab" id="night3-commands-tab" data-view="commands" aria-controls="night3-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="night3-result-tab" data-view="result" aria-controls="night3-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-commands" id="night3-commands" aria-labelledby="night3-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-sleep-orders-e</span>
+    <div role="tablist" class="view-tabs" aria-label="Nuit 3"><button type="button" role="tab" id="night3-source-tab" data-view="source" aria-controls="night3-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="night3-commands-tab" data-view="commands" aria-controls="night3-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="night3-result-tab" data-view="result" aria-controls="night3-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="night3-source" aria-labelledby="night3-source-tab" tabindex="0"><figure class="source"><figcaption>orders-night3.csv</figcaption><pre class="code">order_id;customer;agency;status
+C-01;CLI-003;Lyon;Livrée
+C-02;CLI-004;Grenoble;ANNUL
+C-03;CLI-005;Valence;Livrée
+C-04;CLI-006;Lyon;LIV
+C-05;CLI-007;Grenoble;Livré
+C-06;CLI-008;Valence;EN COURS
+C-07;CLI-009;Lyon;Livrée
+C-08;CLI-010;Grenoble;EN ATT
+C-09;CLI-011;Valence;EN ATT
+C-10;CLI-012;Lyon;EC
+C-11;CLI-013;Grenoble;EC
+C-12;CLI-014;Valence;Annulée</pre></figure></div><div role="tabpanel" class="view-panel view-panel-commands" id="night3-commands" aria-labelledby="night3-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-sleep-orders-e</span>
 <span class="out">run scheduled: 60d66e4c-3b3f-4c09-a535-127929c3171c</span>
 
 <span class="cmd"><span class="prompt">$</span> lm run get 60d66e4c-3b3f-4c09-a535-127929c3171c</span>

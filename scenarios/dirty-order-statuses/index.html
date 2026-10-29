@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Un statut de commande, quatorze orthographes — lumnik</title>
-<meta name="description" content="Quinze ans de saisie à la main ont laissé EC, Livré, LIV, ANNUL… dans l&#x27;export des commandes. lumnik ne touche pas l&#x27;ERP: Un Workflow déclare quatre statuts et leurs orthographes. Chaque import revérifie la colonne.">
+<meta name="description" content="Compter les commandes par statut, quelle que soit l&#x27;orthographe, et être prévenu d&#x27;une orthographe nouvelle. Quinze ans de saisie à la main ont laissé EC, Livré, LIV, ANNUL… dans l&#x27;export des commandes. lumnik ne touche pas l&#x27;ERP: Un Workflow déclare quatre statuts et leurs orthographes. Chaque import revérifie la colonne.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -19,6 +19,7 @@
 <main>
   <section class="hero">
     <h1>Un statut de commande, quatorze orthographes</h1>
+    <p class="goal"><strong>Objectif</strong> Compter les commandes par statut, quelle que soit l&#x27;orthographe, et être prévenu d&#x27;une orthographe nouvelle.</p>
     <p class="lede">Quinze ans de saisie à la main ont laissé EC, Livré, LIV, ANNUL… dans l&#x27;export des commandes. lumnik ne touche pas l&#x27;ERP:</p><ul class="lede-list"><li>un Workflow déclare quatre statuts et leurs orthographes</li><li>chaque import revérifie la colonne.</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Distribution</li><li class="tag">Commandes</li><li class="tag kind">Connector</li><li class="tag kind">Workflow</li></ul>
   </section>
@@ -38,8 +39,27 @@
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>La colonne &quot;status&quot; arrive brute, avec toutes ses orthographes historiques.</p></div>
   </aside>
   <div class="views">
-    <div role="tablist" class="view-tabs" aria-label="Charger"><button type="button" role="tab" id="sources-manifest-tab" data-view="manifest" aria-controls="sources-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="sources-commands-tab" data-view="commands" aria-controls="sources-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="sources-result-tab" data-view="result" aria-controls="sources-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-manifest" id="sources-manifest" aria-labelledby="sources-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-orders.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-orders-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [order-desk]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/dirty-order-statuses/a/orders.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="sources-commands" aria-labelledby="sources-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-orders.yaml</span>
+    <div role="tablist" class="view-tabs" aria-label="Charger"><button type="button" role="tab" id="sources-source-tab" data-view="source" aria-controls="sources-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="sources-manifest-tab" data-view="manifest" aria-controls="sources-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="sources-commands-tab" data-view="commands" aria-controls="sources-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="sources-result-tab" data-view="result" aria-controls="sources-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="sources-source" aria-labelledby="sources-source-tab" tabindex="0"><figure class="source"><figcaption>orders-night1.csv</figcaption><pre class="code">order_id;customer;agency;ordered_on;status
+C-1001;CLI-001;Lyon;01/09/2026;Saisie
+C-1002;CLI-008;Grenoble;02/09/2026;EC
+C-1003;CLI-015;Valence;03/09/2026;Annulée
+C-1004;CLI-022;Chambéry;04/09/2026;EN COURS 
+C-1005;CLI-029;Lyon;05/09/2026;Livré
+C-1006;CLI-005;Grenoble;06/09/2026;SAI
+C-1007;CLI-012;Valence;07/09/2026;Livrée
+C-1008;CLI-019;Chambéry;08/09/2026;
+C-1009;CLI-026;Lyon;09/09/2026;encours
+C-1010;CLI-002;Grenoble;10/09/2026;Annulée
+C-1011;CLI-009;Valence;11/09/2026;En cours
+C-1012;CLI-016;Chambéry;12/09/2026;LIVREE
+C-1013;CLI-023;Lyon;13/09/2026;SAI
+C-1014;CLI-030;Grenoble;14/09/2026;Livrée
+C-1015;CLI-006;Valence;15/09/2026;EN ATT
+C-1016;CLI-013;Chambéry;16/09/2026;encours
+C-1017;CLI-020;Lyon;17/09/2026;LIV
+C-1018;CLI-027;Grenoble;18/09/2026;En cours
+C-1019;CLI-003;Valence;19/09/2026;LIVREE</pre><p class="source-more">… 21 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="sources-manifest" aria-labelledby="sources-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/10-orders.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-orders-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [order-desk]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/dirty-order-statuses/a/orders.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="sources-commands" aria-labelledby="sources-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-orders.yaml</span>
 <span class="out">Applied connector &quot;scenario-orders-a&quot; — 1 endpoint</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run scenario-orders-a</span>
@@ -173,8 +193,27 @@
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une dérive de la donnée se voit au run qui l&#x27;apporte.</p></div>
   </aside>
   <div class="views">
-    <div role="tablist" class="view-tabs" aria-label="Alerter"><button type="button" role="tab" id="nextnight-commands-tab" data-view="commands" aria-controls="nextnight-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="nextnight-result-tab" data-view="result" aria-controls="nextnight-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-commands" id="nextnight-commands" aria-labelledby="nextnight-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-orders-a</span>
+    <div role="tablist" class="view-tabs" aria-label="Alerter"><button type="button" role="tab" id="nextnight-source-tab" data-view="source" aria-controls="nextnight-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="nextnight-commands-tab" data-view="commands" aria-controls="nextnight-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="nextnight-result-tab" data-view="result" aria-controls="nextnight-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="nextnight-source" aria-labelledby="nextnight-source-tab" tabindex="0"><figure class="source"><figcaption>orders-night2.csv</figcaption><pre class="code">order_id;customer;agency;ordered_on;status
+C-1001;CLI-001;Lyon;01/09/2026;En cours
+C-1002;CLI-008;Grenoble;02/09/2026;Livrée
+C-1003;CLI-015;Valence;03/09/2026;Annulée
+C-1004;CLI-022;Chambéry;04/09/2026;EN COURS 
+C-1005;CLI-029;Lyon;05/09/2026;Livré
+C-1006;CLI-005;Grenoble;06/09/2026;En-cours
+C-1007;CLI-012;Valence;07/09/2026;Livrée
+C-1008;CLI-019;Chambéry;08/09/2026;
+C-1009;CLI-026;Lyon;09/09/2026;En-cours
+C-1010;CLI-002;Grenoble;10/09/2026;Annulée
+C-1011;CLI-009;Valence;11/09/2026;Livrée
+C-1012;CLI-016;Chambéry;12/09/2026;LIVREE
+C-1013;CLI-023;Lyon;13/09/2026;SAI
+C-1014;CLI-030;Grenoble;14/09/2026;Livrée
+C-1015;CLI-006;Valence;15/09/2026;EN ATT
+C-1016;CLI-013;Chambéry;16/09/2026;encours
+C-1017;CLI-020;Lyon;17/09/2026;LIV
+C-1018;CLI-027;Grenoble;18/09/2026;En cours
+C-1019;CLI-003;Valence;19/09/2026;LIVREE</pre><p class="source-more">… 21 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-commands" id="nextnight-commands" aria-labelledby="nextnight-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-orders-a</span>
 <span class="out">run scheduled: b9464616-a864-4c83-96da-ec6bd61b98cc</span>
 
 <span class="cmd"><span class="prompt">$</span> lm run get b9464616-a864-4c83-96da-ec6bd61b98cc</span>
@@ -192,8 +231,27 @@ b9464616  scenario-orders-a  default   Completed  40  40   0        0           
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une valeur est signalée une fois, pas à chaque nuit.</p></div>
   </aside>
   <div class="views">
-    <div role="tablist" class="view-tabs" aria-label="Se taire"><button type="button" role="tab" id="thirdnight-commands-tab" data-view="commands" aria-controls="thirdnight-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="thirdnight-result-tab" data-view="result" aria-controls="thirdnight-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-commands" id="thirdnight-commands" aria-labelledby="thirdnight-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-orders-a</span>
+    <div role="tablist" class="view-tabs" aria-label="Se taire"><button type="button" role="tab" id="thirdnight-source-tab" data-view="source" aria-controls="thirdnight-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="thirdnight-commands-tab" data-view="commands" aria-controls="thirdnight-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="thirdnight-result-tab" data-view="result" aria-controls="thirdnight-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="thirdnight-source" aria-labelledby="thirdnight-source-tab" tabindex="0"><figure class="source"><figcaption>orders-night3.csv</figcaption><pre class="code">order_id;customer;agency;ordered_on;status
+C-1001;CLI-001;Lyon;01/09/2026;En cours
+C-1002;CLI-008;Grenoble;02/09/2026;Livrée
+C-1003;CLI-015;Valence;03/09/2026;Annulée
+C-1004;CLI-022;Chambéry;04/09/2026;EN COURS 
+C-1005;CLI-029;Lyon;05/09/2026;Livré
+C-1006;CLI-005;Grenoble;06/09/2026;En-cours
+C-1007;CLI-012;Valence;07/09/2026;Livrée
+C-1008;CLI-019;Chambéry;08/09/2026;
+C-1009;CLI-026;Lyon;09/09/2026;En-cours
+C-1010;CLI-002;Grenoble;10/09/2026;Annulée
+C-1011;CLI-009;Valence;11/09/2026;Livrée
+C-1012;CLI-016;Chambéry;12/09/2026;LIVREE
+C-1013;CLI-023;Lyon;13/09/2026;SAI
+C-1014;CLI-030;Grenoble;14/09/2026;Livrée
+C-1015;CLI-006;Valence;15/09/2026;EN ATT
+C-1016;CLI-013;Chambéry;16/09/2026;encours
+C-1017;CLI-020;Lyon;17/09/2026;LIV
+C-1018;CLI-027;Grenoble;18/09/2026;En cours
+C-1019;CLI-003;Valence;19/09/2026;LIVREE</pre><p class="source-more">… 22 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-commands" id="thirdnight-commands" aria-labelledby="thirdnight-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-orders-a</span>
 <span class="out">run scheduled: 17383880-4db8-4bca-8d5e-e3cc86c772aa</span>
 
 <span class="cmd"><span class="prompt">$</span> lm run get 17383880-4db8-4bca-8d5e-e3cc86c772aa</span>
