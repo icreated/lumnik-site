@@ -150,7 +150,7 @@
     },
     {
       "slug": "devops-ai-pod-triage",
-      "title": "Le cluster brûle, k9s dit Running: quel pod regarder d'abord?",
+      "title": "k8s brûle, k9s dit Running: quel pod regarder d'abord?",
       "lede": "Un vrai cluster, cinq équipes, cinq pods cassés par Kubernetes lui-même:\n- l'API des pods: état, redémarrages, raison de la dernière mort;\n- metrics.k8s.io: ce que chaque pod consomme maintenant;\n- les events Warning.\nUne règle Kotlin de l'astreinte fixe la priorité; le modèle traduit la question, il ne décide rien.",
       "tags": {
         "domain": [
