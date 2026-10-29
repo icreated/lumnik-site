@@ -132,8 +132,8 @@
     },
     {
       "slug": "delivery-date-two-warehouses",
-      "title": "Une règle de date de livraison, deux entrepôts : chacun son délai, ses fériés, ses jours fermés.",
-      "lede": "La date promise au client est la date de commande plus un nombre de jours ouvrés, sans les week-ends, les jours fériés ni les jours où l'entrepôt est fermé. L'opérateur écrit la règle une fois, dans un script Kotlin. Chaque entrepôt la règle à sa façon : Lyon en France, 3 jours, deux jours d'inventaire ; Liège en Belgique, 5 jours.",
+      "title": "Une date de livraison que chaque entrepôt calcule autrement",
+      "lede": "La date promise = la date de commande plus N jours ouvrés. Mais chaque entrepôt compte à sa façon:\n- Lyon, en France: 3 jours, deux jours d'inventaire;\n- Liège, en Belgique: 5 jours, d'autres fériés.\nL'opérateur écrit la règle une fois; l'intégrateur la règle par entrepôt.",
       "tags": {
         "domain": [
           "Logistique",
