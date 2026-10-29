@@ -110,8 +110,8 @@
     },
     {
       "slug": "deal-in-the-pocket",
-      "title": "L'affaire avance pendant le dîner.",
-      "lede": "Cinq exports d'entreprise et un catalogue, quatre entités, trois vues, un Process. Le CRM passe l'affaire à confirmer ; la décision arrive dans la PWA, « Traiter » part en webhook et l'email client suit.",
+      "title": "L'affaire à 240 000 € qui se confirme pendant le dîner",
+      "lede": "Un technico-commercial dîne avec la directrice de Lumilait. Il doit répondre sans ouvrir quatre outils:\n- la ligne d'emballage: ERP et SAV ne disent pas la même chose;\n- les pièces du retrofit: en stock ou pas;\n- le catalogue: 360 pièces à chercher.\nPendant ce temps, le CRM passe l'affaire à confirmer.",
       "tags": {
         "domain": [
           "Industrie",
@@ -127,8 +127,8 @@
         ]
       },
       "edition": "pro",
-      "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:0b9b8301994e5425be84ff8b380d79290704bb12ee8d2f3c074b4facf7d929b5"
+      "replayedAt": "2026-10-29",
+      "evidenceDigest": "sha256:65ea9cbf324f2bd40f57749950607cf94d4e7c39e26e30b34a31c04f93da2e99"
     },
     {
       "slug": "delivery-date-two-warehouses",
