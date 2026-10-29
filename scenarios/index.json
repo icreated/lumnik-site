@@ -73,8 +73,8 @@
     },
     {
       "slug": "cfonb-bank-statement",
-      "title": "Un relevé bancaire CFONB 120 : chaque mouvement signé, dans son relevé, avec ses compléments.",
-      "lede": "Les banques françaises envoient encore leurs relevés au format CFONB 120 : des enregistrements de 120 caractères, sans séparateur. 01 ouvre le relevé avec l'ancien solde, 04 est un mouvement, 05 complète le mouvement qui précède (payeur, référence de facture), 07 clôt avec le nouveau solde. Le dernier caractère du montant porte à la fois son dernier chiffre et son signe. La trésorerie veut chaque mouvement signé, dans son relevé, avec ses compléments.",
+      "title": "Un relevé CFONB où le signe se cache dans le dernier chiffre",
+      "lede": "Les banques envoient encore leurs relevés au format CFONB 120.\n- 120 caractères par enregistrement, sans séparateur;\n- 01 ouvre le relevé, 04 est un mouvement, 05 le complète, 07 clôt;\n- le dernier caractère du montant porte son dernier chiffre et son signe.\nLa trésorerie veut chaque mouvement signé, avec ses compléments.",
       "tags": {
         "domain": [
           "Trésorerie",
