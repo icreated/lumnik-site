@@ -3,8 +3,8 @@
   "scenarios": [
     {
       "slug": "aged-balance-print",
-      "title": "Une balance âgée imprimée : chaque facture avec son client, d'une page à l'autre.",
-      "lede": "La comptabilité imprime sa balance âgée dans un fichier spool : un en-tête par page, puis pour chaque client une ligne avec son compte et son nom, ses factures ouvertes en dessous, et un total. Les factures d'un client peuvent passer sur la page suivante. Le recouvrement veut chaque facture avec son client.",
+      "title": "La balance âgée prisonnière d'un fichier d'impression",
+      "lede": "La compta imprime sa balance âgée dans un fichier spool.\n- un en-tête par page;\n- un client, ses factures en dessous, un total;\n- les factures d'un client continuent parfois page suivante.\nLe recouvrement veut chaque facture avec son client.",
       "tags": {
         "domain": [
           "Recouvrement",
