@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L&#x27;appli Spring derrière un proxy: on nomme le framework, la clé reste le SKU. — lumnik</title>
+<meta name="description" content="Lire tout le stock d&#x27;une application Spring Data REST maison, page par page, et garder chaque produit sous son SKU, quel que soit l&#x27;hôte par lequel on l&#x27;atteint. Un ancien prestataire a laissé une application de stock en Spring Data REST, derrière nginx. lumnik la lit avec le preset spring-hateoas: Ses liens pointent vers son nom interne: le run refuse de les suivre et le dit; Une propriété côté application, et les 63 pages passent; Chaque produit est rangé sous son SKU, lu dans son lien: la nuit suivante, aucune copie.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/rest-spring-behind-proxy/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/rest-spring-behind-proxy/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>L&#x27;appli Spring derrière un proxy: on nomme le framework, la clé reste le SKU.</h1>
+    <p class="goal"><strong>Objectif</strong> Lire tout le stock d&#x27;une application Spring Data REST maison, page par page, et garder chaque produit sous son SKU, quel que soit l&#x27;hôte par lequel on l&#x27;atteint.</p>
+    <p class="lede">Un ancien prestataire a laissé une application de stock en Spring Data REST, derrière nginx. lumnik la lit avec le preset spring-hateoas:</p><ul class="lede-list"><li>ses liens pointent vers son nom interne: le run refuse de les suivre et le dit;</li><li>une propriété côté application, et les 63 pages passent;</li><li>chaque produit est rangé sous son SKU, lu dans son lien: la nuit suivante, aucune copie.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Intégration</li><li class="tag">Stock</li><li class="tag">Spring</li><li class="tag kind">Connector</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="L&#x27;appli Spring derrière un proxy: on nomme le framework, la clé reste le SKU.">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · Déployer</span><span class="sub">L&#x27;application</span></a><a href="#step-connect" data-step="connect"><span class="num">2 · Brancher</span><span class="sub">Le preset</span></a><a href="#step-behind-proxy" data-step="behind-proxy"><span class="num">3 · Refuser</span><span class="sub">Rouge</span></a><a href="#step-fixed" data-step="fixed"><span class="num">4 · Corriger</span><span class="sub">Vert</span></a><a href="#step-next-night" data-step="next-night"><span class="num">5 · Relire</span><span class="sub">Le lendemain</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">Spring Data REST derrière nginx</h2>
+      <p>Une vraie application Spring Boot 3.4: un dépôt de produits exposé par Spring Data REST, 1 250 produits, nginx devant.</p><ul class="prose-list"><li>_embedded.products: les produits de la page</li><li>_links.next.href: la page suivante</li><li>_links.self.href: le seul endroit où figure le SKU</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Pourquoi le lien</strong><p>Spring Data REST ne met pas l&#x27;identifiant dans le corps: il le met dans le lien du produit.</p></div></li><li><span class="n">2</span><div><strong>Le piège</strong><p>Sans réglage, Spring fabrique ses liens avec l&#x27;hôte que nginx appelle: inventory:8080.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Les liens renvoyés nomment l&#x27;hôte interne.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déployer"><button type="button" role="tab" id="lab-manifest-tab" data-view="manifest" aria-controls="lab-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="lab-manifest" aria-labelledby="lab-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/lab-docker-compose.yml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># The stock application of an earlier provider: Spring Data REST behind nginx.</span></span><span class="line"><span class="key">name</span>: lumnik-spring-inventory</span><span class="line"><span class="key">services</span>:</span><span class="line">  <span class="key">inventory</span>:</span><span class="line">    <span class="key">build</span>: ../run/inventory-app</span><span class="line">    <span class="key">environment</span>:</span><span class="line">      <span class="comment"># none: Spring builds its links from the host nginx called, inventory:8080.</span></span><span class="line hl">      <span class="comment"># framework: it reads X-Forwarded-Host, the host the caller used — the one-line fix.</span></span><span class="line hl">      <span class="key">SERVER_FORWARD_HEADERS_STRATEGY</span>: ${FORWARD_HEADERS:-none}</span><span class="line">  <span class="key">proxy</span>:</span><span class="line">    <span class="key">image</span>: nginx:1.27-alpine</span><span class="line">    <span class="key">ports</span>: [<span class="str">&quot;${INVENTORY_PORT:-9230}:80&quot;</span>]</span><span class="line">    <span class="key">volumes</span>: [<span class="str">&quot;./lab-nginx.conf:/etc/nginx/conf.d/default.conf:ro&quot;</span>]</span><span class="line">    <span class="key">depends_on</span>: [inventory]</span></code></pre><div class="file"><span class="filename">manifests/lab-nginx.conf</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># The in-house reverse proxy: it forwards the caller&#x27;s host, as most do.</span></span><span class="line">server {</span><span class="line">  listen 80;</span><span class="line">  location / {</span><span class="line hl">    proxy_pass http://inventory:8080;</span><span class="line hl">    proxy_set_header X-Forwarded-Host $http_host;</span><span class="line">    proxy_set_header X-Forwarded-Proto $scheme;</span><span class="line">  }</span><span class="line">}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0" hidden><dl class="facts"><dt>_links.next.href</dt><dd>http://inventory:8080/products?page=1&amp;size=2</dd><dt>_links.self.href</dt><dd>http://inventory:8080/products/SKU-00001</dd><dt>page.totalElements</dt><dd>1250</dd></dl><p class="sources">preuves: replay.log, page-behind-proxy.json, page-fixed.json, rows-fixed.txt, count-next-night.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-connect" aria-labelledby="connect-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="connect-title">On nomme le framework</h2>
+      <p>Un connecteur rest-generic.</p><ul class="prose-list"><li>pagination: spring-hateoas: suit _links.next.href, lit _embedded.products</li><li>total_path: le total publié par l&#x27;application, témoin du compte</li><li>unique_key: le dernier segment du lien du produit, son SKU</li><li>promote: le même SKU en colonne</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Clé stable</strong><p>La clé ne garde pas l&#x27;hôte: un passage en https ou un autre nom ne la change pas.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le connecteur est accepté.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Brancher"><button type="button" role="tab" id="connect-manifest-tab" data-view="manifest" aria-controls="connect-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="connect-commands-tab" data-view="commands" aria-controls="connect-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="connect-result-tab" data-view="result" aria-controls="connect-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="connect-manifest" aria-labelledby="connect-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-inventory.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-inventory-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [inventory]</span><span class="line"></span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:9230</span><span class="line"></span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: products</span><span class="line">      <span class="key">path</span>: /products</span><span class="line">      <span class="key">method</span>: GET</span><span class="line hl">      <span class="key">pagination</span>: { kind: spring-hateoas, items: products, total_path: $.page.totalElements }</span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_inventory_a</span><span class="line hl">        <span class="key">unique_key</span>: { path: $._links.self.href, transform: last_path_segment }</span><span class="line">        <span class="key">promote</span>:</span><span class="line hl">          - { name: sku, path: $._links.self.href, transform: last_path_segment, type: text }</span><span class="line">          - { name: name, path: $.name, type: text }</span><span class="line">          - { name: warehouse, path: $.warehouse, type: text }</span><span class="line">          - { name: stock, path: $.stock, type: integer }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="connect-commands" aria-labelledby="connect-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-inventory.yaml</span>
+<span class="out">Applied connector &quot;scenario-inventory-a&quot; — 1 endpoint</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="connect-result" aria-labelledby="connect-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-inventory-a</dt><dd>1 endpoint · spring-hateoas</dd></dl><p class="sources">preuves: replay.log, page-behind-proxy.json, page-fixed.json, rows-fixed.txt, count-next-night.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-behind-proxy" aria-labelledby="behind-proxy-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="behind-proxy-title">Page 2 vers l&#x27;hôte interne: le run refuse</h2>
+      <p>Le lien suivant pointe vers http://inventory:8080. lumnik ne suit un lien que vers l&#x27;hôte du connecteur: le run échoue et nomme l&#x27;hôte.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Pourquoi refuser</strong><p>Un lien venu de la réponse ne peut pas envoyer le hub vers un autre serveur.</p></div></li><li><span class="n">2</span><div><strong>IN 0</strong><p>Aucune liste partielle n&#x27;est annoncée verte.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un lien qui sort de l&#x27;hôte arrête le run, avec sa raison.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Refuser"><button type="button" role="tab" id="behind-proxy-commands-tab" data-view="commands" aria-controls="behind-proxy-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="behind-proxy-result-tab" data-view="result" aria-controls="behind-proxy-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="behind-proxy-commands" aria-labelledby="behind-proxy-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-inventory-a</span>
+<span class="out">run scheduled: f309dd90-1100-48b5-80ba-8fd11a8d9c33</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get f309dd90-1100-48b5-80ba-8fd11a8d9c33</span>
+<span class="out">ID        CONNECTOR             ENDPOINT  STATUS  IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+f309dd90  scenario-inventory-a  products  Failed  0   0    0        0             2026-10-30 13:51  2026-10-30 13:51  yes</span>
+<span class="note">✖ run failed: Refusing to follow pagination URL &#x27;http://inventory:8080/products&#x27;: host &#x27;inventory&#x27; differs from the connector&#x27;s host &#x27;host.docker.internal&#x27;</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="behind-proxy-result" aria-labelledby="behind-proxy-result-tab" tabindex="0" hidden><dl class="facts"><dt>products</dt><dd>Failed · IN 0 · OUT 0</dd><dt>refusal</dt><dd>Refusing to follow pagination URL &#x27;http://inventory:8080/products&#x27;: host &#x27;inventory&#x27; differs from the connector&#x27;s host &#x27;host.docker.internal&#x27;</dd></dl><p class="sources">preuves: replay.log, page-behind-proxy.json, page-fixed.json, rows-fixed.txt, count-next-night.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-fixed" aria-labelledby="fixed-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="fixed-title">Une propriété, et les 63 pages passent</h2>
+      <p>Côté application: server.forward-headers-strategy=framework. Spring lit X-Forwarded-Host et fabrique ses liens avec l&#x27;hôte appelé. Le run lit 1 250 produits; le total déclaré concorde.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Clé</strong><p>external_id vaut SKU-00001, pas l&#x27;URL du produit.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le preset lit toute l&#x27;application, chaque produit sous son SKU.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Corriger"><button type="button" role="tab" id="fixed-commands-tab" data-view="commands" aria-controls="fixed-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="fixed-result-tab" data-view="result" aria-controls="fixed-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="fixed-commands" aria-labelledby="fixed-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-inventory-a</span>
+<span class="out">run scheduled: 2506d359-e048-4183-9d39-baa67e3f95bb</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 2506d359-e048-4183-9d39-baa67e3f95bb</span>
+<span class="out">ID        CONNECTOR             ENDPOINT  STATUS     IN    OUT   SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+2506d359  scenario-inventory-a  products  Completed  1250  1250  0        0             2026-10-30 13:51  2026-10-30 13:51  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="fixed-result" aria-labelledby="fixed-result-tab" tabindex="0" hidden><dl class="facts"><dt>_links.next.href</dt><dd>http://host.docker.internal:9230/products?page=1&amp;size=2</dd><dt>_links.self.href</dt><dd>http://host.docker.internal:9230/products/SKU-00001</dd><dt>products</dt><dd>Completed · IN 1250 · OUT 1250</dd><dt>SKU-00001</dt><dd>SKU-00001 · Écrou 00001 · LILLE · 37</dd><dt>SKU-00002</dt><dd>SKU-00002 · Rondelle 00002 · NANTES · 74</dd><dt>SKU-00003</dt><dd>SKU-00003 · Joint 00003 · LYON · 111</dd></dl><p class="sources">preuves: replay.log, page-behind-proxy.json, page-fixed.json, rows-fixed.txt, count-next-night.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-next-night" aria-labelledby="next-night-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="next-night-title">Mêmes clés, aucune copie</h2>
+      <p>Le run de la nuit suivante relit les 1 250 produits. Chaque produit retrouve sa ligne.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Compte</strong><p>1 250 lignes, 1 250 clés.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La clé tient d&#x27;une nuit à l&#x27;autre.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Relire"><button type="button" role="tab" id="next-night-commands-tab" data-view="commands" aria-controls="next-night-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="next-night-result-tab" data-view="result" aria-controls="next-night-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="next-night-commands" aria-labelledby="next-night-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-inventory-a</span>
+<span class="out">run scheduled: 5b925538-5a8c-4f67-9478-0bed9ecae001</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 5b925538-5a8c-4f67-9478-0bed9ecae001</span>
+<span class="out">ID        CONNECTOR             ENDPOINT  STATUS     IN    OUT   SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+5b925538  scenario-inventory-a  products  Completed  1250  1250  0        0             2026-10-30 13:51  2026-10-30 13:51  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="next-night-result" aria-labelledby="next-night-result-tab" tabindex="0" hidden><dl class="facts"><dt>products</dt><dd>Completed · IN 1250 · OUT 1250</dd><dt>table</dt><dd>1250 rows, 1250 keys</dd></dl><p class="sources">preuves: replay.log, page-behind-proxy.json, page-fixed.json, rows-fixed.txt, count-next-night.txt · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>La clé est le dernier segment du lien: le lien doit finir par l&#x27;identifiant, comme Spring Data REST le fait par défaut.</li><li>Un produit dont le lien n&#x27;a pas de segment fait échouer le run, en nommant la clé.</li><li>Le refus de l&#x27;hôte interne demande une correction côté application ou proxy: lumnik ne réécrit pas les liens.</li><li>Application Spring de démonstration, données synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Intégration · application maison</p><h2>Une appli de stock en Spring, laissée par un ancien prestataire.</h2><p class="brief-lead">Il faut lire tout le stock, chaque nuit.</p><p class="brief-note">Application et données de démonstration</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>L&#x27;API ne donne pas l&#x27;identifiant.</h2><ul class="brief-list tone-cyan"><li>Le SKU n&#x27;est que dans le lien de chaque produit.</li><li>Les liens pointent vers le nom interne du serveur.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>Le code de l&#x27;application reste tel quel.</h2><ul class="brief-list tone-green"><li>Une propriété de déploiement: faire confiance au proxy.</li><li>Aucun champ ajouté à l&#x27;API.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>pagination: { kind: spring-hateoas, items: products }
+unique_key: { path: $._links.self.href,
+              transform: last_path_segment }</code></pre><h2>On nomme le framework, on dit où est la clé.</h2><p>Un connecteur de 24 lignes.</p></section><section class="brief-slide"><p class="brief-kicker">Le rouge</p><h2>Page 2 vers inventory:8080: le run refuse.</h2><ul class="brief-list tone-yellow"><li>Il nomme l&#x27;hôte interne.</li><li>Aucune liste partielle annoncée verte.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le vert</p><h2>1 250 produits, 63 pages, rangés sous leur SKU.</h2><ul class="brief-list tone-green"><li>La nuit suivante: 1 250 lignes, 1 250 clés.</li><li>Un passage en https ne changerait aucune clé.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>Le lien doit finir par l&#x27;identifiant.</h2><ul class="brief-list tone-cyan"><li>C&#x27;est le cas par défaut avec Spring Data REST.</li><li>Un lien sans segment fait échouer le run, en nommant la clé.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Une vraie application Spring Boot, un vrai nginx, chaque étape publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
