@@ -757,6 +757,24 @@
       "evidenceDigest": "sha256:ff802f25c861e69da8c41f507bf5246c63d92698f1131ffd246efd4607b3680f"
     },
     {
+      "slug": "rest-wordpress-total-header",
+      "title": "WordPress annonce 46 articles et en sert 31: le run échoue au lieu de passer vert.",
+      "lede": "L'API REST de WordPress pagine par l'en-tête Link et publie son compte dans X-WP-Total. lumnik suit l'un et vérifie l'autre:\n- 46 articles annoncés, 46 lus: le run passe;\n- un plugin « réservé aux membres » cache 15 articles, le compte reste 46: le run échoue et donne les deux chiffres;\n- lu en tant que membre, avec un mot de passe d'application, les 46 articles reviennent.",
+      "tags": {
+        "domain": [
+          "Site web",
+          "WordPress",
+          "Contenu"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-30",
+      "evidenceDigest": "sha256:526add1147e6e74509319034349a5f2de316c49349a6b9822524b72bc74580fc"
+    },
+    {
       "slug": "saas-oauth2-orders",
       "title": "Le SaaS derrière OAuth2 : des jetons de 30 secondes, un run de 40, aucune page perdue.",
       "lede": "L'ERP ne bouge plus, mais une partie des commandes arrive par un SaaS récent. Ce SaaS ne prend plus de jeton fixe : il donne un identifiant client et un secret, et veut un jeton de courte durée à chaque appel. lumnik demande le jeton, le renouvelle avant qu'il expire, encaisse une rotation de clés en plein run, et dit pourquoi quand le secret est révoqué, sans jamais le montrer.",
