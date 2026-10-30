@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Un Page de Spring: quand Spring change son JSON, une ligne suit. — lumnik</title>
+<meta name="description" content="Lire tout le catalogue d&#x27;une app Spring Boot, page après page, avant et après que l&#x27;équipe change la sérialisation de ses Page. Un contrôleur Spring renvoie le Page du repository. lumnik le lit avec un preset: Pagination: { kind: spring-page }: 130 articles en 3 requêtes; L&#x27;équipe suit l&#x27;avertissement de Spring et passe en VIA_DTO: le total passe sous page, le même manifeste lit tout, avec une page vide de trop; Une ligne, spring-paged-model: de nouveau 3 requêtes.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/rest-spring-page/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/rest-spring-page/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Un Page de Spring: quand Spring change son JSON, une ligne suit.</h1>
+    <p class="goal"><strong>Objectif</strong> Lire tout le catalogue d&#x27;une app Spring Boot, page après page, avant et après que l&#x27;équipe change la sérialisation de ses Page.</p>
+    <p class="lede">Un contrôleur Spring renvoie le Page du repository. lumnik le lit avec un preset:</p><ul class="lede-list"><li>pagination: { kind: spring-page }: 130 articles en 3 requêtes;</li><li>l&#x27;équipe suit l&#x27;avertissement de Spring et passe en VIA_DTO: le total passe sous page, le même manifeste lit tout, avec une page vide de trop;</li><li>une ligne, spring-paged-model: de nouveau 3 requêtes.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Catalogue</li><li class="tag">Spring Boot</li><li class="tag kind">Connector</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="Un Page de Spring: quand Spring change son JSON, une ligne suit.">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · Déployer</span><span class="sub">L&#x27;app</span></a><a href="#step-connect" data-step="connect"><span class="num">2 · Brancher</span><span class="sub">Le preset</span></a><a href="#step-via-dto" data-step="via-dto"><span class="num">3 · Changer</span><span class="sub">VIA_DTO</span></a><a href="#step-fixed" data-step="fixed"><span class="num">4 · Corriger</span><span class="sub">Le bon preset</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">Un contrôleur Spring, 130 articles</h2>
+      <p>Spring Boot 3.4.5, Spring Data JPA. Le contrôleur renvoie le Page du repository tel quel.</p><ul class="prose-list"><li>content: 50 articles par page</li><li>totalPages: 3</li><li>totalElements: 130</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>L&#x27;avertissement de Spring</strong><p>Spring écrit dans son journal que cette forme n&#x27;est pas garantie stable, et conseille VIA_DTO.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La réponse dit combien de pages il y a.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déployer"><button type="button" role="tab" id="lab-manifest-tab" data-view="manifest" aria-controls="lab-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="lab-manifest" aria-labelledby="lab-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/lab-docker-compose.yml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># A hand-written Spring Boot 3.4 controller returning the repository&#x27;s Page. PAGE_SERIALIZATION</span></span><span class="line"><span class="comment"># is the team&#x27;s choice: direct (Spring&#x27;s default, with its warning) or via-dto (what that warning recommends).</span></span><span class="line"><span class="key">name</span>: lumnik-spring-catalog</span><span class="line"><span class="key">services</span>:</span><span class="line">  <span class="key">catalog</span>:</span><span class="line">    <span class="key">build</span>: ../run/catalog-app</span><span class="line">    <span class="key">environment</span>:</span><span class="line">      <span class="key">PAGE_SERIALIZATION</span>: ${PAGE_SERIALIZATION:-direct}</span><span class="line">    <span class="key">ports</span>: [<span class="str">&quot;127.0.0.1:${CATALOG_PORT:-9280}:8080&quot;</span>]   <span class="comment"># this machine only</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0" hidden><dl class="facts"><dt>content</dt><dd>50 articles</dd><dt>totalPages</dt><dd>3</dd><dt>totalElements</dt><dd>130</dd><dt>Spring</dt><dd>Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!</dd></dl><p class="sources">preuves: replay.log, page-direct.json, page-via-dto.json, page-3-via-dto.json, spring-warning.txt, requests-connect.txt, requests-via-dto.txt, requests-fixed.txt, count.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-connect" aria-labelledby="connect-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="connect-title">Une ligne: pagination: { kind: spring-page }</h2>
+      <p>Un connecteur rest-generic.</p><ul class="prose-list"><li>pagination: spring-page: page et size, de 0 jusqu&#x27;à totalPages</li><li>clé: la référence de l&#x27;article</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>3 requêtes</strong><p>page=0, 1, 2, lues dans le journal d&#x27;accès de Tomcat.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le preset lit le Page de Spring tel qu&#x27;il sort.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Brancher"><button type="button" role="tab" id="connect-manifest-tab" data-view="manifest" aria-controls="connect-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="connect-commands-tab" data-view="commands" aria-controls="connect-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="connect-result-tab" data-view="result" aria-controls="connect-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="connect-manifest" aria-labelledby="connect-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-articles.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-spring-page-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [catalogue]</span><span class="line"></span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:9280/api</span><span class="line"></span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: articles</span><span class="line">      <span class="key">path</span>: /articles</span><span class="line">      <span class="key">method</span>: GET</span><span class="line hl">      <span class="key">pagination</span>: { kind: spring-page, size: 50 }      <span class="comment"># a Spring Data Page, serialized as is</span></span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_spring_page_a</span><span class="line">        <span class="key">unique_key</span>: $.ref</span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: label, path: $.label, type: text }</span><span class="line">          - { name: family, path: $.family, type: text }</span><span class="line">          - { name: price_cents, path: $.priceCents, type: integer }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="connect-commands" aria-labelledby="connect-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-articles.yaml</span>
+<span class="out">Applied connector &quot;scenario-spring-page-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-spring-page-a</span>
+<span class="out">run scheduled: 24c81d88-1e94-4f2a-819a-052a1be67e37</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 24c81d88-1e94-4f2a-819a-052a1be67e37</span>
+<span class="out">ID        CONNECTOR               ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+24c81d88  scenario-spring-page-a  articles  Completed  130  130  0        0             2026-10-30 23:25  2026-10-30 23:25  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="connect-result" aria-labelledby="connect-result-tab" tabindex="0" hidden><dl class="facts"><dt>articles</dt><dd>Completed · IN 130 · OUT 130</dd><dt>request 1</dt><dd>/api/articles?page=0&amp;size=50 200</dd><dt>request 2</dt><dd>/api/articles?page=1&amp;size=50 200</dd><dt>request 3</dt><dd>/api/articles?page=2&amp;size=50 200</dd></dl><p class="sources">preuves: replay.log, page-direct.json, page-via-dto.json, page-3-via-dto.json, spring-warning.txt, requests-connect.txt, requests-via-dto.txt, requests-fixed.txt, count.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-via-dto" aria-labelledby="via-dto-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="via-dto-title">Le total passe sous page: une page vide de trop</h2>
+      <p>L&#x27;équipe active VIA_DTO, comme Spring le conseille. Le Page sort en PagedModel: totalPages passe sous page. Le même manifeste relit l&#x27;app.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Rien n&#x27;est perdu</strong><p>130 articles. Sans total lisible, le hub s&#x27;arrête à la première page vide: page=3, 0 article.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le preset ne correspond plus à l&#x27;app, et le journal d&#x27;accès le montre.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Changer"><button type="button" role="tab" id="via-dto-commands-tab" data-view="commands" aria-controls="via-dto-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="via-dto-result-tab" data-view="result" aria-controls="via-dto-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="via-dto-commands" aria-labelledby="via-dto-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-articles.yaml</span>
+<span class="out">Applied connector &quot;scenario-spring-page-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-spring-page-a</span>
+<span class="out">run scheduled: ecd4bc8c-db12-4ae0-b7ae-8aa8e4486580</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get ecd4bc8c-db12-4ae0-b7ae-8aa8e4486580</span>
+<span class="out">ID        CONNECTOR               ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+ecd4bc8c  scenario-spring-page-a  articles  Completed  130  130  0        0             2026-10-30 23:25  2026-10-30 23:25  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="via-dto-result" aria-labelledby="via-dto-result-tab" tabindex="0" hidden><dl class="facts"><dt>totalPages</dt><dd>absent</dd><dt>page.totalPages</dt><dd>3</dd><dt>articles</dt><dd>Completed · IN 130 · OUT 130</dd><dt>request 1</dt><dd>/api/articles?page=0&amp;size=50 200</dd><dt>request 2</dt><dd>/api/articles?page=1&amp;size=50 200</dd><dt>request 3</dt><dd>/api/articles?page=2&amp;size=50 200</dd><dt>request 4</dt><dd>/api/articles?page=3&amp;size=50 200</dd><dt>page 3</dt><dd>0 articles</dd></dl><p class="sources">preuves: replay.log, page-direct.json, page-via-dto.json, page-3-via-dto.json, spring-warning.txt, requests-connect.txt, requests-via-dto.txt, requests-fixed.txt, count.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-fixed" aria-labelledby="fixed-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="fixed-title">Une ligne: pagination: { kind: spring-paged-model }</h2>
+      <p>Le même connecteur, un autre preset: il lit le total sous page.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>3 requêtes</strong><p>page=0, 1, 2: la lecture s&#x27;arrête sur la dernière page.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une ligne suit le changement de l&#x27;app.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Corriger"><button type="button" role="tab" id="fixed-manifest-tab" data-view="manifest" aria-controls="fixed-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="fixed-commands-tab" data-view="commands" aria-controls="fixed-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="fixed-result-tab" data-view="result" aria-controls="fixed-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="fixed-manifest" aria-labelledby="fixed-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-articles-paged-model.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-spring-page-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [catalogue]</span><span class="line"></span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:9280/api</span><span class="line"></span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: articles</span><span class="line">      <span class="key">path</span>: /articles</span><span class="line">      <span class="key">method</span>: GET</span><span class="line hl">      <span class="key">pagination</span>: { kind: spring-paged-model, size: 50 }   <span class="comment"># the same Page under VIA_DTO: PagedModel</span></span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_spring_page_a</span><span class="line">        <span class="key">unique_key</span>: $.ref</span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: label, path: $.label, type: text }</span><span class="line">          - { name: family, path: $.family, type: text }</span><span class="line">          - { name: price_cents, path: $.priceCents, type: integer }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="fixed-commands" aria-labelledby="fixed-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/20-articles-paged-model.yaml</span>
+<span class="out">Applied connector &quot;scenario-spring-page-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-spring-page-a</span>
+<span class="out">run scheduled: caac28b7-8d6c-4100-9ece-8edfc3ef2f9b</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get caac28b7-8d6c-4100-9ece-8edfc3ef2f9b</span>
+<span class="out">ID        CONNECTOR               ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+caac28b7  scenario-spring-page-a  articles  Completed  130  130  0        0             2026-10-30 23:26  2026-10-30 23:26  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="fixed-result" aria-labelledby="fixed-result-tab" tabindex="0" hidden><dl class="facts"><dt>articles</dt><dd>Completed · IN 130 · OUT 130</dd><dt>request 1</dt><dd>/api/articles?page=0&amp;size=50 200</dd><dt>request 2</dt><dd>/api/articles?page=1&amp;size=50 200</dd><dt>request 3</dt><dd>/api/articles?page=2&amp;size=50 200</dd><dt>hub</dt><dd>130 articles, 130 refs</dd></dl><p class="sources">preuves: replay.log, page-direct.json, page-via-dto.json, page-3-via-dto.json, spring-warning.txt, requests-connect.txt, requests-via-dto.txt, requests-fixed.txt, count.txt · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Une app de lab, écrite pour le scénario avec les classes de Spring; pas un produit publié.</li><li>Sous VIA_DTO, spring-page ne perd rien: le coût est une requête vide, et un preset qui ne correspond plus.</li><li>Articles synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Catalogue · articles</p><h2>Le catalogue est dans une app Spring Boot.</h2><p class="brief-lead">Il faut lire tous les articles, chaque nuit.</p><p class="brief-note">Spring Boot 3.4, une app de lab</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>L&#x27;app rend ses articles par pages.</h2><ul class="brief-list tone-cyan"><li>Chaque page dit combien il y en a.</li><li>Un jour, l&#x27;équipe change la forme de cette réponse.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>Le code de l&#x27;app reste le sien.</h2><ul class="brief-list tone-green"><li>Le contrôleur renvoie le Page de Spring.</li><li>Le choix de sérialisation est celui de l&#x27;équipe.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>pagination: { kind: spring-page }</code></pre><h2>On nomme le framework.</h2><p>Un connecteur de 23 lignes: 130 articles, 3 requêtes.</p></section><section class="brief-slide"><p class="brief-kicker">Le changement</p><h2>L&#x27;équipe suit l&#x27;avertissement de Spring.</h2><ul class="brief-list tone-cyan"><li>Le total passe sous page.</li><li>Le hub lit tout, avec une page vide de trop.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La correction</p><pre class="brief-code"><code>pagination: { kind: spring-paged-model }</code></pre><h2>Une ligne change.</h2><ul class="brief-list tone-green"><li>De nouveau 3 requêtes.</li><li>130 articles, une ligne chacun.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>Une app de lab, pas un produit publié.</h2><ul class="brief-list tone-cyan"><li>Écrite avec les classes de Spring.</li><li>Sans le bon preset, rien n&#x27;est perdu: une requête de trop.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
