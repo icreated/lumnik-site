@@ -188,8 +188,8 @@
     },
     {
       "slug": "devops-release-gate",
-      "title": "Un hotfix non approuvé en production: le pipeline sort en 1.",
-      "lede": "Le catalogue des versions approuvées est un CSV. Ce qui tourne vraiment est dans le cluster. lumnik lit l'image de chaque pod par l'API Kubernetes et la joint au catalogue:\n- la version approuvée passe;\n- un hotfix poussé avec kubectl set image fait sortir la porte en 1;\n- après le rollback, la même commande repasse.",
+      "title": "Un hotfix non approuvé en prod k8s: le pipeline s'arrête.",
+      "lede": "Le catalogue des versions approuvées est un CSV. Ce qui tourne vraiment est dans le cluster. lumnik lit l'image de chaque pod par l'API Kubernetes et la joint au catalogue:\n- la version approuvée passe;\n- un hotfix poussé avec kubectl set image fait renvoyer le code 1 à la porte: la CI arrête le pipeline;\n- après le rollback, la même commande repasse.",
       "tags": {
         "domain": [
           "DevOps",
@@ -203,7 +203,7 @@
       },
       "edition": "open",
       "replayedAt": "2026-10-30",
-      "evidenceDigest": "sha256:c285ac073fd1fb09ac4eab1254f03f9c853be70881c76cdb91bc99766dd85715"
+      "evidenceDigest": "sha256:f34df98684f2cedfae9a2d63a8bd29355b6e21c43b8f9f0bd2ad9df30eed8815"
     },
     {
       "slug": "dirty-order-statuses",
