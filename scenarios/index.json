@@ -740,6 +740,24 @@
       "evidenceDigest": "sha256:77a360460c6e2c125135a8d28af690c39a297a8307c5ac8f9539bd5826c08b31"
     },
     {
+      "slug": "rest-netbox-inventory",
+      "title": "NetBox, l'inventaire réseau: on nomme Django REST, on dit Token, tout est lu.",
+      "lede": "NetBox est bâti sur Django REST Framework: count, next et results dans chaque réponse, et un jeton présenté par le mot Token, pas Bearer. lumnik nomme les deux:\n- pagination: { kind: drf-limit-offset }: 120 équipements en 3 requêtes;\n- auth: { kind: bearer, scheme: Token }: le mot que NetBox attend;\n- la nuit suivante, les 6 switchs passés hors ligne sont dans le hub.",
+      "tags": {
+        "domain": [
+          "Réseau",
+          "Inventaire",
+          "NetBox"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-30",
+      "evidenceDigest": "sha256:632c333930e7ff453f1e734adcb692485704d643a55656f5e74fc09929abe2f3"
+    },
+    {
       "slug": "rest-partner-loses-rows",
       "title": "L'API du partenaire perd une page, le run ne ment pas.",
       "lede": "Un partenaire publie 2 400 partenaires et leur nombre. Une nuit, une page de 100 disparaît, le nombre reste juste. lumnik compare ce qu'il a lu au total que la source déclare : le run échoue en nommant l'endpoint et les deux chiffres, au lieu de passer au vert.",
