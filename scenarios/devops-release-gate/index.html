@@ -71,18 +71,18 @@ catalog-api       production   lumnik.local/catalog-api:5.8.1</span></code></pre
 <span class="note"></span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run approved-versions</span>
-<span class="out">run scheduled: 852b7d9d-f83c-4e20-be83-b488a8dffdca</span>
+<span class="out">run scheduled: 1792aa2c-a9a5-46c3-ac4a-fe3186b0fb3b</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 852b7d9d-f83c-4e20-be83-b488a8dffdca</span>
+<span class="cmd"><span class="prompt">$</span> lm run get 1792aa2c-a9a5-46c3-ac4a-fe3186b0fb3b</span>
 <span class="out">ID        CONNECTOR          ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-852b7d9d  approved-versions  default   Completed  3   3    0        0             2026-10-30 09:28  2026-10-30 09:28</span>
+1792aa2c  approved-versions  default   Completed  3   3    0        0             2026-10-30 10:06  2026-10-30 10:06</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run k8s-pods</span>
-<span class="out">run scheduled: a0bc9644-b3e9-441a-ba45-14d27ca19707</span>
+<span class="out">run scheduled: f73a6843-4e26-44a2-962b-f5df3d0b2c14</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get a0bc9644-b3e9-441a-ba45-14d27ca19707</span>
+<span class="cmd"><span class="prompt">$</span> lm run get f73a6843-4e26-44a2-962b-f5df3d0b2c14</span>
 <span class="out">ID        CONNECTOR  ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-a0bc9644  k8s-pods   pods      Completed  3   3    0        0             2026-10-30 09:28  2026-10-30 09:28</span>
+f73a6843  k8s-pods   pods      Completed  3   3    0        0             2026-10-30 10:06  2026-10-30 10:06</span>
 <span class="note">• script hooks:image-version.kts  sha256 08ef0373ef0adfaed053c371d9b60f6af0e008d0f743401e497f7dd6bb71ea8f</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="sources-result" aria-labelledby="sources-result-tab" tabindex="0" hidden><dl class="facts"><dt>approved-versions</dt><dd>IN 3 · OUT 3</dd><dt>k8s-pods</dt><dd>IN 3 · OUT 3</dd></dl><p class="sources">preuves: replay.log, approved-statuses.txt, approved-violations.json, hotfix-statuses.txt, hotfix-violations.json, rollback-statuses.txt, rollback-violations.json, rollback-entity.json, summary.env · transform v1</p></div>
   </div>
 </section>
@@ -111,8 +111,43 @@ a0bc9644  k8s-pods   pods      Completed  3   3    0        0             2026-1
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une release conforme: le pipeline continue.</p></div>
   </aside>
   <div class="views">
-    <div role="tablist" class="view-tabs" aria-label="Vérifier"><button type="button" role="tab" id="approved-result-tab" data-view="result" aria-controls="approved-result" aria-selected="true" tabindex="0">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-result" id="approved-result" aria-labelledby="approved-result-tab" tabindex="0"><dl class="facts"><dt>violations</dt><dd>0</dd><dt>PIPESTATUS</dt><dd>lm 0 · tee 0 · release-gate 0 · tee 0</dd></dl><p class="sources">preuves: replay.log, approved-statuses.txt, approved-violations.json, hotfix-statuses.txt, hotfix-violations.json, rollback-statuses.txt, rollback-violations.json, rollback-entity.json, summary.env · transform v1</p></div>
+    <div role="tablist" class="view-tabs" aria-label="Vérifier"><button type="button" role="tab" id="approved-commands-tab" data-view="commands" aria-controls="approved-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="approved-result-tab" data-view="result" aria-controls="approved-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="approved-commands" aria-labelledby="approved-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity get DeploymentCompliance --limit 1000 -o json</span>
+<span class="out">[
+  {
+    &quot;pod_uid&quot;: &quot;32a5ad62-c877-4128-bf90-9c272f3c4465&quot;,
+    &quot;service&quot;: &quot;billing-api&quot;,
+    &quot;environment&quot;: &quot;production&quot;,
+    &quot;deployed_version&quot;: &quot;2.3.7&quot;,
+    &quot;started_at&quot;: &quot;2026-10-30T09:06:09Z&quot;,
+    &quot;owner&quot;: &quot;payments-on-call&quot;,
+    &quot;approved_version&quot;: &quot;2.3.7&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;pod_uid&quot;: &quot;5873791e-7115-4a78-a312-d67e048dc44e&quot;,
+    &quot;service&quot;: &quot;catalog-api&quot;,
+    &quot;environment&quot;: &quot;production&quot;,
+    &quot;deployed_version&quot;: &quot;5.8.1&quot;,
+    &quot;started_at&quot;: &quot;2026-10-30T09:06:09Z&quot;,
+    &quot;owner&quot;: &quot;commerce-on-call&quot;,
+    &quot;approved_version&quot;: &quot;5.8.1&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;pod_uid&quot;: &quot;b0310305-67e3-4a00-bd69-9af4e84b6d86&quot;,
+    &quot;service&quot;: &quot;customer-portal&quot;,
+    &quot;environment&quot;: &quot;staging&quot;,
+    &quot;deployed_version&quot;: &quot;9.1.0-rc2&quot;,
+    &quot;started_at&quot;: &quot;2026-10-30T09:06:09Z&quot;,
+    &quot;owner&quot;: &quot;web-on-call&quot;,
+    &quot;approved_version&quot;: &quot;9.0.4&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  }
+]</span>
+
+<span class="cmd"><span class="prompt">$</span> run/release-gate.sh</span>
+<span class="out">[]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="approved-result" aria-labelledby="approved-result-tab" tabindex="0" hidden><dl class="facts"><dt>violations</dt><dd>0</dd><dt>PIPESTATUS</dt><dd>lm 0 · tee 0 · release-gate 0 · tee 0</dd></dl><p class="sources">preuves: replay.log, approved-statuses.txt, approved-violations.json, hotfix-statuses.txt, hotfix-violations.json, rollback-statuses.txt, rollback-violations.json, rollback-entity.json, summary.env · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-hotfix" aria-labelledby="hotfix-title" data-inactive>
@@ -130,12 +165,66 @@ a0bc9644  k8s-pods   pods      Completed  3   3    0        0             2026-1
 <span class="out">deployment.apps/billing-api image updated</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run k8s-pods</span>
-<span class="out">run scheduled: ffd5ef21-ea59-404e-b2cc-3298d008fcd0</span>
+<span class="out">run scheduled: 7e0558c7-aec1-4865-9a9d-f1243040d98a</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get ffd5ef21-ea59-404e-b2cc-3298d008fcd0</span>
+<span class="cmd"><span class="prompt">$</span> lm run get 7e0558c7-aec1-4865-9a9d-f1243040d98a</span>
 <span class="out">ID        CONNECTOR  ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-ffd5ef21  k8s-pods   pods      Completed  3   3    0        0             2026-10-30 09:29  2026-10-30 09:29</span>
-<span class="note">• script hooks:image-version.kts  sha256 08ef0373ef0adfaed053c371d9b60f6af0e008d0f743401e497f7dd6bb71ea8f</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="hotfix-result" aria-labelledby="hotfix-result-tab" tabindex="0" hidden><dl class="facts"><dt>k8s-pods</dt><dd>IN 3 · OUT 3</dd><dt>billing-api</dt><dd>deployed 2.4.0-hotfix · approved 2.3.7 · payments-on-call</dd><dt>violations</dt><dd>1</dd><dt>PIPESTATUS</dt><dd>lm 0 · tee 0 · release-gate 1 · tee 0</dd></dl><p class="sources">preuves: replay.log, approved-statuses.txt, approved-violations.json, hotfix-statuses.txt, hotfix-violations.json, rollback-statuses.txt, rollback-violations.json, rollback-entity.json, summary.env · transform v1</p></div>
+7e0558c7  k8s-pods   pods      Completed  3   3    0        0             2026-10-30 10:06  2026-10-30 10:06</span>
+<span class="note">• script hooks:image-version.kts  sha256 08ef0373ef0adfaed053c371d9b60f6af0e008d0f743401e497f7dd6bb71ea8f</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get DeploymentCompliance --limit 1000 -o json</span>
+<span class="out">[
+  {
+    &quot;pod_uid&quot;: &quot;1b86c1e6-3538-47ad-b375-38995784ca70&quot;,
+    &quot;service&quot;: &quot;billing-api&quot;,
+    &quot;environment&quot;: &quot;production&quot;,
+    &quot;deployed_version&quot;: &quot;2.4.0-hotfix&quot;,
+    &quot;started_at&quot;: &quot;2026-10-30T09:06:13Z&quot;,
+    &quot;owner&quot;: &quot;payments-on-call&quot;,
+    &quot;approved_version&quot;: &quot;2.3.7&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;pod_uid&quot;: &quot;32a5ad62-c877-4128-bf90-9c272f3c4465&quot;,
+    &quot;service&quot;: &quot;billing-api&quot;,
+    &quot;environment&quot;: &quot;production&quot;,
+    &quot;deployed_version&quot;: &quot;2.3.7&quot;,
+    &quot;started_at&quot;: &quot;2026-10-30T09:06:09Z&quot;,
+    &quot;owner&quot;: &quot;payments-on-call&quot;,
+    &quot;approved_version&quot;: &quot;2.3.7&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;pod_uid&quot;: &quot;5873791e-7115-4a78-a312-d67e048dc44e&quot;,
+    &quot;service&quot;: &quot;catalog-api&quot;,
+    &quot;environment&quot;: &quot;production&quot;,
+    &quot;deployed_version&quot;: &quot;5.8.1&quot;,
+    &quot;started_at&quot;: &quot;2026-10-30T09:06:09Z&quot;,
+    &quot;owner&quot;: &quot;commerce-on-call&quot;,
+    &quot;approved_version&quot;: &quot;5.8.1&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;pod_uid&quot;: &quot;b0310305-67e3-4a00-bd69-9af4e84b6d86&quot;,
+    &quot;service&quot;: &quot;customer-portal&quot;,
+    &quot;environment&quot;: &quot;staging&quot;,
+    &quot;deployed_version&quot;: &quot;9.1.0-rc2&quot;,
+    &quot;started_at&quot;: &quot;2026-10-30T09:06:09Z&quot;,
+    &quot;owner&quot;: &quot;web-on-call&quot;,
+    &quot;approved_version&quot;: &quot;9.0.4&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  }
+]</span>
+
+<span class="cmd"><span class="prompt">$</span> run/release-gate.sh</span>
+<span class="out">[
+  {
+    &quot;service&quot;: &quot;billing-api&quot;,
+    &quot;owner&quot;: &quot;payments-on-call&quot;,
+    &quot;deployed_version&quot;: &quot;2.4.0-hotfix&quot;,
+    &quot;approved_version&quot;: &quot;2.3.7&quot;
+  }
+]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="hotfix-result" aria-labelledby="hotfix-result-tab" tabindex="0" hidden><dl class="facts"><dt>k8s-pods</dt><dd>IN 3 · OUT 3</dd><dt>billing-api</dt><dd>deployed 2.4.0-hotfix · approved 2.3.7 · payments-on-call</dd><dt>violations</dt><dd>1</dd><dt>PIPESTATUS</dt><dd>lm 0 · tee 0 · release-gate 1 · tee 0</dd></dl><p class="sources">preuves: replay.log, approved-statuses.txt, approved-violations.json, hotfix-statuses.txt, hotfix-violations.json, rollback-statuses.txt, rollback-violations.json, rollback-entity.json, summary.env · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-rollback" aria-labelledby="rollback-title" data-inactive>
@@ -154,12 +243,69 @@ ffd5ef21  k8s-pods   pods      Completed  3   3    0        0             2026-1
 <span class="note">Warning: resource deployments/billing-api was previously managed with &#x27;kubectl apply&#x27;. Rolling back will not update the kubectl.kubernetes.io/last-applied-configuration annotation, which may cause unexpected behavior on future &#x27;kubectl apply&#x27; operations. Consider using &#x27;kubectl apply&#x27; with your previous configuration file instead.</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run k8s-pods</span>
-<span class="out">run scheduled: 0e19aaf4-6547-4398-9a7b-8e5621c6407a</span>
+<span class="out">run scheduled: 0f27922d-038c-41df-91ec-5469cde29f9c</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 0e19aaf4-6547-4398-9a7b-8e5621c6407a</span>
+<span class="cmd"><span class="prompt">$</span> lm run get 0f27922d-038c-41df-91ec-5469cde29f9c</span>
 <span class="out">ID        CONNECTOR  ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-0e19aaf4  k8s-pods   pods      Completed  3   3    0        0             2026-10-30 09:29  2026-10-30 09:29</span>
-<span class="note">• script hooks:image-version.kts  sha256 08ef0373ef0adfaed053c371d9b60f6af0e008d0f743401e497f7dd6bb71ea8f</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="rollback-result" aria-labelledby="rollback-result-tab" tabindex="0" hidden><dl class="facts"><dt>k8s-pods</dt><dd>IN 3 · OUT 3</dd><dt>violations</dt><dd>0</dd><dt>PIPESTATUS</dt><dd>lm 0 · tee 0 · release-gate 0 · tee 0</dd><dt>pods kept</dt><dd>5</dd></dl><p class="sources">preuves: replay.log, approved-statuses.txt, approved-violations.json, hotfix-statuses.txt, hotfix-violations.json, rollback-statuses.txt, rollback-violations.json, rollback-entity.json, summary.env · transform v1</p></div>
+0f27922d  k8s-pods   pods      Completed  3   3    0        0             2026-10-30 10:06  2026-10-30 10:06</span>
+<span class="note">• script hooks:image-version.kts  sha256 08ef0373ef0adfaed053c371d9b60f6af0e008d0f743401e497f7dd6bb71ea8f</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get DeploymentCompliance --limit 1000 -o json</span>
+<span class="out">[
+  {
+    &quot;pod_uid&quot;: &quot;1b86c1e6-3538-47ad-b375-38995784ca70&quot;,
+    &quot;service&quot;: &quot;billing-api&quot;,
+    &quot;environment&quot;: &quot;production&quot;,
+    &quot;deployed_version&quot;: &quot;2.4.0-hotfix&quot;,
+    &quot;started_at&quot;: &quot;2026-10-30T09:06:13Z&quot;,
+    &quot;owner&quot;: &quot;payments-on-call&quot;,
+    &quot;approved_version&quot;: &quot;2.3.7&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;pod_uid&quot;: &quot;32a5ad62-c877-4128-bf90-9c272f3c4465&quot;,
+    &quot;service&quot;: &quot;billing-api&quot;,
+    &quot;environment&quot;: &quot;production&quot;,
+    &quot;deployed_version&quot;: &quot;2.3.7&quot;,
+    &quot;started_at&quot;: &quot;2026-10-30T09:06:09Z&quot;,
+    &quot;owner&quot;: &quot;payments-on-call&quot;,
+    &quot;approved_version&quot;: &quot;2.3.7&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;pod_uid&quot;: &quot;5873791e-7115-4a78-a312-d67e048dc44e&quot;,
+    &quot;service&quot;: &quot;catalog-api&quot;,
+    &quot;environment&quot;: &quot;production&quot;,
+    &quot;deployed_version&quot;: &quot;5.8.1&quot;,
+    &quot;started_at&quot;: &quot;2026-10-30T09:06:09Z&quot;,
+    &quot;owner&quot;: &quot;commerce-on-call&quot;,
+    &quot;approved_version&quot;: &quot;5.8.1&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;pod_uid&quot;: &quot;b0310305-67e3-4a00-bd69-9af4e84b6d86&quot;,
+    &quot;service&quot;: &quot;customer-portal&quot;,
+    &quot;environment&quot;: &quot;staging&quot;,
+    &quot;deployed_version&quot;: &quot;9.1.0-rc2&quot;,
+    &quot;started_at&quot;: &quot;2026-10-30T09:06:09Z&quot;,
+    &quot;owner&quot;: &quot;web-on-call&quot;,
+    &quot;approved_version&quot;: &quot;9.0.4&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;pod_uid&quot;: &quot;daa99f47-0867-4fca-a2a8-cc78522350a1&quot;,
+    &quot;service&quot;: &quot;billing-api&quot;,
+    &quot;environment&quot;: &quot;production&quot;,
+    &quot;deployed_version&quot;: &quot;2.3.7&quot;,
+    &quot;started_at&quot;: &quot;2026-10-30T09:06:18Z&quot;,
+    &quot;owner&quot;: &quot;payments-on-call&quot;,
+    &quot;approved_version&quot;: &quot;2.3.7&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  }
+]</span>
+
+<span class="cmd"><span class="prompt">$</span> run/release-gate.sh</span>
+<span class="out">[]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="rollback-result" aria-labelledby="rollback-result-tab" tabindex="0" hidden><dl class="facts"><dt>k8s-pods</dt><dd>IN 3 · OUT 3</dd><dt>violations</dt><dd>0</dd><dt>PIPESTATUS</dt><dd>lm 0 · tee 0 · release-gate 0 · tee 0</dd><dt>pods kept</dt><dd>5</dd></dl><p class="sources">preuves: replay.log, approved-statuses.txt, approved-violations.json, hotfix-statuses.txt, hotfix-violations.json, rollback-statuses.txt, rollback-violations.json, rollback-entity.json, summary.env · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-summary" aria-labelledby="summary-title" data-inactive>
@@ -180,7 +326,7 @@ ffd5ef21  k8s-pods   pods      Completed  3   3    0        0             2026-1
   </div>
   <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">DevOps · mise en production</p><h2>Un hotfix part en production sans validation.</h2><p class="brief-lead">Le pipeline doit le voir.</p><p class="brief-note">Cluster kind de démonstration</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Deux vérités, deux endroits.</h2><ul class="brief-list tone-cyan"><li>Les versions approuvées: un fichier du comité.</li><li>Les versions qui tournent: le cluster.</li><li>Personne ne compare les deux avant de livrer.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>lumnik lit, il ne touche à rien.</h2><ul class="brief-list tone-green"><li>Un compte de service qui ne peut que lister les pods.</li><li>Le CSV reste où il est.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>path: /api/v1/pods?labelSelector=…
 joins:
-  - table: t_approved_versions</code></pre><h2>Une lecture, une jointure.</h2><p>4 fichiers, 72 lignes, et une porte shell de 14 lignes.</p></section><section class="brief-slide"><p class="brief-kicker">Le rouge</p><h2>billing-api: 2.4.0-hotfix, approuvée 2.3.7.</h2><ul class="brief-list tone-yellow"><li>La porte sort en 1.</li><li>Le pipeline s&#x27;arrête.</li><li>La violation nomme le service et son astreinte.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le vert</p><h2>Rollback: la même commande repasse.</h2><ul class="brief-list tone-green"><li>Le hub garde chaque pod vu.</li><li>La porte lit le plus récent.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>La porte voit ce que le hub a lu.</h2><ul class="brief-list tone-cyan"><li>Un hotfix posé après la dernière lecture n&#x27;est pas encore vu.</li><li>Le pipeline lance la lecture juste avant la porte.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue sur kind.</h2><p>Deux connecteurs, un script, une entité, une porte jq: chaque étape est publiée avec sa sortie.</p></section></article>
+  - table: t_approved_versions</code></pre><h2>Une lecture, une jointure.</h2><p>4 fichiers, 72 lignes, et une porte shell de 18 lignes.</p></section><section class="brief-slide"><p class="brief-kicker">Le rouge</p><h2>billing-api: 2.4.0-hotfix, approuvée 2.3.7.</h2><ul class="brief-list tone-yellow"><li>La porte sort en 1.</li><li>Le pipeline s&#x27;arrête.</li><li>La violation nomme le service et son astreinte.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le vert</p><h2>Rollback: la même commande repasse.</h2><ul class="brief-list tone-green"><li>Le hub garde chaque pod vu.</li><li>La porte lit le plus récent.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>La porte voit ce que le hub a lu.</h2><ul class="brief-list tone-cyan"><li>Un hotfix posé après la dernière lecture n&#x27;est pas encore vu.</li><li>Le pipeline lance la lecture juste avant la porte.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue sur kind.</h2><p>Deux connecteurs, un script, une entité, une porte jq: chaque étape est publiée avec sa sortie.</p></section></article>
   <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
 </main>
 <script src="../assets/scenario.js" defer></script>
