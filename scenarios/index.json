@@ -188,11 +188,12 @@
     },
     {
       "slug": "devops-release-gate",
-      "title": "Une version non approuvée en production bloque le pipeline, par un code de sortie.",
-      "lede": "L'inventaire de production et le catalogue des versions approuvées sont deux exports CSV. lumnik les joint ; un script CI lit l'entité en JSON et sort en 1 tant que billing-api tourne en 2.4.0-hotfix. Après le correctif, la même porte passe.",
+      "title": "Un hotfix non approuvé en production: le pipeline sort en 1.",
+      "lede": "Le catalogue des versions approuvées est un CSV. Ce qui tourne vraiment est dans le cluster. lumnik lit l'image de chaque pod par l'API Kubernetes et la joint au catalogue:\n- la version approuvée passe;\n- un hotfix poussé avec kubectl set image fait sortir la porte en 1;\n- après le rollback, la même commande repasse.",
       "tags": {
         "domain": [
           "DevOps",
+          "Kubernetes",
           "Livraison"
         ],
         "kinds": [
@@ -201,8 +202,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:ab0cb4769b91e5bee803affc225a4644e5ae58cefc0f94fb1193a5251e224971"
+      "replayedAt": "2026-10-30",
+      "evidenceDigest": "sha256:c285ac073fd1fb09ac4eab1254f03f9c853be70881c76cdb91bc99766dd85715"
     },
     {
       "slug": "dirty-order-statuses",
