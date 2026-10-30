@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L&#x27;API de Stripe: on la nomme, starting_after fait le reste. — lumnik</title>
+<meta name="description" content="Lire tous les clients d&#x27;un compte Stripe, page après page, sans écrire la pagination. Stripe pagine par curseur: chaque page dit has_more, la suivante se demande avec starting_after, l&#x27;id du dernier client lu. lumnik a un preset du même nom: Pagination: { kind: stripe }: 25 clients en 3 requêtes; Le lendemain, 5 nouveaux clients: 30 lignes, une par client.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/rest-stripe-customers/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/rest-stripe-customers/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>L&#x27;API de Stripe: on la nomme, starting_after fait le reste.</h1>
+    <p class="goal"><strong>Objectif</strong> Lire tous les clients d&#x27;un compte Stripe, page après page, sans écrire la pagination.</p>
+    <p class="lede">Stripe pagine par curseur: chaque page dit has_more, la suivante se demande avec starting_after, l&#x27;id du dernier client lu. lumnik a un preset du même nom:</p><ul class="lede-list"><li>pagination: { kind: stripe }: 25 clients en 3 requêtes;</li><li>le lendemain, 5 nouveaux clients: 30 lignes, une par client.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Facturation</li><li class="tag">Paiement</li><li class="tag">Stripe</li><li class="tag kind">Connector</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="L&#x27;API de Stripe: on la nomme, starting_after fait le reste.">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · Déployer</span><span class="sub">Le compte</span></a><a href="#step-connect" data-step="connect"><span class="num">2 · Brancher</span><span class="sub">Le preset</span></a><a href="#step-next-day" data-step="next-day"><span class="num">3 · Relire</span><span class="sub">Le lendemain</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">L&#x27;API de Stripe, 25 clients</h2>
+      <p>localstripe 1.15, un faux Stripe libre et avec état, utilisé dans les suites de tests, sert l&#x27;API de Stripe. 25 clients créés par l&#x27;API.</p><ul class="prose-list"><li>object: list</li><li>has_more: il reste des pages</li><li>data: 10 clients par page</li><li>la page suivante: starting_after=&lt;id du dernier client&gt;</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Pourquoi localstripe</strong><p>stripe-mock, le serveur de test officiel, est sans état: sa liste rend toujours le même client et ne pagine pas.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La première page dit qu&#x27;il en reste.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déployer"><button type="button" role="tab" id="lab-manifest-tab" data-view="manifest" aria-controls="lab-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="lab-manifest" aria-labelledby="lab-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/lab-docker-compose.yml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># Stripe&#x27;s API, served by localstripe — an open-source, stateful stand-in used in test suites.</span></span><span class="line"><span class="key">name</span>: lumnik-stripe</span><span class="line"><span class="key">services</span>:</span><span class="line">  <span class="key">localstripe</span>:</span><span class="line">    <span class="key">image</span>: python:3.12-slim</span><span class="line">    <span class="key">command</span>: [<span class="str">&quot;sh&quot;</span>, <span class="str">&quot;-c&quot;</span>, <span class="str">&quot;pip install --quiet localstripe==1.15.10 &amp;&amp; exec localstripe --port 8420&quot;</span>]</span><span class="line">    <span class="key">ports</span>: [<span class="str">&quot;127.0.0.1:${STRIPE_PORT:-8420}:8420&quot;</span>]   <span class="comment"># this machine only</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0" hidden><dl class="facts"><dt>object</dt><dd>list</dd><dt>has_more</dt><dd>true</dd><dt>data</dt><dd>10 customers</dd><dt>last id</dt><dd>cus_rSfRULjh5cGt7e</dd></dl><p class="sources">preuves: replay.log, page-1.json, requests-connect.txt, count.txt, sample.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-connect" aria-labelledby="connect-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="connect-title">Une ligne: pagination: { kind: stripe }</h2>
+      <p>Un connecteur rest-generic.</p><ul class="prose-list"><li>auth: bearer: la clé secrète du compte, rangée par lm secret</li><li>pagination: stripe: starting_after sur le dernier id, jusqu&#x27;à has_more false</li><li>created: transform from_epoch, la date de Stripe est en secondes</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>3 requêtes</strong><p>limit=10, puis starting_after deux fois.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le preset lit Stripe tel qu&#x27;il est.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Brancher"><button type="button" role="tab" id="connect-manifest-tab" data-view="manifest" aria-controls="connect-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="connect-commands-tab" data-view="commands" aria-controls="connect-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="connect-result-tab" data-view="result" aria-controls="connect-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="connect-manifest" aria-labelledby="connect-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-customers.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-stripe-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [billing]</span><span class="line"></span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:8420</span><span class="line">  <span class="key">auth</span>: { kind: bearer, token_env: SCENARIO_STRIPE_KEY }   <span class="comment"># a Stripe secret key, test mode</span></span><span class="line"></span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: customers</span><span class="line">      <span class="key">path</span>: /v1/customers?limit=10</span><span class="line">      <span class="key">method</span>: GET</span><span class="line hl">      <span class="key">pagination</span>: { kind: stripe }       <span class="comment"># starting_after the last id, until has_more is false</span></span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_stripe_a</span><span class="line">        <span class="key">unique_key</span>: $.id</span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: name, path: $.name, type: text }</span><span class="line">          - { name: email, path: $.email, type: text }</span><span class="line hl">          - { name: created, path: $.created, type: timestamptz, transform: from_epoch }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="connect-commands" aria-labelledby="connect-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-customers.yaml</span>
+<span class="out">Applied connector &quot;scenario-stripe-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-stripe-a</span>
+<span class="out">run scheduled: f3545a8a-85c2-4c06-a171-2d7c7f994ea4</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get f3545a8a-85c2-4c06-a171-2d7c7f994ea4</span>
+<span class="out">ID        CONNECTOR          ENDPOINT   STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+f3545a8a  scenario-stripe-a  customers  Completed  25  25   0        0             2026-10-30 22:58  2026-10-30 22:58  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="connect-result" aria-labelledby="connect-result-tab" tabindex="0" hidden><dl class="facts"><dt>customers</dt><dd>Completed · IN 25 · OUT 25</dd><dt>request 1</dt><dd>/v1/customers?limit=10</dd><dt>request 2</dt><dd>/v1/customers?limit=10&amp;starting_after=cus_rSfRULjh5cGt7e</dd><dt>request 3</dt><dd>/v1/customers?limit=10&amp;starting_after=cus_SkiCLQ0j6Sd4NM</dd></dl><p class="sources">preuves: replay.log, page-1.json, requests-connect.txt, count.txt, sample.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-next-day" aria-labelledby="next-day-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="next-day-title">5 nouveaux clients: 30 lignes</h2>
+      <p>5 clients sont créés. La nuit suivante relit le compte: 30 clients, une ligne chacun.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Clé</strong><p>L&#x27;id Stripe: un client relu met sa ligne à jour, sans doublon.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le hub suit le compte, client par client.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Relire"><button type="button" role="tab" id="next-day-commands-tab" data-view="commands" aria-controls="next-day-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="next-day-result-tab" data-view="result" aria-controls="next-day-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="next-day-commands" aria-labelledby="next-day-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-stripe-a</span>
+<span class="out">run scheduled: 21a0f34b-1641-4247-8e32-d56d6ad8d798</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 21a0f34b-1641-4247-8e32-d56d6ad8d798</span>
+<span class="out">ID        CONNECTOR          ENDPOINT   STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+21a0f34b  scenario-stripe-a  customers  Completed  30  30   0        0             2026-10-30 22:58  2026-10-30 22:58  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="next-day-result" aria-labelledby="next-day-result-tab" tabindex="0" hidden><dl class="facts"><dt>customers</dt><dd>Completed · IN 30 · OUT 30</dd><dt>hub</dt><dd>30 customers, 30 ids</dd><dt>Client 30</dt><dd>client30@example.test</dd><dt>Client 29</dt><dd>client29@example.test</dd><dt>Client 28</dt><dd>client28@example.test</dd></dl><p class="sources">preuves: replay.log, page-1.json, requests-connect.txt, count.txt, sample.txt · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Rejoué sur localstripe, pas sur Stripe: le vrai Stripe se lit avec le même manifeste et la clé du compte.</li><li>Chaque nuit relit tout le compte.</li><li>Clients synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Facturation · clients</p><h2>Les clients sont dans Stripe.</h2><p class="brief-lead">Il faut les lire tous, chaque nuit.</p><p class="brief-note">API Stripe servie par localstripe, en test</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Stripe rend ses clients par pages de 10.</h2><ul class="brief-list tone-cyan"><li>Chaque page dit s&#x27;il en reste.</li><li>La suivante se demande à partir du dernier client lu.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>Le compte reste tel quel.</h2><ul class="brief-list tone-green"><li>Une clé de test, rangée par lm secret.</li><li>L&#x27;API standard de Stripe.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>pagination: { kind: stripe }</code></pre><h2>On nomme l&#x27;API.</h2><p>Un connecteur de 24 lignes.</p></section><section class="brief-slide"><p class="brief-kicker">Le résultat</p><h2>25 clients, 3 pages.</h2><ul class="brief-list tone-green"><li>Chaque client sous son id Stripe.</li><li>La date de création convertie depuis l&#x27;epoch.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le lendemain</p><h2>5 nouveaux clients: 30 lignes.</h2><ul class="brief-list tone-green"><li>Une ligne par client, sans doublon.</li><li>La nuit relit tout le compte.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>Rejoué sur localstripe, pas sur Stripe.</h2><ul class="brief-list tone-cyan"><li>Un faux Stripe libre, utilisé en tests, avec état.</li><li>Le vrai Stripe se lit pareil, avec la clé du compte.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
