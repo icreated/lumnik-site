@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drupal parle JSON:API: on nomme le standard, une ligne lit tout le site. — lumnik</title>
+<meta name="description" content="Lire tous les articles d&#x27;un site Drupal par son module JSON:API, sans écrire la pagination. Drupal 11 expose ses contenus par JSON:API, un module de son cœur. La page suivante est dans links.next, que Drupal écrit comme un objet {&quot;href&quot;: …}. lumnik a un preset pour ce standard: Pagination: { kind: json-api }, et les 5 pages sont suivies; 45 articles lus, 45 écrits dans le hub.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/rest-drupal-jsonapi/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/rest-drupal-jsonapi/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Drupal parle JSON:API: on nomme le standard, une ligne lit tout le site.</h1>
+    <p class="goal"><strong>Objectif</strong> Lire tous les articles d&#x27;un site Drupal par son module JSON:API, sans écrire la pagination.</p>
+    <p class="lede">Drupal 11 expose ses contenus par JSON:API, un module de son cœur. La page suivante est dans links.next, que Drupal écrit comme un objet {&quot;href&quot;: …}. lumnik a un preset pour ce standard:</p><ul class="lede-list"><li>pagination: { kind: json-api }, et les 5 pages sont suivies;</li><li>45 articles lus, 45 écrits dans le hub.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Site web</li><li class="tag">Drupal</li><li class="tag">Contenu</li><li class="tag kind">Connector</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="Drupal parle JSON:API: on nomme le standard, une ligne lit tout le site.">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · Déployer</span><span class="sub">Le site</span></a><a href="#step-connect" data-step="connect"><span class="num">2 · Brancher</span><span class="sub">Le preset</span></a><a href="#step-articles" data-step="articles"><span class="num">3 · Lire</span><span class="sub">Le résultat</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">Un vrai Drupal 11, JSON:API activé</h2>
+      <p>Drupal 11.4 sur SQLite, installé par drush. 45 articles. Le module JSON:API, dans le cœur de Drupal, répond:</p><ul class="prose-list"><li>data: les articles de la page</li><li>links.next: la page suivante, écrite comme un objet {&quot;href&quot;: …}</li><li>page[limit], page[offset]: la pagination du standard</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Le lien objet</strong><p>La spécification JSON:API accepte un lien en chaîne ou en objet avec href; Drupal écrit l&#x27;objet.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Drupal pagine selon le standard JSON:API.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déployer"><button type="button" role="tab" id="lab-manifest-tab" data-view="manifest" aria-controls="lab-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="lab-manifest" aria-labelledby="lab-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/lab-docker-compose.yml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># A company&#x27;s Drupal site: its articles are read through Drupal&#x27;s core JSON:API module.</span></span><span class="line"><span class="key">name</span>: lumnik-drupal-site</span><span class="line"><span class="key">services</span>:</span><span class="line">  <span class="key">drupal</span>:</span><span class="line">    <span class="key">build</span>: ../run/drupal</span><span class="line">    <span class="key">ports</span>: [<span class="str">&quot;127.0.0.1:${DRUPAL_PORT:-9260}:80&quot;</span>]   <span class="comment"># this machine only: the admin password is the lab&#x27;s</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0" hidden><dl class="facts"><dt>links.next</dt><dd>{&quot;href&quot;: &quot;http://host.docker.internal:9260/jsonapi/node/article?page%5Boffset%5D=10&amp;page%5Blimit%5D=10&amp;fields%5Bnode--article%5D=title%2Ccreated%2Cchanged&quot;}</dd><dt>data</dt><dd>10 articles</dd></dl><p class="sources">preuves: replay.log, page-1.json, requests.txt, count.txt, newest.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-connect" aria-labelledby="connect-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="connect-title">Une ligne: pagination: { kind: json-api }</h2>
+      <p>Un connecteur rest-generic.</p><ul class="prose-list"><li>pagination: json-api: suit links.next, lit data</li><li>fields[node--article]: seuls les champs utiles sont demandés</li><li>unique_key: l&#x27;identifiant JSON:API de l&#x27;article</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>5 requêtes</strong><p>La première, puis 4 pages suivantes lues dans links.next.href.</p></div></li><li><span class="n">2</span><div><strong>Trouvé en route</strong><p>Le preset ne suivait pas un lien objet: corrigé par icreated/lumnik#1638.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le preset lit Drupal tel qu&#x27;il est.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Brancher"><button type="button" role="tab" id="connect-manifest-tab" data-view="manifest" aria-controls="connect-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="connect-commands-tab" data-view="commands" aria-controls="connect-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="connect-result-tab" data-view="result" aria-controls="connect-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="connect-manifest" aria-labelledby="connect-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-articles.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-drupal-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [marketing]</span><span class="line"></span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:9260/jsonapi</span><span class="line"></span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: articles</span><span class="line hl">      <span class="key">path</span>: /node/article?page[limit]=10&amp;fields[node--article]=title,created,changed</span><span class="line">      <span class="key">method</span>: GET</span><span class="line hl">      <span class="key">pagination</span>: { kind: json-api }</span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_drupal_a</span><span class="line">        <span class="key">unique_key</span>: $.id</span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: title, path: $.attributes.title, type: text }</span><span class="line">          - { name: created_at, path: $.attributes.created, type: timestamptz }</span><span class="line">          - { name: changed_at, path: $.attributes.changed, type: timestamptz }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="connect-commands" aria-labelledby="connect-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-articles.yaml</span>
+<span class="out">Applied connector &quot;scenario-drupal-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-drupal-a</span>
+<span class="out">run scheduled: a1c34553-ccd5-4786-a40b-d9fe8c12f7a7</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get a1c34553-ccd5-4786-a40b-d9fe8c12f7a7</span>
+<span class="out">ID        CONNECTOR          ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+a1c34553  scenario-drupal-a  articles  Completed  45  45   0        0             2026-10-30 21:52  2026-10-30 21:52  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="connect-result" aria-labelledby="connect-result-tab" tabindex="0" hidden><dl class="facts"><dt>articles</dt><dd>Completed · IN 45 · OUT 45</dd><dt>requests</dt><dd>5</dd><dt>request 1</dt><dd>/jsonapi/node/article?page[limit]=10&amp;fields[node--article]=title,created,changed</dd><dt>request 2</dt><dd>/jsonapi/node/article?page%5Boffset%5D=10&amp;page%5Blimit%5D=10&amp;fields%5Bnode--article%5D=title%2Ccreated%2Cchanged</dd><dt>request 3</dt><dd>/jsonapi/node/article?page%5Boffset%5D=20&amp;page%5Blimit%5D=10&amp;fields%5Bnode--article%5D=title%2Ccreated%2Cchanged</dd><dt>request 4</dt><dd>/jsonapi/node/article?page%5Boffset%5D=30&amp;page%5Blimit%5D=10&amp;fields%5Bnode--article%5D=title%2Ccreated%2Cchanged</dd><dt>request 5</dt><dd>/jsonapi/node/article?page%5Boffset%5D=40&amp;page%5Blimit%5D=10&amp;fields%5Bnode--article%5D=title%2Ccreated%2Cchanged</dd></dl><p class="sources">preuves: replay.log, page-1.json, requests.txt, count.txt, newest.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-articles" aria-labelledby="articles-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="articles-title">45 articles dans le hub</h2>
+      <p>Chaque article est rangé sous son identifiant JSON:API, avec son titre et ses dates de création et de modification. Trois lignes en exemple.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Clé</strong><p>L&#x27;identifiant JSON:API: un article modifié met sa ligne à jour.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Tout le site est dans le hub.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="articles-result-tab" data-view="result" aria-controls="articles-result" aria-selected="true" tabindex="0">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-result" id="articles-result" aria-labelledby="articles-result-tab" tabindex="0"><dl class="facts"><dt>hub</dt><dd>45 articles</dd><dt>Article 9</dt><dd>2026-10-30 20:52:51+00</dd><dt>Article 8</dt><dd>2026-10-30 20:52:51+00</dd><dt>Article 7</dt><dd>2026-10-30 20:52:51+00</dd></dl><p class="sources">preuves: replay.log, page-1.json, requests.txt, count.txt, newest.txt · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Le hub lit ce que l&#x27;API publie: un contenu non publié n&#x27;est pas lu sans compte.</li><li>Drupal ne publie pas de total par défaut: aucun témoin ne compare le compte lu au compte réel.</li><li>Avant icreated/lumnik#1638, le preset json-api échouait sur un lien objet; le rejeu de cette page tourne sur un hub corrigé.</li><li>Site Drupal de démonstration, articles synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Site web · Drupal</p><h2>Les contenus du site sont dans Drupal.</h2><p class="brief-lead">Il faut les lire, tous, sans développement.</p><p class="brief-note">Site Drupal de démonstration</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Chaque API pagine à sa façon.</h2><ul class="brief-list tone-cyan"><li>Écrire la pagination à la main, c&#x27;est une source d&#x27;erreurs.</li><li>Drupal suit un standard: JSON:API.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>Drupal reste tel quel.</h2><ul class="brief-list tone-green"><li>Le module JSON:API de son cœur, activé.</li><li>Aucun module ajouté, aucun code.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>pagination: { kind: json-api }</code></pre><h2>On nomme le standard.</h2><p>Un connecteur de 23 lignes.</p></section><section class="brief-slide"><p class="brief-kicker">Le rouge</p><h2>Le rejeu a trouvé un défaut.</h2><ul class="brief-list tone-yellow"><li>Drupal écrit le lien suivant comme un objet.</li><li>Le preset ne le suivait pas: corrigé (icreated/lumnik#1638).</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le vert</p><h2>45 articles, 5 pages.</h2><ul class="brief-list tone-green"><li>Chaque page suivante lue dans links.next.</li><li>Chaque article rangé sous son identifiant Drupal.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>Le hub lit ce que l&#x27;API publie.</h2><ul class="brief-list tone-cyan"><li>Un contenu non publié n&#x27;est pas lu sans compte.</li><li>Drupal ne publie pas de total: aucun témoin du compte.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Un vrai Drupal 11, chaque étape publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
