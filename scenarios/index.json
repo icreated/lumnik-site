@@ -670,6 +670,24 @@
       "evidenceDigest": "sha256:c61020779725c30f4b7eb409300a84b2e4aa9869c831175dacdb0a210929f800"
     },
     {
+      "slug": "rest-cursor-in-header",
+      "title": "Le transporteur lit son curseur dans un en-tête: placé ailleurs, le run échoue au lieu de mentir.",
+      "lede": "L'API de suivi d'un transporteur pagine par curseur. Elle le lit dans l'en-tête X-Next-Cursor, et nulle part ailleurs:\n- envoyé en paramètre d'URL, le défaut, le curseur n'arrive pas: l'API renvoie la première page et dit qu'il y en a d'autres; le run échoue et dit pourquoi;\n- une ligne, cursor_binding: header, et les 1200 événements passent, 12 pages.",
+      "tags": {
+        "domain": [
+          "Transport",
+          "Suivi",
+          "API partenaire"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-30",
+      "evidenceDigest": "sha256:f06eb1403fdec7ae433c77b75ae10bd4fb8dabc1c4b2d321c8c6a7d4a4ec5b01"
+    },
+    {
       "slug": "rest-incremental-orders",
       "title": "L'API qui n'envoie que ce qui a changé : une commande modifiée pendant la lecture n'est pas perdue.",
       "lede": "Une API de commandes sait répondre à « ce qui a changé depuis telle date ». lumnik la lit en entier une fois, puis chaque nuit seulement ce qui a bougé. Une commande modifiée pendant qu'un run lit encore les pages suivantes aurait pu passer entre deux nuits : le run suivant repart un peu avant sa dernière marque, et la récupère.",
@@ -701,7 +719,7 @@
       },
       "edition": "open",
       "replayedAt": "2026-10-30",
-      "evidenceDigest": "sha256:a7283d3f6a0861a414d545b36b91ee0d6dbd54a02d9b9f7a4953daedfd8e9ca0"
+      "evidenceDigest": "sha256:77a360460c6e2c125135a8d28af690c39a297a8307c5ac8f9539bd5826c08b31"
     },
     {
       "slug": "rest-partner-loses-rows",
@@ -736,7 +754,7 @@
       },
       "edition": "open",
       "replayedAt": "2026-10-30",
-      "evidenceDigest": "sha256:2a7f38f447c7ed322a5415f39c5bb22250b7299e26a3c16ede06ae53d7eabcad"
+      "evidenceDigest": "sha256:ff802f25c861e69da8c41f507bf5246c63d92698f1131ffd246efd4607b3680f"
     },
     {
       "slug": "saas-oauth2-orders",

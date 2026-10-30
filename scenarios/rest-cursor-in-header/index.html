@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le transporteur lit son curseur dans un en-tête: placé ailleurs, le run échoue au lieu de mentir. — lumnik</title>
+<meta name="description" content="Lire tous les événements de suivi d&#x27;un transporteur dont l&#x27;API attend le curseur de page dans un en-tête de requête. L&#x27;API de suivi d&#x27;un transporteur pagine par curseur. Elle le lit dans l&#x27;en-tête X-Next-Cursor, et nulle part ailleurs: Envoyé en paramètre d&#x27;URL, le défaut, le curseur n&#x27;arrive pas: l&#x27;API renvoie la première page et dit qu&#x27;il y en a d&#x27;autres; le run échoue et dit pourquoi; Une ligne, cursor_binding: header, et les 1200 événements passent, 12 pages.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/rest-cursor-in-header/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/rest-cursor-in-header/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Le transporteur lit son curseur dans un en-tête: placé ailleurs, le run échoue au lieu de mentir.</h1>
+    <p class="goal"><strong>Objectif</strong> Lire tous les événements de suivi d&#x27;un transporteur dont l&#x27;API attend le curseur de page dans un en-tête de requête.</p>
+    <p class="lede">L&#x27;API de suivi d&#x27;un transporteur pagine par curseur. Elle le lit dans l&#x27;en-tête X-Next-Cursor, et nulle part ailleurs:</p><ul class="lede-list"><li>envoyé en paramètre d&#x27;URL, le défaut, le curseur n&#x27;arrive pas: l&#x27;API renvoie la première page et dit qu&#x27;il y en a d&#x27;autres; le run échoue et dit pourquoi;</li><li>une ligne, cursor_binding: header, et les 1200 événements passent, 12 pages.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Transport</li><li class="tag">Suivi</li><li class="tag">API partenaire</li><li class="tag kind">Connector</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="Le transporteur lit son curseur dans un en-tête: placé ailleurs, le run échoue au lieu de mentir.">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · Déployer</span><span class="sub">L&#x27;API</span></a><a href="#step-query" data-step="query"><span class="num">2 · Brancher</span><span class="sub">Rouge</span></a><a href="#step-header" data-step="header"><span class="num">3 · Corriger</span><span class="sub">Vert</span></a><a href="#step-parcels" data-step="parcels"><span class="num">4 · Lire</span><span class="sub">Le résultat</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">1200 événements, le curseur dans un en-tête</h2>
+      <p>Une API de transporteur, simulée pour le rejeu: 1200 événements de suivi, 100 par page.</p><ul class="prose-list"><li>has_more: il reste des pages</li><li>next_cursor: le curseur de la page suivante</li><li>la page suivante se demande par l&#x27;en-tête X-Next-Cursor; ailleurs, le curseur est ignoré</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Pourquoi simulée</strong><p>Peu d&#x27;API publiques font ainsi; le comportement est celui des API partenaires qui le font.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La première page dit qu&#x27;il en reste.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déployer"><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="true" tabindex="0">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0"><dl class="facts"><dt>events</dt><dd>100</dd><dt>has_more</dt><dd>true</dd><dt>next_cursor</dt><dd>eyJvIjogMTAwfQ==</dd></dl><p class="sources">preuves: replay.log, page-1.json, requests-query.txt, requests-header.txt, parcels-by-status.txt, count.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-query" aria-labelledby="query-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="query-title">Curseur en paramètre d&#x27;URL: le run échoue</h2>
+      <p>Le connecteur envoie le curseur en paramètre d&#x27;URL, le défaut. L&#x27;API l&#x27;ignore et renvoie la première page, avec le même curseur. lumnik refuse de s&#x27;arrêter là: le run échoue et nomme les clés à vérifier.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>IN 0</strong><p>Aucune page n&#x27;est écrite comme si elle était la seule.</p></div></li><li><span class="n">2</span><div><strong>Le message</strong><p>Il nomme l&#x27;endpoint, jamais la valeur du curseur.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une source qui répète son curseur arrête le run, avec sa raison.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Brancher"><button type="button" role="tab" id="query-manifest-tab" data-view="manifest" aria-controls="query-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="query-commands-tab" data-view="commands" aria-controls="query-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="query-result-tab" data-view="result" aria-controls="query-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="query-manifest" aria-labelledby="query-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-events-query.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-carrier-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [transport]</span><span class="line"></span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:9240</span><span class="line">  <span class="key">auth</span>: { kind: bearer, token_env: SCENARIO_CARRIER_TOKEN }</span><span class="line"></span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: events</span><span class="line">      <span class="key">path</span>: /v2/tracking-events</span><span class="line">      <span class="key">method</span>: GET</span><span class="line">      <span class="key">pagination</span>:</span><span class="line">        <span class="key">kind</span>: cursor</span><span class="line hl">        <span class="key">cursor_param</span>: cursor              <span class="comment"># sent as ?cursor=… — the default binding</span></span><span class="line">        <span class="key">cursor_path</span>: $.next_cursor</span><span class="line">        <span class="key">has_more_path</span>: $.has_more</span><span class="line">        <span class="key">response_path</span>: $.events</span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_carrier_a</span><span class="line">        <span class="key">unique_key</span>: $.event_id</span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: parcel, path: $.parcel, type: text }</span><span class="line">          - { name: status, path: $.status, type: text }</span><span class="line">          - { name: at, path: $.at, type: timestamptz }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="query-commands" aria-labelledby="query-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-events-query.yaml</span>
+<span class="out">Applied connector &quot;scenario-carrier-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-carrier-a</span>
+<span class="out">run scheduled: 1abbbd5b-ecf3-420d-bfc7-d468f952d271</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 1abbbd5b-ecf3-420d-bfc7-d468f952d271</span>
+<span class="out">ID        CONNECTOR           ENDPOINT  STATUS  IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+1abbbd5b  scenario-carrier-a  events    Failed  0   0    0        0             2026-10-30 18:00  2026-10-30 18:00  yes</span>
+<span class="note">✖ run failed: Endpoint &#x27;events&#x27;: the source sent back the cursor it was given while saying more pages — the cursor is not reaching it (check cursor_binding, and cursor_param or cursor_var)</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="query-result" aria-labelledby="query-result-tab" tabindex="0" hidden><dl class="facts"><dt>events</dt><dd>Failed · IN 0 · OUT 0</dd><dt>refusal</dt><dd>Endpoint &#x27;events&#x27;: the source sent back the cursor it was given while saying more pages — the cursor is not reaching it (check cursor_binding, and cursor_param or cursor_var)</dd><dt>request 1</dt><dd>X-Next-Cursor: - /v2/tracking-events</dd><dt>request 2</dt><dd>X-Next-Cursor: - /v2/tracking-events?cursor=eyJvIjogMTAwfQ%3D%3D</dd></dl><p class="sources">preuves: replay.log, page-1.json, requests-query.txt, requests-header.txt, parcels-by-status.txt, count.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-header" aria-labelledby="header-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="header-title">cursor_binding: header, et les 12 pages passent</h2>
+      <p>Une ligne de plus: cursor_binding: header. Le curseur part dans X-Next-Cursor à chaque page.</p><ul class="prose-list"><li>cursor_binding: où le curseur est envoyé</li><li>cursor_param: le nom de l&#x27;en-tête</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Compte</strong><p>1200 événements, 1200 lus.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le curseur atteint l&#x27;API à chaque page.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Corriger"><button type="button" role="tab" id="header-manifest-tab" data-view="manifest" aria-controls="header-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="header-commands-tab" data-view="commands" aria-controls="header-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="header-result-tab" data-view="result" aria-controls="header-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="header-manifest" aria-labelledby="header-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-events-header.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-carrier-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [transport]</span><span class="line"></span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:9240</span><span class="line">  <span class="key">auth</span>: { kind: bearer, token_env: SCENARIO_CARRIER_TOKEN }</span><span class="line"></span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: events</span><span class="line">      <span class="key">path</span>: /v2/tracking-events</span><span class="line">      <span class="key">method</span>: GET</span><span class="line">      <span class="key">pagination</span>:</span><span class="line">        <span class="key">kind</span>: cursor</span><span class="line hl">        <span class="key">cursor_binding</span>: header            <span class="comment"># the carrier reads its cursor from a header</span></span><span class="line hl">        <span class="key">cursor_param</span>: X-Next-Cursor</span><span class="line">        <span class="key">cursor_path</span>: $.next_cursor</span><span class="line">        <span class="key">has_more_path</span>: $.has_more</span><span class="line">        <span class="key">response_path</span>: $.events</span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_carrier_a</span><span class="line">        <span class="key">unique_key</span>: $.event_id</span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: parcel, path: $.parcel, type: text }</span><span class="line">          - { name: status, path: $.status, type: text }</span><span class="line">          - { name: at, path: $.at, type: timestamptz }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="header-commands" aria-labelledby="header-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/20-events-header.yaml</span>
+<span class="out">Applied connector &quot;scenario-carrier-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-carrier-a</span>
+<span class="out">run scheduled: 77f8c776-4c0f-47d3-86fa-2df5b6197537</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 77f8c776-4c0f-47d3-86fa-2df5b6197537</span>
+<span class="out">ID        CONNECTOR           ENDPOINT  STATUS     IN    OUT   SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+77f8c776  scenario-carrier-a  events    Completed  1200  1200  0        0             2026-10-30 18:00  2026-10-30 18:00  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="header-result" aria-labelledby="header-result-tab" tabindex="0" hidden><dl class="facts"><dt>events</dt><dd>Completed · IN 1200 · OUT 1200</dd><dt>requests</dt><dd>12, each with X-Next-Cursor after the first</dd></dl><p class="sources">preuves: replay.log, page-1.json, requests-query.txt, requests-header.txt, parcels-by-status.txt, count.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-parcels" aria-labelledby="parcels-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="parcels-title">300 colis, chacun à son dernier statut</h2>
+      <p>Le hub garde chaque événement. Une requête prend le plus récent de chaque colis.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Données</strong><p>Synthétiques: les statuts sont répartis régulièrement.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Toute la source est dans le hub.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="parcels-result-tab" data-view="result" aria-controls="parcels-result" aria-selected="true" tabindex="0">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-result" id="parcels-result" aria-labelledby="parcels-result-tab" tabindex="0"><dl class="facts"><dt>hub</dt><dd>1200 events, 300 parcels</dd><dt>AVISE</dt><dd>60 parcels</dd><dt>EN_LIVRAISON</dt><dd>60 parcels</dd><dt>EN_TRANSIT</dt><dd>60 parcels</dd><dt>LIVRE</dt><dd>60 parcels</dd><dt>PRIS_EN_CHARGE</dt><dd>60 parcels</dd></dl><p class="sources">preuves: replay.log, page-1.json, requests-query.txt, requests-header.txt, parcels-by-status.txt, count.txt · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Le refus reconnaît une source qui renvoie le curseur qu&#x27;elle vient de recevoir. Une source qui renverrait des pages au hasard ne serait pas reconnue.</li><li>Sans total publié par l&#x27;API, aucun témoin ne compare le compte lu au compte réel.</li><li>API de transporteur simulée, événements synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Transport · suivi des colis</p><h2>Le transporteur publie 1200 événements de suivi.</h2><p class="brief-lead">L&#x27;import doit tous les lire, page après page.</p><p class="brief-note">API de transporteur simulée</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>L&#x27;API attend la page suivante dans un en-tête.</h2><ul class="brief-list tone-cyan"><li>Envoyée ailleurs, elle est ignorée.</li><li>L&#x27;API renvoie alors la première page.</li><li>Elle dit pourtant qu&#x27;il en reste.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>L&#x27;API reste telle quelle.</h2><ul class="brief-list tone-green"><li>Un jeton du transporteur, rangé par lm secret.</li><li>Aucun développement côté transporteur.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>cursor_binding: header
+cursor_param: X-Next-Cursor</code></pre><h2>Dire où va le curseur.</h2><p>Un connecteur de 30 lignes.</p></section><section class="brief-slide"><p class="brief-kicker">Le rouge</p><h2>Curseur mal placé: le run échoue.</h2><ul class="brief-list tone-yellow"><li>Il dit pourquoi, et quelle clé vérifier.</li><li>Aucune lecture partielle annoncée complète.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le vert</p><h2>1200 événements, 12 pages.</h2><ul class="brief-list tone-green"><li>300 colis, chacun avec son dernier statut.</li><li>Le curseur part dans l&#x27;en-tête à chaque page.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>Le refus suppose que l&#x27;API répète sa page.</h2><ul class="brief-list tone-cyan"><li>Une API qui renverrait des pages au hasard ne serait pas reconnue.</li><li>Le témoin du compte reste le total qu&#x27;elle publie, si elle en publie un.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
