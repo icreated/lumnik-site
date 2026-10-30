@@ -688,6 +688,24 @@
       "evidenceDigest": "sha256:f06eb1403fdec7ae433c77b75ae10bd4fb8dabc1c4b2d321c8c6a7d4a4ec5b01"
     },
     {
+      "slug": "rest-drupal-jsonapi",
+      "title": "Drupal parle JSON:API: on nomme le standard, une ligne lit tout le site.",
+      "lede": "Drupal 11 expose ses contenus par JSON:API, un module de son cœur. La page suivante est dans links.next, que Drupal écrit comme un objet {\"href\": …}. lumnik a un preset pour ce standard:\n- pagination: { kind: json-api }, et les 5 pages sont suivies;\n- 45 articles lus, 45 écrits dans le hub.",
+      "tags": {
+        "domain": [
+          "Site web",
+          "Drupal",
+          "Contenu"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-30",
+      "evidenceDigest": "sha256:a62e250ee1caaf2333b0f07b7cb418de09f31b0158866b2266727cb1d37bfdf2"
+    },
+    {
       "slug": "rest-incremental-orders",
       "title": "L'API qui n'envoie que ce qui a changé : une commande modifiée pendant la lecture n'est pas perdue.",
       "lede": "Une API de commandes sait répondre à « ce qui a changé depuis telle date ». lumnik la lit en entier une fois, puis chaque nuit seulement ce qui a bougé. Une commande modifiée pendant qu'un run lit encore les pages suivantes aurait pu passer entre deux nuits : le run suivant repart un peu avant sa dernière marque, et la récupère.",
