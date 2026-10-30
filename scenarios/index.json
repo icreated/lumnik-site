@@ -686,6 +686,24 @@
       "evidenceDigest": "sha256:4e149714e42f5565513f76d9220f3aa543963653b01b190cfcc233d8772bb9dc"
     },
     {
+      "slug": "rest-link-header-tickets",
+      "title": "Un ticket fermé reste ouvert dans le hub, tant qu'on ne lit que les ouverts.",
+      "lede": "Le support suit ses tickets clients dans Gitea. Son API pagine comme GitHub: la page suivante est dans l'en-tête Link. lumnik suit l'en-tête, page après page:\n- lire state=open laisse ouverts, dans le hub, les tickets fermés depuis: ils sortent du filtre de l'API;\n- lire tous les états, par ce qui a changé depuis le dernier run, garde le hub juste: 57 ouverts, comme Gitea.",
+      "tags": {
+        "domain": [
+          "Support",
+          "Tickets",
+          "Gitea"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-30",
+      "evidenceDigest": "sha256:a7283d3f6a0861a414d545b36b91ee0d6dbd54a02d9b9f7a4953daedfd8e9ca0"
+    },
+    {
       "slug": "rest-partner-loses-rows",
       "title": "L'API du partenaire perd une page, le run ne ment pas.",
       "lede": "Un partenaire publie 2 400 partenaires et leur nombre. Une nuit, une page de 100 disparaît, le nombre reste juste. lumnik compare ce qu'il a lu au total que la source déclare : le run échoue en nommant l'endpoint et les deux chiffres, au lieu de passer au vert.",

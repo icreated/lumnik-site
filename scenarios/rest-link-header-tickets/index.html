@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Un ticket fermé reste ouvert dans le hub, tant qu&#x27;on ne lit que les ouverts. — lumnik</title>
+<meta name="description" content="Suivre les tickets ouverts d&#x27;une forge Gitea, paginée par l&#x27;en-tête Link, sans garder ouvert un ticket que le support a fermé. Le support suit ses tickets clients dans Gitea. Son API pagine comme GitHub: la page suivante est dans l&#x27;en-tête Link. lumnik suit l&#x27;en-tête, page après page: Lire state=open laisse ouverts, dans le hub, les tickets fermés depuis: ils sortent du filtre de l&#x27;API; Lire tous les états, par ce qui a changé depuis le dernier run, garde le hub juste: 57 ouverts, comme Gitea.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/rest-link-header-tickets/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/rest-link-header-tickets/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Un ticket fermé reste ouvert dans le hub, tant qu&#x27;on ne lit que les ouverts.</h1>
+    <p class="goal"><strong>Objectif</strong> Suivre les tickets ouverts d&#x27;une forge Gitea, paginée par l&#x27;en-tête Link, sans garder ouvert un ticket que le support a fermé.</p>
+    <p class="lede">Le support suit ses tickets clients dans Gitea. Son API pagine comme GitHub: la page suivante est dans l&#x27;en-tête Link. lumnik suit l&#x27;en-tête, page après page:</p><ul class="lede-list"><li>lire state=open laisse ouverts, dans le hub, les tickets fermés depuis: ils sortent du filtre de l&#x27;API;</li><li>lire tous les états, par ce qui a changé depuis le dernier run, garde le hub juste: 57 ouverts, comme Gitea.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Support</li><li class="tag">Tickets</li><li class="tag">Gitea</li><li class="tag kind">Connector</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="Un ticket fermé reste ouvert dans le hub, tant qu&#x27;on ne lit que les ouverts.">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · Déployer</span><span class="sub">La forge</span></a><a href="#step-open-only" data-step="open-only"><span class="num">2 · Brancher</span><span class="sub">Les ouverts</span></a><a href="#step-closed" data-step="closed"><span class="num">3 · Fermer</span><span class="sub">Le piège</span></a><a href="#step-all-states" data-step="all-states"><span class="num">4 · Corriger</span><span class="sub">Tous les états</span></a><a href="#step-next-day" data-step="next-day"><span class="num">5 · Relire</span><span class="sub">Le lendemain</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">Gitea: 95 tickets, la page suivante dans l&#x27;en-tête</h2>
+      <p>Une vraie forge Gitea 1.22. Ses tickets sont ceux du support: 3 clients fictifs, un label bloquant, 72 ouverts.</p><ul class="prose-list"><li>Link: la page suivante, et la dernière</li><li>X-Total-Count: le nombre de tickets du filtre</li><li>le corps n&#x27;est que la liste: aucune pagination dedans</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>ROOT_URL</strong><p>Gitea écrit ses liens avec l&#x27;adresse que le hub joint.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La pagination est dans les en-têtes.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déployer"><button type="button" role="tab" id="lab-manifest-tab" data-view="manifest" aria-controls="lab-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="lab-manifest" aria-labelledby="lab-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/lab-docker-compose.yml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># The support team&#x27;s forge: a real Gitea, its issues are the customer tickets.</span></span><span class="line"><span class="key">name</span>: lumnik-gitea-desk</span><span class="line"><span class="key">services</span>:</span><span class="line">  <span class="key">gitea</span>:</span><span class="line">    <span class="key">image</span>: gitea/gitea:1.22.6</span><span class="line">    <span class="key">environment</span>:</span><span class="line">      <span class="key">GITEA__security__INSTALL_LOCK</span>: <span class="str">&quot;true&quot;</span></span><span class="line">      <span class="key">GITEA__database__DB_TYPE</span>: sqlite3</span><span class="line">      <span class="comment"># The address the hub reaches: Gitea builds its Link headers from it.</span></span><span class="line hl">      <span class="key">GITEA__server__ROOT_URL</span>: http://host.docker.internal:${GITEA_PORT:-3030}/</span><span class="line hl">      <span class="key">GITEA__api__DEFAULT_PAGING_NUM</span>: <span class="str">&quot;30&quot;</span></span><span class="line">    <span class="key">ports</span>: [<span class="str">&quot;${GITEA_PORT:-3030}:3000&quot;</span>]</span><span class="line">    <span class="key">tmpfs</span>: [<span class="str">&quot;/data&quot;</span>]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0" hidden><dl class="facts"><dt>Link</dt><dd>&lt;http://host.docker.internal:3030/api/v1/repos/desk-admin/support/issues?page=2&amp;state=open&amp;type=issues&gt;; rel=&quot;next&quot;,&lt;http://host.docker.internal:3030/api/v1/repos/desk-admin/support/issues?page=3&amp;state=open&amp;type=issues&gt;; rel=&quot;last&quot;</dd><dt>X-Total-Count</dt><dd>72</dd></dl><p class="sources">preuves: replay.log, page-1-headers.txt, compare-open-only.txt, compare-closed.txt, compare-all-states.txt, compare-next-day.txt, next-day-requests.txt, open-by-client.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-open-only" aria-labelledby="open-only-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="open-only-title">72 tickets, 3 pages, par l&#x27;en-tête Link</h2>
+      <p>Un connecteur rest-generic.</p><ul class="prose-list"><li>auth: un jeton Gitea en lecture seule, rangé par lm secret</li><li>pagination: link-header: suit rel=&quot;next&quot; jusqu&#x27;à la dernière page</li><li>response_path: $: le corps est la liste</li><li>client, blocking: lus dans les labels du ticket</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Accord</strong><p>Le hub et Gitea comptent 72.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>L&#x27;en-tête Link est suivi jusqu&#x27;au bout.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Brancher"><button type="button" role="tab" id="open-only-manifest-tab" data-view="manifest" aria-controls="open-only-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="open-only-commands-tab" data-view="commands" aria-controls="open-only-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="open-only-result-tab" data-view="result" aria-controls="open-only-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="open-only-manifest" aria-labelledby="open-only-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-tickets.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-desk-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [support]</span><span class="line"></span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:3030/api/v1</span><span class="line">  <span class="key">auth</span>: { kind: bearer, token_env: SCENARIO_DESK_TOKEN }</span><span class="line"></span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: open-tickets</span><span class="line hl">      <span class="key">path</span>: /repos/desk-admin/support/issues?state=open&amp;type=issues</span><span class="line">      <span class="key">method</span>: GET</span><span class="line hl">      <span class="key">pagination</span>: { kind: link-header, response_path: $ }</span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_desk_a</span><span class="line">        <span class="key">unique_key</span>: $.number</span><span class="line">        <span class="key">promote</span>:</span><span class="line hl">          - { name: title, path: $.title, type: text }</span><span class="line hl">          - { name: client, path: <span class="str">&quot;$.labels[?(@.name =~ /client:.*/)].name&quot;</span>, type: text }</span><span class="line hl">          - { name: blocking, path: <span class="str">&quot;$.labels[?(@.name == &#x27;bloquant&#x27;)].name&quot;</span>, type: text }</span><span class="line hl">          - { name: opened_at, path: $.created_at, type: timestamptz }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="open-only-commands" aria-labelledby="open-only-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-tickets.yaml</span>
+<span class="out">Applied connector &quot;scenario-desk-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-desk-a</span>
+<span class="out">run scheduled: 942c7767-5fe2-44d0-a684-5f52e29eea4d</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 942c7767-5fe2-44d0-a684-5f52e29eea4d</span>
+<span class="out">ID        CONNECTOR        ENDPOINT      STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+942c7767  scenario-desk-a  open-tickets  Completed  72  72   0        0             2026-10-30 15:05  2026-10-30 15:05  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="open-only-result" aria-labelledby="open-only-result-tab" tabindex="0" hidden><dl class="facts"><dt>open-tickets</dt><dd>Completed · IN 72 · OUT 72</dd><dt>Gitea</dt><dd>open 72</dd><dt>hub</dt><dd>rows 72</dd></dl><p class="sources">preuves: replay.log, page-1-headers.txt, compare-open-only.txt, compare-closed.txt, compare-all-states.txt, compare-next-day.txt, next-day-requests.txt, open-by-client.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-closed" aria-labelledby="closed-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="closed-title">12 tickets fermés: Gitea 60, le hub 72</h2>
+      <p>Le support ferme 12 tickets. Le même run relit les ouverts: 60. Les 12 fermés ne sont plus renvoyés; le hub ne supprime jamais une ligne absente de la source. Elles restent ouvertes.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Run vert</strong><p>Rien ne signale l&#x27;écart: le filtre de l&#x27;API l&#x27;a caché.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Lire un filtre ne dit rien de ce qui en sort.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Fermer"><button type="button" role="tab" id="closed-commands-tab" data-view="commands" aria-controls="closed-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="closed-result-tab" data-view="result" aria-controls="closed-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="closed-commands" aria-labelledby="closed-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-desk-a</span>
+<span class="out">run scheduled: 7de8ffc5-8dd3-480b-b153-a8580b987f8e</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 7de8ffc5-8dd3-480b-b153-a8580b987f8e</span>
+<span class="out">ID        CONNECTOR        ENDPOINT      STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+7de8ffc5  scenario-desk-a  open-tickets  Completed  60  60   0        0             2026-10-30 15:05  2026-10-30 15:05  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="closed-result" aria-labelledby="closed-result-tab" tabindex="0" hidden><dl class="facts"><dt>open-tickets</dt><dd>Completed · IN 60 · OUT 60</dd><dt>Gitea</dt><dd>open 60</dd><dt>hub</dt><dd>rows 72</dd></dl><p class="sources">preuves: replay.log, page-1-headers.txt, compare-open-only.txt, compare-closed.txt, compare-all-states.txt, compare-next-day.txt, next-day-requests.txt, open-by-client.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-all-states" aria-labelledby="all-states-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="all-states-title">Tous les états, par ce qui a changé</h2>
+      <p>Le même connecteur, autrement déclaré.</p><ul class="prose-list"><li>state=all: les fermés sont lus aussi</li><li>state: une colonne; fermé se lit fermé</li><li>incremental: since reçoit le plus récent updated_at du run précédent</li></ul><p>Premier run: les 95 tickets.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Accord</strong><p>95 lignes, 60 ouvertes, comme Gitea.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>L&#x27;état vient de la source, ligne par ligne.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Corriger"><button type="button" role="tab" id="all-states-manifest-tab" data-view="manifest" aria-controls="all-states-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="all-states-commands-tab" data-view="commands" aria-controls="all-states-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="all-states-result-tab" data-view="result" aria-controls="all-states-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="all-states-manifest" aria-labelledby="all-states-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-tickets-all.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-desk-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [support]</span><span class="line"></span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:3030/api/v1</span><span class="line">  <span class="key">auth</span>: { kind: bearer, token_env: SCENARIO_DESK_TOKEN }</span><span class="line"></span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: open-tickets</span><span class="line hl">      <span class="key">path</span>: /repos/desk-admin/support/issues?state=all&amp;type=issues</span><span class="line">      <span class="key">method</span>: GET</span><span class="line">      <span class="key">pagination</span>: { kind: link-header, response_path: $ }</span><span class="line hl">      <span class="key">incremental</span>: { mode: watermark, param: since, watermark_path: $.updated_at }</span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_desk_a</span><span class="line">        <span class="key">unique_key</span>: $.number</span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: title, path: $.title, type: text }</span><span class="line hl">          - { name: state, path: $.state, type: text }</span><span class="line">          - { name: client, path: <span class="str">&quot;$.labels[?(@.name =~ /client:.*/)].name&quot;</span>, type: text }</span><span class="line">          - { name: blocking, path: <span class="str">&quot;$.labels[?(@.name == &#x27;bloquant&#x27;)].name&quot;</span>, type: text }</span><span class="line">          - { name: opened_at, path: $.created_at, type: timestamptz }</span><span class="line">          - { name: updated_at, path: $.updated_at, type: timestamptz }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="all-states-commands" aria-labelledby="all-states-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/20-tickets-all.yaml</span>
+<span class="out">Applied connector &quot;scenario-desk-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-desk-a</span>
+<span class="out">run scheduled: ba9019b9-72d5-414f-8f0c-7f17c1ad2e6e</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get ba9019b9-72d5-414f-8f0c-7f17c1ad2e6e</span>
+<span class="out">ID        CONNECTOR        ENDPOINT      STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+ba9019b9  scenario-desk-a  open-tickets  Completed  95  95   0        0             2026-10-30 15:05  2026-10-30 15:05  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="all-states-result" aria-labelledby="all-states-result-tab" tabindex="0" hidden><dl class="facts"><dt>open-tickets</dt><dd>Completed · IN 95 · OUT 95</dd><dt>Gitea</dt><dd>open 60</dd><dt>hub</dt><dd>rows 95, open 60</dd></dl><p class="sources">preuves: replay.log, page-1-headers.txt, compare-open-only.txt, compare-closed.txt, compare-all-states.txt, compare-next-day.txt, next-day-requests.txt, open-by-client.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-next-day" aria-labelledby="next-day-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="next-day-title">3 fermés de plus: 57 ouverts, des deux côtés</h2>
+      <p>Le support ferme 3 tickets. Le run demande à Gitea ce qui a changé depuis le dernier run: 15 tickets reviennent, pas 95.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>15, pas 3</strong><p>Chaque run repart une minute avant le dernier changement: les 12 de l&#x27;étape précédente, à peine plus anciens, sont relus aussi.</p></div></li><li><span class="n">2</span><div><strong>Par client</strong><p>Le hub répond: ouverts et bloquants par client.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le hub suit Gitea en ne relisant que ce qui change.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Relire"><button type="button" role="tab" id="next-day-commands-tab" data-view="commands" aria-controls="next-day-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="next-day-result-tab" data-view="result" aria-controls="next-day-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="next-day-commands" aria-labelledby="next-day-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-desk-a</span>
+<span class="out">run scheduled: a03d4fd3-3af4-4edf-81b3-9c5d1f691da6</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get a03d4fd3-3af4-4edf-81b3-9c5d1f691da6</span>
+<span class="out">ID        CONNECTOR        ENDPOINT      STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+a03d4fd3  scenario-desk-a  open-tickets  Completed  15  15   0        0             2026-10-30 15:05  2026-10-30 15:05  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="next-day-result" aria-labelledby="next-day-result-tab" tabindex="0" hidden><dl class="facts"><dt>since</dt><dd>2026-10-30T14:04:07Z</dd><dt>open-tickets</dt><dd>Completed · IN 15 · OUT 15</dd><dt>Gitea</dt><dd>open 57</dd><dt>hub</dt><dd>rows 95, open 57</dd><dt>client:Atelier Ouest</dt><dd>19 open · 2 blocking</dd><dt>client:Brasserie Nord</dt><dd>19 open · 3 blocking</dd><dt>client:Laiterie Sud</dt><dd>19 open · 3 blocking</dd></dl><p class="sources">preuves: replay.log, page-1-headers.txt, compare-open-only.txt, compare-closed.txt, compare-all-states.txt, compare-next-day.txt, next-day-requests.txt, open-by-client.txt · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Un ticket supprimé dans Gitea n&#x27;est plus renvoyé: sa ligne reste dans le hub, avec son dernier état.</li><li>La marge de relecture vaut une minute plus la durée du run: un ticket changé juste avant est relu, jamais perdu.</li><li>Le total X-Total-Count n&#x27;est pas encore un témoin du compte (icreated/lumnik#1632).</li><li>Forge Gitea de démonstration, tickets synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Support · tickets clients</p><h2>Le support ferme 12 tickets.</h2><p class="brief-lead">Le tableau de bord en compte toujours 72 ouverts.</p><p class="brief-note">Forge Gitea de démonstration</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Un filtre ne voit pas ce qui en sort.</h2><ul class="brief-list tone-cyan"><li>L&#x27;import ne lit que les tickets ouverts.</li><li>Un ticket fermé n&#x27;est plus renvoyé.</li><li>Sa ligne reste ouverte.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>Gitea reste tel quel.</h2><ul class="brief-list tone-green"><li>Un jeton en lecture seule.</li><li>La pagination de Gitea, suivie par l&#x27;en-tête Link.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>path: …/issues?state=all
+pagination: { kind: link-header }
+incremental: { mode: watermark, param: since }</code></pre><h2>Tous les états, seulement ce qui a changé.</h2><p>Un connecteur de 28 lignes.</p></section><section class="brief-slide"><p class="brief-kicker">Le rouge</p><h2>Gitea: 60 ouverts. Le hub: 72.</h2><ul class="brief-list tone-yellow"><li>Le run est vert.</li><li>12 tickets fermés restent ouverts.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le vert</p><h2>Gitea: 57 ouverts. Le hub: 57.</h2><ul class="brief-list tone-green"><li>Le lendemain, 15 tickets relus, pas 95.</li><li>L&#x27;état est une colonne: fermé se lit fermé.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>Un ticket supprimé n&#x27;est pas vu.</h2><ul class="brief-list tone-cyan"><li>Gitea ne renvoie plus un ticket supprimé.</li><li>La ligne reste dans le hub, avec son dernier état.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Une vraie forge Gitea, chaque étape publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
