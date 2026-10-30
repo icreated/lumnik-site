@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NetBox, l&#x27;inventaire réseau: on nomme Django REST, on dit Token, tout est lu. — lumnik</title>
+<meta name="description" content="Lire chaque nuit tous les équipements d&#x27;un NetBox, la référence de l&#x27;équipe réseau, avec un jeton en lecture seule. NetBox est bâti sur Django REST Framework: count, next et results dans chaque réponse, et un jeton présenté par le mot Token, pas Bearer. lumnik nomme les deux: Pagination: { kind: drf-limit-offset }: 120 équipements en 3 requêtes; Auth: { kind: bearer, scheme: Token }: le mot que NetBox attend; La nuit suivante, les 6 switchs passés hors ligne sont dans le hub.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/rest-netbox-inventory/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/rest-netbox-inventory/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>NetBox, l&#x27;inventaire réseau: on nomme Django REST, on dit Token, tout est lu.</h1>
+    <p class="goal"><strong>Objectif</strong> Lire chaque nuit tous les équipements d&#x27;un NetBox, la référence de l&#x27;équipe réseau, avec un jeton en lecture seule.</p>
+    <p class="lede">NetBox est bâti sur Django REST Framework: count, next et results dans chaque réponse, et un jeton présenté par le mot Token, pas Bearer. lumnik nomme les deux:</p><ul class="lede-list"><li>pagination: { kind: drf-limit-offset }: 120 équipements en 3 requêtes;</li><li>auth: { kind: bearer, scheme: Token }: le mot que NetBox attend;</li><li>la nuit suivante, les 6 switchs passés hors ligne sont dans le hub.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Réseau</li><li class="tag">Inventaire</li><li class="tag">NetBox</li><li class="tag kind">Connector</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="NetBox, l&#x27;inventaire réseau: on nomme Django REST, on dit Token, tout est lu.">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · Déployer</span><span class="sub">NetBox</span></a><a href="#step-connect" data-step="connect"><span class="num">2 · Brancher</span><span class="sub">Le preset</span></a><a href="#step-next-night" data-step="next-night"><span class="num">3 · Relire</span><span class="sub">Le lendemain</span></a><a href="#step-sites" data-step="sites"><span class="num">4 · Lire</span><span class="sub">Le résultat</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">Un vrai NetBox: 3 sites, 120 équipements</h2>
+      <p>NetBox v4.1 avec PostgreSQL et Valkey, comme le projet netbox-docker. 3 sites, 120 switchs et routeurs, actifs, planifiés ou hors ligne. L&#x27;API répond à la manière de Django REST Framework:</p><ul class="prose-list"><li>count: le nombre d&#x27;équipements</li><li>next: l&#x27;URL de la page suivante</li><li>results: les équipements</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Le jeton</strong><p>Un jeton en lecture seule, présenté par « Authorization: Token &lt;clé&gt; ». « Bearer » est refusé (403).</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>NetBox pagine et s&#x27;authentifie à la manière de Django REST Framework.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déployer"><button type="button" role="tab" id="lab-manifest-tab" data-view="manifest" aria-controls="lab-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="lab-manifest" aria-labelledby="lab-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/lab-docker-compose.yml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># The network team&#x27;s source of truth: a real NetBox, its devices read through the REST API.</span></span><span class="line"><span class="key">name</span>: lumnik-netbox</span><span class="line"><span class="key">services</span>:</span><span class="line">  <span class="key">netbox</span>:</span><span class="line">    <span class="key">image</span>: netboxcommunity/netbox:v4.1</span><span class="line">    <span class="key">depends_on</span>: [postgres, redis, redis-cache]</span><span class="line">    <span class="key">environment</span>:</span><span class="line">      <span class="key">DB_HOST</span>: postgres</span><span class="line">      <span class="key">DB_NAME</span>: netbox</span><span class="line">      <span class="key">DB_USER</span>: netbox</span><span class="line">      <span class="key">DB_PASSWORD</span>: netbox-lab                 <span class="comment"># the lab&#x27;s own, on this machine only</span></span><span class="line">      <span class="key">REDIS_HOST</span>: redis</span><span class="line">      <span class="key">REDIS_CACHE_HOST</span>: redis-cache</span><span class="line">      <span class="key">SECRET_KEY</span>: lab-only-secret-key-0123456789abcdefghijklmnopqrstuvwxyz-0123456789</span><span class="line">      <span class="key">SUPERUSER_NAME</span>: netbox-admin</span><span class="line">      <span class="key">SUPERUSER_EMAIL</span>: admin@netbox.test</span><span class="line">      <span class="key">SUPERUSER_PASSWORD</span>: netbox-admin-pw-1</span><span class="line">      <span class="key">SKIP_SUPERUSER</span>: <span class="str">&quot;false&quot;</span></span><span class="line">      <span class="key">ALLOWED_HOSTS</span>: <span class="str">&quot;*&quot;</span></span><span class="line">    <span class="key">ports</span>: [<span class="str">&quot;127.0.0.1:${NETBOX_PORT:-9270}:8080&quot;</span>]   <span class="comment"># this machine only: the admin password is the lab&#x27;s</span></span><span class="line">  <span class="key">postgres</span>:</span><span class="line">    <span class="key">image</span>: postgres:16-alpine</span><span class="line">    <span class="key">environment</span>:</span><span class="line">      <span class="key">POSTGRES_DB</span>: netbox</span><span class="line">      <span class="key">POSTGRES_USER</span>: netbox</span><span class="line">      <span class="key">POSTGRES_PASSWORD</span>: netbox-lab</span><span class="line">    <span class="key">tmpfs</span>: [<span class="str">&quot;/var/lib/postgresql/data&quot;</span>]</span><span class="line">  <span class="key">redis</span>:</span><span class="line">    <span class="key">image</span>: valkey/valkey:8.0-alpine</span><span class="line">  redis-cache:</span><span class="line">    <span class="key">image</span>: valkey/valkey:8.0-alpine</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0" hidden><dl class="facts"><dt>count</dt><dd>120</dd><dt>next</dt><dd>http://127.0.0.1:9270/api/dcim/devices/?limit=50&amp;offset=50</dd><dt>results</dt><dd>50 devices</dd></dl><p class="sources">preuves: replay.log, page-1.json, requests-connect.txt, offline-before.txt, offline-after.txt, offline-by-site.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-connect" aria-labelledby="connect-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="connect-title">120 équipements, 3 requêtes</h2>
+      <p>Un connecteur rest-generic.</p><ul class="prose-list"><li>auth: bearer, scheme: Token: le mot que NetBox attend devant la clé</li><li>pagination: drf-limit-offset: offset et limit, count comme total</li><li>headers: Accept: application/json</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Trouvé en route</strong><p>Le hub n&#x27;écrivait que « Bearer »: la clé scheme vient d&#x27;icreated/lumnik#1640.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le preset et le mot du framework suffisent.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Brancher"><button type="button" role="tab" id="connect-manifest-tab" data-view="manifest" aria-controls="connect-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="connect-commands-tab" data-view="commands" aria-controls="connect-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="connect-result-tab" data-view="result" aria-controls="connect-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="connect-manifest" aria-labelledby="connect-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-devices.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-netbox-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [network]</span><span class="line"></span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:9270/api</span><span class="line hl">  <span class="key">auth</span>: { kind: bearer, scheme: Token, token_env: SCENARIO_NETBOX_TOKEN }   <span class="comment"># Django REST Framework&#x27;s token word</span></span><span class="line">  <span class="key">headers</span>:</span><span class="line">    - { name: Accept, value: application/json }</span><span class="line"></span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: devices</span><span class="line">      <span class="key">path</span>: /dcim/devices/</span><span class="line">      <span class="key">method</span>: GET</span><span class="line hl">      <span class="key">pagination</span>: { kind: drf-limit-offset, limit: 50 }      <span class="comment"># NetBox is Django REST Framework</span></span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_netbox_a</span><span class="line">        <span class="key">unique_key</span>: $.id</span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: name, path: $.name, type: text }</span><span class="line">          - { name: site, path: $.site.slug, type: text }</span><span class="line">          - { name: status, path: $.status.value, type: text }</span><span class="line">          - { name: model, path: $.device_type.model, type: text }</span><span class="line">          - { name: last_updated, path: $.last_updated, type: timestamptz }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="connect-commands" aria-labelledby="connect-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-devices.yaml</span>
+<span class="out">Applied connector &quot;scenario-netbox-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-netbox-a</span>
+<span class="out">run scheduled: 0efb19b5-cdec-41d1-bc17-011cee7ed474</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 0efb19b5-cdec-41d1-bc17-011cee7ed474</span>
+<span class="out">ID        CONNECTOR          ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+0efb19b5  scenario-netbox-a  devices   Completed  120  120  0        0             2026-10-30 22:51  2026-10-30 22:51  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="connect-result" aria-labelledby="connect-result-tab" tabindex="0" hidden><dl class="facts"><dt>devices</dt><dd>Completed · IN 120 · OUT 120</dd><dt>request 1</dt><dd>/api/dcim/devices/?limit=50&amp;offset=0</dd><dt>request 2</dt><dd>/api/dcim/devices/?offset=50&amp;limit=50</dd><dt>request 3</dt><dd>/api/dcim/devices/?limit=50&amp;offset=100</dd></dl><p class="sources">preuves: replay.log, page-1.json, requests-connect.txt, offline-before.txt, offline-after.txt, offline-by-site.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-next-night" aria-labelledby="next-night-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="next-night-title">6 switchs hors ligne: le hub les voit</h2>
+      <p>L&#x27;équipe réseau passe 6 switchs de Nantes hors ligne dans NetBox. La nuit suivante relit l&#x27;inventaire: chaque équipement met sa ligne à jour.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Clé</strong><p>L&#x27;id NetBox: un équipement modifié met sa ligne à jour, sans doublon.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le hub suit l&#x27;état de NetBox.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Relire"><button type="button" role="tab" id="next-night-commands-tab" data-view="commands" aria-controls="next-night-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="next-night-result-tab" data-view="result" aria-controls="next-night-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="next-night-commands" aria-labelledby="next-night-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-netbox-a</span>
+<span class="out">run scheduled: 5ae5a95b-1125-43b5-8921-f15a6ef53d0e</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 5ae5a95b-1125-43b5-8921-f15a6ef53d0e</span>
+<span class="out">ID        CONNECTOR          ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+5ae5a95b  scenario-netbox-a  devices   Completed  120  120  0        0             2026-10-30 22:51  2026-10-30 22:51  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="next-night-result" aria-labelledby="next-night-result-tab" tabindex="0" hidden><dl class="facts"><dt>devices</dt><dd>Completed · IN 120 · OUT 120</dd><dt>offline in the hub</dt><dd>24 → 30</dd></dl><p class="sources">preuves: replay.log, page-1.json, requests-connect.txt, offline-before.txt, offline-after.txt, offline-by-site.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-sites" aria-labelledby="sites-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="sites-title">Hors ligne, par site</h2>
+      <p>Une requête sur la table du hub compte les équipements hors ligne par site.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Nantes</strong><p>Les 6 switchs passés hors ligne s&#x27;ajoutent à ceux qui l&#x27;étaient déjà.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>L&#x27;inventaire réseau se lit en SQL, à côté des autres sources.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="sites-result-tab" data-view="result" aria-controls="sites-result" aria-selected="true" tabindex="0">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-result" id="sites-result" aria-labelledby="sites-result-tab" tabindex="0"><dl class="facts"><dt>lille</dt><dd>8 offline · 40 devices</dd><dt>lyon</dt><dd>8 offline · 40 devices</dd><dt>nantes</dt><dd>14 offline · 40 devices</dd></dl><p class="sources">preuves: replay.log, page-1.json, requests-connect.txt, offline-before.txt, offline-after.txt, offline-by-site.txt · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Chaque nuit relit tout l&#x27;inventaire. Le filtre last_updated de NetBox permettrait de ne relire que les changements; ce rejeu ne le montre pas, son inventaire étant créé dans la minute.</li><li>Un équipement supprimé de NetBox reste dans le hub avec son dernier état.</li><li>NetBox de démonstration, équipements synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Réseau · inventaire</p><h2>L&#x27;inventaire réseau vit dans NetBox.</h2><p class="brief-lead">Il faut le lire chaque nuit, sans droit d&#x27;écriture.</p><p class="brief-note">NetBox de démonstration</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>NetBox refuse le jeton tel qu&#x27;on l&#x27;envoie d&#x27;habitude.</h2><ul class="brief-list tone-cyan"><li>Il attend « Token &lt;clé&gt; », pas « Bearer &lt;clé&gt; ».</li><li>C&#x27;est la règle de Django REST Framework, sur lequel il est bâti.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>NetBox reste tel quel.</h2><ul class="brief-list tone-green"><li>Un jeton en lecture seule.</li><li>Son API REST standard.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>auth: { kind: bearer, scheme: Token }
+pagination: { kind: drf-limit-offset }</code></pre><h2>On nomme le framework et son mot.</h2><p>Un connecteur de 28 lignes.</p></section><section class="brief-slide"><p class="brief-kicker">Le rouge</p><h2>Le rejeu a trouvé un manque.</h2><ul class="brief-list tone-yellow"><li>Le hub n&#x27;écrivait que « Bearer ».</li><li>Il fallait ranger « Token » dans le secret: corrigé (icreated/lumnik#1640).</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le vert</p><h2>120 équipements, 3 requêtes.</h2><ul class="brief-list tone-green"><li>La nuit suivante, 6 switchs passés hors ligne.</li><li>Le hub les compte par site.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>Chaque nuit relit tout l&#x27;inventaire.</h2><ul class="brief-list tone-cyan"><li>Le filtre last_updated de NetBox permettrait de ne relire que les changements.</li><li>Un équipement supprimé reste dans le hub, avec son dernier état.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Un vrai NetBox, chaque étape publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
