@@ -703,6 +703,24 @@
       "evidenceDigest": "sha256:a4cdc366fbe1e7888345bbde65e66545842441a3b0fc28ff698830687fd06acc"
     },
     {
+      "slug": "rest-spring-behind-proxy",
+      "title": "L'appli Spring derrière un proxy: on nomme le framework, la clé reste le SKU.",
+      "lede": "Un ancien prestataire a laissé une application de stock en Spring Data REST, derrière nginx. lumnik la lit avec le preset spring-hateoas:\n- ses liens pointent vers son nom interne: le run refuse de les suivre et le dit;\n- une propriété côté application, et les 63 pages passent;\n- chaque produit est rangé sous son SKU, lu dans son lien: la nuit suivante, aucune copie.",
+      "tags": {
+        "domain": [
+          "Intégration",
+          "Stock",
+          "Spring"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-30",
+      "evidenceDigest": "sha256:2a7f38f447c7ed322a5415f39c5bb22250b7299e26a3c16ede06ae53d7eabcad"
+    },
+    {
       "slug": "saas-oauth2-orders",
       "title": "Le SaaS derrière OAuth2 : des jetons de 30 secondes, un run de 40, aucune page perdue.",
       "lede": "L'ERP ne bouge plus, mais une partie des commandes arrive par un SaaS récent. Ce SaaS ne prend plus de jeton fixe : il donne un identifiant client et un secret, et veut un jeton de courte durée à chaque appel. lumnik demande le jeton, le renouvelle avant qu'il expire, encaisse une rotation de clés en plein run, et dit pourquoi quand le secret est révoqué, sans jamais le montrer.",
