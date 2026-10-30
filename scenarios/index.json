@@ -793,6 +793,23 @@
       "evidenceDigest": "sha256:ff802f25c861e69da8c41f507bf5246c63d92698f1131ffd246efd4607b3680f"
     },
     {
+      "slug": "rest-spring-page",
+      "title": "Un Page de Spring: quand Spring change son JSON, une ligne suit.",
+      "lede": "Un contrôleur Spring renvoie le Page du repository. lumnik le lit avec un preset:\n- pagination: { kind: spring-page }: 130 articles en 3 requêtes;\n- l'équipe suit l'avertissement de Spring et passe en VIA_DTO: le total passe sous page, le même manifeste lit tout, avec une page vide de trop;\n- une ligne, spring-paged-model: de nouveau 3 requêtes.",
+      "tags": {
+        "domain": [
+          "Catalogue",
+          "Spring Boot"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-10-30",
+      "evidenceDigest": "sha256:1d41bdf9efeb026653b67292b537585265c916c79ec5aed6a81bafe2f8578c2e"
+    },
+    {
       "slug": "rest-stripe-customers",
       "title": "L'API de Stripe: on la nomme, starting_after fait le reste.",
       "lede": "Stripe pagine par curseur: chaque page dit has_more, la suivante se demande avec starting_after, l'id du dernier client lu. lumnik a un preset du même nom:\n- pagination: { kind: stripe }: 25 clients en 3 requêtes;\n- le lendemain, 5 nouveaux clients: 30 lignes, une par client.",
