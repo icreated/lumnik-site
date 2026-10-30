@@ -149,6 +149,25 @@
       "evidenceDigest": "sha256:0c815961842dd09ffe69c48f144e01f6f2ff4c8b4ce00c9ee4c287f5ff98c8d7"
     },
     {
+      "slug": "devops-ai-event-memory",
+      "title": "k8s a oublié, lumnik se souvient: qui a crashé cette nuit?",
+      "lede": "Kubernetes garde ses events une heure. Un déploiement réparé à l'aube n'a plus d'histoire le matin:\n- un nouveau pod, Running, 0 redémarrage;\n- plus aucun event Warning.\nlumnik lit les events pendant qu'ils existent et les garde; Ask répond encore quand kubectl ne sait plus.",
+      "tags": {
+        "domain": [
+          "DevOps",
+          "Kubernetes",
+          "Post-mortem"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-10-29",
+      "evidenceDigest": "sha256:985606b1b017f8e42fb636af3c752cfeb630b109657d433d304d81513022ecc4"
+    },
+    {
       "slug": "devops-ai-pod-triage",
       "title": "k8s brûle, k9s dit Running: quel pod regarder d'abord?",
       "lede": "Un vrai cluster, cinq équipes, cinq pods cassés par Kubernetes lui-même:\n- l'API des pods: état, redémarrages, raison de la dernière mort;\n- metrics.k8s.io: ce que chaque pod consomme maintenant;\n- les events Warning.\nUne règle Kotlin de l'astreinte fixe la priorité; le modèle traduit la question, il ne décide rien.",
