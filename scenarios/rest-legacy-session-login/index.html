@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Une vieille app derrière un login: lumnik se connecte comme un utilisateur. — lumnik</title>
+<meta name="description" content="Lire les vétérinaires de Spring PetClinic, protégé par le login du serveur Tomcat, sans toucher à l&#x27;app. Spring PetClinic d&#x27;avant Spring Boot, derrière le login du serveur (j_security_check). Pas de jeton d&#x27;API: un formulaire et un cookie de session. Sans auth, Tomcat rend sa page de login en 200: le hub la refuse, ce n&#x27;est pas du JSON; Auth: { kind: session }: le hub se connecte et garde la session, 6 vétérinaires; L&#x27;app redémarre, la session est perdue: le hub se reconnecte seul, une fois.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/rest-legacy-session-login/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/rest-legacy-session-login/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Une vieille app derrière un login: lumnik se connecte comme un utilisateur.</h1>
+    <p class="goal"><strong>Objectif</strong> Lire les vétérinaires de Spring PetClinic, protégé par le login du serveur Tomcat, sans toucher à l&#x27;app.</p>
+    <p class="lede">Spring PetClinic d&#x27;avant Spring Boot, derrière le login du serveur (j_security_check). Pas de jeton d&#x27;API: un formulaire et un cookie de session.</p><ul class="lede-list"><li>sans auth, Tomcat rend sa page de login en 200: le hub la refuse, ce n&#x27;est pas du JSON;</li><li>auth: { kind: session }: le hub se connecte et garde la session, 6 vétérinaires;</li><li>l&#x27;app redémarre, la session est perdue: le hub se reconnecte seul, une fois.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Clinique</li><li class="tag">Spring MVC</li><li class="tag kind">Connector</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="Une vieille app derrière un login: lumnik se connecte comme un utilisateur.">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · Déployer</span><span class="sub">L&#x27;app</span></a><a href="#step-no-auth" data-step="no-auth"><span class="num">2 · Essayer</span><span class="sub">Sans auth</span></a><a href="#step-session" data-step="session"><span class="num">3 · Se connecter</span><span class="sub">kind: session</span></a><a href="#step-again" data-step="again"><span class="num">4 · Relire</span><span class="sub">La nuit suivante</span></a><a href="#step-restarted" data-step="restarted"><span class="num">5 · Redémarrer</span><span class="sub">Session perdue</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">PetClinic derrière le login de Tomcat</h2>
+      <p>Le PetClinic du scénario précédent, sur Tomcat 11. L&#x27;exploitant le protège dans web.xml: login FORM du serveur, comptes dans Tomcat. Le code de l&#x27;app n&#x27;est pas touché.</p><ul class="prose-list"><li>sans session, /vets.json rend la page de login, en 200</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Pas de redirection</strong><p>Tomcat ne renvoie ni 401 ni 302: il rend sa page de login à la place des données.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une session absente ressemble à une réponse normale.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déployer"><button type="button" role="tab" id="lab-manifest-tab" data-view="manifest" aria-controls="lab-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="lab-manifest" aria-labelledby="lab-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/lab-docker-compose.yml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># The clinic&#x27;s application: Spring PetClinic of before Spring Boot, a WAR on Tomcat 11, behind the container&#x27;s FORM login.</span></span><span class="line"><span class="key">name</span>: lumnik-legacy-session</span><span class="line"><span class="key">services</span>:</span><span class="line">  <span class="key">petclinic</span>:</span><span class="line">    <span class="key">build</span>: ../run/petclinic</span><span class="line">    <span class="key">environment</span>:</span><span class="line">      <span class="comment"># Tomcat reads ${...} in its configuration from system properties.</span></span><span class="line">      <span class="key">JAVA_OPTS</span>: -DCLINIC_PASSWORD=${CLINIC_PASSWORD:-clinic-lab-password}</span><span class="line">    <span class="key">ports</span>: [<span class="str">&quot;127.0.0.1:${PETCLINIC_PORT:-9310}:8080&quot;</span>]   <span class="comment"># this machine only</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0" hidden><dl class="facts"><dt>/vets.json, no session</dt><dd>HTTP/1.1 200 · Set-Cookie: JSESSIONID=…; Path=/petclinic; HttpOnly · Content-Type: text/html;charset=UTF-8</dd></dl><p class="sources">preuves: replay.log, no-session-headers.txt, no-auth-error.txt, requests-no-auth.txt, requests-preflight.txt, requests-session.txt, requests-again.txt, requests-restarted.txt, count.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-no-auth" aria-labelledby="no-auth-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="no-auth-title">La page de login n&#x27;est pas une donnée</h2>
+      <p>Un connecteur sans auth. Le run échoue et nomme le Content-Type: text/html.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Pas de faux zéro</strong><p>Le hub lit du JSON; une page HTML n&#x27;est jamais lue comme 0 ligne (#1644).</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le hub refuse ce qu&#x27;il ne sait pas lire, et dit pourquoi.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Essayer"><button type="button" role="tab" id="no-auth-manifest-tab" data-view="manifest" aria-controls="no-auth-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="no-auth-commands-tab" data-view="commands" aria-controls="no-auth-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="no-auth-result-tab" data-view="result" aria-controls="no-auth-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="no-auth-manifest" aria-labelledby="no-auth-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-vets-no-auth.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-legacy-session-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [clinic]</span><span class="line"></span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:9310/petclinic</span><span class="line"></span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: vets</span><span class="line">      <span class="key">path</span>: /vets.json</span><span class="line">      <span class="key">method</span>: GET</span><span class="line">      <span class="key">pagination</span>: { kind: none, response_path: $.vetList }</span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_legacy_session_a</span><span class="line">        <span class="key">unique_key</span>: $.id</span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: first_name, path: $.firstName, type: text }</span><span class="line">          - { name: last_name, path: $.lastName, type: text }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="no-auth-commands" aria-labelledby="no-auth-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-vets-no-auth.yaml</span>
+<span class="out">Applied connector &quot;scenario-legacy-session-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-legacy-session-a</span>
+<span class="out">run scheduled: 39125bb7-8957-4c91-93f3-44221423d958</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 39125bb7-8957-4c91-93f3-44221423d958</span>
+<span class="out">ID        CONNECTOR                  ENDPOINT  STATUS  IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+39125bb7  scenario-legacy-session-a  vets      Failed  0   0    0        0             2026-11-02 21:11  2026-11-02 21:11  yes</span>
+<span class="note">✖ run failed: the response is not JSON (Content-Type text/html;charset=UTF-8) — rest-generic reads JSON</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="no-auth-result" aria-labelledby="no-auth-result-tab" tabindex="0" hidden><dl class="facts"><dt>vets</dt><dd>Failed · IN 0 · OUT 0</dd><dt>request 1</dt><dd>GET /vets.json 200</dd><dt>error</dt><dd>the response is not JSON (Content-Type text/html;charset=UTF-8) — rest-generic reads JSON</dd></dl><p class="sources">preuves: replay.log, no-session-headers.txt, no-auth-error.txt, requests-no-auth.txt, requests-preflight.txt, requests-session.txt, requests-again.txt, requests-restarted.txt, count.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-session" aria-labelledby="session-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="session-title">auth: { kind: session }</h2>
+      <p>Le hub lit une page protégée, poste j_username et j_password, et garde le cookie de session (#1751). Le mot de passe est un secret lm.</p><ul class="prose-list"><li>pre-flight: GET, POST 303, GET des données</li><li>le run: un seul GET</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Une seule connexion</strong><p>La session ouverte par le pre-flight sert au run.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une app sans API se lit avec le compte d&#x27;un utilisateur.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Se connecter"><button type="button" role="tab" id="session-manifest-tab" data-view="manifest" aria-controls="session-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="session-commands-tab" data-view="commands" aria-controls="session-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="session-result-tab" data-view="result" aria-controls="session-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="session-manifest" aria-labelledby="session-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-vets-session.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-legacy-session-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [clinic]</span><span class="line"></span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:9310/petclinic</span><span class="line hl">  <span class="key">auth</span>:</span><span class="line hl">    <span class="key">kind</span>: session                                       <span class="comment"># the container&#x27;s form login, the session cookie kept</span></span><span class="line">    <span class="key">login_url</span>: http://host.docker.internal:9310/petclinic/j_security_check</span><span class="line">    <span class="key">prime_url</span>: http://host.docker.internal:9310/petclinic/vets.json</span><span class="line">    <span class="key">username</span>: lumnik</span><span class="line">    <span class="key">password_env</span>: SCENARIO_CLINIC_A_PASSWORD</span><span class="line">    <span class="key">username_field</span>: j_username</span><span class="line">    <span class="key">password_field</span>: j_password</span><span class="line"></span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: vets</span><span class="line">      <span class="key">path</span>: /vets.json</span><span class="line">      <span class="key">method</span>: GET</span><span class="line">      <span class="key">pagination</span>: { kind: none, response_path: $.vetList }</span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_legacy_session_a</span><span class="line">        <span class="key">unique_key</span>: $.id</span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: first_name, path: $.firstName, type: text }</span><span class="line">          - { name: last_name, path: $.lastName, type: text }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="session-commands" aria-labelledby="session-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/20-vets-session.yaml</span>
+<span class="out">Applied connector &quot;scenario-legacy-session-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm source rest test scenario-legacy-session-a</span>
+<span class="out">ENDPOINT  METHOD  STATUS  ITEMS  VERDICT
+vets      GET     200     6      ok</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-legacy-session-a</span>
+<span class="out">run scheduled: c00f7aa2-93eb-4fcb-8068-6669c2817f51</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get c00f7aa2-93eb-4fcb-8068-6669c2817f51</span>
+<span class="out">ID        CONNECTOR                  ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+c00f7aa2  scenario-legacy-session-a  vets      Completed  6   6    0        0             2026-11-02 21:11  2026-11-02 21:11  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="session-result" aria-labelledby="session-result-tab" tabindex="0" hidden><dl class="facts"><dt>pre-flight 1</dt><dd>GET /vets.json 200</dd><dt>pre-flight 2</dt><dd>POST /j_security_check 303</dd><dt>pre-flight 3</dt><dd>GET /vets.json 200</dd><dt>vets</dt><dd>Completed · IN 6 · OUT 6</dd><dt>run 1</dt><dd>GET /vets.json 200</dd></dl><p class="sources">preuves: replay.log, no-session-headers.txt, no-auth-error.txt, requests-no-auth.txt, requests-preflight.txt, requests-session.txt, requests-again.txt, requests-restarted.txt, count.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-again" aria-labelledby="again-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="again-title">La session est gardée</h2>
+      <p>Un deuxième run: un GET, aucune nouvelle connexion.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Pas un login par run</strong><p>Le hub garde la session du connecteur tant qu&#x27;elle est acceptée.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le hub ne se reconnecte pas sans raison.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Relire"><button type="button" role="tab" id="again-commands-tab" data-view="commands" aria-controls="again-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="again-result-tab" data-view="result" aria-controls="again-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="again-commands" aria-labelledby="again-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-legacy-session-a</span>
+<span class="out">run scheduled: 45908ea8-e37c-4e46-920f-2a658563c1be</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 45908ea8-e37c-4e46-920f-2a658563c1be</span>
+<span class="out">ID        CONNECTOR                  ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+45908ea8  scenario-legacy-session-a  vets      Completed  6   6    0        0             2026-11-02 21:11  2026-11-02 21:11  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="again-result" aria-labelledby="again-result-tab" tabindex="0" hidden><dl class="facts"><dt>vets</dt><dd>Completed · IN 6 · OUT 6</dd><dt>request 1</dt><dd>GET /vets.json 200</dd></dl><p class="sources">preuves: replay.log, no-session-headers.txt, no-auth-error.txt, requests-no-auth.txt, requests-preflight.txt, requests-session.txt, requests-again.txt, requests-restarted.txt, count.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-restarted" aria-labelledby="restarted-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="restarted-title">Le hub se reconnecte seul, une fois</h2>
+      <p>L&#x27;app redémarre: ses sessions sont perdues. Tomcat rend sa page de login avec un nouveau cookie; le hub le voit, se reconnecte, et rejoue la requête.</p>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Un seul nouveau login</strong><p>Si la session est encore refusée après, le run échoue en le disant.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un redémarrage de l&#x27;app ne casse pas la nuit.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Redémarrer"><button type="button" role="tab" id="restarted-commands-tab" data-view="commands" aria-controls="restarted-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="restarted-result-tab" data-view="result" aria-controls="restarted-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="restarted-commands" aria-labelledby="restarted-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-legacy-session-a</span>
+<span class="out">run scheduled: ef5e983b-312f-4889-b17f-ddd2218a9379</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get ef5e983b-312f-4889-b17f-ddd2218a9379</span>
+<span class="out">ID        CONNECTOR                  ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+ef5e983b  scenario-legacy-session-a  vets      Completed  6   6    0        0             2026-11-02 21:11  2026-11-02 21:11  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="restarted-result" aria-labelledby="restarted-result-tab" tabindex="0" hidden><dl class="facts"><dt>vets</dt><dd>Completed · IN 6 · OUT 6</dd><dt>request 1</dt><dd>GET /vets.json 200</dd><dt>request 2</dt><dd>GET /vets.json 200</dd><dt>request 3</dt><dd>POST /j_security_check 303</dd><dt>request 4</dt><dd>GET /vets.json 200</dd><dt>hub</dt><dd>6 vets, Carter, Douglas, Jenkins, Leary, Ortega, Stevens</dd></dl><p class="sources">preuves: replay.log, no-session-headers.txt, no-auth-error.txt, requests-no-auth.txt, requests-preflight.txt, requests-session.txt, requests-again.txt, requests-restarted.txt, count.txt · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Un formulaire simple: pas de login en JavaScript, pas de second facteur, pas de SAML ni de CAS.</li><li>Le cookie ne part que vers l&#x27;origine du login: un endpoint sur un autre hôte est refusé.</li><li>Les données de démo de PetClinic: 6 vétérinaires; un mot de passe jetable, tiré à chaque rejeu.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Clinique · vétérinaires</p><h2>La vieille app de la clinique demande un login.</h2><p class="brief-lead">Il faut lire ses vétérinaires, chaque nuit.</p><p class="brief-note">Spring PetClinic derrière le login de Tomcat</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Pas de jeton d&#x27;API.</h2><ul class="brief-list tone-cyan"><li>Un formulaire, un mot de passe.</li><li>Puis un cookie de session.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>L&#x27;app reste telle quelle.</h2><ul class="brief-list tone-green"><li>Le login est celui du serveur.</li><li>Le compte est un compte de la clinique.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Sans auth</p><h2>Le serveur rend sa page de login.</h2><ul class="brief-list tone-cyan"><li>En 200, en HTML.</li><li>Le hub la refuse: ce ne sont pas des données.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>auth: { kind: session }</code></pre><h2>Le hub se connecte comme un utilisateur.</h2><ul class="brief-list tone-green"><li>6 vétérinaires.</li><li>Un connecteur de 30 lignes.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le redémarrage</p><h2>L&#x27;app redémarre, la session est perdue.</h2><ul class="brief-list tone-green"><li>Le hub se reconnecte seul, une fois.</li><li>Le run lit les 6 vétérinaires.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>Un formulaire simple.</h2><ul class="brief-list tone-cyan"><li>Pas de login en JavaScript.</li><li>Pas de second facteur.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>

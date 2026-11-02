@@ -722,6 +722,23 @@
       "evidenceDigest": "sha256:4e149714e42f5565513f76d9220f3aa543963653b01b190cfcc233d8772bb9dc"
     },
     {
+      "slug": "rest-legacy-session-login",
+      "title": "Une vieille app derrière un login: lumnik se connecte comme un utilisateur.",
+      "lede": "Spring PetClinic d'avant Spring Boot, derrière le login du serveur (j_security_check). Pas de jeton d'API: un formulaire et un cookie de session.\n- sans auth, Tomcat rend sa page de login en 200: le hub la refuse, ce n'est pas du JSON;\n- auth: { kind: session }: le hub se connecte et garde la session, 6 vétérinaires;\n- l'app redémarre, la session est perdue: le hub se reconnecte seul, une fois.",
+      "tags": {
+        "domain": [
+          "Clinique",
+          "Spring MVC"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-02",
+      "evidenceDigest": "sha256:62e05d51dc048247dc2a6b50bfb73fc50a4fbc165a7a02ca40c78ccebb9bdc3a"
+    },
+    {
       "slug": "rest-legacy-spring-mvc",
       "title": "Une vieille app Spring MVC: toute la liste d'un coup, une ligne la lit.",
       "lede": "Spring PetClinic tel qu'il était avant Spring Boot: un WAR sur Tomcat. Son contrôleur rend toute la liste d'un coup, sans pages.\n- /vets.xml: le hub lit du JSON, il refuse l'XML par son nom au lieu de lire 0 ligne;\n- lm source rest probe sur /vets.json trouve la liste et propose kind: none;\n- pagination: { kind: none }: 6 vétérinaires en une requête.",
