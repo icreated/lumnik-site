@@ -809,6 +809,23 @@
       "evidenceDigest": "sha256:a4cdc366fbe1e7888345bbde65e66545842441a3b0fc28ff698830687fd06acc"
     },
     {
+      "slug": "rest-prestashop",
+      "title": "PrestaShop: une ligne lit tout le catalogue, et une erreur ne passe plus pour un succès.",
+      "lede": "Un vrai PrestaShop 8.2.8 et son catalogue de démo, lus par le Webservice.\n- il répond en XML: le hub le refuse par son nom;\n- en JSON, il ignore offset=: la même page revient, le hub la refuse au lieu de la relire 10 000 fois;\n- pagination: { kind: prestashop }: les 19 produits, limit=0,5 puis limit=5,5.",
+      "tags": {
+        "domain": [
+          "E-commerce",
+          "PrestaShop"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-02",
+      "evidenceDigest": "sha256:65a8d97f7351b834b96880db80f786005a5f3b2d6d6278c682ab9f27fd317332"
+    },
+    {
       "slug": "rest-spring-behind-proxy",
       "title": "L'appli Spring derrière un proxy: on nomme le framework, la clé reste le SKU.",
       "lede": "Un ancien prestataire a laissé une application de stock en Spring Data REST, derrière nginx. lumnik la lit avec le preset spring-hateoas:\n- ses liens pointent vers son nom interne: le run refuse de les suivre et le dit;\n- une propriété côté application, et les 63 pages passent;\n- chaque produit est rangé sous son SKU, lu dans son lien: la nuit suivante, aucune copie.",
