@@ -33,7 +33,7 @@
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="refused-title">Ce que le hub refuse à côté de split-row</h2>
-      <p>Une commande découpée en trois articles n&#x27;est plus une ligne: on-error: dlq mettrait en lettre morte des fragments, pas la commande, et validate-row placé après le découpage écarterait des articles un par un. lm validate refuse les deux, avec la raison, avant que rien ne tourne.</p>
+      <p>Une commande découpée n&#x27;est plus une ligne. Une lettre morte ou un validate-row après split-row fausseraient le compte. lm validate refuse les deux, avant que rien ne tourne.</p>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Valider avant</strong><p>validate-row va avant split-row.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une composition qui fausserait le compte du run n&#x27;est jamais appliquée.</p></div>
@@ -59,9 +59,9 @@ Fix errors above before running &#x27;lm apply -f 90-dlq-beside-split-row.yaml&#
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="load-title">L&#x27;export découpé à l&#x27;entrée</h2>
-      <p>require-headers vérifie que les colonnes order_no et items sont là ; skip-empty-rows écarte la ligne de séparation que l&#x27;export ajoute. split-row fait une ligne par article et position les numérote ; upper met tsh-vert-s en majuscules ; split coupe la référence en modèle, couleur et taille.</p>
+      <p>require-headers vérifie les colonnes. skip-empty-rows écarte la ligne de séparation. split-row fait une ligne par article, split coupe la référence.</p><ul class="prose-list"><li>IN 7: six commandes et la séparation</li><li>OUT 6: OUT compte les commandes</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>2 cellules</strong><p>CASQ-NOIR sans taille, SWEAT-BLEU-MARINE-L avec un tiret de trop.</p></div></li><li><span class="n">2</span><div><strong>Ligne vide</strong><p>Une vraie ligne vide n&#x27;est pas lue: elle n&#x27;entre dans aucun compte.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>2 cellules</strong><p>CASQ-NOIR sans taille, SWEAT-BLEU-MARINE-L avec un tiret de trop.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>7 = 6 + 1: six commandes écrites, la séparation écartée et comptée. OUT compte les commandes, pas les articles.</p></div>
   </aside>
   <div class="views">
@@ -85,9 +85,9 @@ Fix errors above before running &#x27;lm apply -f 90-dlq-beside-split-row.yaml&#
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="read-title">Une ligne par article à préparer</h2>
-      <p>Onze articles pour sept commandes. CMD-1003 commande deux fois le même t-shirt: item_no 1 et 2 en font deux lignes. Sans position, les deux lignes auraient le même contenu, et la table n&#x27;en garde qu&#x27;une. CASQ-NOIR n&#x27;a pas de taille: la case reste vide. SWEAT-BLEU-MARINE-L donne la couleur BLEU et la taille MARINE: la valeur est écrite telle quelle, et comptée.</p>
+      <p>Onze articles pour sept commandes. CMD-1003 commande deux fois le même t-shirt: item_no en fait deux lignes.</p><ul class="prose-list"><li>CASQ-NOIR: pas de taille, la case reste vide</li><li>BLEU-MARINE: la taille devient MARINE, comptée</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>item_no</strong><p>Le rang de l&#x27;article dans la commande.</p></div></li><li><span class="n">2</span><div><strong>MARINE</strong><p>Une couleur à tiret casse le découpage: comptée, pas corrigée.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>item_no</strong><p>Le rang de l&#x27;article dans la commande.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Chaque article commandé est une ligne, même quand deux sont identiques.</p></div>
   </aside>
   <div class="views">
@@ -111,7 +111,7 @@ CMD-1006  2        Garnier   SWEAT-BLEU-MARINE-L  SWEAT  BLEU    MARINE  {}</spa
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="renamed-title">Le lendemain, items s&#x27;appelle articles</h2>
-      <p>L&#x27;export du lendemain renomme la colonne items. require-headers fait échouer le run en nommant la colonne manquante. Rien n&#x27;est écrit: les onze lignes de la veille restent.</p>
+      <p>L&#x27;export du lendemain renomme items. Le run échoue et nomme la colonne. Rien n&#x27;est écrit.</p><ul class="prose-list"><li>les onze lignes de la veille restent</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>items</strong><p>La colonne manquante, nommée.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un fichier qui a changé de forme est refusé, pas lu de travers.</p></div>

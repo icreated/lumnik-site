@@ -109,7 +109,7 @@ shipping-fee-b.kts  333   c1c59e5c7b81302d5a284c9c722ca8cacaca0fe859c8ae1c393cd1
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="audit-title">Le même montant n&#x27;a pas le même port</h2>
-      <p>L&#x27;entité montre le run qui a écrit chaque commande. CMD-2402 (décembre) et CMD-2501 (janvier) ont 172,50 de marchandises. Port 0,00 pour l&#x27;une, 12,90 pour l&#x27;autre. lm run get sur le run de CMD-2402 nomme la version 1.</p>
+      <p>L&#x27;entité montre le run qui a écrit chaque commande.</p><ul class="prose-list"><li>CMD-2402, décembre: 172,50, port 0,00</li><li>CMD-2501, janvier: 172,50, port 12,90</li><li>le run de CMD-2402 nomme la version 1</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>_run_id</strong><p>Le run qui a écrit la ligne.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Commande, run, version de la règle: la chaîne se lit avec lm, sans accès au serveur.</p></div>
