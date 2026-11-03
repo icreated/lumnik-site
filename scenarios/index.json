@@ -96,6 +96,26 @@
       "evidenceDigest": "sha256:8e90b728bc532d5bb7004559d0544c6495c04a864ea55b733c6b95cf44696170"
     },
     {
+      "slug": "chirpstack-freezer-probe",
+      "title": "La sonde du congélateur voit 6,8 °C en pleine nuit",
+      "goal": "Être alerté dès qu'une sonde HACCP indépendante voit un congélateur au-dessus de -18 °C, même quand le contrôleur frigorifique ne dit rien.",
+      "lede": "À l'automne 2026, des contrôleurs frigorifiques de supermarchés ont été modifiés à distance. En France, le 11 octobre, aucune alarme ne s'est déclenchée. Une sonde HACCP indépendante mesure la température, et ChirpStack publie ses relevés sur Kafka.\n- la lecture est imbriquée dans l'événement: promote en fait une colonne\n- un registre dit quel meuble, quel rayon, qui est d'astreinte\n- à 02 h 30, PROBE-07 lit 6,8 °C: une décision",
+      "tags": {
+        "domain": [
+          "Chaîne du froid",
+          "Distribution"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "Process"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:182940ec4d12384c857dc8a5957a4cfbd96238300b82af432f7bd9cde39f4d96"
+    },
+    {
       "slug": "crm-contacts-reachable",
       "title": "Un export CRM aux accents cassés et aux emails faux",
       "goal": "Reprendre les contacts du vieux CRM avec un nom réparé, un téléphone international et un email valide, et nommer ceux qu'on ne peut pas joindre.",
