@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NestJS: le ticket supprimé pendant la lecture ne fait plus perdre son voisin — lumnik</title>
+<meta name="description" content="Lire tous les tickets d&#x27;un service NestJS par son API, même quand l&#x27;équipe support y travaille. Un service NestJS sur nestjs-paginate et 130 tickets, dont 97 ouverts. Tout: les 130, en suivant le lien next; Les ouverts seuls: le filtre suit chaque lien, 97 lus; Un ticket supprimé pendant la lecture: le total bouge, la liste est relue.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/rest-nestjs-tickets/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/rest-nestjs-tickets/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>NestJS: le ticket supprimé pendant la lecture ne fait plus perdre son voisin</h1>
+    <p class="goal"><strong>Objectif</strong> Lire tous les tickets d&#x27;un service NestJS par son API, même quand l&#x27;équipe support y travaille.</p>
+    <p class="lede">Un service NestJS sur nestjs-paginate et 130 tickets, dont 97 ouverts.</p><ul class="lede-list"><li>tout: les 130, en suivant le lien next;</li><li>les ouverts seuls: le filtre suit chaque lien, 97 lus;</li><li>un ticket supprimé pendant la lecture: le total bouge, la liste est relue.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Support</li><li class="tag">NestJS</li><li class="tag kind">Connector</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="NestJS: le ticket supprimé pendant la lecture ne fait plus perdre son voisin">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · Service</span><span class="sub">NestJS</span></a><a href="#step-quiet" data-step="quiet"><span class="num">2 · Lire</span><span class="sub">Tout</span></a><a href="#step-open" data-step="open"><span class="num">3 · Filtrer</span><span class="sub">Les ouverts</span></a><a href="#step-deleted" data-step="deleted"><span class="num">4 · Supprimer</span><span class="sub">Pendant la lecture</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">130 tickets derrière nestjs-paginate</h2>
+      <p>Un service NestJS 11 tel qu&#x27;une équipe l&#x27;écrit: TypeORM et nestjs-paginate 12.5. Chaque page donne le total (meta.totalItems) et l&#x27;adresse de la suivante (links.next).</p><ul class="prose-list"><li>totalItems: 130</li><li>next: ?page=2&amp;limit=2&amp;sortBy=id:ASC</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Un labo construit</strong><p>Docker Compose construit le service depuis lab/, versions épinglées.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>On lit le service par son API, sans le toucher.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Service"><button type="button" role="tab" id="lab-manifest-tab" data-view="manifest" aria-controls="lab-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="lab-manifest" aria-labelledby="lab-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/lab-docker-compose.yml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">name</span>: lumnik-scenario-nestjs</span><span class="line"><span class="key">services</span>:</span><span class="line">  <span class="key">tickets</span>:</span><span class="line">    <span class="key">build</span>: ../lab</span><span class="line">    <span class="key">ports</span>: [<span class="str">&quot;127.0.0.1:${NESTJS_PORT:-9350}:3000&quot;</span>]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0" hidden><dl class="facts"><dt>totalItems</dt><dd>130</dd><dt>next</dt><dd>http://host.docker.internal:9350/tickets?page=2&amp;limit=2&amp;sortBy=id:ASC</dd><dt>row</dt><dd>1 | Ticket 001 | closed</dd><dt>row</dt><dd>2 | Ticket 002 | open</dd></dl><p class="sources">preuves: replay.log, page-1.json, count-quiet.txt, count-open.txt, deleted.txt, count-after-delete.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-quiet" aria-labelledby="quiet-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="quiet-title">Les 130 tickets en une ligne</h2>
+      <p>pagination: { kind: nestjs }. Le hub suit links.next, lit data et compare les lignes lues à meta.totalItems.</p><ul class="prose-list"><li>path: limit=50, trois pages</li><li>130 sur 130</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Un témoin</strong><p>Si le hub lit moins de lignes que le total annoncé, le run échoue au lieu de se dire complet.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une ligne suffit pour lire une API NestJS.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="quiet-manifest-tab" data-view="manifest" aria-controls="quiet-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="quiet-commands-tab" data-view="commands" aria-controls="quiet-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="quiet-result-tab" data-view="result" aria-controls="quiet-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="quiet-manifest" aria-labelledby="quiet-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-tickets.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-nestjs-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [support]</span><span class="line"></span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:9350</span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: tickets</span><span class="line">      <span class="key">path</span>: <span class="str">&quot;/tickets?limit=50&quot;</span></span><span class="line">      <span class="key">method</span>: GET</span><span class="line hl">      <span class="key">pagination</span>: { kind: nestjs }                    <span class="comment"># follows $.links.next, reads $.data</span></span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_nestjs_a</span><span class="line">        <span class="key">unique_key</span>: $.id</span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: subject, path: $.subject, type: text }</span><span class="line">          - { name: status, path: $.status, type: text }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="quiet-commands" aria-labelledby="quiet-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-tickets.yaml</span>
+<span class="out">Applied connector &quot;scenario-nestjs-c&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-nestjs-c</span>
+<span class="out">run scheduled: 557ab511-28ea-43b7-aa39-007b9c9f9633</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 557ab511-28ea-43b7-aa39-007b9c9f9633</span>
+<span class="out">ID        CONNECTOR          ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+557ab511  scenario-nestjs-c  tickets   Completed  130  130  0        0             2026-11-04 00:34  2026-11-04 00:34  no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="quiet-result" aria-labelledby="quiet-result-tab" tabindex="0" hidden><dl class="facts"><dt>tickets</dt><dd>Completed · IN 130 · OUT 130</dd><dt>hub</dt><dd>130 tickets</dd></dl><p class="sources">preuves: replay.log, page-1.json, count-quiet.txt, count-open.txt, deleted.txt, count-after-delete.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-open" aria-labelledby="open-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="open-title">Le filtre suit chaque lien next</h2>
+      <p>Le même connecteur, avec filter.status=$eq:open dans le path. nestjs-paginate remet le filtre dans chaque lien next: le hub n&#x27;a rien à ajouter.</p><ul class="prose-list"><li>97 tickets, tous ouverts</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Pourquoi filtrer à la source</strong><p>Le service ne rend que ce qu&#x27;on lit: aucun ticket fermé n&#x27;arrive dans le hub.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un filtre de l&#x27;API traverse toutes les pages.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Filtrer"><button type="button" role="tab" id="open-manifest-tab" data-view="manifest" aria-controls="open-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="open-commands-tab" data-view="commands" aria-controls="open-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="open-result-tab" data-view="result" aria-controls="open-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="open-manifest" aria-labelledby="open-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-open-tickets.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-nestjs-open-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [support]</span><span class="line"></span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:9350</span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: tickets</span><span class="line hl">      <span class="key">path</span>: <span class="str">&quot;/tickets?limit=50&amp;filter.status=$eq:open&quot;</span></span><span class="line">      <span class="key">method</span>: GET</span><span class="line">      <span class="key">pagination</span>: { kind: nestjs }                    <span class="comment"># the next link keeps the filter</span></span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_nestjs_open_a</span><span class="line">        <span class="key">unique_key</span>: $.id</span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: subject, path: $.subject, type: text }</span><span class="line">          - { name: status, path: $.status, type: text }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="open-commands" aria-labelledby="open-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/20-open-tickets.yaml</span>
+<span class="out">Applied connector &quot;scenario-nestjs-open-c&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-nestjs-open-c</span>
+<span class="out">run scheduled: 2e28615c-dc68-4316-8f85-e63bc382f874</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 2e28615c-dc68-4316-8f85-e63bc382f874</span>
+<span class="out">ID        CONNECTOR               ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+2e28615c  scenario-nestjs-open-c  tickets   Completed  97  97   0        0             2026-11-04 00:34  2026-11-04 00:34  no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="open-result" aria-labelledby="open-result-tab" tabindex="0" hidden><dl class="facts"><dt>tickets</dt><dd>Completed · IN 97 · OUT 97</dd><dt>hub</dt><dd>97 tickets, status open only</dd></dl><p class="sources">preuves: replay.log, page-1.json, count-quiet.txt, count-open.txt, deleted.txt, count-after-delete.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-deleted" aria-labelledby="deleted-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="deleted-title">Un ticket supprimé: la liste est relue</h2>
+      <p>Dix par page, une par seconde. Pendant la lecture, on supprime Ticket 001, déjà lu en page 1. Les tickets suivants remontent d&#x27;une place: un ticket n&#x27;est sur aucune page. meta.totalItems passe de 130 à 129, alors le hub relit la liste (#1794).</p><ul class="prose-list"><li>default_rate_limit: 1/s, une page par seconde</li><li>IN 189: la première lecture, puis la relecture</li><li>les 129 restants sont tous dans la table</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Avant la correction</strong><p>Le preset ne lisait pas meta.totalItems: le run disait Completed avec un ticket en moins.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une liste qui bouge n&#x27;est plus lue à moitié en silence.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Supprimer"><button type="button" role="tab" id="deleted-manifest-tab" data-view="manifest" aria-controls="deleted-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="deleted-commands-tab" data-view="commands" aria-controls="deleted-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="deleted-result-tab" data-view="result" aria-controls="deleted-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="deleted-manifest" aria-labelledby="deleted-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-tickets-watched.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-nestjs-watched-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [support]</span><span class="line"></span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:9350</span><span class="line">  <span class="key">default_rate_limit</span>: 1/s                              <span class="comment"># a gentle reader: thirteen pages take thirteen seconds</span></span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: tickets</span><span class="line">      <span class="key">path</span>: <span class="str">&quot;/tickets?limit=10&quot;</span></span><span class="line">      <span class="key">method</span>: GET</span><span class="line">      <span class="key">pagination</span>: { kind: nestjs }                    <span class="comment"># checks $.meta.totalItems on every page (#1794)</span></span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_nestjs_watched_a</span><span class="line">        <span class="key">unique_key</span>: $.id</span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: subject, path: $.subject, type: text }</span><span class="line">          - { name: status, path: $.status, type: text }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="deleted-commands" aria-labelledby="deleted-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/30-tickets-watched.yaml</span>
+<span class="out">Applied connector &quot;scenario-nestjs-watched-c&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-nestjs-watched-c</span>
+<span class="out">run scheduled: bcd7e2f6-7390-4309-92f5-35bcae1fd504</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get bcd7e2f6-7390-4309-92f5-35bcae1fd504</span>
+<span class="out">ID        CONNECTOR                  ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+bcd7e2f6  scenario-nestjs-watched-c  tickets   Completed  189  189  0        0             2026-11-04 00:34  2026-11-04 00:35  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="deleted-result" aria-labelledby="deleted-result-tab" tabindex="0" hidden><dl class="facts"><dt>tickets</dt><dd>Completed · IN 189 · OUT 189</dd><dt>deleted</dt><dd>Ticket 001, read on page 1</dd><dt>hub</dt><dd>129 tickets left, every one there</dd></dl><p class="sources">preuves: replay.log, page-1.json, count-quiet.txt, count-open.txt, deleted.txt, count-after-delete.txt · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Un ticket supprimé reste dans la table du hub: une lecture complète ajoute et met à jour, elle n&#x27;efface pas.</li><li>La relecture compte deux fois les lignes lues deux fois dans IN; l&#x27;upsert n&#x27;en garde qu&#x27;une.</li><li>130 tickets fictifs, en mémoire dans le service.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Support · tickets</p><h2>Les tickets sont dans le service support.</h2><p class="brief-lead">Il faut tous les lire, par l&#x27;API.</p><p class="brief-note">NestJS 11, nestjs-paginate, 130 tickets</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>L&#x27;API rend la liste par pages.</h2><ul class="brief-list tone-cyan"><li>Chaque page donne le lien de la suivante.</li><li>Pendant ce temps, le support travaille.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>Le service reste tel quel.</h2><ul class="brief-list tone-green"><li>Son API, telle que l&#x27;équipe l&#x27;a écrite.</li><li>Aucun module, aucun réglage.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le piège</p><h2>Une suppression décale les pages.</h2><ul class="brief-list tone-cyan"><li>Un ticket de la page 1 disparaît.</li><li>Un autre ne tombe sur aucune page.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>pagination: { kind: nestjs }</code></pre><h2>Une ligne.</h2><ul class="brief-list tone-green"><li>Le lien next est suivi.</li><li>Le total de chaque page est vérifié.</li><li>Un connecteur de 21 lignes.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Un filtre</p><h2>Les tickets ouverts seulement.</h2><ul class="brief-list tone-cyan"><li>Le filtre est écrit dans le path.</li><li>Chaque lien next le garde: 97 lus.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui a été corrigé</p><h2>Un trou trouvé, une correction.</h2><ul class="brief-list tone-green"><li>Avant: Completed, un ticket manquant.</li><li>Maintenant: la liste est relue (#1794).</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>

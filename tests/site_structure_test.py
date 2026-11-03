@@ -146,6 +146,9 @@ class DiscoveryTest(unittest.TestCase):
         urls = {node.text for node in root.findall("sm:url/sm:loc", namespace)}
         expected = {"https://lumnik.fr/", "https://lumnik.fr/scenarios/"}
         expected.update(f"https://lumnik.fr/{page}" for page in ALL_PAGES if page != "index.html")
+        # The publish writes one entry per scenario page the site serves (lumnik-scenario publish_site).
+        served = json.loads((ROOT / "scenarios" / "index.json").read_text(encoding="utf-8"))["scenarios"]
+        expected.update(f"https://lumnik.fr/scenarios/{e['slug']}/" for e in served)
         self.assertEqual(expected, urls)
         self.assertTrue(all(f"https://lumnik.fr/{relay}" not in urls for relay in RELAYS))
 

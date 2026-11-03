@@ -764,6 +764,24 @@
       "evidenceDigest": "sha256:a62e250ee1caaf2333b0f07b7cb418de09f31b0158866b2266727cb1d37bfdf2"
     },
     {
+      "slug": "rest-fastapi-deliveries",
+      "title": "FastAPI: les 130 livraisons lues en une ligne",
+      "goal": "Lire toutes les livraisons d'un service FastAPI maison par son API, sans demander d'export à son équipe.",
+      "lede": "Un vrai service FastAPI avec fastapi-pagination 0.16.1 et 130 livraisons fictives.\n- au calme: les 130 en trois pages;\n- 500 par page: la bibliothèque refuse, rien n'est ingéré;\n- un size écrit dans le path: refusé dès lm apply (#1789).",
+      "tags": {
+        "domain": [
+          "Logistique",
+          "FastAPI"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-04",
+      "evidenceDigest": "sha256:9f95b58aa1cdf154415055b09bab0a913d8bda9513253a9c591ecd56670a161d"
+    },
+    {
       "slug": "rest-incremental-orders",
       "title": "Une commande modifiée pendant la lecture n'est pas perdue",
       "goal": "Ne lire chaque nuit que ce qui a changé, sans perdre ce qui change pendant la lecture.",
@@ -834,6 +852,42 @@
       "edition": "open",
       "replayedAt": "2026-10-30",
       "evidenceDigest": "sha256:77a360460c6e2c125135a8d28af690c39a297a8307c5ac8f9539bd5826c08b31"
+    },
+    {
+      "slug": "rest-micronaut-parts",
+      "title": "Micronaut: les pièces du magasin lues en trois requêtes",
+      "goal": "Lire toutes les pièces détachées d'un service Micronaut par son API, même quand le magasin y travaille.",
+      "lede": "Un vrai Micronaut 4.7 et 130 pièces fictives, rendues par la Page du repository.\n- cinquante par page: les 130 en trois requêtes, le total vérifié;\n- une pièce supprimée pendant la lecture: le total bouge, la liste est relue, rien n'est perdu.",
+      "tags": {
+        "domain": [
+          "Magasin",
+          "Micronaut"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-04",
+      "evidenceDigest": "sha256:29c2c59e92246df92b5a1521c2e06a6f5d658e1467babaf5103f8c21bde2a365"
+    },
+    {
+      "slug": "rest-nestjs-tickets",
+      "title": "NestJS: le ticket supprimé pendant la lecture ne fait plus perdre son voisin",
+      "goal": "Lire tous les tickets d'un service NestJS par son API, même quand l'équipe support y travaille.",
+      "lede": "Un service NestJS sur nestjs-paginate et 130 tickets, dont 97 ouverts.\n- tout: les 130, en suivant le lien next;\n- les ouverts seuls: le filtre suit chaque lien, 97 lus;\n- un ticket supprimé pendant la lecture: le total bouge, la liste est relue.",
+      "tags": {
+        "domain": [
+          "Support",
+          "NestJS"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-04",
+      "evidenceDigest": "sha256:70d1e65fa0913c7fb493f2677bd5d512160a0bc6a41f29eba2da0d94c35ad37e"
     },
     {
       "slug": "rest-netbox-inventory",
@@ -909,6 +963,24 @@
       "evidenceDigest": "sha256:5b8271dff705c942268807d0eb567a6818d9caff55be82364405cbc1a6745c83"
     },
     {
+      "slug": "rest-sequelize-orders",
+      "title": "Sequelize: le service annonce 260 commandes pour 130",
+      "goal": "Lire toutes les commandes d'un service Node par son API, sans croire un total faux.",
+      "lede": "Un service Express et Sequelize, 130 commandes et leurs lignes, lues par offset et limit.\n- au calme: les 130, le count de chaque page vérifié;\n- avec les lignes, sans distinct: le count dit 260, le run refuse;\n- avec distinct: true: 130 sur 130;\n- une commande supprimée pendant la lecture: la liste est relue.",
+      "tags": {
+        "domain": [
+          "Ventes",
+          "Sequelize"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:1142066c1369b9822f4bc1f384d76a0b1e4c99ae1f8a81d9359fbc660a4a1972"
+    },
+    {
       "slug": "rest-spring-behind-proxy",
       "title": "Une appli Spring derrière un proxy garde chaque produit sous son SKU",
       "goal": "Lire tout le stock d'une application Spring Data REST maison, page par page, et garder chaque produit sous son SKU, quel que soit l'hôte par lequel on l'atteint.",
@@ -944,6 +1016,24 @@
       "edition": "open",
       "replayedAt": "2026-10-30",
       "evidenceDigest": "sha256:1d41bdf9efeb026653b67292b537585265c916c79ec5aed6a81bafe2f8578c2e"
+    },
+    {
+      "slug": "rest-spring-slice",
+      "title": "Spring Slice: un article supprimé pendant la lecture n'est sur aucune page",
+      "goal": "Lire tous les articles d'un catalogue Spring Boot par son API, et savoir quand un article peut manquer.",
+      "lede": "Un contrôleur Spring Boot qui rend la Slice du repository, et 130 articles.\n- au calme: les 130, arrêt sur $.last;\n- 5000 par page demandés: Spring en sert 2000, la lecture reste complète;\n- un article supprimé pendant la lecture: la Slice n'a pas de total, un article est perdu sans signal;\n- la même suppression sur la Page: le total bouge, la liste est relue.",
+      "tags": {
+        "domain": [
+          "Catalogue",
+          "Spring Boot"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-04",
+      "evidenceDigest": "sha256:ac9b1b3cb07651ef36202dc10387da1781f29cfc45c8b6cd210457866b0f406c"
     },
     {
       "slug": "rest-stripe-customers",
