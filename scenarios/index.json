@@ -546,9 +546,9 @@
     },
     {
       "slug": "one-app-per-metier",
-      "title": "Un hub, une app par métier.",
-      "goal": null,
-      "lede": "La maintenance et les achats partagent un ERP où chacun voit tout. Sur le même hub, lumnik compose une app par métier ; un technicien qui ne tient que le rôle scope:maintenance voit son app, ses ordres et ses décisions, et chaque porte des achats lui répond par un refus.",
+      "title": "Un technicien ne voit que l'app de la maintenance",
+      "goal": "Donner à chaque métier son app sur le même hub, sans qu'un technicien puisse lire les données des achats.",
+      "lede": "La maintenance et les achats partagent un ERP où chacun voit tout. Sur le même hub, lumnik compose une app par métier.\n- le technicien ne tient que le rôle Keycloak scope:maintenance\n- il voit son app, ses ordres et ses décisions\n- chaque porte des achats lui répond par un refus",
       "tags": {
         "domain": [
           "Sécurité",
@@ -564,8 +564,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:1731d57291ef750662c646acdaf0559f6076f4774a5f0b2e2486b470458c99ca"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:685bc56997af89e6bdb01b2338fd7620781a5b38fce39ef42ec83a57cec72adb"
     },
     {
       "slug": "orders-where-they-sleep",
@@ -1115,9 +1115,9 @@
     },
     {
       "slug": "two-tenants-one-hub",
-      "title": "Deux clients, un hub, une table : chacun ne lit que ses lignes.",
-      "goal": null,
-      "lede": "Deux intégrateurs de deux clients appliquent les mêmes fichiers sur le même hub. Même connecteur, même entité, même table. Chacun charge ses commandes, sous les mêmes numéros. Chacun relit, interroge et compte : il ne voit que les siennes.",
+      "title": "Deux clients écrivent dans la même table et chacun ne lit que ses lignes",
+      "goal": "Héberger deux clients sur un même hub sans qu'aucun ne puisse lire, compter ou ouvrir les données de l'autre.",
+      "lede": "Deux intégrateurs de deux clients appliquent les mêmes fichiers sur le même hub: même connecteur, même entité, même table. Chacun charge ses commandes, sous les mêmes numéros.\n- chacun relit 240 ou 60 lignes, jamais celles de l'autre\n- la même question donne le même SQL et deux réponses\n- la lecture de l'autre répond 404",
       "tags": {
         "domain": [
           "Sécurité",
@@ -1129,8 +1129,8 @@
         ]
       },
       "edition": "pro",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:e808faa5e8409fe3ba7856e1ca3367048ba088ffb10e54e7fe2006eea1383d15"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:a7606c4a38ca66439c86c2ac8750ba35c026ff5a2461acca4170b7f64cefa132"
     },
     {
       "slug": "windev-hfsql-export",
