@@ -33,9 +33,9 @@
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="load-title">Les lignes de vente, sans les sous-totaux</h2>
-      <p>filter-where ne garde que les lignes datées: les 15 sous-totaux sont écartés et comptés. map-columns renomme les en-têtes, parse-date et parse-number lisent dates et montants. fill-down reporte la région et le client de la première ligne d&#x27;un groupe sur les suivantes.</p>
+      <p>Une vente a une date. Un sous-total n&#x27;en a pas: filter-where l&#x27;écarte et le compte. fill-down reporte la région et le client sur tout le groupe.</p><ul class="prose-list"><li>1 112 lignes lues</li><li>15 sous-totaux écartés</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>15 sous-totaux</strong><p>Écartés, comptés dans SKIPPED.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>SKIPPED 15</strong><p>Les sous-totaux, comptés.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un rapport mis en forme pour l&#x27;œil se lit comme une table.</p></div>
   </aside>
   <div class="views">
@@ -55,9 +55,9 @@
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="client-title">Un client à cheval sur deux morceaux de 500 lignes</h2>
-      <p>Le hub lit un fichier par morceaux de 500 lignes. Biscuiterie de l&#x27;Anse occupe les lignes 461 à 544: son groupe est coupé en deux. Ses 84 lignes portent toutes Est et le client ; 546 unités et 13 603,90, le sous-total de l&#x27;export.</p>
+      <p>Le hub lit par morceaux de 500 lignes. Biscuiterie de l&#x27;Anse est coupée en deux.</p><ul class="prose-list"><li>84 lignes, toutes au bon client</li><li>13 603,90, comme le sous-total</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>13 603,90</strong><p>Le sous-total de l&#x27;export, retrouvé.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>13 603,90</strong><p>Le sous-total de l&#x27;export, retrouvé.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>La valeur reportée passe d&#x27;un morceau à l&#x27;autre.</p></div>
   </aside>
   <div class="views">
@@ -157,9 +157,9 @@ FA26090539  09     Est     Biscuiterie de l&#x27;Anse  2026-09-03  Farine T65 25
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="october-title">Un export copié depuis une feuille filtrée</h2>
-      <p>En octobre, l&#x27;export a été copié depuis une feuille filtrée qui masquait la première ligne du premier groupe: ses trois premières lignes n&#x27;ont ni région ni client. Elles restent vides et n&#x27;héritent pas du dernier client de septembre: chaque fichier commence sans valeur reportée.</p>
+      <p>L&#x27;export d&#x27;octobre vient d&#x27;une feuille filtrée. Ses trois premières lignes n&#x27;ont pas de client. Elles restent vides.</p><ul class="prose-list"><li>pas de client de septembre par erreur</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>FA26100001</strong><p>Ni région ni client, comme dans l&#x27;export.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>FA26100001</strong><p>Sans client, comme dans l&#x27;export.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une valeur ne passe jamais d&#x27;un fichier à l&#x27;autre.</p></div>
   </aside>
   <div class="views">
