@@ -59,18 +59,18 @@ M-1006,FAURE Léo,CONFORT,9 rue Garibaldi,Lyon,leo.faure@example.org</pre></figu
 <span class="out">Applied connector &quot;scenario-member-portail-a&quot; — 1 endpoint</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run scenario-member-gestion-a</span>
-<span class="out">run scheduled: a4820a55-d5ab-487d-88a4-d872f4ce90c8</span>
+<span class="out">run scheduled: 9d4c5bb4-da4b-45cc-848b-436d0a114551</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get a4820a55-d5ab-487d-88a4-d872f4ce90c8</span>
+<span class="cmd"><span class="prompt">$</span> lm run get 9d4c5bb4-da4b-45cc-848b-436d0a114551</span>
 <span class="out">ID        CONNECTOR                  ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-a4820a55  scenario-member-gestion-a  default   Completed  6   6    0        0             2026-11-03 16:24  2026-11-03 16:24</span>
+9d4c5bb4  scenario-member-gestion-a  default   Completed  6   6    0        0             2026-11-03 16:59  2026-11-03 16:59</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run scenario-member-portail-a</span>
-<span class="out">run scheduled: 4a13d27a-1cd1-43fd-add0-1218f38ac09f</span>
+<span class="out">run scheduled: 51c141e6-e94f-42c5-912e-58cad7d08873</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 4a13d27a-1cd1-43fd-add0-1218f38ac09f</span>
+<span class="cmd"><span class="prompt">$</span> lm run get 51c141e6-e94f-42c5-912e-58cad7d08873</span>
 <span class="out">ID        CONNECTOR                  ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-4a13d27a  scenario-member-portail-a  default   Completed  6   6    0        0             2026-11-03 16:24  2026-11-03 16:24</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="sources-result" aria-labelledby="sources-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-member-gestion-a</dt><dd>Completed · IN 6 · OUT 6</dd><dt>scenario-member-portail-a</dt><dd>Completed · IN 6 · OUT 6</dd></dl><p class="sources">preuves: replay.log, 01-m1002-contract-first.json, 02-conflicts-night1.json, 03-m1002-prefer.json, 04-m1003-plan.json, 05-conflicts-night2.json · transform v1</p></div>
+51c141e6  scenario-member-portail-a  default   Completed  6   6    0        0             2026-11-03 16:59  2026-11-03 16:59</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="sources-result" aria-labelledby="sources-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-member-gestion-a</dt><dd>Completed · IN 6 · OUT 6</dd><dt>scenario-member-portail-a</dt><dd>Completed · IN 6 · OUT 6</dd></dl><p class="sources">preuves: replay.log, 01-m1002-contract-first.json, 02-conflicts-night1.json, 03-m1002-prefer.json, 04-m1003-plan.json, 05-conflicts-night2.json · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-fuse" aria-labelledby="fuse-title" data-inactive>
@@ -91,12 +91,12 @@ a4820a55  scenario-member-gestion-a  default   Completed  6   6    0        0   
 <span class="out">MEMBER_NO  FULL_NAME    PLAN     EFFECTIVE_DATE  STREET          CITY          EMAIL                    _CONFLICTS
 M-1002     MARTIN Paul  CONFORT  2023-06-01      12 avenue Foch  Villeurbanne  paul.martin@example.org  {&quot;city&quot;: [{&quot;src&quot;: &quot;t_scenario_member_gestion_a&quot;, &quot;value&quot;: &quot;Villeurbanne&quot;}, {&quot;src&quot;: &quot;t_scenario_member_portail_a&quot;, &quot;value&quot;: &quot;Lyon&quot;}], &quot;street&quot;: [{&quot;src&quot;: &quot;t_scenario_member_gestion_a&quot;, &quot;value&quot;: &quot;12 avenue Foch&quot;}, {&quot;src&quot;: &quot;t_scenario_member_portail_a&quot;, &quot;value&quot;: &quot;25 rue Paul Bert&quot;}]}</span>
 
-<span class="cmd"><span class="prompt">$</span> lm conflicts list</span>
-<span class="out">ENTITY                    KEY                                   COLUMNS      SOURCES
-member_a                  M-1001                                full_name    t_scenario_member_gestion_a,t_scenario_member_portail_a
-member_a                  M-1002                                city,street  t_scenario_member_gestion_a,t_scenario_member_portail_a
-member_a                  M-1003                                plan         t_scenario_member_gestion_a,t_scenario_member_portail_a
-member_a                  M-1005                                street       t_scenario_member_gestion_a,t_scenario_member_portail_a</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="fuse-result" aria-labelledby="fuse-result-tab" tabindex="0" hidden><dl class="facts"><dt>M-1002</dt><dd>12 avenue Foch, Villeurbanne</dd><dt>M-1001</dt><dd>full_name</dd><dt>M-1002</dt><dd>city, street</dd><dt>M-1003</dt><dd>plan</dd><dt>M-1005</dt><dd>street</dd></dl><p class="sources">preuves: replay.log, 01-m1002-contract-first.json, 02-conflicts-night1.json, 03-m1002-prefer.json, 04-m1003-plan.json, 05-conflicts-night2.json · transform v1</p></div>
+<span class="cmd"><span class="prompt">$</span> lm conflicts list --entity member_a</span>
+<span class="out">ENTITY    KEY     COLUMNS      SOURCES
+member_a  M-1001  full_name    t_scenario_member_gestion_a,t_scenario_member_portail_a
+member_a  M-1002  city,street  t_scenario_member_gestion_a,t_scenario_member_portail_a
+member_a  M-1003  plan         t_scenario_member_gestion_a,t_scenario_member_portail_a
+member_a  M-1005  street       t_scenario_member_gestion_a,t_scenario_member_portail_a</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="fuse-result" aria-labelledby="fuse-result-tab" tabindex="0" hidden><dl class="facts"><dt>M-1002</dt><dd>12 avenue Foch, Villeurbanne</dd><dt>M-1001</dt><dd>full_name</dd><dt>M-1002</dt><dd>city, street</dd><dt>M-1003</dt><dd>plan</dd><dt>M-1005</dt><dd>street</dd></dl><p class="sources">preuves: replay.log, 01-m1002-contract-first.json, 02-conflicts-night1.json, 03-m1002-prefer.json, 04-m1003-plan.json, 05-conflicts-night2.json · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-prefer" aria-labelledby="prefer-title" data-inactive>
@@ -140,16 +140,16 @@ M-1003,BERNARD Lucie,CONFORT,2025-03-01,7 place Bellecour,Lyon
 M-1004,PETIT Hugo,ESSENTIEL,2022-09-01,3 chemin du Moulin,Vienne
 M-1005,ROUX Anna,INTEGRAL,2024-11-01,41 cours Gambetta,Lyon
 M-1006,FAURE Léo,CONFORT,2021-02-01,9 rue Garibaldi,Lyon</pre></figure></div><div role="tabpanel" class="view-panel view-panel-commands" id="night2-commands" aria-labelledby="night2-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-member-gestion-a</span>
-<span class="out">run scheduled: 802d6023-2b9f-48b3-9aa5-87c23275da42</span>
+<span class="out">run scheduled: 348e6025-e88b-4cc2-8386-533395344725</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 802d6023-2b9f-48b3-9aa5-87c23275da42</span>
+<span class="cmd"><span class="prompt">$</span> lm run get 348e6025-e88b-4cc2-8386-533395344725</span>
 <span class="out">ID        CONNECTOR                  ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-802d6023  scenario-member-gestion-a  default   Completed  6   6    0        0             2026-11-03 16:24  2026-11-03 16:24</span>
+348e6025  scenario-member-gestion-a  default   Completed  6   6    0        0             2026-11-03 16:59  2026-11-03 16:59</span>
 
-<span class="cmd"><span class="prompt">$</span> lm conflicts list</span>
-<span class="out">ENTITY                    KEY                                   COLUMNS     SOURCES
-member_a                  M-1001                                full_name   t_scenario_member_gestion_a,t_scenario_member_portail_a
-member_a                  M-1003                                plan        t_scenario_member_gestion_a,t_scenario_member_portail_a</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="night2-result" aria-labelledby="night2-result-tab" tabindex="0" hidden><dl class="facts"><dt>M-1001</dt><dd>full_name</dd><dt>M-1003</dt><dd>plan</dd></dl><p class="sources">preuves: replay.log, 01-m1002-contract-first.json, 02-conflicts-night1.json, 03-m1002-prefer.json, 04-m1003-plan.json, 05-conflicts-night2.json · transform v1</p></div>
+<span class="cmd"><span class="prompt">$</span> lm conflicts list --entity member_a</span>
+<span class="out">ENTITY    KEY     COLUMNS    SOURCES
+member_a  M-1001  full_name  t_scenario_member_gestion_a,t_scenario_member_portail_a
+member_a  M-1003  plan       t_scenario_member_gestion_a,t_scenario_member_portail_a</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="night2-result" aria-labelledby="night2-result-tab" tabindex="0" hidden><dl class="facts"><dt>M-1001</dt><dd>full_name</dd><dt>M-1003</dt><dd>plan</dd></dl><p class="sources">preuves: replay.log, 01-m1002-contract-first.json, 02-conflicts-night1.json, 03-m1002-prefer.json, 04-m1003-plan.json, 05-conflicts-night2.json · transform v1</p></div>
   </div>
 </section>
   <section class="limits"><h2>Limites</h2><ul><li>Chaque colonne est fusionnée seule: préférer le portail pour la rue et la ville ne les lie pas.</li><li>Une préférence choisit la valeur affichée ; elle ne règle pas le désaccord à la source.</li><li>Données synthétiques.</li></ul></section>
