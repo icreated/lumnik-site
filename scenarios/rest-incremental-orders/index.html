@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>L&#x27;API qui n&#x27;envoie que ce qui a changé : une commande modifiée pendant la lecture n&#x27;est pas perdue. — lumnik</title>
-<meta name="description" content="Une API de commandes sait répondre à « ce qui a changé depuis telle date ». lumnik la lit en entier une fois, puis chaque nuit seulement ce qui a bougé. Une commande modifiée pendant qu&#x27;un run lit encore les pages suivantes aurait pu passer entre deux nuits : le run suivant repart un peu avant sa dernière marque, et la récupère.">
+<title>Une commande modifiée pendant la lecture n&#x27;est pas perdue — lumnik</title>
+<meta name="description" content="Ne lire chaque nuit que ce qui a changé, sans perdre ce qui change pendant la lecture. Une API de commandes sait répondre à « ce qui a changé depuis telle date ». lumnik la lit en entier une fois, puis chaque nuit seulement ce qui a bougé. La marque reculée d&#x27;une marge; Une commande modifiée pendant un run arrive au run suivant; Chaque date rangée comme une date.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -18,91 +18,99 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/rest-incremental-orders/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>L&#x27;API qui n&#x27;envoie que ce qui a changé : une commande modifiée pendant la lecture n&#x27;est pas perdue.</h1>
-    <p class="lede">Une API de commandes sait répondre à « ce qui a changé depuis telle date ». lumnik la lit en entier une fois, puis chaque nuit seulement ce qui a bougé. Une commande modifiée pendant qu&#x27;un run lit encore les pages suivantes aurait pu passer entre deux nuits : le run suivant repart un peu avant sa dernière marque, et la récupère.</p>
+    <h1>Une commande modifiée pendant la lecture n&#x27;est pas perdue</h1>
+    <p class="goal"><strong>Objectif</strong> Ne lire chaque nuit que ce qui a changé, sans perdre ce qui change pendant la lecture.</p>
+    <p class="lede">Une API de commandes sait répondre à « ce qui a changé depuis telle date ». lumnik la lit en entier une fois, puis chaque nuit seulement ce qui a bougé.</p><ul class="lede-list"><li>la marque reculée d&#x27;une marge;</li><li>une commande modifiée pendant un run arrive au run suivant;</li><li>chaque date rangée comme une date.</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Commerce</li><li class="tag kind">Connector</li></ul>
   </section>
+  <div role="tablist" class="page-tabs" aria-label="Une commande modifiée pendant la lecture n&#x27;est pas perdue">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
   <nav class="steps-nav" aria-label="Étapes"><a href="#step-full" data-step="full" aria-current="step"><span class="num">1 · Première lecture</span><span class="sub">300 commandes</span></a><a href="#step-quiet" data-step="quiet"><span class="num">2 · Nuit calme</span><span class="sub">Rien n&#x27;a changé</span></a><a href="#step-race" data-step="race"><span class="num">3 · Pendant la lecture</span><span class="sub">Deux changements</span></a><a href="#step-next" data-step="next"><span class="num">4 · Le run suivant</span><span class="sub">Rien de perdu</span></a></nav>
   <section class="step" id="step-full" aria-labelledby="full-title">
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="full-title">Une première lecture complète, chaque date rangée comme une date</h2>
-      <p>Sans marque, le run lit les 300 commandes. L&#x27;API envoie updated_at sous forme de texte ; lumnik le range comme une date, sans transformation à déclarer.</p>
+      <p>Sans marque, le run lit tout.</p><ul class="prose-list"><li>300 commandes, 6 pages</li><li>updated_at rangé comme une date</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>300 commandes</strong><p>Lues en 6 pages.</p></div></li><li><span class="n">2</span><div><strong>Des dates</strong><p>updated_at stocké comme une date.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>Des dates</strong><p>Sans transformation à déclarer.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une date envoyée en texte arrive en date.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Première lecture"><button type="button" role="tab" id="full-manifest-tab" data-view="manifest" aria-controls="full-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="full-commands-tab" data-view="commands" aria-controls="full-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="full-result-tab" data-view="result" aria-controls="full-result" aria-selected="false" tabindex="-1">Résultat</button></div>
     <div role="tabpanel" class="view-panel view-panel-manifest" id="full-manifest" aria-labelledby="full-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-orders.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-incremental-b</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [sales]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:8096</span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: orders</span><span class="line">      <span class="key">path</span>: /api/orders</span><span class="line">      <span class="key">method</span>: GET</span><span class="line">      <span class="key">pagination</span>:</span><span class="line">        <span class="key">kind</span>: offset</span><span class="line">        <span class="key">offset_param</span>: offset</span><span class="line">        <span class="key">limit_param</span>: limit</span><span class="line">        <span class="key">limit</span>: 50</span><span class="line">        <span class="key">response_path</span>: <span class="str">&quot;$.data&quot;</span></span><span class="line hl">      <span class="key">incremental</span>:</span><span class="line">        <span class="key">mode</span>: watermark</span><span class="line">        <span class="key">param</span>: updated_since</span><span class="line hl">        <span class="key">watermark_path</span>: <span class="str">&quot;$.updated_at&quot;</span></span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.incremental_orders_b</span><span class="line">        <span class="key">unique_key</span>: <span class="str">&quot;$.id&quot;</span></span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: customer, path: <span class="str">&quot;$.customer&quot;</span>, type: text }</span><span class="line">          - { name: status, path: <span class="str">&quot;$.status&quot;</span>, type: text }</span><span class="line">          - { name: amount, path: <span class="str">&quot;$.amount&quot;</span>, type: decimal }</span><span class="line hl">          - { name: updated_at, path: <span class="str">&quot;$.updated_at&quot;</span>, type: timestamptz }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="full-commands" aria-labelledby="full-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-orders.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;scenario-incremental-b&quot;,&quot;connectorId&quot;:&quot;c0e7b310-0e4b-4bb4-b70c-1952be123e26&quot;,&quot;endpointsApplied&quot;:1}</span>
+<span class="out">Applied connector &quot;scenario-incremental-b&quot; — 1 endpoint</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run scenario-incremental-b</span>
-<span class="out">run scheduled: 1c3d6137-b091-4e93-9889-df2b82b975a7</span>
+<span class="out">run scheduled: 09c861a6-6897-42af-ac71-f5b02ba652f5</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 1c3d6137-b091-4e93-9889-df2b82b975a7</span>
-<span class="out">ID        CONNECTOR               ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
-1c3d6137  scenario-incremental-b  orders    Completed  300  300  0        0             2026-10-23 12:42  2026-10-23 12:43  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="full-result" aria-labelledby="full-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 300 · OUT 300</dd></dl><p class="sources">preuves : replay.log, 01-requests-full.txt, 02-requests-quiet.txt, 03-requests-race.txt, 04-requests-next.txt · transform v1</p></div>
+<span class="cmd"><span class="prompt">$</span> lm run get 09c861a6-6897-42af-ac71-f5b02ba652f5</span>
+<span class="out">ID        CONNECTOR               ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
+09c861a6  scenario-incremental-b  orders    Completed  300  300  0        0             2026-11-03 17:07  2026-11-03 17:08</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="full-result" aria-labelledby="full-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 300 · OUT 300</dd></dl><p class="sources">preuves: replay.log, 01-requests-full.txt, 02-requests-quiet.txt, 03-requests-race.txt, 04-requests-next.txt · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-quiet" aria-labelledby="quiet-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="quiet-title">Le run ne demande que ce qui a bougé</h2>
-      <p>Le run envoie la date de la dernière modification lue, un peu reculée. Seules deux commandes reviennent : rien n&#x27;a changé, la table ne grossit pas.</p>
+      <p>Le run envoie la dernière date lue, un peu reculée.</p><ul class="prose-list"><li>2 commandes reviennent, au lieu de 300</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>updated_since</strong><p>La marque, avec une petite marge.</p></div></li><li><span class="n">2</span><div><strong>2 commandes</strong><p>Au lieu de 300.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>updated_since</strong><p>La marque, avec une marge.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une nuit calme coûte quelques lignes.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Nuit calme"><button type="button" role="tab" id="quiet-commands-tab" data-view="commands" aria-controls="quiet-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="quiet-result-tab" data-view="result" aria-controls="quiet-result" aria-selected="false" tabindex="-1">Résultat</button></div>
     <div role="tabpanel" class="view-panel view-panel-commands" id="quiet-commands" aria-labelledby="quiet-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-incremental-b</span>
-<span class="out">run scheduled: d2c12e36-bcb5-4924-be19-0e5e0c03fc55</span>
+<span class="out">run scheduled: 2917bdc6-1521-488a-867a-c534c044031c</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get d2c12e36-bcb5-4924-be19-0e5e0c03fc55</span>
-<span class="out">ID        CONNECTOR               ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
-d2c12e36  scenario-incremental-b  orders    Completed  2   2    0        0             2026-10-23 12:43  2026-10-23 12:43  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="quiet-result" aria-labelledby="quiet-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 2 · OUT 2</dd><dt>updated_since</dt><dd>2026-10-01T12:58:45.000Z</dd></dl><p class="sources">preuves : replay.log, 01-requests-full.txt, 02-requests-quiet.txt, 03-requests-race.txt, 04-requests-next.txt · transform v1</p></div>
+<span class="cmd"><span class="prompt">$</span> lm run get 2917bdc6-1521-488a-867a-c534c044031c</span>
+<span class="out">ID        CONNECTOR               ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
+2917bdc6  scenario-incremental-b  orders    Completed  2   2    0        0             2026-11-03 17:08  2026-11-03 17:08</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="quiet-result" aria-labelledby="quiet-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 2 · OUT 2</dd><dt>updated_since</dt><dd>2026-10-01T12:58:45.000Z</dd></dl><p class="sources">preuves: replay.log, 01-requests-full.txt, 02-requests-quiet.txt, 03-requests-race.txt, 04-requests-next.txt · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-race" aria-labelledby="race-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="race-title">Une commande déjà lue change pendant le run</h2>
-      <p>120 commandes ont changé. Pendant que le run lit, SO-00101, déjà lue au statut shipped, passe à invoiced ; puis SO-00219, sur une page encore à lire, change aussi. Le run se termine : sa marque est maintenant la date de SO-00219, plus récente que le second changement de SO-00101.</p>
+      <p>120 commandes ont changé. Pendant la lecture, SO-00101, déjà lue, passe à invoiced.</p><ul class="prose-list"><li>la marque finale est plus récente que ce changement</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>SO-00101</strong><p>Lue shipped, devenue invoiced juste après.</p></div></li><li><span class="n">2</span><div><strong>SO-00219</strong><p>Lue plus tard, avec une date plus récente.</p></div></li></ol>
-    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le piège existe : la marque dépasse un changement que le run n&#x27;a pas vu.</p></div>
+    <ol class="points"><li><span class="n">1</span><div><strong>SO-00101</strong><p>Lue shipped, devenue invoiced juste après.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le piège existe: la marque dépasse un changement que le run n&#x27;a pas vu.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Pendant la lecture"><button type="button" role="tab" id="race-commands-tab" data-view="commands" aria-controls="race-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="race-result-tab" data-view="result" aria-controls="race-result" aria-selected="false" tabindex="-1">Résultat</button></div>
     <div role="tabpanel" class="view-panel view-panel-commands" id="race-commands" aria-labelledby="race-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-incremental-b</span>
-<span class="out">run scheduled: 2e147518-b117-45d7-a721-b7ce9f0aabdd</span>
+<span class="out">run scheduled: ac6d8527-718f-4375-90a9-f9238bcc0190</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 2e147518-b117-45d7-a721-b7ce9f0aabdd</span>
-<span class="out">ID        CONNECTOR               ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
-2e147518  scenario-incremental-b  orders    Completed  122  122  0        0             2026-10-23 12:43  2026-10-23 12:43  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="race-result" aria-labelledby="race-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 122 · OUT 122</dd><dt>SO-00101 read</dt><dd>SO-00101=shipped</dd><dt>API</dt><dd>-- SO-00101 changed: status invoiced, updated_at 2026-10-23T10:43:10.325Z</dd><dt>API</dt><dd>-- SO-00219 changed: status invoiced, updated_at 2026-10-23T10:43:10.453Z</dd></dl><p class="sources">preuves : replay.log, 01-requests-full.txt, 02-requests-quiet.txt, 03-requests-race.txt, 04-requests-next.txt · transform v1</p></div>
+<span class="cmd"><span class="prompt">$</span> lm run get ac6d8527-718f-4375-90a9-f9238bcc0190</span>
+<span class="out">ID        CONNECTOR               ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
+ac6d8527  scenario-incremental-b  orders    Completed  122  122  0        0             2026-11-03 17:08  2026-11-03 17:08</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="race-result" aria-labelledby="race-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 122 · OUT 122</dd><dt>SO-00101 read</dt><dd>SO-00101=shipped</dd><dt>API</dt><dd>-- SO-00101 changed: status invoiced, updated_at 2026-11-03T16:08:20.322Z</dd><dt>API</dt><dd>-- SO-00219 changed: status invoiced, updated_at 2026-11-03T16:08:20.471Z</dd></dl><p class="sources">preuves: replay.log, 01-requests-full.txt, 02-requests-quiet.txt, 03-requests-race.txt, 04-requests-next.txt · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-next" aria-labelledby="next-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="next-title">SO-00101 arrive invoiced</h2>
-      <p>Le run suivant repart un peu avant la marque, de la durée du run précédent plus une minute. SO-00101 revient avec son statut invoiced. Les commandes relues une seconde fois sont simplement mises à jour.</p>
+      <p>Le run suivant repart un peu avant la marque.</p><ul class="prose-list"><li>SO-00101 arrive invoiced</li><li>les commandes relues sont mises à jour</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>invoiced</strong><p>Le changement fait pendant la lecture arrive.</p></div></li><li><span class="n">2</span><div><strong>Marge</strong><p>La durée du run précédent, plus une minute.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>Marge</strong><p>La durée du run précédent, plus une minute.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un changement fait pendant un run n&#x27;est jamais perdu.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Le run suivant"><button type="button" role="tab" id="next-commands-tab" data-view="commands" aria-controls="next-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="next-result-tab" data-view="result" aria-controls="next-result" aria-selected="false" tabindex="-1">Résultat</button></div>
     <div role="tabpanel" class="view-panel view-panel-commands" id="next-commands" aria-labelledby="next-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-incremental-b</span>
-<span class="out">run scheduled: 2e24d283-1454-42d7-a848-c93b5c7ccc7d</span>
+<span class="out">run scheduled: 5cb57a7d-542f-4579-913c-0e7ea7700f49</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 2e24d283-1454-42d7-a848-c93b5c7ccc7d</span>
-<span class="out">ID        CONNECTOR               ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
-2e24d283  scenario-incremental-b  orders    Completed  120  120  0        0             2026-10-23 12:43  2026-10-23 12:43  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="next-result" aria-labelledby="next-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 120 · OUT 120</dd><dt>updated_since</dt><dd>2026-10-23T10:42:03.453Z</dd><dt>SO-00101 read</dt><dd>SO-00101=invoiced</dd></dl><p class="sources">preuves : replay.log, 01-requests-full.txt, 02-requests-quiet.txt, 03-requests-race.txt, 04-requests-next.txt · transform v1</p></div>
+<span class="cmd"><span class="prompt">$</span> lm run get 5cb57a7d-542f-4579-913c-0e7ea7700f49</span>
+<span class="out">ID        CONNECTOR               ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
+5cb57a7d  scenario-incremental-b  orders    Completed  120  120  0        0             2026-11-03 17:08  2026-11-03 17:08</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="next-result" aria-labelledby="next-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 120 · OUT 120</dd><dt>updated_since</dt><dd>2026-11-03T16:07:13.471Z</dd><dt>SO-00101 read</dt><dd>SO-00101=invoiced</dd></dl><p class="sources">preuves: replay.log, 01-requests-full.txt, 02-requests-quiet.txt, 03-requests-race.txt, 04-requests-next.txt · transform v1</p></div>
   </div>
 </section>
   <section class="limits"><h2>Limites</h2><ul><li>La marge relit les commandes modifiées dans cet intervalle ; elles sont mises à jour, pas dupliquées.</li><li>Fonctionne quand updated_at porte un fuseau horaire ; un numéro de version ou une date seule est envoyé tel quel.</li><li>API simulée, commandes synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Ventes · API de commandes</p><h2>L&#x27;API dit ce qui a changé.</h2><p class="brief-lead">Chaque nuit, seulement ça.</p><p class="brief-note">300 commandes, API simulée</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Une commande change pendant la lecture.</h2><ul class="brief-list tone-cyan"><li>Déjà lue, elle bouge encore.</li><li>La marque suivante passe après.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>L&#x27;API reste telle quelle.</h2><ul class="brief-list tone-green"><li>Son paramètre updated_since.</li><li>Aucun déclencheur à ajouter.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le piège</p><h2>Un changement entre deux nuits.</h2><ul class="brief-list tone-cyan"><li>Trop tard pour ce run.</li><li>Trop tôt pour le suivant.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>incremental: { mode: watermark }</code></pre><h2>Une ligne.</h2><ul class="brief-list tone-green"><li>La marque reculée d&#x27;une marge.</li><li>Ce qui est relu est mis à jour.</li><li>Un manifeste, 31 lignes.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le résultat</p><h2>SO-00101 arrive invoiced.</h2><ul class="brief-list tone-cyan"><li>Au run suivant.</li><li>Sans doublon.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>Il faut une date avec fuseau.</h2><ul class="brief-list tone-green"><li>Un numéro de version est envoyé tel quel.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
   <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
 </main>
 <script src="../assets/scenario.js" defer></script>

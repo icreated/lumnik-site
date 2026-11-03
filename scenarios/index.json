@@ -353,9 +353,9 @@
     },
     {
       "slug": "export-that-lies",
-      "title": "L'export qui ment : une ligne illisible ne passe pas en silence.",
-      "goal": null,
-      "lede": "Un ERP exporte chaque nuit son catalogue d'articles en un seul fichier. Un libellé contient le séparateur, sans guillemets. lumnik met la ligne de côté avec ses valeurs brutes, ne retire rien du catalogue tant qu'elle est illisible, et ne ferme la lettre morte que sur le run qui l'a vraiment relue.",
+      "title": "Une ligne illisible de l'export ne passe pas en silence",
+      "goal": "Ne jamais écrire ni retirer à moitié un catalogue dont une ligne est illisible.",
+      "lede": "Un ERP exporte chaque nuit son catalogue d'articles. Un libellé contient le séparateur, sans guillemets.\n- la ligne mise de côté avec ses valeurs brutes;\n- rien retiré du catalogue tant qu'elle est illisible;\n- la lettre morte fermée par le run qui l'a vraiment relue.",
       "tags": {
         "domain": [
           "Catalogue",
@@ -366,8 +366,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:a610b53bba19b3247c78e657bf9b4edea5e10290471848a5650c09a2ed68710d"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:99d22064292dcb6ead4b52f4aad94bc309eba96a715569fa6118df21f934095f"
     },
     {
       "slug": "gmao-candy-line-incident",
@@ -430,9 +430,9 @@
     },
     {
       "slug": "invoices-dead-letters",
-      "title": "Un montant illisible n'entre pas : la facture attend, corrigée à la source.",
-      "goal": null,
-      "lede": "Un export de factures fournisseurs porte deux montants mal saisis et une facture de test. Au lieu d'écrire des factures sans montant, le hub les met de côté avec la ligne telle qu'elle a été lue. On écarte la facture de test, on corrige à la source, et chaque lettre est fermée par la lecture qui a apporté la bonne ligne.",
+      "title": "Une facture au montant illisible attend sa correction à la source",
+      "goal": "Ne jamais écrire une facture sans montant, et suivre chaque ligne écartée jusqu'à sa correction.",
+      "lede": "Un export de factures fournisseurs porte deux montants mal saisis et une facture de test.\n- les trois mises de côté, telles qu'elles ont été lues;\n- la facture de test écartée;\n- les deux autres corrigées à la source, et leur lettre fermée par la bonne lecture.",
       "tags": {
         "domain": [
           "Achats",
@@ -444,8 +444,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:7bde61b7ab56d003546f3cf2465acde53578b2a40c5f09b6e093bde26c93d22b"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:c98dbe5b1d92c75028ef00de716b34ea89be1f5816d4180ee1fce42bdbff0a6c"
     },
     {
       "slug": "jdbc-merge-oracle-postgresql",
@@ -688,9 +688,9 @@
     },
     {
       "slug": "quantity-script-one-in-500",
-      "title": "Une valeur imprévue sur 500 : la ligne en lettre morte, les 499 autres écrites.",
-      "goal": null,
-      "lede": "Un bon de réception saisi à la main : 500 lignes, des quantités écrites « 12,5 kg » ou « 3 pce ». Un script Kotlin de l'opérateur les lit en nombre et en unité. La ligne 317 dit « env. 4 kg ». Que deviennent les 499 autres ?",
+      "title": "Une valeur imprévue sur 500 en lettre morte et les 499 autres écrites",
+      "goal": "Qu'une seule ligne imprévue n'arrête pas les 499 autres, et qu'elle reste visible.",
+      "lede": "Un bon de réception saisi à la main: 500 lignes, des quantités « 12,5 kg » ou « 3 pce ». Un script Kotlin de l'opérateur les lit. La ligne 317 dit « env. 4 kg ».\n- version 1: le run échoue et n'écrit rien;\n- version 2: la valeur déclarée illisible;\n- 499 lignes écrites, la 317 en lettre morte.",
       "tags": {
         "domain": [
           "Logistique",
@@ -702,8 +702,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:c61020779725c30f4b7eb409300a84b2e4aa9869c831175dacdb0a210929f800"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:4c91c7c4205d8d30a6e085f8302ec976e3b1f451e2d2ad6e8c6d3e94fd9774a2"
     },
     {
       "slug": "rest-cursor-in-header",
@@ -745,9 +745,9 @@
     },
     {
       "slug": "rest-incremental-orders",
-      "title": "L'API qui n'envoie que ce qui a changé : une commande modifiée pendant la lecture n'est pas perdue.",
-      "goal": null,
-      "lede": "Une API de commandes sait répondre à « ce qui a changé depuis telle date ». lumnik la lit en entier une fois, puis chaque nuit seulement ce qui a bougé. Une commande modifiée pendant qu'un run lit encore les pages suivantes aurait pu passer entre deux nuits : le run suivant repart un peu avant sa dernière marque, et la récupère.",
+      "title": "Une commande modifiée pendant la lecture n'est pas perdue",
+      "goal": "Ne lire chaque nuit que ce qui a changé, sans perdre ce qui change pendant la lecture.",
+      "lede": "Une API de commandes sait répondre à « ce qui a changé depuis telle date ». lumnik la lit en entier une fois, puis chaque nuit seulement ce qui a bougé.\n- la marque reculée d'une marge;\n- une commande modifiée pendant un run arrive au run suivant;\n- chaque date rangée comme une date.",
       "tags": {
         "domain": [
           "Commerce"
@@ -757,8 +757,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:4e149714e42f5565513f76d9220f3aa543963653b01b190cfcc233d8772bb9dc"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:1f88e9c916f9cbe6ec5ba85fe0af1137b970727d0a85d97bc8340a1c1c159e72"
     },
     {
       "slug": "rest-legacy-session-login",
@@ -854,9 +854,9 @@
     },
     {
       "slug": "rest-partner-loses-rows",
-      "title": "L'API du partenaire perd une page, le run ne ment pas.",
-      "goal": null,
-      "lede": "Un partenaire publie 2 400 partenaires et leur nombre. Une nuit, une page de 100 disparaît, le nombre reste juste. lumnik compare ce qu'il a lu au total que la source déclare : le run échoue en nommant l'endpoint et les deux chiffres, au lieu de passer au vert.",
+      "title": "L'API du partenaire perd une page et le run ne ment pas",
+      "goal": "Qu'un run ne se dise jamais complet quand la source a servi moins de lignes qu'elle n'en annonce.",
+      "lede": "Un partenaire publie 2 400 lignes et leur nombre. Une nuit, une page de 100 disparaît, le nombre reste juste.\n- lu et déclaré comparés à chaque run;\n- la nuit en défaut finit Failed, avec les deux chiffres;\n- la nuit suivante repasse, sans geste sur la table.",
       "tags": {
         "domain": [
           "Partenaires",
@@ -867,8 +867,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:a4cdc366fbe1e7888345bbde65e66545842441a3b0fc28ff698830687fd06acc"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:f9c6de6c7d2dcf726cbeb23e1c43d87434e11ffd4db791bd788608e7ff5a8baf"
     },
     {
       "slug": "rest-prestashop",
@@ -965,9 +965,9 @@
     },
     {
       "slug": "saas-oauth2-orders",
-      "title": "Le SaaS derrière OAuth2 : des jetons de 30 secondes, un run de 40, aucune page perdue.",
-      "goal": null,
-      "lede": "L'ERP ne bouge plus, mais une partie des commandes arrive par un SaaS récent. Ce SaaS ne prend plus de jeton fixe : il donne un identifiant client et un secret, et veut un jeton de courte durée à chaque appel. lumnik demande le jeton, le renouvelle avant qu'il expire, encaisse une rotation de clés en plein run, et dit pourquoi quand le secret est révoqué, sans jamais le montrer.",
+      "title": "Le SaaS derrière OAuth2 lu sans perdre une page",
+      "goal": "Lire un SaaS protégé par OAuth2 sans perdre de page, et dire pourquoi quand l'accès est refusé.",
+      "lede": "Une partie des commandes arrive par un SaaS récent. Il donne un identifiant client et un secret, et veut un jeton de courte durée.\n- un jeton renouvelé avant qu'il expire;\n- une rotation de clés absorbée en plein run;\n- un secret révoqué nommé, jamais montré.",
       "tags": {
         "domain": [
           "Commerce",
@@ -978,8 +978,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:0578ebee341d3e1e3630f4b1505befdddda630bcd1fcc36dfb56e82b30221666"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:8570a70708a8f37907e6e5cf2b8299aa47489fd81a72df96928f1708fb46ed5b"
     },
     {
       "slug": "sap-idoc-orders",
@@ -1003,9 +1003,9 @@
     },
     {
       "slug": "sftp-carrier-drop",
-      "title": "Le dépôt SFTP du transporteur : chaque nuit lue, rangée, et rien sur parole.",
-      "goal": null,
-      "lede": "Un transporteur dépose chaque nuit livraisons.csv sur son serveur SFTP, toujours sous le même nom. lumnik relit une nuit de même taille, range chaque nuit sous son propre nom, dit sur le run un fichier qu'il n'a pas pu archiver, et refuse un serveur dont la clé a changé.",
+      "title": "Le dépôt SFTP du transporteur lu chaque nuit sans rien croire sur parole",
+      "goal": "Lire chaque nuit le fichier du transporteur, le ranger, et refuser un serveur dont la clé a changé.",
+      "lede": "Un transporteur dépose chaque nuit livraisons.csv sur son SFTP, toujours sous le même nom.\n- chaque nuit lue, puis archivée sous son nom et son heure;\n- un fichier non archivé dit sur le run;\n- une clé de serveur changée refusée jusqu'à confirmation.",
       "tags": {
         "domain": [
           "Transport",
