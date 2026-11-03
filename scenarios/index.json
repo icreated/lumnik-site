@@ -17,8 +17,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-24",
-      "evidenceDigest": "sha256:4b5d35a43dea6ed789968d58b7ab43c9cf9ab4ae0d3b473500a8f3974d8ed3ee"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:981df85c035ea063812782f3883ea735606a6b50701634a41562310dbf149729"
     },
     {
       "slug": "app-inventory-urls",
@@ -55,8 +55,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:504241b86a19491ea48c0372bd9786bfdb907114dc29dcace40e6df16343e967"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:23e7006035aba0600827fa91a3d112e12b9df19ace82f4b54e717f31b089dbe6"
     },
     {
       "slug": "catalogue-ean-check",
@@ -92,8 +92,28 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-24",
-      "evidenceDigest": "sha256:c345db6596e6d9b5edf6b22469510693de2950fd964d94569e18ae83444f8d4d"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:8e90b728bc532d5bb7004559d0544c6495c04a864ea55b733c6b95cf44696170"
+    },
+    {
+      "slug": "chirpstack-freezer-probe",
+      "title": "La sonde du congélateur voit 6,8 °C en pleine nuit",
+      "goal": "Être alerté dès qu'une sonde HACCP indépendante voit un congélateur au-dessus de -18 °C, même quand le contrôleur frigorifique ne dit rien.",
+      "lede": "À l'automne 2026, des contrôleurs frigorifiques de supermarchés ont été modifiés à distance. En France, le 11 octobre, aucune alarme ne s'est déclenchée. Une sonde HACCP indépendante mesure la température, et ChirpStack publie ses relevés sur Kafka.\n- la lecture est imbriquée dans l'événement: promote en fait une colonne\n- un registre dit quel meuble, quel rayon, qui est d'astreinte\n- à 02 h 30, PROBE-07 lit 6,8 °C: une décision",
+      "tags": {
+        "domain": [
+          "Chaîne du froid",
+          "Distribution"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "Process"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:182940ec4d12384c857dc8a5957a4cfbd96238300b82af432f7bd9cde39f4d96"
     },
     {
       "slug": "crm-contacts-reachable",
@@ -237,9 +257,9 @@
     },
     {
       "slug": "edi-flat-order-lines",
-      "title": "Un fichier EDI à plat sorti d'un ERP : des lignes de commande en largeur fixe, lues sans outil de mapping.",
-      "goal": null,
-      "lede": "Un fabricant échange avec son logisticien des fichiers à plat, un dossier par partenaire, un préfixe par type d'échange. Aucun séparateur : chaque champ a sa place et sa largeur, une ligne d'en-tête en tête, de l'ISO-8859-1, et parfois pas de fin de ligne après la dernière. Le logisticien veut les lignes de commande en colonnes.",
+      "title": "Les lignes de commande d'un fichier EDI à plat lues à leur place",
+      "goal": "Lire en colonnes les lignes de commande d'un fichier EDI à largeur fixe, sans outil de mapping.",
+      "lede": "Un fabricant et son logisticien s'échangent des fichiers à plat. Aucun séparateur: chaque champ a sa place et sa largeur.\n- l'en-tête écarté et compté;\n- onze champs découpés à leur place;\n- les accents justes, même dans un fichier d'une ligne.",
       "tags": {
         "domain": [
           "Logistique",
@@ -251,8 +271,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:22d0e049052a29719d6ec0d48efcf410afde361223d9683819502906f2a1efc2"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:0dafa0eaa9eeb3bc7ca21db80e88d4d6e563dd1b37049173e1e164235917d62e"
     },
     {
       "slug": "edi-order-cycle",
@@ -277,9 +297,9 @@
     },
     {
       "slug": "edifact-orders",
-      "title": "Un message EDIFACT ORDERS : une ligne, découpée en segments, l'apostrophe échappée respectée.",
-      "goal": null,
-      "lede": "La distribution et l'industrie échangent encore de l'EDIFACT : un message ORDERS de l'acheteur, souvent écrit sur une seule ligne, ses segments terminés par une apostrophe, ses éléments séparés par + et :. Une apostrophe dans un libellé s'écrit ?'. L'acheteur veut lire le message segment par segment.",
+      "title": "Un message EDIFACT ORDERS relu ligne de commande par ligne de commande",
+      "goal": "Lire une commande EDIFACT segment par segment, puis ligne par ligne, sans outil EDI.",
+      "lede": "L'acheteur envoie un message ORDERS sur une seule ligne. Les segments finissent par une apostrophe. Une apostrophe dans un libellé s'écrit ?'.\n- quatorze segments, dans l'ordre;\n- « Bâche d'hiver » entier;\n- deux lignes de commande, chacune avec sa commande et son EAN.",
       "tags": {
         "domain": [
           "Achats",
@@ -291,14 +311,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-24",
-      "evidenceDigest": "sha256:aa3aeb186ca03e54605ad9329207707515c823084d60db69975b10a8629d65bb"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:70336c22436e96e4fbc85464a773bb62e4830def557b57dcf444e84337e773c4"
     },
     {
       "slug": "entity-resolution",
-      "title": "Un client, deux systèmes, aucun identifiant commun.",
-      "goal": null,
-      "lede": "Un ERP, un CRM, une Entity. L'email rapproche les fiches ; une boîte partagée ouvre une ambiguïté. lumnik ne tranche pas : un humain décide, et la décision tient au rejeu.",
+      "title": "Un client dans deux systèmes sans identifiant commun",
+      "goal": "Rapprocher les clients de l'ERP et les contacts du CRM, sans jamais fusionner au hasard.",
+      "lede": "Un ERP, un CRM, aucun identifiant commun. L'email rapproche les fiches. Une boîte partagée désigne deux clients.\n- le rapprochement par une règle écrite;\n- deux candidats: une ambiguïté, pas une fusion;\n- un humain tranche, et sa décision tient au rejeu.",
       "tags": {
         "domain": [
           "Données de référence",
@@ -310,14 +330,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:ffe4a8455e06d5f2794d63fd918164cb00ffe45f1d1502fc05dab4f67d68c10d"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:979eebfd6186bb50fbe01e98dead089ea24d8a8f79e6afe1f489de4453d63ddc"
     },
     {
       "slug": "entity-resolution-drift",
-      "title": "Un client établi ne change pas de fiche en silence.",
-      "goal": null,
-      "lede": "Hier, le contact CRM CC-42 et le compte ERP AC-700 désignaient Nova Pumps. Aujourd'hui, son email pointe vers Helios Valves. lumnik ne déplace pas le contact : il le rend ambigu, et un humain tranche.",
+      "title": "Un client établi ne change pas de fiche en silence",
+      "goal": "Voir quand un contact du CRM se met à désigner un autre client, au lieu de le déplacer en silence.",
+      "lede": "Hier, le contact CC-42 et le compte AC-700 désignaient Nova Pumps. Aujourd'hui, son email pointe vers Helios Valves.\n- le lien d'hier ne bouge pas tout seul;\n- le contact devient ambigu;\n- un humain tranche, et l'historique nomme l'auteur.",
       "tags": {
         "domain": [
           "Données de référence",
@@ -329,14 +349,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:783138b77fcaa6c26745e209244f7bc67c3cfce06ecfddd25fb63b25667ac76a"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:0781b34d56fc82b39fcb6e8a0c63443db40049849f5b97f45318a4d7956287ac"
     },
     {
       "slug": "excel-merged-cells",
-      "title": "Un export Excel aux cellules fusionnées : chaque ligne avec sa région et son client.",
-      "goal": null,
-      "lede": "Les ventes envoient chaque mois un rapport Excel : un groupe par client, la région et le client dans des cellules fusionnées, un sous-total sous chaque groupe. Enregistrée en CSV, une cellule fusionnée ne garde sa valeur que sur la première ligne du groupe ; les suivantes sont vides. Les ventes veulent chaque ligne avec sa région et son client.",
+      "title": "Chaque ligne de l'export Excel retrouve sa région et son client",
+      "goal": "Lire un rapport Excel aux cellules fusionnées comme une table, une ligne par vente.",
+      "lede": "Les ventes envoient chaque mois un rapport Excel. Un groupe par client, la région et le client dans des cellules fusionnées, un sous-total sous chaque groupe. En CSV, une cellule fusionnée ne garde sa valeur que sur la première ligne.\n- les 15 sous-totaux écartés et comptés;\n- chaque ligne reçoit la région et le client de son groupe;\n- rien ne passe d'un fichier à l'autre.",
       "tags": {
         "domain": [
           "Ventes",
@@ -348,14 +368,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-24",
-      "evidenceDigest": "sha256:9515b1197282ecae8ac5fa281f972d4d5b45b212249b9472452b4421a770da36"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:69baebe77cc02e0641159af568d6cb3897f3c3e2f41cd1c345260e8603f55a03"
     },
     {
       "slug": "export-that-lies",
-      "title": "L'export qui ment : une ligne illisible ne passe pas en silence.",
-      "goal": null,
-      "lede": "Un ERP exporte chaque nuit son catalogue d'articles en un seul fichier. Un libellé contient le séparateur, sans guillemets. lumnik met la ligne de côté avec ses valeurs brutes, ne retire rien du catalogue tant qu'elle est illisible, et ne ferme la lettre morte que sur le run qui l'a vraiment relue.",
+      "title": "Une ligne illisible de l'export ne passe pas en silence",
+      "goal": "Ne jamais écrire ni retirer à moitié un catalogue dont une ligne est illisible.",
+      "lede": "Un ERP exporte chaque nuit son catalogue d'articles. Un libellé contient le séparateur, sans guillemets.\n- la ligne mise de côté avec ses valeurs brutes;\n- rien retiré du catalogue tant qu'elle est illisible;\n- la lettre morte fermée par le run qui l'a vraiment relue.",
       "tags": {
         "domain": [
           "Catalogue",
@@ -366,12 +386,12 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:a610b53bba19b3247c78e657bf9b4edea5e10290471848a5650c09a2ed68710d"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:99d22064292dcb6ead4b52f4aad94bc309eba96a715569fa6118df21f934095f"
     },
     {
       "slug": "gmao-candy-line-incident",
-      "title": "Un incident critique, aucun technicien",
+      "title": "Un incident critique reste sans technicien",
       "goal": "Prévenir le responsable maintenance dès qu'un incident critique n'a pas de technicien.",
       "lede": "Une GMAO exporte ses incidents en CSV. Le convoyeur de la ligne de bonbons gélifiés est à l'arrêt, sans technicien. La GMAO ne prévient personne.\n- un Workflow suit le statut de chaque incident\n- un Process signale l'incident critique non affecté\n- une seule décision; l'affectation la fait avancer.",
       "tags": {
@@ -391,9 +411,9 @@
     },
     {
       "slug": "graphql-insurance-bff",
-      "title": "Les listes d'un formulaire de sinistre, sans exposer le GraphQL du CRM.",
-      "goal": null,
-      "lede": "Le type et le sous-type de sinistre vivent dans un CRM qui parle GraphQL. lumnik l'ingère page par page, en fait une entité canonique, et un petit BFF sert au formulaire du JSON REST stable : le schéma du CRM ne devient jamais un contrat du navigateur.",
+      "title": "Les listes d'un formulaire de sinistre viennent du CRM sans exposer son GraphQL",
+      "goal": "Alimenter les listes d'un formulaire depuis un CRM GraphQL sans que le navigateur dépende du schéma du CRM.",
+      "lede": "Le type et le sous-type de sinistre vivent dans un CRM qui parle GraphQL. lumnik l'ingère page par page et en fait une entité canonique.\n- un petit BFF sert au formulaire du JSON REST stable\n- passer d'Automobile à Habitation remplace la liste\n- un type inconnu répond 404",
       "tags": {
         "domain": [
           "Assurance",
@@ -405,14 +425,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:c4e7cfc5eba9c8095b2da7e7ef871f8de55a2c3121d95d6830fb0313111ac3c7"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:81638f79c0711724f257732f97137d1f82ac49f579adc0b3e542755e2ce3593c"
     },
     {
       "slug": "import-export",
-      "title": "Le catalogue part chez le partenaire dans son format, pas dans le nôtre.",
-      "goal": null,
-      "lede": "Deux CSV d'un ERP, produits et catégories, sont joints dans le hub puis livrés sur S3 au format d'un partenaire : en-têtes français, point-virgule, virgule décimale, statuts recodés, référence interne masquée. Un reçu prouve les octets livrés.",
+      "title": "Le catalogue part chez le partenaire dans son format à lui",
+      "goal": "Livrer le catalogue produits à un partenaire dans le format qu'il impose, sans écrire de code de conversion.",
+      "lede": "Deux CSV d'un ERP, produits et catégories, sont joints dans le hub puis livrés sur S3 au format d'un partenaire.\n- en-têtes français, point-virgule, virgule décimale\n- statuts recodés, référence interne masquée\n- un reçu prouve les octets livrés",
       "tags": {
         "domain": [
           "Catalogue",
@@ -425,14 +445,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:19279255a1f737e09bb4a5169bc241bba26a6a47c5b0f10017acd3ed6310324c"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:400faba3dd0f1e5917b581ab68329cb495867651a8e3e0564af130e8f8eae0e5"
     },
     {
       "slug": "invoices-dead-letters",
-      "title": "Un montant illisible n'entre pas : la facture attend, corrigée à la source.",
-      "goal": null,
-      "lede": "Un export de factures fournisseurs porte deux montants mal saisis et une facture de test. Au lieu d'écrire des factures sans montant, le hub les met de côté avec la ligne telle qu'elle a été lue. On écarte la facture de test, on corrige à la source, et chaque lettre est fermée par la lecture qui a apporté la bonne ligne.",
+      "title": "Une facture au montant illisible attend sa correction à la source",
+      "goal": "Ne jamais écrire une facture sans montant, et suivre chaque ligne écartée jusqu'à sa correction.",
+      "lede": "Un export de factures fournisseurs porte deux montants mal saisis et une facture de test.\n- les trois mises de côté, telles qu'elles ont été lues;\n- la facture de test écartée;\n- les deux autres corrigées à la source, et leur lettre fermée par la bonne lecture.",
       "tags": {
         "domain": [
           "Achats",
@@ -444,14 +464,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:7bde61b7ab56d003546f3cf2465acde53578b2a40c5f09b6e093bde26c93d22b"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:c98dbe5b1d92c75028ef00de716b34ea89be1f5816d4180ee1fce42bdbff0a6c"
     },
     {
       "slug": "jdbc-merge-oracle-postgresql",
-      "title": "Une fiche produit, deux bases : PostgreSQL et Oracle restent où elles sont.",
-      "goal": null,
-      "lede": "Les produits vivent dans PostgreSQL, leurs catégories dans Oracle. Deux connecteurs jdbc les lisent sans rien y écrire, et une entité les joint : 40 234 produits, chacun avec sa catégorie quand elle existe.",
+      "title": "Une fiche produit réunit PostgreSQL et Oracle sans rien migrer",
+      "goal": "Montrer une fiche produit complète quand le produit vit dans PostgreSQL et sa catégorie dans Oracle, sans toucher aux deux bases.",
+      "lede": "Les produits vivent dans PostgreSQL, leurs catégories dans Oracle. Deux connecteurs jdbc les lisent sans rien y écrire, et une entité les joint.\n- 40 234 produits, 63 catégories\n- chaque produit porte sa catégorie quand elle existe\n- le produit sans catégorie reste, avec des champs vides",
       "tags": {
         "domain": [
           "Catalogue",
@@ -463,14 +483,14 @@
         ]
       },
       "edition": "pro",
-      "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:51afbf4edf408443129e50a9843ce31a5623605011aebcb3383756a2cc950fb7"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:c15fe72f30eccaa5f7daff0f05e6bf4f06d3c8666424488b79a12572bf31bf2d"
     },
     {
       "slug": "kafka-after-hours-energy",
-      "title": "À 23 h 15, le même chiffre ne veut pas dire la même chose partout.",
-      "goal": null,
-      "lede": "Trois compteurs publient leur puissance sur Kafka. Lyon tire 18,7 kW, le laboratoire de Grenoble 28,4 kW. Seul Lyon dépasse son seuil de nuit : une décision, un email à sa responsable, et un tableau Grafana qui suit les trois états.",
+      "title": "Lyon tire 18,7 kW la nuit et seule sa responsable est alertée",
+      "goal": "Être alerté quand un site fermé consomme au-delà de son seuil de nuit, sans alerter les sites où cette charge est normale.",
+      "lede": "Trois compteurs publient leur puissance sur Kafka à 23 h 15. Un registre CSV dit ce qu'est chaque site.\n- Lyon tire 18,7 kW pour un seuil de 10 kW: une décision, un email\n- le laboratoire tire 28,4 kW, sous son seuil de 40 kW: rien\n- Grafana suit les trois états",
       "tags": {
         "domain": [
           "Énergie",
@@ -483,8 +503,8 @@
         ]
       },
       "edition": "pro",
-      "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:cd8aa75aec35af4ca81fef172bd8802b2cc6f6c98ec7b77542d97417367f0d86"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:534437228df33228dc34ea2647d362d40c9152be7ec6cde1be47c41e111c5671"
     },
     {
       "slug": "kafka-freezer-door-dormancy",
@@ -508,9 +528,9 @@
     },
     {
       "slug": "legacy-sales-grafana",
-      "title": "Un ERP figé alimente un vrai tableau Grafana, sans connecteur de plus.",
-      "goal": null,
-      "lede": "L'ERP exporte ses ventes et son catalogue en CSV. lumnik les joint, Grafana lit l'entité par un compte PostgreSQL en lecture seule, borné à son tenant. Lundi : 10 450 €. Mardi, l'export change : 14 200 €, et la vente modifiée n'apparaît qu'une fois.",
+      "title": "Un ERP figé alimente un vrai tableau Grafana",
+      "goal": "Donner à la direction un tableau de ventes à jour à partir des exports d'un ERP qu'on ne touche plus.",
+      "lede": "L'ERP exporte ses ventes et son catalogue en CSV. lumnik les joint, et Grafana lit l'entité par un compte PostgreSQL en lecture seule, borné à son tenant.\n- lundi: 10 450 €\n- mardi, l'export change: 14 200 €\n- la vente modifiée n'apparaît qu'une fois",
       "tags": {
         "domain": [
           "Ventes",
@@ -522,14 +542,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:c8f311c0fb15458e813e3953b2f5e5ccbcf37311ffc8541d21e8c70a2e594146"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:8e656db00ebb0aca2931ed304badf23420b48475f36260614a93aa9e561b8677"
     },
     {
       "slug": "marketplace-order-items",
-      "title": "Les commandes d'une marketplace, une ligne par article à préparer : modèle, couleur, taille.",
-      "goal": null,
-      "lede": "L'export de la marketplace donne une ligne par commande, les articles serrés dans une cellule, et une référence qui serre à son tour modèle, couleur et taille. La logistique veut une ligne par article, pour compter ce qu'il faut sortir du stock. Le manifeste découpe la commande, puis la référence, et refuse un fichier dont la colonne a changé de nom.",
+      "title": "Une ligne par article à préparer avec modèle couleur et taille",
+      "goal": "Sortir de l'export d'une marketplace une ligne par article, pour préparer le stock.",
+      "lede": "L'export de la marketplace donne une ligne par commande. Les articles sont serrés dans une cellule, et chaque référence serre modèle, couleur et taille.\n- une ligne par article, même quand deux sont identiques;\n- la référence coupée en modèle, couleur et taille;\n- un fichier dont la colonne a changé de nom est refusé.",
       "tags": {
         "domain": [
           "Logistique",
@@ -541,14 +561,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:0c5b83354986a2a80be058fc89dbcfde39ab0775efbfa7b401a72e9317c2bdf5"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:69ef587c0021ffa045f4e926ee84334d73dd1ec689ec4ea45b27d1b1ad66f639"
     },
     {
       "slug": "one-app-per-metier",
-      "title": "Un hub, une app par métier.",
-      "goal": null,
-      "lede": "La maintenance et les achats partagent un ERP où chacun voit tout. Sur le même hub, lumnik compose une app par métier ; un technicien qui ne tient que le rôle scope:maintenance voit son app, ses ordres et ses décisions, et chaque porte des achats lui répond par un refus.",
+      "title": "Un technicien ne voit que l'app de la maintenance",
+      "goal": "Donner à chaque métier son app sur le même hub, sans qu'un technicien puisse lire les données des achats.",
+      "lede": "La maintenance et les achats partagent un ERP où chacun voit tout. Sur le même hub, lumnik compose une app par métier.\n- le technicien ne tient que le rôle Keycloak scope:maintenance\n- il voit son app, ses ordres et ses décisions\n- chaque porte des achats lui répond par un refus",
       "tags": {
         "domain": [
           "Sécurité",
@@ -564,8 +584,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:1731d57291ef750662c646acdaf0559f6076f4774a5f0b2e2486b470458c99ca"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:685bc56997af89e6bdb01b2338fd7620781a5b38fce39ef42ec83a57cec72adb"
     },
     {
       "slug": "orders-where-they-sleep",
@@ -588,9 +608,9 @@
     },
     {
       "slug": "purchasing-ask-abstains",
-      "title": "La question à laquelle Ask refuse de répondre : une marge sans coût, un « meilleur » sans critère.",
-      "goal": null,
-      "lede": "Un directeur achats pose ses questions à un an de commandes fournisseurs, avec ses mots. Trois questions reçoivent leur chiffre, avec le SQL qui l'a produit. Trois autres n'ont pas de réponse dans ces données : une marge sans prix de revient, un meilleur fournisseur sans critère, des retards sans date de livraison. Ask les refuse au lieu d'inventer un chiffre qu'on répéterait en réunion.",
+      "title": "Ask refuse une marge sans coût et un meilleur fournisseur sans critère",
+      "goal": "Laisser un directeur achats interroger ses commandes avec ses mots, sans qu'on lui invente un chiffre que les données ne portent pas.",
+      "lede": "Un directeur achats pose ses questions à un an de commandes fournisseurs. Trois questions reçoivent leur chiffre, avec le SQL qui l'a produit.\n- une marge sans prix de revient: refusée\n- un meilleur fournisseur sans critère: refusé\n- des retards sans date de livraison: refusés",
       "tags": {
         "domain": [
           "Achats",
@@ -602,14 +622,14 @@
         ]
       },
       "edition": "pro",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:4fc2a8f4570862eae39d0c4bfd265abf89722596a361e48f0b6173e021168859"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:9a93335740bfba272cddd74a5d33cad5c24221c82b7a28ef7d585e83051edd67"
     },
     {
       "slug": "purchasing-follow-up",
-      "title": "« Et SUP-004 ? » : une question de suite, répondue comme la question entière.",
-      "goal": null,
-      "lede": "Un acheteur demande combien de commandes ont été annulées, puis « Et pour le fournisseur SUP-003 ? », puis « Et SUP-004 ? ». Il ne retape pas la question. Ask lit chaque suite avec la question d'avant, répond à la question complète et affiche celle qu'il a comprise.",
+      "title": "Et SUP-004? Ask répond à la question de suite comme à la question entière",
+      "goal": "Laisser un acheteur enchaîner ses questions sans les retaper, en lui montrant chaque fois la question comprise.",
+      "lede": "Un acheteur demande combien de commandes ont été annulées, puis «Et pour le fournisseur SUP-003?», puis «Et SUP-004?». Il ne retape pas la question.\n- Ask lit chaque suite avec la question d'avant\n- il répond à la question complète et l'affiche\n- une suite que les données ne portent pas est refusée",
       "tags": {
         "domain": [
           "Achats",
@@ -621,14 +641,14 @@
         ]
       },
       "edition": "pro",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:e78e1e66fedf9e58c79861c1caa836eadde835862d626e93e1be6b167302d6cf"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:9a325fae011c677c7ff72a89629c6e36d3b9002a81bfed76a511bd02ef63ffbc"
     },
     {
       "slug": "pwa-chat",
-      "title": "Questionner 40 000 articles, SQL à l'appui.",
-      "goal": null,
-      "lede": "Deux exports CSV, une entité, une app réduite au chat. La question devient une requête en lecture seule ; la réponse montre son SQL.",
+      "title": "Questionner 40 000 articles avec ses mots et voir le SQL",
+      "goal": "Laisser un utilisateur interroger le catalogue avec ses mots, sans apprendre les colonnes ni écrire de SQL.",
+      "lede": "Deux exports CSV, une entité, une app réduite au chat. La question devient une requête en lecture seule.\n- 40 233 articles, chacun avec sa catégorie\n- «Combien d'articles dans la catégorie Pompes?»: 7 407\n- la réponse montre son SQL",
       "tags": {
         "domain": [
           "Commerce",
@@ -641,14 +661,14 @@
         ]
       },
       "edition": "pro",
-      "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:eafd0ad70a2bf076779c7564601762a63957d9210e6aa0a341c973f15c26ee27"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:186d1f9f815871ffa1b6098e51c3362e21e4f4e47b24f0558432b25209f91e41"
     },
     {
       "slug": "pwa-pagination",
-      "title": "40 000 articles, parcourus page par page.",
-      "goal": null,
-      "lede": "Deux exports CSV, deux entités, deux vues liées, une app. Le hub sert le catalogue par pages de 50 ; la PWA n'en charge jamais plus.",
+      "title": "40 000 articles parcourus page par page dans la PWA",
+      "goal": "Parcourir tout un catalogue dans la PWA sans jamais charger plus de 50 lignes à la fois.",
+      "lede": "Deux exports CSV, deux entités, deux vues liées, une app. Le hub sert le catalogue par pages de 50.\n- 40 233 articles atteints, sans doublon\n- les catégories liées dans les deux sens\n- l'édition Open suffit",
       "tags": {
         "domain": [
           "Commerce",
@@ -662,14 +682,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:3fef15276b19cf9e8983d01669de4656fcbbe4c9ba4598f0564b36af994beb34"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:ef1b020d72b35293b42d2eef88025240bfc8e6fe0aa6241382c95978906ef666"
     },
     {
       "slug": "pwa-search",
-      "title": "Chercher dans 40 000 articles, facettes comprises.",
-      "goal": null,
-      "lede": "Deux exports CSV, une entité, un SearchIndex, une app réduite à la recherche. Le hub indexe les colonnes déclarées ; la PWA filtre par facette.",
+      "title": "Chercher dans 40 000 articles avec les facettes dans la PWA",
+      "goal": "Trouver un article par ses mots ou le début de sa référence, et affiner par catégorie, dans la PWA.",
+      "lede": "Deux exports CSV, une entité, un SearchIndex, une app réduite à la recherche.\n- «Pompes»: 7 407 articles, dont 6 761 actifs\n- «Pompe Badu»: 122 inactifs\n- le hub indexe les seules colonnes déclarées",
       "tags": {
         "domain": [
           "Commerce",
@@ -683,14 +703,14 @@
         ]
       },
       "edition": "pro",
-      "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:66a82f5e2a774e0fec0a1f34cd31ae7a093cecf939403942db2c932df6afefab"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:7e92771ee39eb576c7c50b0dc3706b6f1b652198b33fd2334a94c9e6a564eecd"
     },
     {
       "slug": "quantity-script-one-in-500",
-      "title": "Une valeur imprévue sur 500 : la ligne en lettre morte, les 499 autres écrites.",
-      "goal": null,
-      "lede": "Un bon de réception saisi à la main : 500 lignes, des quantités écrites « 12,5 kg » ou « 3 pce ». Un script Kotlin de l'opérateur les lit en nombre et en unité. La ligne 317 dit « env. 4 kg ». Que deviennent les 499 autres ?",
+      "title": "Une valeur imprévue sur 500 en lettre morte et les 499 autres écrites",
+      "goal": "Qu'une seule ligne imprévue n'arrête pas les 499 autres, et qu'elle reste visible.",
+      "lede": "Un bon de réception saisi à la main: 500 lignes, des quantités « 12,5 kg » ou « 3 pce ». Un script Kotlin de l'opérateur les lit. La ligne 317 dit « env. 4 kg ».\n- version 1: le run échoue et n'écrit rien;\n- version 2: la valeur déclarée illisible;\n- 499 lignes écrites, la 317 en lettre morte.",
       "tags": {
         "domain": [
           "Logistique",
@@ -702,8 +722,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:c61020779725c30f4b7eb409300a84b2e4aa9869c831175dacdb0a210929f800"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:4c91c7c4205d8d30a6e085f8302ec976e3b1f451e2d2ad6e8c6d3e94fd9774a2"
     },
     {
       "slug": "rest-cursor-in-header",
@@ -745,9 +765,9 @@
     },
     {
       "slug": "rest-incremental-orders",
-      "title": "L'API qui n'envoie que ce qui a changé : une commande modifiée pendant la lecture n'est pas perdue.",
-      "goal": null,
-      "lede": "Une API de commandes sait répondre à « ce qui a changé depuis telle date ». lumnik la lit en entier une fois, puis chaque nuit seulement ce qui a bougé. Une commande modifiée pendant qu'un run lit encore les pages suivantes aurait pu passer entre deux nuits : le run suivant repart un peu avant sa dernière marque, et la récupère.",
+      "title": "Une commande modifiée pendant la lecture n'est pas perdue",
+      "goal": "Ne lire chaque nuit que ce qui a changé, sans perdre ce qui change pendant la lecture.",
+      "lede": "Une API de commandes sait répondre à « ce qui a changé depuis telle date ». lumnik la lit en entier une fois, puis chaque nuit seulement ce qui a bougé.\n- la marque reculée d'une marge;\n- une commande modifiée pendant un run arrive au run suivant;\n- chaque date rangée comme une date.",
       "tags": {
         "domain": [
           "Commerce"
@@ -757,8 +777,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:4e149714e42f5565513f76d9220f3aa543963653b01b190cfcc233d8772bb9dc"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:1f88e9c916f9cbe6ec5ba85fe0af1137b970727d0a85d97bc8340a1c1c159e72"
     },
     {
       "slug": "rest-legacy-session-login",
@@ -854,9 +874,9 @@
     },
     {
       "slug": "rest-partner-loses-rows",
-      "title": "L'API du partenaire perd une page, le run ne ment pas.",
-      "goal": null,
-      "lede": "Un partenaire publie 2 400 partenaires et leur nombre. Une nuit, une page de 100 disparaît, le nombre reste juste. lumnik compare ce qu'il a lu au total que la source déclare : le run échoue en nommant l'endpoint et les deux chiffres, au lieu de passer au vert.",
+      "title": "L'API du partenaire perd une page et le run ne ment pas",
+      "goal": "Qu'un run ne se dise jamais complet quand la source a servi moins de lignes qu'elle n'en annonce.",
+      "lede": "Un partenaire publie 2 400 lignes et leur nombre. Une nuit, une page de 100 disparaît, le nombre reste juste.\n- lu et déclaré comparés à chaque run;\n- la nuit en défaut finit Failed, avec les deux chiffres;\n- la nuit suivante repasse, sans geste sur la table.",
       "tags": {
         "domain": [
           "Partenaires",
@@ -867,8 +887,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:a4cdc366fbe1e7888345bbde65e66545842441a3b0fc28ff698830687fd06acc"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:f9c6de6c7d2dcf726cbeb23e1c43d87434e11ffd4db791bd788608e7ff5a8baf"
     },
     {
       "slug": "rest-prestashop",
@@ -965,9 +985,9 @@
     },
     {
       "slug": "saas-oauth2-orders",
-      "title": "Le SaaS derrière OAuth2 : des jetons de 30 secondes, un run de 40, aucune page perdue.",
-      "goal": null,
-      "lede": "L'ERP ne bouge plus, mais une partie des commandes arrive par un SaaS récent. Ce SaaS ne prend plus de jeton fixe : il donne un identifiant client et un secret, et veut un jeton de courte durée à chaque appel. lumnik demande le jeton, le renouvelle avant qu'il expire, encaisse une rotation de clés en plein run, et dit pourquoi quand le secret est révoqué, sans jamais le montrer.",
+      "title": "Le SaaS derrière OAuth2 lu sans perdre une page",
+      "goal": "Lire un SaaS protégé par OAuth2 sans perdre de page, et dire pourquoi quand l'accès est refusé.",
+      "lede": "Une partie des commandes arrive par un SaaS récent. Il donne un identifiant client et un secret, et veut un jeton de courte durée.\n- un jeton renouvelé avant qu'il expire;\n- une rotation de clés absorbée en plein run;\n- un secret révoqué nommé, jamais montré.",
       "tags": {
         "domain": [
           "Commerce",
@@ -978,14 +998,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:0578ebee341d3e1e3630f4b1505befdddda630bcd1fcc36dfb56e82b30221666"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:8570a70708a8f37907e6e5cf2b8299aa47489fd81a72df96928f1708fb46ed5b"
     },
     {
       "slug": "sap-idoc-orders",
-      "title": "Des IDocs SAP ORDERS05 à plat : chaque ligne de commande avec sa commande client.",
-      "goal": null,
-      "lede": "Le SAP d'un client envoie ses commandes en IDocs ORDERS05, écrits dans un fichier à plat : un enregistrement de contrôle EDI_DC40 par IDoc, puis des enregistrements de données à largeur fixe. Le numéro de commande est dans E2EDK02, la quantité dans le poste E2EDP01, notre article dans le E2EDP19 qui le suit. L'administration des ventes veut une ligne par ligne de commande.",
+      "title": "Chaque ligne d'un IDoc SAP ORDERS05 retrouve sa commande client",
+      "goal": "Lire les IDocs de commande d'un client SAP, une ligne par ligne de commande, sans middleware.",
+      "lede": "Le SAP d'un client écrit ses commandes en IDocs ORDERS05, dans un fichier à plat. La commande est en tête de l'IDoc, l'article plus bas.\n- seize enregistrements découpés à leur position;\n- chaque ligne avec sa commande, sa quantité et son unité;\n- un IDoc sans commande ne prend pas celle du précédent.",
       "tags": {
         "domain": [
           "Administration des ventes",
@@ -998,14 +1018,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-24",
-      "evidenceDigest": "sha256:6ace3102303eb5e4e6995dc9088505bce1b14c5caaa4392fd00a9f4a6bf2e32c"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:86ec6030a58cdfe8be82890844fb65cb17acab57e785a4a0a83bda5b75817a0f"
     },
     {
       "slug": "sftp-carrier-drop",
-      "title": "Le dépôt SFTP du transporteur : chaque nuit lue, rangée, et rien sur parole.",
-      "goal": null,
-      "lede": "Un transporteur dépose chaque nuit livraisons.csv sur son serveur SFTP, toujours sous le même nom. lumnik relit une nuit de même taille, range chaque nuit sous son propre nom, dit sur le run un fichier qu'il n'a pas pu archiver, et refuse un serveur dont la clé a changé.",
+      "title": "Le dépôt SFTP du transporteur lu chaque nuit sans rien croire sur parole",
+      "goal": "Lire chaque nuit le fichier du transporteur, le ranger, et refuser un serveur dont la clé a changé.",
+      "lede": "Un transporteur dépose chaque nuit livraisons.csv sur son SFTP, toujours sous le même nom.\n- chaque nuit lue, puis archivée sous son nom et son heure;\n- un fichier non archivé dit sur le run;\n- une clé de serveur changée refusée jusqu'à confirmation.",
       "tags": {
         "domain": [
           "Transport",
@@ -1021,9 +1041,9 @@
     },
     {
       "slug": "shipping-rule-changed",
-      "title": "La règle a changé au 1er janvier : chaque commande dit quelle version l'a calculée.",
-      "goal": null,
-      "lede": "Les frais de port sont calculés par un script Kotlin que fournit l'opérateur du hub : port offert dès 150,00 en décembre, dès 200,00 à partir de janvier. L'opérateur remplace le script. Des mois plus tard, un auditeur demande pourquoi une commande de 172,50 n'a pas payé de port en décembre, et en a payé en janvier.",
+      "title": "Chaque commande dit quelle version de la règle l'a calculée",
+      "goal": "Savoir, des mois plus tard, quelle règle de port a calculé chaque commande.",
+      "lede": "Le port est calculé par un script Kotlin que fournit l'opérateur du hub. En décembre, il est offert dès 150,00. Au 1er janvier, dès 200,00. L'opérateur remplace le script.\n- deux commandes de 172,50: port offert en décembre, payé en janvier;\n- chaque run nomme la version de la règle par son empreinte;\n- chaque commande nomme son run: on remonte de la commande à la règle avec lm.",
       "tags": {
         "domain": [
           "Ventes",
@@ -1035,14 +1055,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:4b95ff1e65a7bab3bb0e57522cc13c138b794ffc58849e66d227c8a355b5d1b2"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:7fc0f21d8e7f84d321693a17f42afc6b7071ee0b4a8688698fd9d507ef2738a4"
     },
     {
       "slug": "siebel-soap-desk",
-      "title": "Le guichet SOAP du CRM : chaque service lu à sa façon, rien de lu deux fois.",
-      "goal": null,
-      "lede": "Un CRM des années 2000 expose ses données par des services web SOAP sur mesure : les actions d'une demande en un appel, les opportunités d'un client page par page sur un numéro de page. Le mot de passe voyage dans l'enveloppe. lumnik lit chacun comme il se lit, dit le Fault du service tel quel, et n'envoie jamais deux fois la même requête.",
+      "title": "Le guichet SOAP du CRM lu service par service sans rien lire deux fois",
+      "goal": "Lire les services SOAP d'un vieux CRM, chacun comme il se lit, sans le marteler.",
+      "lede": "Un CRM des années 2000 expose ses données par des services SOAP sur mesure. Le mot de passe voyage dans l'enveloppe.\n- un service lu en un appel, un autre page par page;\n- le Fault du CRM sur le run, sans nouvel essai;\n- la nuit suivante mise à jour sur les clés.",
       "tags": {
         "domain": [
           "CRM",
@@ -1053,8 +1073,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:8b3414d2ab1d0ef94f4c6a4721657dea1d3abb8af651b08a2a487f2d5801e5a2"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:271a48f39e34c8347ccd28b7fbf2e0fa91530dd396b712115180766f31d4f804"
     },
     {
       "slug": "siem-bank-account-change",
@@ -1077,9 +1097,9 @@
     },
     {
       "slug": "supplier-master-edi",
-      "title": "Le fichier fournisseurs envoyé à l'EDI : ASCII, majuscules, 35 caractères, un identifiant stable.",
-      "goal": null,
-      "lede": "Les achats alimentent une plateforme EDI qui impose des noms en ASCII, en majuscules, de 35 caractères au plus, et un identifiant par fournisseur. L'export de l'ERP a des accents, de longues raisons sociales, des fournisseurs inactifs, et une colonne d'identifiant qui contient N/A, 0 ou rien. La contrainte de l'EDI est déclarée une fois dans le manifeste.",
+      "title": "Le fichier fournisseurs part à l'EDI en ASCII avec un identifiant stable",
+      "goal": "Envoyer à l'EDI des fournisseurs au format qu'il impose, avec un identifiant qui ne change pas.",
+      "lede": "La plateforme EDI des achats impose des noms en ASCII, en majuscules, de 35 caractères au plus, et un identifiant par fournisseur. L'export de l'ERP a des accents, de longues raisons sociales, des inactifs, et des identifiants N/A, 0 ou vides.\n- les noms mis au format de l'EDI;\n- N/A et 0 vidés et comptés, un identifiant manquant dérivé du code;\n- le lendemain, les mêmes identifiants.",
       "tags": {
         "domain": [
           "Achats",
@@ -1091,14 +1111,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:374c812a51ae0a399c6b06828002a7669b031b381cb10eaf03b472ac84e700a0"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:da72848c7a8284282d09de7dff01b18683d12ec376bf6ef77aa57f80a195948a"
     },
     {
       "slug": "two-systems-one-member",
-      "title": "Deux systèmes, un adhérent : chacun fait foi pour ses propres champs.",
-      "goal": null,
-      "lede": "Une mutuelle tient ses adhérents dans sa gestion des contrats et dans son portail. Fusionnés avec un seul ordre de sources, l'un des deux a toujours tort. lumnik laisse chaque colonne nommer sa source de référence, et garde chaque désaccord visible jusqu'à ce que la source le règle.",
+      "title": "Deux systèmes et un adhérent chacun fait foi pour ses champs",
+      "goal": "Montrer chaque champ d'un adhérent depuis le système qui fait foi pour lui, sans cacher un désaccord.",
+      "lede": "Une mutuelle tient ses adhérents dans sa gestion des contrats et dans son portail. Avec un seul ordre de sources, l'un des deux a toujours tort.\n- l'adresse vient du portail, la formule de la gestion;\n- chaque désaccord reste listé;\n- il sort de la liste quand la source le règle.",
       "tags": {
         "domain": [
           "Mutuelle",
@@ -1110,14 +1130,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:34a4686b33cd9ed78ae22b0d2939162db85fb4efea44d82dd7dabaccda305e66"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:87bf26f93305d690bf0d3c90dae68092dfcd06a849e7d4c5caa3ef719743edcb"
     },
     {
       "slug": "two-tenants-one-hub",
-      "title": "Deux clients, un hub, une table : chacun ne lit que ses lignes.",
-      "goal": null,
-      "lede": "Deux intégrateurs de deux clients appliquent les mêmes fichiers sur le même hub. Même connecteur, même entité, même table. Chacun charge ses commandes, sous les mêmes numéros. Chacun relit, interroge et compte : il ne voit que les siennes.",
+      "title": "Deux clients écrivent dans la même table et chacun ne lit que ses lignes",
+      "goal": "Héberger deux clients sur un même hub sans qu'aucun ne puisse lire, compter ou ouvrir les données de l'autre.",
+      "lede": "Deux intégrateurs de deux clients appliquent les mêmes fichiers sur le même hub: même connecteur, même entité, même table. Chacun charge ses commandes, sous les mêmes numéros.\n- chacun relit 240 ou 60 lignes, jamais celles de l'autre\n- la même question donne le même SQL et deux réponses\n- la lecture de l'autre répond 404",
       "tags": {
         "domain": [
           "Sécurité",
@@ -1129,8 +1149,8 @@
         ]
       },
       "edition": "pro",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:e808faa5e8409fe3ba7856e1ca3367048ba088ffb10e54e7fe2006eea1383d15"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:a7606c4a38ca66439c86c2ac8750ba35c026ff5a2461acca4170b7f64cefa132"
     },
     {
       "slug": "windev-hfsql-export",
@@ -1152,9 +1172,9 @@
     },
     {
       "slug": "zombie-cmms",
-      "title": "Le système zombie : trente ans d'ordres de travail, la machine éteinte, le hub répond toujours.",
-      "goal": null,
-      "lede": "Une GMAO remplacée depuis des années reste allumée pour quelques lectures de conformité par an : la licence, la machine, et la seule personne qui sait la redémarrer. lumnik la lit une dernière fois, archive ce qu'il a lu sous une seule empreinte, puis on éteint la machine. Le run suivant dit pourquoi il échoue, la pause arrête le planning, et le hub rend les mêmes octets qu'avant.",
+      "title": "La GMAO est éteinte et le hub rend toujours les mêmes octets",
+      "goal": "Éteindre une GMAO remplacée sans perdre ses trente ans d'ordres de travail ni les lectures de conformité.",
+      "lede": "Une GMAO remplacée reste allumée pour quelques lectures de conformité par an. lumnik la lit une dernière fois, archive ce qu'il a lu, puis on éteint la machine.\n- 3 600 ordres lus par le planning habituel\n- une archive S3 sous une seule empreinte\n- après l'extinction: la même ligne, les mêmes octets",
       "tags": {
         "domain": [
           "Maintenance",
@@ -1167,8 +1187,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:b2f4e260daf5ac892a89a3e7c309a3fb8dcff3479cd3ab6b9537ae1a4f577b95"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:f1774f6bbca1bdcba0052954690508c806b9789e7bd67c0bf712d3193398bf38"
     }
   ]
 }

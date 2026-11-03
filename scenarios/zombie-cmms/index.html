@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Le système zombie : trente ans d&#x27;ordres de travail, la machine éteinte, le hub répond toujours. — lumnik</title>
-<meta name="description" content="Une GMAO remplacée depuis des années reste allumée pour quelques lectures de conformité par an : la licence, la machine, et la seule personne qui sait la redémarrer. lumnik la lit une dernière fois, archive ce qu&#x27;il a lu sous une seule empreinte, puis on éteint la machine. Le run suivant dit pourquoi il échoue, la pause arrête le planning, et le hub rend les mêmes octets qu&#x27;avant.">
+<title>La GMAO est éteinte et le hub rend toujours les mêmes octets — lumnik</title>
+<meta name="description" content="Éteindre une GMAO remplacée sans perdre ses trente ans d&#x27;ordres de travail ni les lectures de conformité. Une GMAO remplacée reste allumée pour quelques lectures de conformité par an. lumnik la lit une dernière fois, archive ce qu&#x27;il a lu, puis on éteint la machine. 3 600 ordres lus par le planning habituel. Une archive S3 sous une seule empreinte. Après l&#x27;extinction: la même ligne, les mêmes octets.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -18,37 +18,62 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/zombie-cmms/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>Le système zombie : trente ans d&#x27;ordres de travail, la machine éteinte, le hub répond toujours.</h1>
-    <p class="lede">Une GMAO remplacée depuis des années reste allumée pour quelques lectures de conformité par an : la licence, la machine, et la seule personne qui sait la redémarrer. lumnik la lit une dernière fois, archive ce qu&#x27;il a lu sous une seule empreinte, puis on éteint la machine. Le run suivant dit pourquoi il échoue, la pause arrête le planning, et le hub rend les mêmes octets qu&#x27;avant.</p>
+    <h1>La GMAO est éteinte et le hub rend toujours les mêmes octets</h1>
+    <p class="goal"><strong>Objectif</strong> Éteindre une GMAO remplacée sans perdre ses trente ans d&#x27;ordres de travail ni les lectures de conformité.</p>
+    <p class="lede">Une GMAO remplacée reste allumée pour quelques lectures de conformité par an. lumnik la lit une dernière fois, archive ce qu&#x27;il a lu, puis on éteint la machine.</p><ul class="lede-list"><li>3 600 ordres lus par le planning habituel</li><li>une archive S3 sous une seule empreinte</li><li>après l&#x27;extinction: la même ligne, les mêmes octets</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Maintenance</li><li class="tag">Conformité</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li><li class="tag kind">Export</li></ul>
   </section>
+  <div role="tablist" class="page-tabs" aria-label="La GMAO est éteinte et le hub rend toujours les mêmes octets">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
   <nav class="steps-nav" aria-label="Étapes"><a href="#step-connect" data-step="connect" aria-current="step"><span class="num">1 · Lire</span><span class="sub">Une dernière fois</span></a><a href="#step-read" data-step="read"><span class="num">2 · Consulter</span><span class="sub">Conformité</span></a><a href="#step-archive" data-step="archive"><span class="num">3 · Archiver</span><span class="sub">Avant d&#x27;éteindre</span></a><a href="#step-off" data-step="off"><span class="num">4 · Éteindre</span><span class="sub">La machine coupée</span></a><a href="#step-after" data-step="after"><span class="num">5 · Après</span><span class="sub">Sans la machine</span></a></nav>
   <section class="step" id="step-connect" aria-labelledby="connect-title">
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="connect-title">Trente ans d&#x27;ordres de travail, lus par le planning</h2>
-      <p>Le connecteur JDBC de la GMAO garde son planning habituel ; le rejeu le passe à chaque minute pour voir la suite sans attendre la nuit. Le compte de lecture n&#x27;a que SELECT, son mot de passe est un secret du hub.</p>
+      <p>Le connecteur JDBC garde son planning habituel; le rejeu le passe à chaque minute. Le compte n&#x27;a que SELECT, son mot de passe est un secret du hub.</p><ul class="prose-list"><li>3 600 ordres de 1995 à 2024</li><li>le run part du planning, pas à la main</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>3 600 ordres</strong><p>De 1995 à 2024, sur leur numéro.</p></div></li><li><span class="n">2</span><div><strong>Par le planning</strong><p>Le run part tout seul, pas à la main.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>La source est lue entière avant d&#x27;être éteinte.</p></div>
   </aside>
   <div class="views">
-    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="connect-manifest-tab" data-view="manifest" aria-controls="connect-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="connect-commands-tab" data-view="commands" aria-controls="connect-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="connect-result-tab" data-view="result" aria-controls="connect-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-manifest" id="connect-manifest" aria-labelledby="connect-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-cmms.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># The retired CMMS, read by its usual nightly connector. The replay schedules it every minute so</span></span><span class="line"><span class="comment"># that switching the box off is seen by a scheduled run, not a manual one.</span></span><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-zombie-b</span><span class="line">  <span class="key">connector_type</span>: jdbc-generic</span><span class="line">  <span class="key">scopes</span>: [maintenance]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">connection</span>:</span><span class="line">    <span class="key">url</span>: jdbc:postgresql://zombie-cmms-b:5432/maximo</span><span class="line">    <span class="key">user</span>: cmms_reader</span><span class="line hl">    <span class="key">password_env</span>: SCENARIO_ZOMBIE_B_PASSWORD</span><span class="line">  <span class="key">defaults</span>:</span><span class="line">    <span class="key">schema</span>: public</span><span class="line">  <span class="key">source</span>:</span><span class="line">    <span class="key">tables</span>:</span><span class="line">      <span class="dash">-</span> <span class="key">name</span>: workorder</span><span class="line">        <span class="key">mode</span>: full</span><span class="line hl">        <span class="key">pk_columns</span>: [wonum]</span><span class="line">        <span class="key">target</span>: zombie_workorder_b</span><span class="line hl">  <span class="key">schedule</span>: <span class="str">&quot;* * * * *&quot;</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="connect-commands" aria-labelledby="connect-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-cmms.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;scenario-zombie-b&quot;,&quot;connectorId&quot;:&quot;2a3149d2-828d-48de-ac8d-4bf7baf15091&quot;,&quot;endpointsApplied&quot;:1}</span>
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="connect-source-tab" data-view="source" aria-controls="connect-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="connect-manifest-tab" data-view="manifest" aria-controls="connect-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="connect-commands-tab" data-view="commands" aria-controls="connect-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="connect-result-tab" data-view="result" aria-controls="connect-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="connect-source" aria-labelledby="connect-source-tab" tabindex="0"><figure class="source"><figcaption>cmms.sql</figcaption><pre class="code">-- A retired CMMS: thirty years of work orders, all synthetic, generated the same way every time.
+CREATE TABLE workorder (
+  wonum       text PRIMARY KEY,
+  assetnum    text NOT NULL,
+  description text NOT NULL,
+  status      text NOT NULL,
+  reportdate  date NOT NULL,
+  actfinish   date,
+  failurecode text,
+  remarks     text
+);
 
-<span class="cmd"><span class="prompt">$</span> lm run get 0555285e-f50d-4633-a1fd-3ad9dc1febbe</span>
+INSERT INTO workorder
+SELECT &#x27;WO-&#x27; || lpad(n::text, 6, &#x27;0&#x27;),
+       (ARRAY[&#x27;T-114&#x27;,&#x27;T-115&#x27;,&#x27;P-207&#x27;,&#x27;P-208&#x27;,&#x27;C-031&#x27;,&#x27;V-412&#x27;,&#x27;G-002&#x27;,&#x27;K-090&#x27;])[1 + n % 8],
+       (ARRAY[&#x27;Inspection annuelle&#x27;,&#x27;Fuite huile&#x27;,&#x27;Remplacement joint&#x27;,&#x27;Surchauffe&#x27;,&#x27;Vibration anormale&#x27;,
+              &#x27;Contrôle isolement&#x27;,&#x27;Graissage&#x27;,&#x27;Déclenchement protection&#x27;])[1 + (n * 7) % 8],
+       CASE WHEN n % 97 = 0 THEN &#x27;CAN&#x27; ELSE &#x27;CLOSE&#x27; END,
+       date &#x27;1995-01-02&#x27; + (n * 3),
+       date &#x27;1995-01-02&#x27; + (n * 3) + (n % 5),</pre><p class="source-more">… 4 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="connect-manifest" aria-labelledby="connect-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/10-cmms.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># The retired CMMS, read by its usual nightly connector. The replay schedules it every minute so</span></span><span class="line"><span class="comment"># that switching the box off is seen by a scheduled run, not a manual one.</span></span><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-zombie-b</span><span class="line">  <span class="key">connector_type</span>: jdbc-generic</span><span class="line">  <span class="key">scopes</span>: [maintenance]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">connection</span>:</span><span class="line">    <span class="key">url</span>: jdbc:postgresql://zombie-cmms-b:5432/maximo</span><span class="line">    <span class="key">user</span>: cmms_reader</span><span class="line hl">    <span class="key">password_env</span>: SCENARIO_ZOMBIE_B_PASSWORD</span><span class="line">  <span class="key">defaults</span>:</span><span class="line">    <span class="key">schema</span>: public</span><span class="line">  <span class="key">source</span>:</span><span class="line">    <span class="key">tables</span>:</span><span class="line">      <span class="dash">-</span> <span class="key">name</span>: workorder</span><span class="line">        <span class="key">mode</span>: full</span><span class="line hl">        <span class="key">pk_columns</span>: [wonum]</span><span class="line">        <span class="key">target</span>: zombie_workorder_b</span><span class="line hl">  <span class="key">schedule</span>: <span class="str">&quot;* * * * *&quot;</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="connect-commands" aria-labelledby="connect-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-cmms.yaml</span>
+<span class="out">Applied connector &quot;scenario-zombie-b&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 9aae5607-c153-4809-94aa-0fba8c8fb36a</span>
 <span class="out">ID        CONNECTOR          ENDPOINT   STATUS     IN    OUT   SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
-0555285e  scenario-zombie-b  workorder  Completed  3600  3600  0        0             2026-10-22 23:04  2026-10-22 23:04  no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="connect-result" aria-labelledby="connect-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 3600 · OUT 3600</dd><dt>trigger</dt><dd>SCHEDULE</dd></dl><p class="sources">preuves : replay.log, 01-read-before.txt, 02-archive-object.sha256, 03-run-failed.txt, 04-list-paused.txt, 05-read-after.txt · transform v1</p></div>
+9aae5607  scenario-zombie-b  workorder  Completed  3600  3600  0        0             2026-11-03 19:10  2026-11-03 19:10  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="connect-result" aria-labelledby="connect-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 3600 · OUT 3600</dd><dt>trigger</dt><dd>SCHEDULE</dd></dl><p class="sources">preuves: replay.log, 01-read-before.txt, 02-archive-object.sha256, 03-run-failed.txt, 04-list-paused.txt, 05-read-after.txt · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-read" aria-labelledby="read-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="read-title">Un ordre par son numéro, et un numéro jamais émis</h2>
-      <p>Une demande de conformité cite un ordre de travail : le hub le rend. Elle cite aussi un numéro que la GMAO n&#x27;a jamais émis : la réponse est « no rows », pas une erreur.</p>
+      <p>Un audit cite un ordre de travail: le hub le rend. Il cite aussi un numéro jamais émis: la réponse est «no rows».</p><ul class="prose-list"><li>WO-001234: une ligne, telle que la GMAO l&#x27;avait</li><li>WO-009999: aucune ligne, un non vérifié</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>WO-001234</strong><p>Une ligne, telle que la GMAO l&#x27;avait.</p></div></li><li><span class="n">2</span><div><strong>WO-009999</strong><p>Aucune ligne : un non vérifié.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>WO-001234</strong><p>Une ligne, telle que la GMAO l&#x27;avait.</p></div></li><li><span class="n">2</span><div><strong>WO-009999</strong><p>Aucune ligne: un non vérifié.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le hub répond aux lectures de conformité à la place de la GMAO.</p></div>
   </aside>
   <div class="views">
@@ -61,14 +86,14 @@
 WO-001234  P-207     Graissage    CLOSE   2005-02-20  2005-02-24               Intervention 1234 : aucun défaut constaté  {}</span>
 
 <span class="cmd"><span class="prompt">$</span> lm entity get work_order_b --filter wonum=WO-009999</span>
-<span class="note">no rows</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>WO-001234</dt><dd>1 row</dd><dt>WO-009999</dt><dd>no rows</dd></dl><p class="sources">preuves : replay.log, 01-read-before.txt, 02-archive-object.sha256, 03-run-failed.txt, 04-list-paused.txt, 05-read-after.txt · transform v1</p></div>
+<span class="note">no rows</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>WO-001234</dt><dd>1 row</dd><dt>WO-009999</dt><dd>no rows</dd></dl><p class="sources">preuves: replay.log, 01-read-before.txt, 02-archive-object.sha256, 03-run-failed.txt, 04-list-paused.txt, 05-read-after.txt · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-archive" aria-labelledby="archive-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="archive-title">Une empreinte pour l&#x27;instantané, le reçu et l&#x27;objet stocké</h2>
-      <p>lm entity export écrit l&#x27;instantané local et donne son SHA-256. L&#x27;export S3 dépose le même fichier dans le compartiment d&#x27;archive, sous un nom fixe ; son reçu porte la même empreinte, et l&#x27;objet relu dans le compartiment aussi.</p>
+      <p>lm entity export écrit l&#x27;instantané local et donne son SHA-256. L&#x27;export S3 dépose le même fichier sous un nom fixe.</p><ul class="prose-list"><li>même empreinte: instantané, reçu, objet stocké</li><li>l&#x27;archive finale est livrée une fois</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Même SHA-256</strong><p>Instantané, reçu et objet stocké.</p></div></li><li><span class="n">2</span><div><strong>Un nom fixe</strong><p>L&#x27;archive finale est livrée une fois.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Ce qui est archivé est exactement ce que le hub a lu.</p></div>
@@ -82,7 +107,7 @@ WO-001234  P-207     Graissage    CLOSE   2005-02-20  2005-02-24               I
 <span class="out">work_order_b: 438561 bytes written to work-orders.csv (sha256 6cfa21baedadc0b0321a9998f5fa6da5eded14a94b84f597b4527a3017292fc2)</span>
 
 <span class="cmd"><span class="prompt">$</span> lm export run scenario-zombie-archive-b --wait</span>
-<span class="out">Run           81ee21ce-a218-4434-a5b1-82c53e7f4262
+<span class="out">Run           cfaf427d-2d82-4d80-9d4a-595f03718b0a
 Export        scenario-zombie-archive-b
 Entity        work_order_b
 Scope         maintenance
@@ -90,45 +115,45 @@ Destination   s3
 Status        Completed
 Trigger       manual
 Attempt       1
-Started       2026-10-22 23:04:14
-Ended         2026-10-22 23:04:14
+Started       2026-11-03 19:10:32
+Ended         2026-11-03 19:10:33
 Rows          3600
 Bytes         438561
 SHA-256       6cfa21baedadc0b0321a9998f5fa6da5eded14a94b84f597b4527a3017292fc2
 Location      s3://archive/cmms/work-orders-final.csv
 ETag          &quot;20afec704bc99a53d12691a19f7d9603&quot;</span>
-<span class="note">• export run 81ee21ce-a218-4434-a5b1-82c53e7f4262 accepted — waiting for the hub to record its outcome</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="archive-result" aria-labelledby="archive-result-tab" tabindex="0" hidden><dl class="facts"><dt>lm entity export</dt><dd>6cfa21baedadc0b0321a9998f5fa6da5eded14a94b84f597b4527a3017292fc2</dd><dt>S3 receipt</dt><dd>6cfa21baedadc0b0321a9998f5fa6da5eded14a94b84f597b4527a3017292fc2</dd><dt>stored object</dt><dd>6cfa21baedadc0b0321a9998f5fa6da5eded14a94b84f597b4527a3017292fc2</dd><dt>location</dt><dd>s3://archive/cmms/work-orders-final.csv</dd></dl><p class="sources">preuves : replay.log, 01-read-before.txt, 02-archive-object.sha256, 03-run-failed.txt, 04-list-paused.txt, 05-read-after.txt · transform v1</p></div>
+<span class="note">• export run cfaf427d-2d82-4d80-9d4a-595f03718b0a accepted — waiting for the hub to record its outcome</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="archive-result" aria-labelledby="archive-result-tab" tabindex="0" hidden><dl class="facts"><dt>lm entity export</dt><dd>6cfa21baedadc0b0321a9998f5fa6da5eded14a94b84f597b4527a3017292fc2</dd><dt>S3 receipt</dt><dd>6cfa21baedadc0b0321a9998f5fa6da5eded14a94b84f597b4527a3017292fc2</dd><dt>stored object</dt><dd>6cfa21baedadc0b0321a9998f5fa6da5eded14a94b84f597b4527a3017292fc2</dd><dt>location</dt><dd>s3://archive/cmms/work-orders-final.csv</dd></dl><p class="sources">preuves: replay.log, 01-read-before.txt, 02-archive-object.sha256, 03-run-failed.txt, 04-list-paused.txt, 05-read-after.txt · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-off" aria-labelledby="off-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="off-title">Le run suivant dit pourquoi, la pause arrête le planning</h2>
-      <p>La machine est éteinte. Au créneau suivant, le run échoue avec une phrase qui nomme la table, le SQLSTATE et le genre de panne, sans le texte du pool ni celui du pilote. lm connector pause arrête le planning, lm connector list le dit, et les deux créneaux suivants passent sans run.</p>
+      <p>La machine est éteinte. Au créneau suivant, le run échoue en nommant la table, le SQLSTATE et la panne.</p><ul class="prose-list"><li>host not resolved: la machine n&#x27;existe plus</li><li>lm connector pause arrête le planning</li><li>deux créneaux passent sans run</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>host not resolved</strong><p>La machine n&#x27;existe plus sur le réseau.</p></div></li><li><span class="n">2</span><div><strong>(paused)</strong><p>Le planning est arrêté, et la liste le dit.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une source éteinte se voit sur le run, et le planning s&#x27;arrête sur un geste.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Éteindre"><button type="button" role="tab" id="off-commands-tab" data-view="commands" aria-controls="off-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="off-result-tab" data-view="result" aria-controls="off-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-commands" id="off-commands" aria-labelledby="off-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm run get 85cd40bb-329c-4e9d-9795-bee118eec3ed</span>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="off-commands" aria-labelledby="off-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm run get cb35afc0-b589-48f6-9c23-8fc463dfa536</span>
 <span class="out">ID        CONNECTOR          ENDPOINT   STATUS  IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
-85cd40bb  scenario-zombie-b  workorder  Failed  0   0    0        0             2026-10-22 23:05  2026-10-22 23:05  yes</span>
+cb35afc0  scenario-zombie-b  workorder  Failed  0   0    0        0             2026-11-03 19:11  2026-11-03 19:11  yes</span>
 <span class="note">✖ run failed: could not reach public.workorder (SQLSTATE 08001): host not resolved (UnknownHostException)</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector pause scenario-zombie-b</span>
 <span class="out">paused: scenario-zombie-b</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector list</span>
-<span class="out">NAME                                TYPE          TENANT  SCHED               WINDOW       STATUS     LAST RUN
-scenario-zombie-b                   jdbc-generic  1       * * * * * (paused)               Failed     2026-10-22 23:05</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="off-result" aria-labelledby="off-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Failed · IN 0 · OUT 0</dd><dt>refusal</dt><dd>could not reach public.workorder (SQLSTATE 08001): host not resolved (UnknownHostException)</dd><dt>list</dt><dd>* * * * * (paused)</dd><dt>after the pause</dt><dd>no run in the two slots after the pause</dd></dl><p class="sources">preuves : replay.log, 01-read-before.txt, 02-archive-object.sha256, 03-run-failed.txt, 04-list-paused.txt, 05-read-after.txt · transform v1</p></div>
+<span class="out">NAME                             TYPE          TENANT  SCHED               WINDOW  STATUS     LAST RUN
+scenario-zombie-b                jdbc-generic  1       * * * * * (paused)          Failed     2026-11-03 19:11</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="off-result" aria-labelledby="off-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Failed · IN 0 · OUT 0</dd><dt>refusal</dt><dd>could not reach public.workorder (SQLSTATE 08001): host not resolved (UnknownHostException)</dd><dt>list</dt><dd>* * * * * (paused)</dd><dt>after the pause</dt><dd>no run in the two slots after the pause</dd></dl><p class="sources">preuves: replay.log, 01-read-before.txt, 02-archive-object.sha256, 03-run-failed.txt, 04-list-paused.txt, 05-read-after.txt · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-after" aria-labelledby="after-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="after-title">La même ligne, la même empreinte, l&#x27;archive intacte</h2>
-      <p>Sans la GMAO, le hub rend la même ligne pour WO-001234 et le même SHA-256 pour l&#x27;instantané. Un second envoi de l&#x27;archive est refusé : le fichier livré n&#x27;est jamais remplacé.</p>
+      <p>Sans la GMAO, le hub rend la même ligne et la même empreinte. Un second envoi de l&#x27;archive est refusé.</p><ul class="prose-list"><li>WO-001234: même ligne</li><li>même SHA-256</li><li>le fichier livré n&#x27;est jamais remplacé</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Mêmes octets</strong><p>L&#x27;empreinte d&#x27;avant l&#x27;extinction.</p></div></li><li><span class="n">2</span><div><strong>Jamais remplacée</strong><p>Le compartiment garde la première livraison.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Les données survivent à la machine qui les portait.</p></div>
@@ -143,7 +168,7 @@ WO-001234  P-207     Graissage    CLOSE   2005-02-20  2005-02-24               I
 <span class="out">work_order_b: 438561 bytes written to work-orders-after.csv (sha256 6cfa21baedadc0b0321a9998f5fa6da5eded14a94b84f597b4527a3017292fc2)</span>
 
 <span class="cmd"><span class="prompt">$</span> lm export run scenario-zombie-archive-b --wait</span>
-<span class="out">Run           14f2d847-fe00-4fd6-8618-62ee26cbe23b
+<span class="out">Run           5cd65a1c-85a2-4df4-8b60-c0682dcf9eee
 Export        scenario-zombie-archive-b
 Entity        work_order_b
 Scope         maintenance
@@ -151,15 +176,18 @@ Destination   s3
 Status        Failed
 Trigger       manual
 Attempt       1
-Started       2026-10-22 23:07:24
-Ended         2026-10-22 23:07:24
+Started       2026-11-03 19:13:40
+Ended         2026-11-03 19:13:40
 Failure       collision
 Reason        S3 destination: s3://archive/cmms/work-orders-final.csv already exists — refusing to overwrite a previously delivered artifact</span>
-<span class="note">• export run 14f2d847-fe00-4fd6-8618-62ee26cbe23b accepted — waiting for the hub to record its outcome</span>
-<span class="note">Error: export run 14f2d847-fe00-4fd6-8618-62ee26cbe23b failed (collision): S3 destination: s3://archive/cmms/work-orders-final.csv already exists — refusing to overwrite a previously delivered artifact</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="after-result" aria-labelledby="after-result-tab" tabindex="0" hidden><dl class="facts"><dt>WO-001234</dt><dd>same row</dd><dt>lm entity export</dt><dd>6cfa21baedadc0b0321a9998f5fa6da5eded14a94b84f597b4527a3017292fc2</dd><dt>archive</dt><dd>already exists — refusing to overwrite a previously delivered artifact</dd></dl><p class="sources">preuves : replay.log, 01-read-before.txt, 02-archive-object.sha256, 03-run-failed.txt, 04-list-paused.txt, 05-read-after.txt · transform v1</p></div>
+<span class="note">• export run 5cd65a1c-85a2-4df4-8b60-c0682dcf9eee accepted — waiting for the hub to record its outcome</span>
+<span class="note">Error: export run 5cd65a1c-85a2-4df4-8b60-c0682dcf9eee failed (collision): S3 destination: s3://archive/cmms/work-orders-final.csv already exists — refusing to overwrite a previously delivered artifact</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="after-result" aria-labelledby="after-result-tab" tabindex="0" hidden><dl class="facts"><dt>WO-001234</dt><dd>same row</dd><dt>lm entity export</dt><dd>6cfa21baedadc0b0321a9998f5fa6da5eded14a94b84f597b4527a3017292fc2</dd><dt>archive</dt><dd>already exists — refusing to overwrite a previously delivered artifact</dd></dl><p class="sources">preuves: replay.log, 01-read-before.txt, 02-archive-object.sha256, 03-run-failed.txt, 04-list-paused.txt, 05-read-after.txt · transform v1</p></div>
   </div>
 </section>
-  <section class="limits"><h2>Limites</h2><ul><li>Un connecteur dont la source est éteinte échoue à chaque créneau jusqu&#x27;à sa mise en pause ; le hub ne le met pas en pause de lui-même.</li><li>lm source jdbc discover cite encore le message du pilote.</li><li>La rétention du compartiment (verrouillage d&#x27;objet) relève du stockage, pas du hub.</li><li>GMAO et compartiment simulés ; données synthétiques.</li></ul></section>
+  <section class="limits"><h2>Limites</h2><ul><li>Un connecteur dont la source est éteinte échoue à chaque créneau jusqu&#x27;à sa mise en pause; le hub ne le met pas en pause de lui-même.</li><li>lm source jdbc discover cite encore le message du pilote.</li><li>La rétention du compartiment (verrouillage d&#x27;objet) relève du stockage, pas du hub.</li><li>GMAO et compartiment simulés; données synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Maintenance · conformité</p><h2>Une GMAO remplacée tourne encore.</h2><p class="brief-lead">Pour quelques lectures par an.</p><p>Une licence, une machine, et une seule personne qui sait la redémarrer.</p><p class="brief-note">GMAO simulée · données synthétiques</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Trente ans d&#x27;ordres de travail retiennent la machine.</h2><ul class="brief-list tone-cyan"><li>3 600 ordres, de 1995 à 2024.</li><li>Un audit peut citer n&#x27;importe lequel.</li><li>Éteindre, c&#x27;est perdre la réponse.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Rien n&#x27;est migré</p><h2>La GMAO est lue telle qu&#x27;elle est.</h2><ul class="brief-list tone-green"><li>Un compte en lecture seule.</li><li>Pas de reprise de données.</li><li>Aucune application à développer.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>filename: work-orders-final.csv
+mode: snapshot</code></pre><h2>Une archive, un nom, livrée une fois.</h2><p>Le scénario complet tient en 3 fichiers de déclaration, 63 lignes.</p></section><section class="brief-slide"><p class="brief-kicker">La preuve</p><h2>Une seule empreinte.</h2><ul class="brief-list tone-cyan"><li>L&#x27;instantané local.</li><li>Le reçu de l&#x27;export.</li><li>L&#x27;objet relu dans le compartiment.</li></ul><p class="brief-note">SHA-256 6cfa21ba…92fc2, rejeu du 3 novembre 2026.</p></section><section class="brief-slide"><p class="brief-kicker">La machine éteinte</p><h2>Le run suivant dit pourquoi il échoue.</h2><figure class="brief-quote"><figcaption>lm run get</figcaption><blockquote>could not reach public.workorder (SQLSTATE 08001): host not resolved (UnknownHostException)</blockquote></figure><p>Une pause arrête le planning.</p></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>Le hub ne se met pas en pause tout seul.</h2><ul class="brief-list tone-yellow"><li>Sans pause, chaque créneau échoue.</li><li>La rétention du compartiment relève du stockage.</li><li>Le message du pilote reste visible dans discover.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue de bout en bout.</h2><p>GMAO, archive S3, extinction: chaque étape est publiée avec sa sortie.</p></section></article>
   <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
 </main>
 <script src="../assets/scenario.js" defer></script>

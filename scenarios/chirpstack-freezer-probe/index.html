@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La sonde du congélateur voit 6,8 °C en pleine nuit — lumnik</title>
+<meta name="description" content="Être alerté dès qu&#x27;une sonde HACCP indépendante voit un congélateur au-dessus de -18 °C, même quand le contrôleur frigorifique ne dit rien. À l&#x27;automne 2026, des contrôleurs frigorifiques de supermarchés ont été modifiés à distance. En France, le 11 octobre, aucune alarme ne s&#x27;est déclenchée. Une sonde HACCP indépendante mesure la température, et ChirpStack publie ses relevés sur Kafka. La lecture est imbriquée dans l&#x27;événement: promote en fait une colonne. Un registre dit quel meuble, quel rayon, qui est d&#x27;astreinte. À 02 h 30, PROBE-07 lit 6,8 °C: une décision.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/chirpstack-freezer-probe/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/chirpstack-freezer-probe/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>La sonde du congélateur voit 6,8 °C en pleine nuit</h1>
+    <p class="goal"><strong>Objectif</strong> Être alerté dès qu&#x27;une sonde HACCP indépendante voit un congélateur au-dessus de -18 °C, même quand le contrôleur frigorifique ne dit rien.</p>
+    <p class="lede">À l&#x27;automne 2026, des contrôleurs frigorifiques de supermarchés ont été modifiés à distance. En France, le 11 octobre, aucune alarme ne s&#x27;est déclenchée. Une sonde HACCP indépendante mesure la température, et ChirpStack publie ses relevés sur Kafka.</p><ul class="lede-list"><li>la lecture est imbriquée dans l&#x27;événement: promote en fait une colonne</li><li>un registre dit quel meuble, quel rayon, qui est d&#x27;astreinte</li><li>à 02 h 30, PROBE-07 lit 6,8 °C: une décision</li></ul>
+    <ul class="tags"><li class="tag edition edition-pro"><a href="https://docs.lumnik.io/editions/">lumnik Pro</a></li><li class="tag">Chaîne du froid</li><li class="tag">Distribution</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li><li class="tag kind">Process</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="La sonde du congélateur voit 6,8 °C en pleine nuit">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-sources" data-step="sources" aria-current="step"><span class="num">1 · Brancher</span><span class="sub">ChirpStack + CSV</span></a><a href="#step-enrich" data-step="enrich"><span class="num">2 · Enrichir</span><span class="sub">L&#x27;entité</span></a><a href="#step-alert" data-step="alert"><span class="num">3 · Déclarer</span><span class="sub">Le seuil</span></a><a href="#step-night" data-step="night"><span class="num">4 · Nuit</span><span class="sub">02 h 30</span></a><a href="#step-decide" data-step="decide"><span class="num">5 · Décider</span><span class="sub">Une décision</span></a></nav>
+  <section class="step" id="step-sources" aria-labelledby="sources-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="sources-title">Les relevés sur Kafka, les meubles en CSV</h2>
+      <p>ChirpStack publie chaque événement LoRaWAN sur Kafka. Le registre CSV dit quel meuble chaque sonde mesure.</p><ul class="prose-list"><li>la température est imbriquée: object.temperature</li><li>promote la lit dans une colonne decimal</li><li>les événements status arrivent sur le même topic, sans température</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Format réel</strong><p>Un événement up de ChirpStack v4, en JSON.</p></div></li><li><span class="n">2</span><div><strong>Producteur intact</strong><p>Rien n&#x27;est ajouté côté ChirpStack.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une valeur imbriquée devient une colonne typée.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Brancher"><button type="button" role="tab" id="sources-source-tab" data-view="source" aria-controls="sources-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="sources-manifest-tab" data-view="manifest" aria-controls="sources-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="sources-commands-tab" data-view="commands" aria-controls="sources-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="sources-result-tab" data-view="result" aria-controls="sources-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="sources-source" aria-labelledby="sources-source-tab" tabindex="0"><figure class="source"><figcaption>probes.csv</figcaption><pre class="code">device,store,cabinet,aisle,products,max_temperature_c,on_call
+PROBE-07,Store 17 (Brussels),FROZEN-07,Frozen food,Ice cream and frozen vegetables,-18,Sofia Martin
+PROBE-08,Store 17 (Brussels),FROZEN-08,Frozen food,Frozen fish,-18,Sofia Martin
+PROBE-09,Store 17 (Brussels),FROZEN-09,Frozen food,Frozen meals,-18,Sofia Martin</pre></figure><figure class="source"><figcaption>evening.jsonl</figcaption><pre class="code">{&quot;deduplicationId&quot;: &quot;00000000-0000-4000-8000-000000000001&quot;, &quot;time&quot;: &quot;2026-11-01T22:00:00Z&quot;, &quot;deviceInfo&quot;: {&quot;tenantName&quot;: &quot;Store 17&quot;, &quot;applicationName&quot;: &quot;cold-room-probes&quot;, &quot;deviceProfileName&quot;: &quot;haccp-probe&quot;, &quot;deviceName&quot;: &quot;PROBE-07&quot;, &quot;devEui&quot;: &quot;a84041000181c007&quot;, &quot;tags&quot;: {}}, &quot;devAddr&quot;: &quot;01f2a307&quot;, &quot;adr&quot;: true, &quot;dr&quot;: 5, &quot;fCnt&quot;: 101, &quot;fPort&quot;: 2, &quot;confirmed&quot;: false, &quot;data&quot;: &quot;AH0=&quot;, &quot;object&quot;: {&quot;temperature&quot;: -21.4}, &quot;rxInfo&quot;: [{&quot;gatewayId&quot;: &quot;0016c001ff10a235&quot;, &quot;rssi&quot;: -71, &quot;snr&quot;: 9.5}], &quot;txInfo&quot;: {&quot;frequency&quot;: 868100000}}
+{&quot;deduplicationId&quot;: &quot;00000000-0000-4000-8000-000000000002&quot;, &quot;time&quot;: &quot;2026-11-01T22:00:00Z&quot;, &quot;deviceInfo&quot;: {&quot;tenantName&quot;: &quot;Store 17&quot;, &quot;applicationName&quot;: &quot;cold-room-probes&quot;, &quot;deviceProfileName&quot;: &quot;haccp-probe&quot;, &quot;deviceName&quot;: &quot;PROBE-08&quot;, &quot;devEui&quot;: &quot;a84041000181c008&quot;, &quot;tags&quot;: {}}, &quot;devAddr&quot;: &quot;01f2a308&quot;, &quot;adr&quot;: true, &quot;dr&quot;: 5, &quot;fCnt&quot;: 102, &quot;fPort&quot;: 2, &quot;confirmed&quot;: false, &quot;data&quot;: &quot;AH0=&quot;, &quot;object&quot;: {&quot;temperature&quot;: -22.1}, &quot;rxInfo&quot;: [{&quot;gatewayId&quot;: &quot;0016c001ff10a235&quot;, &quot;rssi&quot;: -71, &quot;snr&quot;: 9.5}], &quot;txInfo&quot;: {&quot;frequency&quot;: 868100000}}
+{&quot;deduplicationId&quot;: &quot;00000000-0000-4000-8000-000000000003&quot;, &quot;time&quot;: &quot;2026-11-01T22:00:00Z&quot;, &quot;deviceInfo&quot;: {&quot;tenantName&quot;: &quot;Store 17&quot;, &quot;applicationName&quot;: &quot;cold-room-probes&quot;, &quot;deviceProfileName&quot;: &quot;haccp-probe&quot;, &quot;deviceName&quot;: &quot;PROBE-09&quot;, &quot;devEui&quot;: &quot;a84041000181c009&quot;, &quot;tags&quot;: {}}, &quot;devAddr&quot;: &quot;01f2a309&quot;, &quot;adr&quot;: true, &quot;dr&quot;: 5, &quot;fCnt&quot;: 103, &quot;fPort&quot;: 2, &quot;confirmed&quot;: false, &quot;data&quot;: &quot;AH0=&quot;, &quot;object&quot;: {&quot;temperature&quot;: -21.8}, &quot;rxInfo&quot;: [{&quot;gatewayId&quot;: &quot;0016c001ff10a235&quot;, &quot;rssi&quot;: -71, &quot;snr&quot;: 9.5}], &quot;txInfo&quot;: {&quot;frequency&quot;: 868100000}}
+{&quot;deduplicationId&quot;: &quot;00000000-0000-4000-8000-000000000004&quot;, &quot;time&quot;: &quot;2026-11-01T22:05:00Z&quot;, &quot;deviceInfo&quot;: {&quot;tenantName&quot;: &quot;Store 17&quot;, &quot;applicationName&quot;: &quot;cold-room-probes&quot;, &quot;deviceProfileName&quot;: &quot;haccp-probe&quot;, &quot;deviceName&quot;: &quot;PROBE-09&quot;, &quot;devEui&quot;: &quot;a84041000181c009&quot;, &quot;tags&quot;: {}}, &quot;margin&quot;: 9, &quot;externalPowerSource&quot;: false, &quot;batteryLevel&quot;: 86.0}</pre></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="sources-manifest" aria-labelledby="sources-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/10-probes.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-probe-registry-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [cold-chain]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line hl">    <span class="key">path</span>: /tmp/lumnik-scenario/chirpstack-freezer-probe/a/probes.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre><div class="file"><span class="filename">manifests/20-chirpstack.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-probe-events-a</span><span class="line">  <span class="key">connector_type</span>: kafka</span><span class="line">  <span class="key">scopes</span>: [cold-chain]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">name</span>: scenario_probe_events_a</span><span class="line">  <span class="key">brokers</span>: host.docker.internal:29095</span><span class="line">  <span class="key">topic</span>: chirpstack.a</span><span class="line">  <span class="key">format</span>: json</span><span class="line hl">  <span class="key">promote</span>:</span><span class="line hl">    - { name: temperature_c, path: $.object.temperature, type: decimal }</span><span class="line hl">    - { name: device, path: $.deviceInfo.deviceName, type: text }</span><span class="line hl">    - { name: measured_at, path: $.time, type: timestamptz }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="sources-commands" aria-labelledby="sources-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-probes.yaml</span>
+<span class="out">Applied connector &quot;scenario-probe-registry-c&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f manifests/20-chirpstack.yaml</span>
+<span class="out">Applied connector &quot;scenario-probe-events-c&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-probe-registry-c</span>
+<span class="out">run scheduled: f2774fa3-ec5a-4188-903d-d143571159df</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get f2774fa3-ec5a-4188-903d-d143571159df</span>
+<span class="out">ID        CONNECTOR                  ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+f2774fa3  scenario-probe-registry-c  default   Completed  3   3    0        0             2026-11-03 21:49  2026-11-03 21:49  no</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-probe-events-c</span>
+<span class="out">run scheduled: ae198fbc-5707-446f-b02b-e6e78981a2ac</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get ae198fbc-5707-446f-b02b-e6e78981a2ac</span>
+<span class="out">ID        CONNECTOR                ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+ae198fbc  scenario-probe-events-c  default   Completed  4   4    0        0             2026-11-03 21:49  2026-11-03 21:49  no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="sources-result" aria-labelledby="sources-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-probe-registry-c</dt><dd>IN 3 · OUT 3</dd><dt>scenario-probe-events-c</dt><dd>IN 4 · OUT 4</dd></dl><p class="sources">preuves: replay.log, 03-inbox.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-enrich" aria-labelledby="enrich-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="enrich-title">Une sonde devient un meuble</h2>
+      <p>L&#x27;entité joint chaque lecture au registre, par le nom de la sonde.</p><ul class="prose-list"><li>PROBE-07 mesure FROZEN-07, rayon surgelés</li><li>à 22 h, -21,4 °C</li><li>astreinte: Sofia Martin</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Clé</strong><p>device, promu depuis deviceInfo.deviceName.</p></div></li><li><span class="n">2</span><div><strong>Contexte</strong><p>Le meuble, les produits et l&#x27;astreinte viennent du CSV.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une télémétrie laconique devient exploitable.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Enrichir"><button type="button" role="tab" id="enrich-manifest-tab" data-view="manifest" aria-controls="enrich-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="enrich-commands-tab" data-view="commands" aria-controls="enrich-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="enrich-result-tab" data-view="result" aria-controls="enrich-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="enrich-manifest" aria-labelledby="enrich-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-probe-reading.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ScenarioProbeReadingA</span><span class="line"><span class="key">description</span>: <span class="str">&quot;A cold-room probe reading with the cabinet it measures.&quot;</span></span><span class="line"><span class="key">match</span>: [deduplicationId]</span><span class="line"><span class="key">scopes</span>: [cold-chain]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">deduplicationId</span>: { label: <span class="str">&quot;Uplink&quot;</span> }</span><span class="line">  <span class="key">device</span>: { label: <span class="str">&quot;Probe&quot;</span> }</span><span class="line">  <span class="key">measured_at</span>: { label: <span class="str">&quot;Measured at&quot;</span> }</span><span class="line">  <span class="key">temperature_c</span>: { label: <span class="str">&quot;Temperature (°C)&quot;</span> }</span><span class="line">  <span class="key">store</span>: { label: <span class="str">&quot;Store&quot;</span> }</span><span class="line">  <span class="key">cabinet</span>: { label: <span class="str">&quot;Cabinet&quot;</span> }</span><span class="line">  <span class="key">aisle</span>: { label: <span class="str">&quot;Aisle&quot;</span> }</span><span class="line">  <span class="key">products</span>: { label: <span class="str">&quot;Products&quot;</span> }</span><span class="line">  <span class="key">max_temperature_c</span>: { label: <span class="str">&quot;Maximum (°C)&quot;</span> }</span><span class="line">  <span class="key">on_call</span>: { label: <span class="str">&quot;On call&quot;</span> }</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_probe_events_a</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">deduplicationId</span>: deduplicationId</span><span class="line">      <span class="key">device</span>: device</span><span class="line">      <span class="key">measured_at</span>: measured_at</span><span class="line">      <span class="key">temperature_c</span>: temperature_c</span><span class="line hl"><span class="key">joins</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_probe_registry_a</span><span class="line">    <span class="key">from</span>: device</span><span class="line">    <span class="key">to</span>: device</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">store</span>: store</span><span class="line">      <span class="key">cabinet</span>: cabinet</span><span class="line">      <span class="key">aisle</span>: aisle</span><span class="line">      <span class="key">products</span>: products</span><span class="line">      <span class="key">max_temperature_c</span>: max_temperature_c</span><span class="line">      <span class="key">on_call</span>: on_call</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="enrich-commands" aria-labelledby="enrich-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f manifests/30-probe-reading.yaml</span>
+<span class="out">Applied entity &quot;ScenarioProbeReadingC&quot; → connector.&quot;v_scenarioprobereadingc&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get ScenarioProbeReadingC --filter device=PROBE-07 -o json</span>
+<span class="out">[
+  {
+    &quot;deduplicationId&quot;: &quot;00000000-0000-4000-8000-000000000001&quot;,
+    &quot;device&quot;: &quot;PROBE-07&quot;,
+    &quot;measured_at&quot;: &quot;2026-11-01T22:00:00Z&quot;,
+    &quot;temperature_c&quot;: &quot;-21.4&quot;,
+    &quot;store&quot;: &quot;Store 17 (Brussels)&quot;,
+    &quot;cabinet&quot;: &quot;FROZEN-07&quot;,
+    &quot;aisle&quot;: &quot;Frozen food&quot;,
+    &quot;products&quot;: &quot;Ice cream and frozen vegetables&quot;,
+    &quot;max_temperature_c&quot;: &quot;-18&quot;,
+    &quot;on_call&quot;: &quot;Sofia Martin&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  }
+]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="enrich-result" aria-labelledby="enrich-result-tab" tabindex="0" hidden><dl class="facts"><dt>ScenarioProbeReadingC</dt><dd>v_scenarioprobereadingc</dd><dt>2026-11-01T22:00:00Z</dt><dd>PROBE-07 · -21.4 °C · FROZEN-07 · Sofia Martin</dd></dl><p class="sources">preuves: replay.log, 03-inbox.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-alert" aria-labelledby="alert-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="alert-title">Au-dessus de -18 °C, une décision</h2>
+      <p>Un Process lit la colonne promue sur la table brute. Au-dessus de -18 °C, il émet une décision.</p><ul class="prose-list"><li>when: temperature_c&gt;-18</li><li>une lecture sans température n&#x27;émet rien</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Table brute</strong><p>Le Process lit les colonnes de l&#x27;événement, pas celles de l&#x27;entité.</p></div></li><li><span class="n">2</span><div><strong>Status</strong><p>Un événement status n&#x27;a pas de température: il ne passe pas la condition.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une condition numérique porte sur la valeur imbriquée.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="alert-manifest-tab" data-view="manifest" aria-controls="alert-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="alert-commands-tab" data-view="commands" aria-controls="alert-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="alert-result-tab" data-view="result" aria-controls="alert-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="alert-manifest" aria-labelledby="alert-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/40-frozen-alert.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-probe-frozen-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: cold-chain</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">event</span>: data.row.changed</span><span class="line">    <span class="key">table</span>: connector.t_scenario_probe_events_a</span><span class="line hl">  <span class="key">when</span>:</span><span class="line">    - temperature_c&gt;-18</span><span class="line hl">  <span class="key">emit</span>:</span><span class="line">    <span class="key">type</span>: decision.frozen-too-warm-a</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;{device} reads {temperature_c} °C at {measured_at}: a frozen cabinet must stay at -18 °C or below&quot;</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="alert-commands" aria-labelledby="alert-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm process apply -f manifests/40-frozen-alert.yaml</span>
+<span class="out">Applied process &quot;scenario-probe-frozen-c&quot; → table connector.t_scenario_probe_events_c, emits decision.frozen-too-warm-c</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="alert-result" aria-labelledby="alert-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-probe-frozen-c</dt><dd>t_scenario_probe_events_c · emits decision.frozen-too-warm-c</dd></dl><p class="sources">preuves: replay.log, 03-inbox.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-night" aria-labelledby="night-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="night-title">PROBE-07 lit 6,8 °C</h2>
+      <p>Quatre événements arrivent: trois lectures et un status. lm run get --wait-evaluated attend que le Process ait lu le run.</p><ul class="prose-list"><li>PROBE-08 et PROBE-09 restent sous -21 °C</li><li>PROBE-07 lit 6,8 °C</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Barrière</strong><p>L&#x27;inbox se lit une fois le Process passé sur le run.</p></div></li><li><span class="n">2</span><div><strong>Même topic</strong><p>Le status de PROBE-07 arrive avec les lectures.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La décision n&#x27;est lue qu&#x27;une fois le Process passé.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Nuit"><button type="button" role="tab" id="night-source-tab" data-view="source" aria-controls="night-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="night-commands-tab" data-view="commands" aria-controls="night-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="night-result-tab" data-view="result" aria-controls="night-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="night-source" aria-labelledby="night-source-tab" tabindex="0"><figure class="source"><figcaption>night.jsonl</figcaption><pre class="code">{&quot;deduplicationId&quot;: &quot;00000000-0000-4000-8000-000000000005&quot;, &quot;time&quot;: &quot;2026-11-02T02:30:00Z&quot;, &quot;deviceInfo&quot;: {&quot;tenantName&quot;: &quot;Store 17&quot;, &quot;applicationName&quot;: &quot;cold-room-probes&quot;, &quot;deviceProfileName&quot;: &quot;haccp-probe&quot;, &quot;deviceName&quot;: &quot;PROBE-08&quot;, &quot;devEui&quot;: &quot;a84041000181c008&quot;, &quot;tags&quot;: {}}, &quot;devAddr&quot;: &quot;01f2a308&quot;, &quot;adr&quot;: true, &quot;dr&quot;: 5, &quot;fCnt&quot;: 105, &quot;fPort&quot;: 2, &quot;confirmed&quot;: false, &quot;data&quot;: &quot;AH0=&quot;, &quot;object&quot;: {&quot;temperature&quot;: -21.9}, &quot;rxInfo&quot;: [{&quot;gatewayId&quot;: &quot;0016c001ff10a235&quot;, &quot;rssi&quot;: -71, &quot;snr&quot;: 9.5}], &quot;txInfo&quot;: {&quot;frequency&quot;: 868100000}}
+{&quot;deduplicationId&quot;: &quot;00000000-0000-4000-8000-000000000006&quot;, &quot;time&quot;: &quot;2026-11-02T02:31:00Z&quot;, &quot;deviceInfo&quot;: {&quot;tenantName&quot;: &quot;Store 17&quot;, &quot;applicationName&quot;: &quot;cold-room-probes&quot;, &quot;deviceProfileName&quot;: &quot;haccp-probe&quot;, &quot;deviceName&quot;: &quot;PROBE-07&quot;, &quot;devEui&quot;: &quot;a84041000181c007&quot;, &quot;tags&quot;: {}}, &quot;margin&quot;: 9, &quot;externalPowerSource&quot;: false, &quot;batteryLevel&quot;: 86.0}
+{&quot;deduplicationId&quot;: &quot;00000000-0000-4000-8000-000000000007&quot;, &quot;time&quot;: &quot;2026-11-02T02:30:00Z&quot;, &quot;deviceInfo&quot;: {&quot;tenantName&quot;: &quot;Store 17&quot;, &quot;applicationName&quot;: &quot;cold-room-probes&quot;, &quot;deviceProfileName&quot;: &quot;haccp-probe&quot;, &quot;deviceName&quot;: &quot;PROBE-07&quot;, &quot;devEui&quot;: &quot;a84041000181c007&quot;, &quot;tags&quot;: {}}, &quot;devAddr&quot;: &quot;01f2a307&quot;, &quot;adr&quot;: true, &quot;dr&quot;: 5, &quot;fCnt&quot;: 107, &quot;fPort&quot;: 2, &quot;confirmed&quot;: false, &quot;data&quot;: &quot;AH0=&quot;, &quot;object&quot;: {&quot;temperature&quot;: 6.8}, &quot;rxInfo&quot;: [{&quot;gatewayId&quot;: &quot;0016c001ff10a235&quot;, &quot;rssi&quot;: -71, &quot;snr&quot;: 9.5}], &quot;txInfo&quot;: {&quot;frequency&quot;: 868100000}}
+{&quot;deduplicationId&quot;: &quot;00000000-0000-4000-8000-000000000008&quot;, &quot;time&quot;: &quot;2026-11-02T02:30:00Z&quot;, &quot;deviceInfo&quot;: {&quot;tenantName&quot;: &quot;Store 17&quot;, &quot;applicationName&quot;: &quot;cold-room-probes&quot;, &quot;deviceProfileName&quot;: &quot;haccp-probe&quot;, &quot;deviceName&quot;: &quot;PROBE-09&quot;, &quot;devEui&quot;: &quot;a84041000181c009&quot;, &quot;tags&quot;: {}}, &quot;devAddr&quot;: &quot;01f2a309&quot;, &quot;adr&quot;: true, &quot;dr&quot;: 5, &quot;fCnt&quot;: 108, &quot;fPort&quot;: 2, &quot;confirmed&quot;: false, &quot;data&quot;: &quot;AH0=&quot;, &quot;object&quot;: {&quot;temperature&quot;: -21.6}, &quot;rxInfo&quot;: [{&quot;gatewayId&quot;: &quot;0016c001ff10a235&quot;, &quot;rssi&quot;: -71, &quot;snr&quot;: 9.5}], &quot;txInfo&quot;: {&quot;frequency&quot;: 868100000}}</pre></figure></div><div role="tabpanel" class="view-panel view-panel-commands" id="night-commands" aria-labelledby="night-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-probe-events-c</span>
+<span class="out">run scheduled: 3f319dd8-fe9f-4358-a162-55cda1a3be2b</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 3f319dd8-fe9f-4358-a162-55cda1a3be2b</span>
+<span class="out">ID        CONNECTOR                ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+3f319dd8  scenario-probe-events-c  default   Completed  4   4    0        0             2026-11-03 21:49  2026-11-03 21:49  no</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 3f319dd8-fe9f-4358-a162-55cda1a3be2b --wait-evaluated --timeout 2m</span>
+<span class="out">ID        CONNECTOR                ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+3f319dd8  scenario-probe-events-c  default   Completed  4   4    0        0             2026-11-03 21:49  2026-11-03 21:49  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="night-result" aria-labelledby="night-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-probe-events-c</dt><dd>IN 4 · OUT 4</dd></dl><p class="sources">preuves: replay.log, 03-inbox.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-decide" aria-labelledby="decide-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="decide-title">Une seule décision, et la fiche du meuble</h2>
+      <p>L&#x27;inbox reçoit une seule décision, pour PROBE-07. La fiche de la sonde donne le reste.</p><ul class="prose-list"><li>le meuble FROZEN-07 et ses produits</li><li>l&#x27;astreinte: Sofia Martin</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Message</strong><p>Il cite la sonde, la température et l&#x27;heure.</p></div></li><li><span class="n">2</span><div><strong>Fiche</strong><p>Le meuble et l&#x27;astreinte sont sur l&#x27;entité.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Seule la sonde au-dessus du seuil déclenche une décision.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Décider"><button type="button" role="tab" id="decide-commands-tab" data-view="commands" aria-controls="decide-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="decide-result-tab" data-view="result" aria-controls="decide-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="decide-commands" aria-labelledby="decide-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm inbox --process scenario-probe-frozen-c</span>
+<span class="out">ID   WHEN      PROCESS                  MESSAGE                                                                                       ENTITY_KEY
+276  just now  scenario-probe-frozen-c  PROBE-07 reads 6.8 °C at 2026-11-02T02:30:00Z: a frozen cabinet must stay at -18 °C or below  d05be1cf9429dda18cfe3e63a18c0878c3809e42b022bba79279d5bfa6da0bcc</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get ScenarioProbeReadingC --filter device=PROBE-07 -o json</span>
+<span class="out">[
+  {
+    &quot;deduplicationId&quot;: &quot;00000000-0000-4000-8000-000000000001&quot;,
+    &quot;device&quot;: &quot;PROBE-07&quot;,
+    &quot;measured_at&quot;: &quot;2026-11-01T22:00:00Z&quot;,
+    &quot;temperature_c&quot;: &quot;-21.4&quot;,
+    &quot;store&quot;: &quot;Store 17 (Brussels)&quot;,
+    &quot;cabinet&quot;: &quot;FROZEN-07&quot;,
+    &quot;aisle&quot;: &quot;Frozen food&quot;,
+    &quot;products&quot;: &quot;Ice cream and frozen vegetables&quot;,
+    &quot;max_temperature_c&quot;: &quot;-18&quot;,
+    &quot;on_call&quot;: &quot;Sofia Martin&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;deduplicationId&quot;: &quot;00000000-0000-4000-8000-000000000006&quot;,
+    &quot;device&quot;: &quot;PROBE-07&quot;,
+    &quot;measured_at&quot;: &quot;2026-11-02T02:31:00Z&quot;,
+    &quot;temperature_c&quot;: null,
+    &quot;store&quot;: &quot;Store 17 (Brussels)&quot;,
+    &quot;cabinet&quot;: &quot;FROZEN-07&quot;,
+    &quot;aisle&quot;: &quot;Frozen food&quot;,
+    &quot;products&quot;: &quot;Ice cream and frozen vegetables&quot;,
+    &quot;max_temperature_c&quot;: &quot;-18&quot;,
+    &quot;on_call&quot;: &quot;Sofia Martin&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;deduplicationId&quot;: &quot;00000000-0000-4000-8000-000000000007&quot;,
+    &quot;device&quot;: &quot;PROBE-07&quot;,
+    &quot;measured_at&quot;: &quot;2026-11-02T02:30:00Z&quot;,
+    &quot;temperature_c&quot;: &quot;6.8&quot;,
+    &quot;store&quot;: &quot;Store 17 (Brussels)&quot;,
+    &quot;cabinet&quot;: &quot;FROZEN-07&quot;,
+    &quot;aisle&quot;: &quot;Frozen food&quot;,
+    &quot;products&quot;: &quot;Ice cream and frozen vegetables&quot;,
+    &quot;max_temperature_c&quot;: &quot;-18&quot;,
+    &quot;on_call&quot;: &quot;Sofia Martin&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  }
+]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="decide-result" aria-labelledby="decide-result-tab" tabindex="0" hidden><dl class="facts"><dt>decisions</dt><dd>1 · scenario-probe-frozen-c</dd><dt>message</dt><dd>PROBE-07 reads 6.8 °C at 2026-11-02T02:30:00Z: a frozen cabinet must stay at -18 °C or below</dd><dt>2026-11-01T22:00:00Z</dt><dd>PROBE-07 · -21.4 °C · FROZEN-07 · Sofia Martin</dd><dt>2026-11-02T02:30:00Z</dt><dd>PROBE-07 · 6.8 °C · FROZEN-07 · Sofia Martin</dd><dt>2026-11-02T02:31:00Z</dt><dd>PROBE-07 · no reading (status event) · FROZEN-07 · Sofia Martin</dd></dl><p class="sources">preuves: replay.log, 03-inbox.json · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>lumnik ne voit que ce que la sonde envoie: une sonde, une passerelle ou un ChirpStack muets ne déclenchent aucune décision ici.</li><li>Le message de décision ne cite que les colonnes de l&#x27;événement: le meuble et l&#x27;astreinte sont sur la fiche, pas dans le message.</li><li>Un seul seuil, -18 °C, pour tous les meubles de ce Process.</li><li>lumnik ne bloque pas une attaque et ne pilote pas le froid.</li><li>ChirpStack publie tous ses types d&#x27;événements sur le même topic: un status arrive comme une ligne sans température.</li><li>Magasin fictif, données synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Chaîne du froid · magasin</p><h2>À 02 h 30, un congélateur est à 6,8 °C.</h2><p class="brief-lead">Le contrôleur frigorifique ne dit rien.</p><p>En France, le 11 octobre 2026, des contrôleurs de supermarchés modifiés à distance n&#x27;ont déclenché aucune alarme.</p><p class="brief-note">Magasin fictif · données synthétiques</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>L&#x27;alarme vit dans le boîtier attaqué.</h2><ul class="brief-list tone-cyan"><li>Le contrôleur pilote le froid et ses propres alarmes.</li><li>Une sonde HACCP mesure à part, par sa propre radio.</li><li>Sa lecture arrive imbriquée dans un événement ChirpStack.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Rien n&#x27;est modifié</p><h2>La sonde, ChirpStack et Kafka restent en place.</h2><ul class="brief-list tone-green"><li>Le topic reste celui de ChirpStack.</li><li>Le registre des meubles reste un fichier CSV.</li><li>Aucune application à développer.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>promote:
+  - name: temperature_c
+    path: $.object.temperature</code></pre><h2>Une ligne lit la température dans l&#x27;événement.</h2><p>Le scénario complet tient en 4 fichiers de déclaration, 76 lignes.</p></section><section class="brief-slide"><p class="brief-kicker">Ce que reçoit l&#x27;équipe</p><h2>Une décision, pour la seule sonde au-dessus de -18 °C.</h2><figure class="brief-quote"><figcaption>Boîte de décisions</figcaption><blockquote>PROBE-07 reads 6.8 °C at 2026-11-02T02:30:00Z: a frozen cabinet must stay at -18 °C or below</blockquote></figure><p class="brief-note">Message réel, rejeu du 3 novembre 2026.</p></section><section class="brief-slide"><p class="brief-kicker">La fiche dit le reste</p><h2>Le meuble, le rayon et l&#x27;astreinte.</h2><ul class="brief-list tone-green"><li>FROZEN-07, rayon surgelés.</li><li>Glaces et légumes surgelés.</li><li>Astreinte: Sofia Martin.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>lumnik ne voit que ce que la sonde envoie.</h2><ul class="brief-list tone-yellow"><li>Une sonde muette ne déclenche rien ici.</li><li>lumnik ne bloque pas l&#x27;attaque.</li><li>Il ne pilote pas le froid.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue de bout en bout.</h2><p>ChirpStack, Kafka, CSV, entité, Process: chaque étape est publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario demande lumnik Pro.</p><a class="try-button" href="../../offre.html">Voir l&#x27;offre →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>

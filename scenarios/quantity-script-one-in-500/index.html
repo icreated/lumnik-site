@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Une valeur imprévue sur 500 : la ligne en lettre morte, les 499 autres écrites. — lumnik</title>
-<meta name="description" content="Un bon de réception saisi à la main : 500 lignes, des quantités écrites « 12,5 kg » ou « 3 pce ». Un script Kotlin de l&#x27;opérateur les lit en nombre et en unité. La ligne 317 dit « env. 4 kg ». Que deviennent les 499 autres ?">
+<title>Une valeur imprévue sur 500 en lettre morte et les 499 autres écrites — lumnik</title>
+<meta name="description" content="Qu&#x27;une seule ligne imprévue n&#x27;arrête pas les 499 autres, et qu&#x27;elle reste visible. Un bon de réception saisi à la main: 500 lignes, des quantités « 12,5 kg » ou « 3 pce ». Un script Kotlin de l&#x27;opérateur les lit. La ligne 317 dit « env. 4 kg ». Version 1: le run échoue et n&#x27;écrit rien; Version 2: la valeur déclarée illisible; 499 lignes écrites, la 317 en lettre morte.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -18,55 +18,80 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/quantity-script-one-in-500/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>Une valeur imprévue sur 500 : la ligne en lettre morte, les 499 autres écrites.</h1>
-    <p class="lede">Un bon de réception saisi à la main : 500 lignes, des quantités écrites « 12,5 kg » ou « 3 pce ». Un script Kotlin de l&#x27;opérateur les lit en nombre et en unité. La ligne 317 dit « env. 4 kg ». Que deviennent les 499 autres ?</p>
+    <h1>Une valeur imprévue sur 500 en lettre morte et les 499 autres écrites</h1>
+    <p class="goal"><strong>Objectif</strong> Qu&#x27;une seule ligne imprévue n&#x27;arrête pas les 499 autres, et qu&#x27;elle reste visible.</p>
+    <p class="lede">Un bon de réception saisi à la main: 500 lignes, des quantités « 12,5 kg » ou « 3 pce ». Un script Kotlin de l&#x27;opérateur les lit. La ligne 317 dit « env. 4 kg ».</p><ul class="lede-list"><li>version 1: le run échoue et n&#x27;écrit rien;</li><li>version 2: la valeur déclarée illisible;</li><li>499 lignes écrites, la 317 en lettre morte.</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Logistique</li><li class="tag">Réception</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
   </section>
+  <div role="tablist" class="page-tabs" aria-label="Une valeur imprévue sur 500 en lettre morte et les 499 autres écrites">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
   <nav class="steps-nav" aria-label="Étapes"><a href="#step-reading-v1" data-step="reading-v1" aria-current="step"><span class="num">1 · Script v1</span><span class="sub">kg ou pce</span></a><a href="#step-fails" data-step="fails"><span class="num">2 · Échec</span><span class="sub">rien d&#x27;écrit</span></a><a href="#step-reading-v2" data-step="reading-v2"><span class="num">3 · Script v2</span><span class="sub">unreadable</span></a><a href="#step-load" data-step="load"><span class="num">4 · Charger</span><span class="sub">499 sur 500</span></a><a href="#step-letters" data-step="letters"><span class="num">5 · Lettre morte</span><span class="sub">L0317</span></a></nav>
   <section class="step" id="step-reading-v1" aria-labelledby="reading-v1-title">
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="reading-v1-title">L&#x27;opérateur dépose sa lecture des quantités</h2>
-      <p>La version 1 du script coupe la quantité en un nombre et une unité. Elle ne prévoit que « 12,5 kg » et « 3 pce ». lm hook scripts montre son empreinte.</p>
+      <p>La version 1 coupe la quantité en un nombre et une unité. Elle ne prévoit que deux formes.</p><ul class="prose-list"><li>lm hook scripts montre son empreinte</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>Deux formes</strong><p>Aucune autre n&#x27;est prévue.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>Deux formes</strong><p>12,5 kg et 3 pce.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le script est celui de l&#x27;opérateur ; le manifeste ne fait que le nommer.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Script v1"><button type="button" role="tab" id="reading-v1-manifest-tab" data-view="manifest" aria-controls="reading-v1-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="reading-v1-commands-tab" data-view="commands" aria-controls="reading-v1-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="reading-v1-result-tab" data-view="result" aria-controls="reading-v1-result" aria-selected="false" tabindex="-1">Résultat</button></div>
     <div role="tabpanel" class="view-panel view-panel-manifest" id="reading-v1-manifest" aria-labelledby="reading-v1-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/quantity-v1.kts</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line">// Operator-provided: reads a quantity written <span class="str">&quot;12,5 kg&quot;</span> or <span class="str">&quot;3 pce&quot;</span> into a number and a unit.</span><span class="line">@Suppress(<span class="str">&quot;UNCHECKED_CAST&quot;</span>)</span><span class="line">val cells = bindings[<span class="str">&quot;cells&quot;</span>] as MutableMap&lt;String, Any?&gt;</span><span class="line">val (amount, unit) = (cells[<span class="str">&quot;quantity&quot;</span>] as String).trim().split(<span class="str">&quot; &quot;</span>)</span><span class="line">cells[<span class="str">&quot;qty&quot;</span>] = amount.replace(&#x27;,&#x27;, &#x27;.&#x27;).toBigDecimal().toPlainString()</span><span class="line">cells[<span class="str">&quot;unit&quot;</span>] = unit</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="reading-v1-commands" aria-labelledby="reading-v1-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm hook scripts</span>
 <span class="out">NAME                SIZE  SHA256
-quantity-e.kts      341   54ab285d0f4ebc727c4413da954f043b3ab816304a678e6f1f1f098a8471ebc1</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="reading-v1-result" aria-labelledby="reading-v1-result-tab" tabindex="0" hidden><dl class="facts"><dt>quantity-e.kts</dt><dd>sha256 54ab285d0f4e…</dd></dl><p class="sources">preuves : replay.log, reading-v1-scripts.txt, fails-run.txt, reading-v2-scripts.txt, load-run.txt, line-316.txt, line-318.json, letters.txt, letters.json, letter-317.txt · transform v1</p></div>
+quantity-b.kts      341   54ab285d0f4ebc727c4413da954f043b3ab816304a678e6f1f1f098a8471ebc1</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="reading-v1-result" aria-labelledby="reading-v1-result-tab" tabindex="0" hidden><dl class="facts"><dt>quantity-b.kts</dt><dd>sha256 54ab285d0f4e…</dd></dl><p class="sources">preuves: replay.log, reading-v1-scripts.txt, fails-run.txt, reading-v2-scripts.txt, load-run.txt, line-316.txt, line-318.json, letters.txt, letters.json, letter-317.txt · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-fails" aria-labelledby="fails-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="fails-title">Un script qui lève une exception arrête le run</h2>
-      <p>Sur « env. 4 kg », le script lève une exception : le run échoue et n&#x27;écrit aucune des 500 lignes. Le message nomme le script, le type d&#x27;exception et la ligne du script, jamais la valeur lue.</p>
+      <p>Sur « env. 4 kg », le script lève une exception.</p><ul class="prose-list"><li>le run échoue</li><li>aucune des 500 lignes écrite</li><li>le message nomme le script et sa ligne 5, pas la valeur</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>line 5</strong><p>La ligne du script, pas celle du fichier.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un script cassé ne laisse pas passer de lignes à moitié lues, et son erreur ne recopie pas la donnée.</p></div>
   </aside>
   <div class="views">
-    <div role="tablist" class="view-tabs" aria-label="Échec"><button type="button" role="tab" id="fails-manifest-tab" data-view="manifest" aria-controls="fails-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="fails-commands-tab" data-view="commands" aria-controls="fails-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="fails-result-tab" data-view="result" aria-controls="fails-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-manifest" id="fails-manifest" aria-labelledby="fails-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-receipts.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-receipts-b</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [warehouse-b]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/quantity-script-one-in-500/b/receipts.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line hl">      <span class="dash">-</span> <span class="key">kotlin</span>:</span><span class="line">          <span class="key">script</span>: hooks:quantity-b.kts   <span class="comment"># the operator&#x27;s reading of &quot;12,5 kg&quot; / &quot;3 pce&quot;</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="fails-commands" aria-labelledby="fails-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-receipts.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;scenario-receipts-e&quot;,&quot;connectorId&quot;:&quot;17c5ff73-6995-4499-bc3e-ca3a228bf5a8&quot;,&quot;endpointsApplied&quot;:1}</span>
+    <div role="tablist" class="view-tabs" aria-label="Échec"><button type="button" role="tab" id="fails-source-tab" data-view="source" aria-controls="fails-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="fails-manifest-tab" data-view="manifest" aria-controls="fails-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="fails-commands-tab" data-view="commands" aria-controls="fails-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="fails-result-tab" data-view="result" aria-controls="fails-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="fails-source" aria-labelledby="fails-source-tab" tabindex="0"><figure class="source"><figcaption>receipts.csv</figcaption><pre class="code">line_no;item;quantity
+L0001;Sel fin;21 pce
+L0002;Farine T55;4 pce
+L0003;Levure fraîche;18 pce
+L0004;Œufs plein air;18,5 kg
+L0005;Farine T55;4,0 kg
+L0006;Sel fin;18,4 kg
+L0007;Beurre doux;29,7 kg
+L0008;Farine T55;32,0 kg
+L0009;Sucre roulé;17,7 kg
+L0010;Levure fraîche;20,1 kg
+L0011;Sel fin;15,1 kg
+L0012;Beurre doux;37,2 kg
+L0013;Œufs plein air;36,7 kg
+L0014;Farine T55;37,9 kg
+L0015;Levure fraîche;28,7 kg
+L0016;Sucre roulé;28,2 kg
+L0017;Sucre roulé;15,6 kg
+L0018;Œufs plein air;8 pce
+L0019;Levure fraîche;13,1 kg</pre><p class="source-more">… 481 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="fails-manifest" aria-labelledby="fails-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/10-receipts.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-receipts-b</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [warehouse-b]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/quantity-script-one-in-500/b/receipts.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line hl">      <span class="dash">-</span> <span class="key">kotlin</span>:</span><span class="line">          <span class="key">script</span>: hooks:quantity-b.kts   <span class="comment"># the operator&#x27;s reading of &quot;12,5 kg&quot; / &quot;3 pce&quot;</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="fails-commands" aria-labelledby="fails-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-receipts.yaml</span>
+<span class="out">Applied connector &quot;scenario-receipts-b&quot; — 1 endpoint</span>
 
-<span class="cmd"><span class="prompt">$</span> lm connector run scenario-receipts-e</span>
-<span class="out">run scheduled: d0795a25-7677-4e7a-80d3-975b8771407f</span>
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-receipts-b</span>
+<span class="out">run scheduled: 18614e4a-3d44-4f80-93ca-f461893b3ab2</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get d0795a25-7677-4e7a-80d3-975b8771407f</span>
-<span class="out">ID        CONNECTOR            ENDPOINT  STATUS  IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
-d0795a25  scenario-receipts-e  default   Failed  0   0    0        0             2026-10-23 21:12  2026-10-23 21:12  no</span>
-<span class="note">✖ run failed: kotlin hook hooks:quantity-e.kts failed: NumberFormatException at line 5</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="fails-result" aria-labelledby="fails-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Failed · IN 0 · OUT 0</dd><dt>✖</dt><dd>kotlin hook hooks:quantity-e.kts failed: NumberFormatException at line 5</dd></dl><p class="sources">preuves : replay.log, reading-v1-scripts.txt, fails-run.txt, reading-v2-scripts.txt, load-run.txt, line-316.txt, line-318.json, letters.txt, letters.json, letter-317.txt · transform v1</p></div>
+<span class="cmd"><span class="prompt">$</span> lm run get 18614e4a-3d44-4f80-93ca-f461893b3ab2</span>
+<span class="out">ID        CONNECTOR            ENDPOINT  STATUS  IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
+18614e4a  scenario-receipts-b  default   Failed  0   0    0        0             2026-11-03 17:07  2026-11-03 17:07</span>
+<span class="note">✖ run failed: kotlin hook hooks:quantity-b.kts failed: NumberFormatException at line 5</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="fails-result" aria-labelledby="fails-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Failed · IN 0 · OUT 0</dd><dt>✖</dt><dd>kotlin hook hooks:quantity-b.kts failed: NumberFormatException at line 5</dd></dl><p class="sources">preuves: replay.log, reading-v1-scripts.txt, fails-run.txt, reading-v2-scripts.txt, load-run.txt, line-316.txt, line-318.json, letters.txt, letters.json, letter-317.txt · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-reading-v2" aria-labelledby="reading-v2-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="reading-v2-title">L&#x27;opérateur déclare illisible ce qu&#x27;il ne sait pas lire</h2>
-      <p>La version 2 lit les deux formes connues ; pour toute autre, elle appelle unreadable au lieu de deviner. Le hub compte alors la cellule, comme pour un transformer intégré.</p>
+      <p>La version 2 appelle unreadable pour toute forme inconnue, au lieu de deviner.</p><ul class="prose-list"><li>le hub compte la cellule</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>unreadable</strong><p>Compté, jamais deviné.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un script peut dire « je ne sais pas lire cette valeur » sans arrêter le run.</p></div>
@@ -75,68 +100,70 @@ d0795a25  scenario-receipts-e  default   Failed  0   0    0        0            
     <div role="tablist" class="view-tabs" aria-label="Script v2"><button type="button" role="tab" id="reading-v2-manifest-tab" data-view="manifest" aria-controls="reading-v2-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="reading-v2-commands-tab" data-view="commands" aria-controls="reading-v2-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="reading-v2-result-tab" data-view="result" aria-controls="reading-v2-result" aria-selected="false" tabindex="-1">Résultat</button></div>
     <div role="tabpanel" class="view-panel view-panel-manifest" id="reading-v2-manifest" aria-labelledby="reading-v2-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/quantity-v2.kts</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line">// Operator-provided: reads a quantity written <span class="str">&quot;12,5 kg&quot;</span> or <span class="str">&quot;3 pce&quot;</span> into a number and a unit.</span><span class="line hl">// A quantity in any other shape is declared unreadable: counted, never guessed.</span><span class="line">@Suppress(<span class="str">&quot;UNCHECKED_CAST&quot;</span>)</span><span class="line">val cells = bindings[<span class="str">&quot;cells&quot;</span>] as MutableMap&lt;String, Any?&gt;</span><span class="line">val m = Regex(<span class="str">&quot;(\\d+(?:,\\d+)?) (kg|pce)&quot;</span>).matchEntire((cells[<span class="str">&quot;quantity&quot;</span>] as String).trim())</span><span class="line">if (m == null) {</span><span class="line hl">    (bindings[<span class="str">&quot;unreadable&quot;</span>] as Runnable).run()</span><span class="line">} else {</span><span class="line">    cells[<span class="str">&quot;qty&quot;</span>] = m.groupValues[1].replace(&#x27;,&#x27;, &#x27;.&#x27;)</span><span class="line">    cells[<span class="str">&quot;unit&quot;</span>] = m.groupValues[2]</span><span class="line">}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="reading-v2-commands" aria-labelledby="reading-v2-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm hook scripts</span>
 <span class="out">NAME                SIZE  SHA256
-quantity-e.kts      520   37981f5cb501d358140e02c9b3d6892911c4688e15940b533b12a69e38ed53d3</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="reading-v2-result" aria-labelledby="reading-v2-result-tab" tabindex="0" hidden><dl class="facts"><dt>quantity-e.kts</dt><dd>sha256 37981f5cb501…</dd></dl><p class="sources">preuves : replay.log, reading-v1-scripts.txt, fails-run.txt, reading-v2-scripts.txt, load-run.txt, line-316.txt, line-318.json, letters.txt, letters.json, letter-317.txt · transform v1</p></div>
+quantity-b.kts      520   37981f5cb501d358140e02c9b3d6892911c4688e15940b533b12a69e38ed53d3</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="reading-v2-result" aria-labelledby="reading-v2-result-tab" tabindex="0" hidden><dl class="facts"><dt>quantity-b.kts</dt><dd>sha256 37981f5cb501…</dd></dl><p class="sources">preuves: replay.log, reading-v1-scripts.txt, fails-run.txt, reading-v2-scripts.txt, load-run.txt, line-316.txt, line-318.json, letters.txt, letters.json, letter-317.txt · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-load" aria-labelledby="load-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="load-title">Les 499 lignes lisibles sont écrites</h2>
-      <p>L&#x27;intégrateur ajoute on-error: default: dlq. Les 500 lignes sont relues : 499 écrites avec leur quantité et leur unité, une écartée et comptée. L0316 et L0318 sont dans la table.</p>
+      <p>L&#x27;intégrateur ajoute on-error: default: dlq.</p><ul class="prose-list"><li>499 lignes écrites</li><li>1 écartée et comptée</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>default</strong><p>Le hook kotlin n&#x27;a pas de colonne : default décide.</p></div></li></ol>
-    <div class="proves"><h3>Ce que prouve cette étape</h3><p>500 = 499 + 1 : une valeur imprévue n&#x27;empêche plus le reste du bon d&#x27;arriver.</p></div>
+    <ol class="points"><li><span class="n">1</span><div><strong>default</strong><p>Le hook kotlin n&#x27;a pas de colonne: default décide.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>500 = 499 + 1: une valeur imprévue n&#x27;empêche plus le reste du bon d&#x27;arriver.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Charger"><button type="button" role="tab" id="load-manifest-tab" data-view="manifest" aria-controls="load-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="load-commands-tab" data-view="commands" aria-controls="load-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="load-result-tab" data-view="result" aria-controls="load-result" aria-selected="false" tabindex="-1">Résultat</button></div>
     <div role="tabpanel" class="view-panel view-panel-manifest" id="load-manifest" aria-labelledby="load-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/11-receipts-dlq.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-receipts-b</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [warehouse-b]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/quantity-script-one-in-500/b/receipts.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line hl">    on-error:</span><span class="line hl">      <span class="key">default</span>: dlq                     <span class="comment"># a line the script declares unreadable goes to the dead letters, as read</span></span><span class="line">    <span class="key">cell</span>:</span><span class="line">      <span class="dash">-</span> <span class="key">kotlin</span>:</span><span class="line">          <span class="key">script</span>: hooks:quantity-b.kts   <span class="comment"># the operator&#x27;s reading of &quot;12,5 kg&quot; / &quot;3 pce&quot;</span></span></code></pre><div class="file"><span class="filename">manifests/20-receipt-line.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: receipt_line_b</span><span class="line"><span class="key">label</span>: Ligne de réception</span><span class="line"><span class="key">description</span>: <span class="str">&quot;A received line: the item and its quantity read as a number and a unit.&quot;</span></span><span class="line"><span class="key">match</span>: [line_no]</span><span class="line"><span class="key">scopes</span>: [warehouse-b]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">line_no</span>: { label: <span class="str">&quot;Ligne&quot;</span> }</span><span class="line">  <span class="key">item</span>: { label: <span class="str">&quot;Article&quot;</span> }</span><span class="line">  <span class="key">quantity</span>: { label: <span class="str">&quot;Quantité saisie&quot;</span> }</span><span class="line">  <span class="key">qty</span>: { label: <span class="str">&quot;Quantité&quot;</span> }</span><span class="line">  <span class="key">unit</span>: { label: <span class="str">&quot;Unité&quot;</span> }</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_receipts_b</span><span class="line">    <span class="key">map</span>: { line_no: line_no, item: item, quantity: quantity, qty: qty, unit: unit }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="load-commands" aria-labelledby="load-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 11-receipts-dlq.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;scenario-receipts-e&quot;,&quot;connectorId&quot;:&quot;17c5ff73-6995-4499-bc3e-ca3a228bf5a8&quot;,&quot;endpointsApplied&quot;:1}</span>
+<span class="out">Applied connector &quot;scenario-receipts-b&quot; — 1 endpoint</span>
 
-<span class="cmd"><span class="prompt">$</span> lm connector run scenario-receipts-e</span>
-<span class="out">run scheduled: 32295463-919b-43ab-bf93-7c0d077be167</span>
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-receipts-b</span>
+<span class="out">run scheduled: 897ccf78-90fa-4710-b4a8-88f74d003bfd</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 32295463-919b-43ab-bf93-7c0d077be167</span>
-<span class="out">ID        CONNECTOR            ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
-32295463  scenario-receipts-e  default   Completed  500  499  1        1             2026-10-23 21:12  2026-10-23 21:12  no</span>
-<span class="note">⚠ 1 rows quarantined — see: lm dlq list --run 32295463-919b-43ab-bf93-7c0d077be167</span>
-<span class="note">• script hooks:quantity-e.kts  sha256 37981f5cb501d358140e02c9b3d6892911c4688e15940b533b12a69e38ed53d3</span>
+<span class="cmd"><span class="prompt">$</span> lm run get 897ccf78-90fa-4710-b4a8-88f74d003bfd</span>
+<span class="out">ID        CONNECTOR            ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
+897ccf78  scenario-receipts-b  default   Completed  500  499  1        1             2026-11-03 17:07  2026-11-03 17:07</span>
+<span class="note">⚠ 1 rows quarantined — see: lm dlq list --run 897ccf78-90fa-4710-b4a8-88f74d003bfd</span>
+<span class="note">• script hooks:quantity-b.kts  sha256 37981f5cb501d358140e02c9b3d6892911c4688e15940b533b12a69e38ed53d3</span>
 
 <span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-receipt-line.yaml</span>
-<span class="out">Applied entity &quot;receipt_line_e&quot; → connector.&quot;v_receipt_line_e&quot;</span>
+<span class="out">Applied entity &quot;receipt_line_b&quot; → connector.&quot;v_receipt_line_b&quot;</span>
 
-<span class="cmd"><span class="prompt">$</span> lm entity get receipt_line_e --filter line_no=L0316</span>
+<span class="cmd"><span class="prompt">$</span> lm entity get receipt_line_b --filter line_no=L0316</span>
 <span class="out">LINE_NO  ITEM         QUANTITY  QTY  UNIT  _CONFLICTS
-L0316    Beurre doux  11 pce    11   pce   {}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="load-result" aria-labelledby="load-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 500 · OUT 499 · SKIPPED 1 · DEAD-LETTERS 1</dd></dl><p class="sources">preuves : replay.log, reading-v1-scripts.txt, fails-run.txt, reading-v2-scripts.txt, load-run.txt, line-316.txt, line-318.json, letters.txt, letters.json, letter-317.txt · transform v1</p></div>
+L0316    Beurre doux  11 pce    11   pce   {}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="load-result" aria-labelledby="load-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>Completed · IN 500 · OUT 499 · SKIPPED 1 · DEAD-LETTERS 1</dd></dl><p class="sources">preuves: replay.log, reading-v1-scripts.txt, fails-run.txt, reading-v2-scripts.txt, load-run.txt, line-316.txt, line-318.json, letters.txt, letters.json, letter-317.txt · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-letters" aria-labelledby="letters-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="letters-title">La ligne 317, telle qu&#x27;elle a été lue</h2>
-      <p>La lettre morte garde la ligne d&#x27;origine : L0317, Sel fin, « env. 4 kg ». C&#x27;est à la source de corriger la saisie ; le run suivant l&#x27;écrira.</p>
+      <p>La lettre morte garde la ligne d&#x27;origine.</p><ul class="prose-list"><li>L0317, Sel fin, « env. 4 kg »</li><li>la source corrige, le run suivant l&#x27;écrit</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>1 lettre</strong><p>Valeur illisible pour le script.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>La ligne écartée est nommée, entière, et attend sa correction.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Lettre morte"><button type="button" role="tab" id="letters-commands-tab" data-view="commands" aria-controls="letters-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="letters-result-tab" data-view="result" aria-controls="letters-result" aria-selected="false" tabindex="-1">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-commands" id="letters-commands" aria-labelledby="letters-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm dlq list --run 32295463-919b-43ab-bf93-7c0d077be167</span>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="letters-commands" aria-labelledby="letters-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm dlq list --run 897ccf78-90fa-4710-b4a8-88f74d003bfd</span>
 <span class="out">ID        CONNECTOR            RUN       REASON         ATTEMPTS  RESOLUTION  MESSAGE
-a4d33973  scenario-receipts-e  32295463  MappingFailed  1                     kotlin: kotlin could not read the value</span>
+3a59d4c6  scenario-receipts-b  897ccf78  MappingFailed  1                     kotlin: kotlin could not read the value</span>
 
-<span class="cmd"><span class="prompt">$</span> lm dlq get a4d33973-94d3-4b53-82a0-2c83c97589b7</span>
-<span class="out">ID:        a4d33973-94d3-4b53-82a0-2c83c97589b7
-Connector: scenario-receipts-e (17c5ff73-6995-4499-bc3e-ca3a228bf5a8)
-Run:       32295463-919b-43ab-bf93-7c0d077be167
+<span class="cmd"><span class="prompt">$</span> lm dlq get 3a59d4c6-3d6c-4af2-ab26-3c0d91408113</span>
+<span class="out">ID:        3a59d4c6-3d6c-4af2-ab26-3c0d91408113
+Connector: scenario-receipts-b (4bd712c0-288b-413e-8ad3-60661f10381d)
+Run:       897ccf78-90fa-4710-b4a8-88f74d003bfd
 Reason:    MappingFailed
 Attempts:  1
 Message:   kotlin: kotlin could not read the value
 Detail:    {&quot;field&quot;:&quot;kotlin&quot;,&quot;message&quot;:&quot;kotlin could not read the value&quot;}
 Payload:   {&quot;item&quot;:&quot;Sel fin&quot;,&quot;line_no&quot;:&quot;L0317&quot;,&quot;quantity&quot;:&quot;env. 4 kg&quot;}
-Resolution: open</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="letters-result" aria-labelledby="letters-result-tab" tabindex="0" hidden><dl class="facts"><dt>L0317</dt><dd>env. 4 kg · kotlin: kotlin could not read the value</dd></dl><p class="sources">preuves : replay.log, reading-v1-scripts.txt, fails-run.txt, reading-v2-scripts.txt, load-run.txt, line-316.txt, line-318.json, letters.txt, letters.json, letter-317.txt · transform v1</p></div>
+Resolution: open</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="letters-result" aria-labelledby="letters-result-tab" tabindex="0" hidden><dl class="facts"><dt>L0317</dt><dd>env. 4 kg · kotlin: kotlin could not read the value</dd></dl><p class="sources">preuves: replay.log, reading-v1-scripts.txt, fails-run.txt, reading-v2-scripts.txt, load-run.txt, line-316.txt, line-318.json, letters.txt, letters.json, letter-317.txt · transform v1</p></div>
   </div>
 </section>
-  <section class="limits"><h2>Limites</h2><ul><li>Le message d&#x27;un script qui échoue donne la ligne du script, pas celle du fichier : il faut un script qui déclare la valeur illisible pour savoir quelle ligne pose problème.</li><li>La lettre morte nomme le hook kotlin, pas la colonne : un script peut écrire plusieurs cellules.</li><li>Lignes synthétiques.</li></ul></section>
+  <section class="limits"><h2>Limites</h2><ul><li>Le message d&#x27;un script qui échoue donne la ligne du script, pas celle du fichier: il faut un script qui déclare la valeur illisible pour savoir quelle ligne pose problème.</li><li>La lettre morte nomme le hook kotlin, pas la colonne: un script peut écrire plusieurs cellules.</li><li>Lignes synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Réception · saisie</p><h2>Un bon de réception saisi à la main.</h2><p class="brief-lead">500 lignes, des quantités en texte.</p><p class="brief-note">12,5 kg, 3 pce… et env. 4 kg</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Une valeur que personne n&#x27;a prévue.</h2><ul class="brief-list tone-cyan"><li>« env. 4 kg », ligne 317.</li><li>Le script ne sait pas la lire.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>La saisie reste telle quelle.</h2><ul class="brief-list tone-green"><li>La correction se fait à la source.</li><li>Le hub ne devine pas.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le piège</p><h2>Une ligne arrête tout.</h2><ul class="brief-list tone-cyan"><li>Le script lève une exception.</li><li>Aucune des 500 lignes n&#x27;est écrite.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>on-error: { default: dlq }</code></pre><h2>Une ligne.</h2><ul class="brief-list tone-green"><li>Le script dit unreadable au lieu de deviner.</li><li>La ligne va en lettre morte.</li><li>Deux manifestes, 34 lignes.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le résultat</p><h2>499 écrites, une mise de côté.</h2><ul class="brief-list tone-cyan"><li>L0317, telle qu&#x27;elle a été lue.</li><li>L0316 et L0318 dans la table.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>Une exception donne la ligne du script.</h2><ul class="brief-list tone-green"><li>Pas celle du fichier.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
   <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
 </main>
 <script src="../assets/scenario.js" defer></script>

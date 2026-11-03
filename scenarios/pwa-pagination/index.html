@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>40 000 articles, parcourus page par page. — lumnik</title>
-<meta name="description" content="Deux exports CSV, deux entités, deux vues liées, une app. Le hub sert le catalogue par pages de 50 ; la PWA n&#x27;en charge jamais plus.">
+<title>40 000 articles parcourus page par page dans la PWA — lumnik</title>
+<meta name="description" content="Parcourir tout un catalogue dans la PWA sans jamais charger plus de 50 lignes à la fois. Deux exports CSV, deux entités, deux vues liées, une app. Le hub sert le catalogue par pages de 50. 40 233 articles atteints, sans doublon. Les catégories liées dans les deux sens. L&#x27;édition Open suffit.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -18,16 +18,22 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/pwa-pagination/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>40 000 articles, parcourus page par page.</h1>
-    <p class="lede">Deux exports CSV, deux entités, deux vues liées, une app. Le hub sert le catalogue par pages de 50 ; la PWA n&#x27;en charge jamais plus.</p>
+    <h1>40 000 articles parcourus page par page dans la PWA</h1>
+    <p class="goal"><strong>Objectif</strong> Parcourir tout un catalogue dans la PWA sans jamais charger plus de 50 lignes à la fois.</p>
+    <p class="lede">Deux exports CSV, deux entités, deux vues liées, une app. Le hub sert le catalogue par pages de 50.</p><ul class="lede-list"><li>40 233 articles atteints, sans doublon</li><li>les catégories liées dans les deux sens</li><li>l&#x27;édition Open suffit</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Commerce</li><li class="tag">Catalogue</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li><li class="tag kind">View</li><li class="tag kind">App</li></ul>
   </section>
+  <div role="tablist" class="page-tabs" aria-label="40 000 articles parcourus page par page dans la PWA">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
   <nav class="steps-nav" aria-label="Étapes"><a href="#step-import" data-step="import" aria-current="step"><span class="num">1 · Importer</span><span class="sub">Deux CSV</span></a><a href="#step-model" data-step="model"><span class="num">2 · Modéliser</span><span class="sub">Deux entités</span></a><a href="#step-views" data-step="views"><span class="num">3 · Afficher</span><span class="sub">Deux vues liées</span></a><a href="#step-app" data-step="app"><span class="num">4 · Publier</span><span class="sub">L&#x27;app</span></a><a href="#step-verify" data-step="verify"><span class="num">5 · Vérifier</span><span class="sub">La pagination</span></a></nav>
   <section class="step" id="step-import" aria-labelledby="import-title">
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="import-title">Un Connector par export</h2>
-      <p>Articles et catégories, chacun son fichier. Les identifiants deviennent des entiers ; les libellés sont nettoyés.</p>
+      <p>Deux connecteurs CSV, un par export. Les identifiants deviennent des entiers, les libellés sont nettoyés.</p><ul class="prose-list"><li>les articles</li><li>les catégories</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Ordre</strong><p>Catégories d&#x27;abord, articles ensuite.</p></div></li><li><span class="n">2</span><div><strong>Périmètre</strong><p>Associe les données au périmètre métier pwa-pagination.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Les deux exports sont lus tels quels.</p></div>
@@ -38,36 +44,36 @@
 <span class="out">✓ 10-products.yaml — valid</span>
 
 <span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-products.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;pwa-pagination-products&quot;,&quot;connectorId&quot;:&quot;8c45c7f3-c54f-4649-8138-253e96cd167d&quot;,&quot;endpointsApplied&quot;:1}</span>
+<span class="out">Applied connector &quot;pwa-pagination-products&quot; — 1 endpoint</span>
 
 <span class="cmd"><span class="prompt">$</span> lm validate -f manifests/15-product-categories.yaml</span>
 <span class="out">✓ 15-product-categories.yaml — valid</span>
 
 <span class="cmd"><span class="prompt">$</span> lm apply -f manifests/15-product-categories.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;pwa-pagination-product-categories&quot;,&quot;connectorId&quot;:&quot;b8264dfc-9697-45ee-9214-522c86e5c5d7&quot;,&quot;endpointsApplied&quot;:1}</span>
+<span class="out">Applied connector &quot;pwa-pagination-product-categories&quot; — 1 endpoint</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run pwa-pagination-product-categories</span>
-<span class="out">run scheduled: 2dbc1090-0a46-44d6-a64b-dc0942e4533e</span>
+<span class="out">run scheduled: 67bff7c3-2b5e-4078-88d7-d64303080c76</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 2dbc1090-0a46-44d6-a64b-dc0942e4533e</span>
-<span class="out">ID        CONNECTOR                          ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-2dbc1090  pwa-pagination-product-categories  default   Completed  63  63   0        0             2026-10-21 15:46  2026-10-21 15:46</span>
+<span class="cmd"><span class="prompt">$</span> lm run get 67bff7c3-2b5e-4078-88d7-d64303080c76</span>
+<span class="out">ID        CONNECTOR                          ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+67bff7c3  pwa-pagination-product-categories  default   Completed  63  63   0        0             2026-11-03 21:55  2026-11-03 21:55  no</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run pwa-pagination-products</span>
-<span class="out">run scheduled: 3c6383c5-1847-461e-88ac-282a40869df5</span>
+<span class="out">run scheduled: 6df3acdc-6870-4213-9a7b-a387ff540a38</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 3c6383c5-1847-461e-88ac-282a40869df5</span>
-<span class="out">ID        CONNECTOR                ENDPOINT  STATUS     IN     OUT    SKIPPED  DEAD-LETTERS  STARTED           ENDED
-3c6383c5  pwa-pagination-products  default   Completed  40233  40233  0        0             2026-10-21 15:46  2026-10-21 15:46</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="import-result" aria-labelledby="import-result-tab" tabindex="0" hidden><dl class="facts"><dt>Connectors appliqués</dt><dd>pwa-pagination-products, pwa-pagination-product-categories</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+<span class="cmd"><span class="prompt">$</span> lm run get 6df3acdc-6870-4213-9a7b-a387ff540a38</span>
+<span class="out">ID        CONNECTOR                ENDPOINT  STATUS     IN     OUT    SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+6df3acdc  pwa-pagination-products  default   Completed  40233  40233  0        0             2026-11-03 21:55  2026-11-03 21:55  no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="import-result" aria-labelledby="import-result-tab" tabindex="0" hidden><dl class="facts"><dt>Connectors appliqués</dt><dd>pwa-pagination-products, pwa-pagination-product-categories</dd></dl><p class="sources">preuves: replay.log · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-model" aria-labelledby="model-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="model-title">Joindre la catégorie à l&#x27;article</h2>
-      <p>PwaPaginationProduct porte le nom de sa catégorie ; PwaPaginationCategory expose le référentiel.</p>
+      <p>PwaPaginationProduct porte le nom de sa catégorie. PwaPaginationCategory expose le référentiel.</p>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>Une jointure déclarée</strong><p>joins relie category_id à la table des catégories.</p></div></li><li><span class="n">2</span><div><strong>Des libellés métier</strong><p>Chaque colonne reçoit son label ; la PWA l&#x27;affiche.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>Une jointure déclarée</strong><p>joins relie category_id à la table des catégories.</p></div></li><li><span class="n">2</span><div><strong>Des libellés métier</strong><p>Chaque colonne reçoit son label; la PWA l&#x27;affiche.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Chaque article sait le nom de sa catégorie.</p></div>
   </aside>
   <div class="views">
@@ -76,27 +82,22 @@
 <span class="out">Applied entity &quot;PwaPaginationProduct&quot; → connector.&quot;v_pwapaginationproduct&quot;</span>
 
 <span class="cmd"><span class="prompt">$</span> lm entity apply -f manifests/25-category.yaml</span>
-<span class="out">Applied entity &quot;PwaPaginationCategory&quot; → connector.&quot;v_pwapaginationcategory&quot;</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="model-result" aria-labelledby="model-result-tab" tabindex="0" hidden><dl class="facts"><dt>PwaPaginationProduct</dt><dd>v_pwapaginationproduct</dd><dt>PwaPaginationCategory</dt><dd>v_pwapaginationcategory</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+<span class="out">Applied entity &quot;PwaPaginationCategory&quot; → connector.&quot;v_pwapaginationcategory&quot;</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="model-result" aria-labelledby="model-result-tab" tabindex="0" hidden><dl class="facts"><dt>PwaPaginationProduct</dt><dd>v_pwapaginationproduct</dd><dt>PwaPaginationCategory</dt><dd>v_pwapaginationcategory</dd></dl><p class="sources">preuves: replay.log · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-views" aria-labelledby="views-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="views-title">Lier les vues par le nom</h2>
-      <p>Chaque View choisit ses colonnes ; l&#x27;identifiant de catégorie n&#x27;y figure pas. Les liens filtrent par nom, dans les deux sens.</p>
+      <p>Chaque View choisit ses colonnes. Les liens filtrent par nom, dans les deux sens.</p><ul class="prose-list"><li>l&#x27;identifiant de catégorie n&#x27;y figure pas</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>Colonnes choisies</strong><p>Un lien ne peut citer qu&#x27;une colonne affichée.</p></div></li><li><span class="n">2</span><div><strong>Aller-retour</strong><p>Catégorie vers ses articles ; article vers sa catégorie.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>Colonnes choisies</strong><p>Un lien ne peut citer qu&#x27;une colonne affichée.</p></div></li><li><span class="n">2</span><div><strong>Aller-retour</strong><p>Catégorie vers ses articles; article vers sa catégorie.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>On navigue entre les vues sans identifiant technique à l&#x27;écran.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Afficher"><button type="button" role="tab" id="views-manifest-tab" data-view="manifest" aria-controls="views-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="views-commands-tab" data-view="commands" aria-controls="views-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="views-result-tab" data-view="result" aria-controls="views-result" aria-selected="false" tabindex="-1">Résultat</button></div>
     <div role="tabpanel" class="view-panel view-panel-manifest" id="views-manifest" aria-labelledby="views-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-products-view.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: View</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: pwa-pagination-products</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: pwa-pagination</span><span class="line">  <span class="key">table</span>: connector.v_pwapaginationproduct</span><span class="line">  <span class="key">title</span>: Catalogue des articles</span><span class="line">  <span class="key">columns</span>: [product_id, reference, description, category_name, active]</span><span class="line hl">  <span class="key">links</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">column</span>: category_name</span><span class="line">      <span class="key">targetView</span>: pwa-pagination-categories</span><span class="line">      <span class="key">filters</span>:</span><span class="line hl">        <span class="key">name</span>: <span class="str">&quot;{category_name}&quot;</span></span></code></pre><div class="file"><span class="filename">manifests/35-categories-view.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: View</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: pwa-pagination-categories</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: pwa-pagination</span><span class="line">  <span class="key">table</span>: connector.v_pwapaginationcategory</span><span class="line">  <span class="key">title</span>: Catégories</span><span class="line">  <span class="key">columns</span>: [name, description, active]</span><span class="line hl">  <span class="key">links</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">column</span>: name</span><span class="line">      <span class="key">targetView</span>: pwa-pagination-products</span><span class="line">      <span class="key">filters</span>:</span><span class="line hl">        <span class="key">category_name</span>: <span class="str">&quot;{name}&quot;</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="views-commands" aria-labelledby="views-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm view apply -f manifests/30-products-view.yaml</span>
 <span class="out">applied: pwa-pagination-products (scope pwa-pagination)</span>
-<span class="note">! 30-products-view.yaml — 0 error(s), 1 warning(s)</span>
-<span class="note"></span>
-<span class="note">  WARN     spec.links[0].targetView</span>
-<span class="note">          targetView &#x27;pwa-pagination-categories&#x27; is not a view of scope &#x27;pwa-pagination&#x27; (yet); the declaration is kept, and following the link is refused until that view is applied</span>
-<span class="note"></span>
 
 <span class="cmd"><span class="prompt">$</span> lm view apply -f manifests/35-categories-view.yaml</span>
 <span class="out">applied: pwa-pagination-categories (scope pwa-pagination)</span>
@@ -104,14 +105,14 @@
 <span class="cmd"><span class="prompt">$</span> lm view list --scope pwa-pagination</span>
 <span class="out">NAME                       SCOPE           TITLE
 pwa-pagination-categories  pwa-pagination  Catégories
-pwa-pagination-products    pwa-pagination  Catalogue des articles</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="views-result" aria-labelledby="views-result-tab" tabindex="0" hidden><dl class="facts"><dt>pwa-pagination-products</dt><dd>pwa-pagination</dd><dt>pwa-pagination-categories</dt><dd>pwa-pagination</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+pwa-pagination-products    pwa-pagination  Catalogue des articles</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="views-result" aria-labelledby="views-result-tab" tabindex="0" hidden><dl class="facts"><dt>pwa-pagination-products</dt><dd>pwa-pagination</dd><dt>pwa-pagination-categories</dt><dd>pwa-pagination</dd></dl><p class="sources">preuves: replay.log · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-app" aria-labelledby="app-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="app-title">Une app réduite à Fiches</h2>
-      <p>spec.tabs ne garde que fiches. Ni chat ni recherche ; le scénario tourne sur l&#x27;édition Open.</p>
+      <p>spec.tabs ne garde que les fiches. Ni chat ni recherche.</p><ul class="prose-list"><li>le scénario tourne sur l&#x27;édition Open</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Ouvrir</strong><p>/app/?m=pwa-pagination</p></div></li><li><span class="n">2</span><div><strong>Naviguer</strong><p>Suivant, Précédent, Début.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>La PWA pagine en tableau sur ordinateur, en cartes sur téléphone.</p></div>
@@ -120,24 +121,26 @@ pwa-pagination-products    pwa-pagination  Catalogue des articles</span></code><
     <div role="tablist" class="view-tabs" aria-label="Publier"><button type="button" role="tab" id="app-manifest-tab" data-view="manifest" aria-controls="app-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="app-commands-tab" data-view="commands" aria-controls="app-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="app-result-tab" data-view="result" aria-controls="app-result" aria-selected="false" tabindex="-1">Résultat</button><button type="button" role="tab" id="app-screenshots-tab" data-view="screenshots" aria-controls="app-screenshots" aria-selected="false" tabindex="-1">Captures</button></div>
     <div role="tabpanel" class="view-panel view-panel-manifest" id="app-manifest" aria-labelledby="app-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/40-pwa-pagination-app.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: App</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: pwa-pagination</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">title</span>: Catalogue</span><span class="line">  <span class="key">scope</span>: pwa-pagination</span><span class="line">  <span class="key">icon</span>: generic</span><span class="line">  <span class="key">theme</span>:</span><span class="line">    <span class="key">accentColor</span>: <span class="str">&quot;#8b7ff0&quot;</span></span><span class="line">    <span class="key">backgroundColor</span>: <span class="str">&quot;#14121f&quot;</span></span><span class="line hl">  <span class="key">tabs</span>: [fiches]</span><span class="line">  <span class="key">default</span>: false</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="app-commands" aria-labelledby="app-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm app apply -f manifests/40-pwa-pagination-app.yaml</span>
 <span class="out">Applied app &quot;pwa-pagination&quot; → scope pwa-pagination
-  tabs: fiches</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="app-result" aria-labelledby="app-result-tab" tabindex="0" hidden><dl class="facts"><dt>App</dt><dd>pwa-pagination</dd><dt>Onglets</dt><dd>fiches</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div><div role="tabpanel" class="view-panel view-panel-screenshots" id="app-screenshots" aria-labelledby="app-screenshots-tab" tabindex="0" hidden><figure class="shot"><img src="evidence/screenshots/01-desktop-articles-page-2.jpg" alt="Ordinateur : page 2 du catalogue, en tableau, catégories cliquables." loading="lazy"><figcaption>Ordinateur : page 2 du catalogue, en tableau, catégories cliquables.</figcaption></figure><figure class="shot"><img src="evidence/screenshots/02-phone-articles-page-2.png" alt="Téléphone : la même page 2, en cartes." loading="lazy"><figcaption>Téléphone : la même page 2, en cartes.</figcaption></figure></div>
+  tabs: fiches</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="app-result" aria-labelledby="app-result-tab" tabindex="0" hidden><dl class="facts"><dt>App</dt><dd>pwa-pagination</dd><dt>Onglets</dt><dd>fiches</dd></dl><p class="sources">preuves: replay.log · transform v1</p></div><div role="tabpanel" class="view-panel view-panel-screenshots" id="app-screenshots" aria-labelledby="app-screenshots-tab" tabindex="0" hidden><figure class="shot"><img src="evidence/screenshots/01-desktop-articles-page-2.jpg" alt="Ordinateur: page 2 du catalogue, en tableau, catégories cliquables (capture du 21 octobre 2026)." loading="lazy"><figcaption>Ordinateur: page 2 du catalogue, en tableau, catégories cliquables (capture du 21 octobre 2026).</figcaption></figure><figure class="shot"><img src="evidence/screenshots/02-phone-articles-page-2.png" alt="Téléphone: la même page 2, en cartes (capture du 21 octobre 2026)." loading="lazy"><figcaption>Téléphone: la même page 2, en cartes (capture du 21 octobre 2026).</figcaption></figure></div>
   </div>
 </section>
 <section class="step" id="step-verify" aria-labelledby="verify-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="verify-title">Pages de 50, sans doublon</h2>
-      <p>run/run.sh lit deux pages via /api/views/render, puis parcourt tout le catalogue par curseur.</p>
+      <p>Le runner lit deux pages par /api/views/render, puis parcourt tout le catalogue par curseur.</p><ul class="prose-list"><li>pages de 50</li><li>40 233 articles, sans doublon</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Deux pages disjointes</strong><p>Aucun article commun entre la page 1 et la page 2.</p></div></li><li><span class="n">2</span><div><strong>Parcours complet</strong><p>Chaque article du CSV revient une fois, une seule.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le catalogue entier passe par pages, sans perte ni doublon.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Vérifier"><button type="button" role="tab" id="verify-result-tab" data-view="result" aria-controls="verify-result" aria-selected="true" tabindex="0">Résultat</button></div>
-    <div role="tabpanel" class="view-panel view-panel-result" id="verify-result" aria-labelledby="verify-result-tab" tabindex="0"><dl class="facts"><dt>Lignes par page</dt><dd>50</dd><dt>Articles parcourus, chacun une fois</dt><dd>40233</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+    <div role="tabpanel" class="view-panel view-panel-result" id="verify-result" aria-labelledby="verify-result-tab" tabindex="0"><dl class="facts"><dt>Lignes par page</dt><dd>50</dd><dt>Articles parcourus, chacun une fois</dt><dd>40233</dd></dl><p class="sources">preuves: replay.log · transform v1</p></div>
   </div>
 </section>
-  <section class="limits"><h2>Limites</h2><ul><li>Curseur opaque ; pas de saut direct à la page n.</li><li>Données synthétiques.</li></ul></section>
+  <section class="limits"><h2>Limites</h2><ul><li>Curseur opaque; pas de saut direct à la page n.</li><li>Données synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Catalogue · fiches</p><h2>40 000 articles dans un téléphone.</h2><p class="brief-lead">Page par page.</p><p>Ni tout charger, ni perdre une ligne.</p><p class="brief-note">Catalogue synthétique</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Tout charger bloque l&#x27;écran.</h2><ul class="brief-list tone-cyan"><li>40 000 lignes ne tiennent pas dans un téléphone.</li><li>Une pagination naïve saute ou répète des lignes.</li><li>Les catégories sont dans un autre fichier.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Rien n&#x27;est modifié</p><h2>Deux exports CSV, tels quels.</h2><ul class="brief-list tone-green"><li>Deux entités, deux vues.</li><li>Une app réduite aux fiches.</li><li>Aucune application à développer.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>tabs: [fiches]</code></pre><h2>Une app réduite aux fiches.</h2><p>Le scénario complet tient en 150 lignes de déclaration.</p></section><section class="brief-slide"><p class="brief-kicker">Ce que voit l&#x27;utilisateur</p><h2>Des pages de 50.</h2><ul class="brief-list tone-green"><li>En tableau sur ordinateur.</li><li>En cartes sur téléphone.</li><li>Une catégorie se clique.</li></ul><p class="brief-note">Captures du 21 octobre 2026, valeurs vérifiées au rejeu du 3 novembre.</p></section><section class="brief-slide"><p class="brief-kicker">La preuve</p><h2>Tout le catalogue, sans doublon.</h2><ul class="brief-list tone-cyan"><li>Deux pages distinctes de 50 lignes.</li><li>Un curseur parcourt les 40 233 articles.</li><li>Rejeu du 3 novembre 2026.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>Pas de saut direct à la page n.</h2><ul class="brief-list tone-yellow"><li>Le curseur est opaque.</li><li>On avance ou on recule d&#x27;une page.</li><li>Données synthétiques.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue de bout en bout.</h2><p>CSV, entités, vues, app: chaque étape est publiée avec sa sortie.</p></section></article>
   <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
 </main>
 <script src="../assets/scenario.js" defer></script>
