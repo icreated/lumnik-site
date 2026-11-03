@@ -646,7 +646,7 @@
     },
     {
       "slug": "pwa-chat",
-      "title": "Questionner 40 000 articles en français et voir le SQL",
+      "title": "Questionner 40 000 articles avec ses mots et voir le SQL",
       "goal": "Laisser un utilisateur interroger le catalogue avec ses mots, sans apprendre les colonnes ni écrire de SQL.",
       "lede": "Deux exports CSV, une entité, une app réduite au chat. La question devient une requête en lecture seule.\n- 40 233 articles, chacun avec sa catégorie\n- «Combien d'articles dans la catégorie Pompes?»: 7 407\n- la réponse montre son SQL",
       "tags": {
