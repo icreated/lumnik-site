@@ -646,9 +646,9 @@
     },
     {
       "slug": "pwa-chat",
-      "title": "Questionner 40 000 articles, SQL à l'appui.",
-      "goal": null,
-      "lede": "Deux exports CSV, une entité, une app réduite au chat. La question devient une requête en lecture seule ; la réponse montre son SQL.",
+      "title": "Questionner 40 000 articles en français et voir le SQL",
+      "goal": "Laisser un utilisateur interroger le catalogue avec ses mots, sans apprendre les colonnes ni écrire de SQL.",
+      "lede": "Deux exports CSV, une entité, une app réduite au chat. La question devient une requête en lecture seule.\n- 40 233 articles, chacun avec sa catégorie\n- «Combien d'articles dans la catégorie Pompes?»: 7 407\n- la réponse montre son SQL",
       "tags": {
         "domain": [
           "Commerce",
@@ -661,14 +661,14 @@
         ]
       },
       "edition": "pro",
-      "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:eafd0ad70a2bf076779c7564601762a63957d9210e6aa0a341c973f15c26ee27"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:186d1f9f815871ffa1b6098e51c3362e21e4f4e47b24f0558432b25209f91e41"
     },
     {
       "slug": "pwa-pagination",
-      "title": "40 000 articles, parcourus page par page.",
-      "goal": null,
-      "lede": "Deux exports CSV, deux entités, deux vues liées, une app. Le hub sert le catalogue par pages de 50 ; la PWA n'en charge jamais plus.",
+      "title": "40 000 articles parcourus page par page dans la PWA",
+      "goal": "Parcourir tout un catalogue dans la PWA sans jamais charger plus de 50 lignes à la fois.",
+      "lede": "Deux exports CSV, deux entités, deux vues liées, une app. Le hub sert le catalogue par pages de 50.\n- 40 233 articles atteints, sans doublon\n- les catégories liées dans les deux sens\n- l'édition Open suffit",
       "tags": {
         "domain": [
           "Commerce",
@@ -682,14 +682,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:3fef15276b19cf9e8983d01669de4656fcbbe4c9ba4598f0564b36af994beb34"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:ef1b020d72b35293b42d2eef88025240bfc8e6fe0aa6241382c95978906ef666"
     },
     {
       "slug": "pwa-search",
-      "title": "Chercher dans 40 000 articles, facettes comprises.",
-      "goal": null,
-      "lede": "Deux exports CSV, une entité, un SearchIndex, une app réduite à la recherche. Le hub indexe les colonnes déclarées ; la PWA filtre par facette.",
+      "title": "Chercher dans 40 000 articles avec les facettes dans la PWA",
+      "goal": "Trouver un article par ses mots ou le début de sa référence, et affiner par catégorie, dans la PWA.",
+      "lede": "Deux exports CSV, une entité, un SearchIndex, une app réduite à la recherche.\n- «Pompes»: 7 407 articles, dont 6 761 actifs\n- «Pompe Badu»: 122 inactifs\n- le hub indexe les seules colonnes déclarées",
       "tags": {
         "domain": [
           "Commerce",
@@ -703,8 +703,8 @@
         ]
       },
       "edition": "pro",
-      "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:66a82f5e2a774e0fec0a1f34cd31ae7a093cecf939403942db2c932df6afefab"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:7e92771ee39eb576c7c50b0dc3706b6f1b652198b33fd2334a94c9e6a564eecd"
     },
     {
       "slug": "quantity-script-one-in-500",

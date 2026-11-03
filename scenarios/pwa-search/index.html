@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chercher dans 40 000 articles, facettes comprises. — lumnik</title>
-<meta name="description" content="Deux exports CSV, une entité, un SearchIndex, une app réduite à la recherche. Le hub indexe les colonnes déclarées ; la PWA filtre par facette.">
+<title>Chercher dans 40 000 articles avec les facettes dans la PWA — lumnik</title>
+<meta name="description" content="Trouver un article par ses mots ou le début de sa référence, et affiner par catégorie, dans la PWA. Deux exports CSV, une entité, un SearchIndex, une app réduite à la recherche. «Pompes»: 7 407 articles, dont 6 761 actifs. «Pompe Badu»: 122 inactifs. Le hub indexe les seules colonnes déclarées.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -18,16 +18,22 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/pwa-search/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>Chercher dans 40 000 articles, facettes comprises.</h1>
-    <p class="lede">Deux exports CSV, une entité, un SearchIndex, une app réduite à la recherche. Le hub indexe les colonnes déclarées ; la PWA filtre par facette.</p>
+    <h1>Chercher dans 40 000 articles avec les facettes dans la PWA</h1>
+    <p class="goal"><strong>Objectif</strong> Trouver un article par ses mots ou le début de sa référence, et affiner par catégorie, dans la PWA.</p>
+    <p class="lede">Deux exports CSV, une entité, un SearchIndex, une app réduite à la recherche.</p><ul class="lede-list"><li>«Pompes»: 7 407 articles, dont 6 761 actifs</li><li>«Pompe Badu»: 122 inactifs</li><li>le hub indexe les seules colonnes déclarées</li></ul>
     <ul class="tags"><li class="tag edition edition-pro"><a href="https://docs.lumnik.io/editions/">lumnik Pro</a></li><li class="tag">Commerce</li><li class="tag">Catalogue</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li><li class="tag kind">SearchIndex</li><li class="tag kind">App</li></ul>
   </section>
+  <div role="tablist" class="page-tabs" aria-label="Chercher dans 40 000 articles avec les facettes dans la PWA">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
   <nav class="steps-nav" aria-label="Étapes"><a href="#step-import" data-step="import" aria-current="step"><span class="num">1 · Importer</span><span class="sub">Deux CSV</span></a><a href="#step-model" data-step="model"><span class="num">2 · Modéliser</span><span class="sub">Une entité</span></a><a href="#step-index" data-step="index"><span class="num">3 · Indexer</span><span class="sub">Le SearchIndex</span></a><a href="#step-app" data-step="app"><span class="num">4 · Publier</span><span class="sub">L&#x27;app</span></a><a href="#step-query" data-step="query"><span class="num">5 · Chercher</span><span class="sub">La preuve</span></a></nav>
   <section class="step" id="step-import" aria-labelledby="import-title">
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="import-title">Un Connector par export</h2>
-      <p>Articles et catégories, chacun son fichier ; même périmètre métier pwa-search.</p>
+      <p>Deux connecteurs CSV, un par export, dans le même périmètre pwa-search.</p><ul class="prose-list"><li>les articles</li><li>les catégories</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Ordre</strong><p>Catégories d&#x27;abord, articles ensuite.</p></div></li><li><span class="n">2</span><div><strong>Périmètre</strong><p>Associe les données au périmètre métier pwa-search.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Les deux exports sont lus tels quels.</p></div>
@@ -38,34 +44,34 @@
 <span class="out">✓ 10-products.yaml — valid</span>
 
 <span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-products.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;pwa-search-products&quot;,&quot;connectorId&quot;:&quot;9769c687-edba-4bc3-9315-cc179cd55dc3&quot;,&quot;endpointsApplied&quot;:1}</span>
+<span class="out">Applied connector &quot;pwa-search-products&quot; — 1 endpoint</span>
 
 <span class="cmd"><span class="prompt">$</span> lm validate -f manifests/15-product-categories.yaml</span>
 <span class="out">✓ 15-product-categories.yaml — valid</span>
 
 <span class="cmd"><span class="prompt">$</span> lm apply -f manifests/15-product-categories.yaml</span>
-<span class="out">{&quot;name&quot;:&quot;pwa-search-product-categories&quot;,&quot;connectorId&quot;:&quot;967c0e91-de4d-491a-b14c-583b95e6aa34&quot;,&quot;endpointsApplied&quot;:1}</span>
+<span class="out">Applied connector &quot;pwa-search-product-categories&quot; — 1 endpoint</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run pwa-search-product-categories</span>
-<span class="out">run scheduled: 44cd73ab-8623-4b30-91cf-775b87ad6b37</span>
+<span class="out">run scheduled: cedfc04a-d40f-4d80-96a8-be7d47b70040</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 44cd73ab-8623-4b30-91cf-775b87ad6b37</span>
-<span class="out">ID        CONNECTOR                      ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED
-44cd73ab  pwa-search-product-categories  default   Completed  63  63   0        0             2026-10-21 15:48  2026-10-21 15:48</span>
+<span class="cmd"><span class="prompt">$</span> lm run get cedfc04a-d40f-4d80-96a8-be7d47b70040</span>
+<span class="out">ID        CONNECTOR                      ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+cedfc04a  pwa-search-product-categories  default   Completed  63  63   0        0             2026-11-03 21:56  2026-11-03 21:56  no</span>
 
 <span class="cmd"><span class="prompt">$</span> lm connector run pwa-search-products</span>
-<span class="out">run scheduled: 5aae2d9e-a39c-494e-8035-dba5d4ffbd98</span>
+<span class="out">run scheduled: ff6fc729-7dcc-4d43-89ee-27fdb9667298</span>
 
-<span class="cmd"><span class="prompt">$</span> lm run get 5aae2d9e-a39c-494e-8035-dba5d4ffbd98</span>
-<span class="out">ID        CONNECTOR            ENDPOINT  STATUS     IN     OUT    SKIPPED  DEAD-LETTERS  STARTED           ENDED
-5aae2d9e  pwa-search-products  default   Completed  40233  40233  0        0             2026-10-21 15:48  2026-10-21 15:48</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="import-result" aria-labelledby="import-result-tab" tabindex="0" hidden><dl class="facts"><dt>Connectors appliqués</dt><dd>pwa-search-products, pwa-search-product-categories</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+<span class="cmd"><span class="prompt">$</span> lm run get ff6fc729-7dcc-4d43-89ee-27fdb9667298</span>
+<span class="out">ID        CONNECTOR            ENDPOINT  STATUS     IN     OUT    SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+ff6fc729  pwa-search-products  default   Completed  40233  40233  0        0             2026-11-03 21:56  2026-11-03 21:56  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="import-result" aria-labelledby="import-result-tab" tabindex="0" hidden><dl class="facts"><dt>Connectors appliqués</dt><dd>pwa-search-products, pwa-search-product-categories</dd></dl><p class="sources">preuves: replay.log · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-model" aria-labelledby="model-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="model-title">Joindre la catégorie à l&#x27;article</h2>
-      <p>PwaSearchProduct porte le nom et la description de sa catégorie ; une catégorie n&#x27;est jamais un résultat à part.</p>
+      <p>PwaSearchProduct porte le nom et la description de sa catégorie.</p><ul class="prose-list"><li>une catégorie n&#x27;est jamais un résultat à part</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Clé</strong><p>product_id identifie chaque document.</p></div></li><li><span class="n">2</span><div><strong>Jointure</strong><p>La catégorie enrichit l&#x27;article.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Chaque article sait le nom de sa catégorie.</p></div>
@@ -73,14 +79,14 @@
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Modéliser"><button type="button" role="tab" id="model-manifest-tab" data-view="manifest" aria-controls="model-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="model-commands-tab" data-view="commands" aria-controls="model-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="model-result-tab" data-view="result" aria-controls="model-result" aria-selected="false" tabindex="-1">Résultat</button></div>
     <div role="tabpanel" class="view-panel view-panel-manifest" id="model-manifest" aria-labelledby="model-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-product.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: PwaSearchProduct</span><span class="line"><span class="key">label</span>: Article du catalogue</span><span class="line"><span class="key">description</span>: <span class="str">&quot;Articles du catalogue, enrichis avec leur catégorie. Une ligne représente un article.&quot;</span></span><span class="line hl"><span class="key">match</span>: [product_id]</span><span class="line"><span class="key">scopes</span>: [pwa-search]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">product_id</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Identifiant de l&#x27;article&quot;</span></span><span class="line">  <span class="key">category_id</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Identifiant de la catégorie&quot;</span></span><span class="line">  <span class="key">category_name</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Catégorie&quot;</span></span><span class="line">  <span class="key">category_description</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Description de la catégorie&quot;</span></span><span class="line">  <span class="key">reference</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Référence&quot;</span></span><span class="line">  <span class="key">description</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Description&quot;</span></span><span class="line">  <span class="key">active</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Actif&quot;</span></span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_pwa_search_products</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">m_product_id</span>: product_id</span><span class="line">      <span class="key">m_product_category_id</span>: category_id</span><span class="line">      <span class="key">name</span>: reference</span><span class="line">      <span class="key">description</span>: description</span><span class="line">      <span class="key">isactive</span>: active</span><span class="line hl"><span class="key">joins</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_pwa_search_product_categories</span><span class="line">    <span class="key">from</span>: category_id</span><span class="line">    <span class="key">to</span>: m_product_category_id</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">name</span>: category_name</span><span class="line">      <span class="key">description</span>: category_description</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="model-commands" aria-labelledby="model-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f manifests/20-product.yaml</span>
-<span class="out">Applied entity &quot;PwaSearchProduct&quot; → connector.&quot;v_pwasearchproduct&quot;</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="model-result" aria-labelledby="model-result-tab" tabindex="0" hidden><dl class="facts"><dt>PwaSearchProduct</dt><dd>v_pwasearchproduct</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+<span class="out">Applied entity &quot;PwaSearchProduct&quot; → connector.&quot;v_pwasearchproduct&quot;</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="model-result" aria-labelledby="model-result-tab" tabindex="0" hidden><dl class="facts"><dt>PwaSearchProduct</dt><dd>v_pwasearchproduct</dd></dl><p class="sources">preuves: replay.log · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-index" aria-labelledby="index-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="index-title">Déclarer ce qui se cherche</h2>
-      <p>Le SearchIndex liste les colonnes indexées et leur mode : préfixe pour la référence, texte français pour la description et la catégorie.</p>
+      <p>Le SearchIndex liste les colonnes indexées et leur mode.</p><ul class="prose-list"><li>préfixe pour la référence</li><li>texte français pour la description et la catégorie</li><li>40 233 documents, prêts</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Facettes</strong><p>category_name et active.</p></div></li><li><span class="n">2</span><div><strong>Lien ERP</strong><p>La référence ouvre la fiche dans l&#x27;ERP d&#x27;exemple.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Tout le catalogue est indexé, prêt à chercher.</p></div>
@@ -93,17 +99,17 @@
 <span class="cmd"><span class="prompt">$</span> lm search rebuild pwa-search-products --wait --timeout 10m</span>
 <span class="out">Name              pwa-search-products
 Status            ready
-Live generation   67
+Live generation   87
 Documents         40233
-Lag               1s
-Last rebuild      d6f364a5-3016-48e7-aba1-5769b2e0baff (ready)</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="index-result" aria-labelledby="index-result-tab" tabindex="0" hidden><dl class="facts"><dt>SearchIndex</dt><dd>pwa-search-products</dd><dt>État</dt><dd>ready</dd><dt>Documents indexés</dt><dd>40233</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+Lag               0s
+Last rebuild      f25745f9-ac6f-47ec-98ab-1d02d2f1cda7 (ready)</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="index-result" aria-labelledby="index-result-tab" tabindex="0" hidden><dl class="facts"><dt>SearchIndex</dt><dd>pwa-search-products</dd><dt>État</dt><dd>ready</dd><dt>Documents indexés</dt><dd>40233</dd></dl><p class="sources">preuves: replay.log · transform v1</p></div>
   </div>
 </section>
 <section class="step" id="step-app" aria-labelledby="app-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="app-title">Une app réduite à la recherche</h2>
-      <p>spec.tabs ne garde que search. Édition Pro, avec un fournisseur Search ; la PWA cherche dans le périmètre de l&#x27;app.</p>
+      <p>spec.tabs ne garde que la recherche. Édition Pro, avec un fournisseur Search.</p><ul class="prose-list"><li>la PWA cherche dans le périmètre de l&#x27;app</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Ouvrir</strong><p>/app/?m=pwa-search</p></div></li><li><span class="n">2</span><div><strong>Filtrer</strong><p>Un clic sur une facette restreint les résultats.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Termes surlignés, facettes comptées, fraîcheur de l&#x27;index affichée.</p></div>
@@ -112,14 +118,14 @@ Last rebuild      d6f364a5-3016-48e7-aba1-5769b2e0baff (ready)</span></code></pr
     <div role="tablist" class="view-tabs" aria-label="Publier"><button type="button" role="tab" id="app-manifest-tab" data-view="manifest" aria-controls="app-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="app-commands-tab" data-view="commands" aria-controls="app-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="app-result-tab" data-view="result" aria-controls="app-result" aria-selected="false" tabindex="-1">Résultat</button><button type="button" role="tab" id="app-screenshots-tab" data-view="screenshots" aria-controls="app-screenshots" aria-selected="false" tabindex="-1">Captures</button></div>
     <div role="tabpanel" class="view-panel view-panel-manifest" id="app-manifest" aria-labelledby="app-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/40-pwa-search-app.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: App</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: pwa-search</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">title</span>: Catalogue produits</span><span class="line">  <span class="key">scope</span>: pwa-search</span><span class="line">  <span class="key">icon</span>: generic</span><span class="line">  <span class="key">theme</span>:</span><span class="line">    <span class="key">accentColor</span>: <span class="str">&quot;#4fd1a5&quot;</span></span><span class="line">    <span class="key">backgroundColor</span>: <span class="str">&quot;#f4f1ea&quot;</span></span><span class="line hl">  <span class="key">tabs</span>: [search]</span><span class="line">  <span class="key">default</span>: false</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="app-commands" aria-labelledby="app-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm app apply -f manifests/40-pwa-search-app.yaml</span>
 <span class="out">Applied app &quot;pwa-search&quot; → scope pwa-search
-  tabs: search</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="app-result" aria-labelledby="app-result-tab" tabindex="0" hidden><dl class="facts"><dt>App</dt><dd>pwa-search</dd><dt>Onglets</dt><dd>search</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div><div role="tabpanel" class="view-panel view-panel-screenshots" id="app-screenshots" aria-labelledby="app-screenshots-tab" tabindex="0" hidden><figure class="shot"><img src="evidence/screenshots/01-desktop-pompe-badu-facet-active-n.jpg" alt="Ordinateur : « Pompe Badu », facette Active = N, 122 articles." loading="lazy"><figcaption>Ordinateur : « Pompe Badu », facette Active = N, 122 articles.</figcaption></figure><figure class="shot"><img src="evidence/screenshots/02-phone-pompes-facet-category.png" alt="Téléphone : « Pompes », facette Pompes, 7407 articles." loading="lazy"><figcaption>Téléphone : « Pompes », facette Pompes, 7407 articles.</figcaption></figure></div>
+  tabs: search</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="app-result" aria-labelledby="app-result-tab" tabindex="0" hidden><dl class="facts"><dt>App</dt><dd>pwa-search</dd><dt>Onglets</dt><dd>search</dd></dl><p class="sources">preuves: replay.log · transform v1</p></div><div role="tabpanel" class="view-panel view-panel-screenshots" id="app-screenshots" aria-labelledby="app-screenshots-tab" tabindex="0" hidden><figure class="shot"><img src="evidence/screenshots/01-desktop-pompe-badu-facet-active-n.jpg" alt="Ordinateur: «Pompe Badu», facette Active = N, 122 articles (capture du 21 octobre 2026)." loading="lazy"><figcaption>Ordinateur: «Pompe Badu», facette Active = N, 122 articles (capture du 21 octobre 2026).</figcaption></figure><figure class="shot"><img src="evidence/screenshots/02-phone-pompes-facet-category.png" alt="Téléphone: «Pompes», facette Pompes, 7407 articles (capture du 21 octobre 2026)." loading="lazy"><figcaption>Téléphone: «Pompes», facette Pompes, 7407 articles (capture du 21 octobre 2026).</figcaption></figure></div>
   </div>
 </section>
 <section class="step" id="step-query" aria-labelledby="query-title" data-inactive>
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="query-title">Deux requêtes, leurs facettes</h2>
-      <p>run/run.sh interroge l&#x27;index par lm search query, avec et sans facette.</p>
+      <p>Le runner interroge l&#x27;index par lm search query, avec et sans facette.</p><ul class="prose-list"><li>«Pompes»: Pompes 7 407, actifs 6 761, inactifs 646</li><li>«Badu»: Pompes 1 286, actifs 1 164, inactifs 122</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Texte</strong><p>Pompe Badu trouve les pompes de la gamme.</p></div></li><li><span class="n">2</span><div><strong>Facette</strong><p>category_name=Pompes borne à une catégorie.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>La PWA et lm lisent le même index, aux mêmes comptes.</p></div>
@@ -138,8 +144,8 @@ facets:
 active          N (122)  Y (1164)
 category_name   Pompes (1286)
 
-5 hits shown · as of 2026-10-21 15:48
-more: lm search query &#x27;Pompe Badu&#x27; --entity PwaSearchProduct --limit 5 --cursor eyJzY29yZSI6MC4xNzU5NDcyNDg5MzU2OTk0Niwic2VhcmNoSW5kZXgiOiJwd2Etc2VhcmNoLXByb2R1Y3RzIiwiZG9jdW1lbnRJZCI6IjF8NzoxMDQxODYxIiwiZmluZ2VycHJpbnQiOiJzaGEyNTY6Yjg1YzgzOTlkYTQ2NDMzM2QwYTg0YWRlOTE1NWU1MzRjMTk3MTgwMWZjYTYxOWI5YmNhYTE0ODU0MDM1NmQ2MiIsImVsaWdpYmxlIjp7InB3YS1zZWFyY2gtcHJvZHVjdHMiOjY3fX0</span>
+5 hits shown · as of 2026-11-03 21:56
+more: lm search query &#x27;Pompe Badu&#x27; --entity PwaSearchProduct --limit 5 --cursor eyJzY29yZSI6MC4xNzU5NDcyNDg5MzU2OTk0Niwic2VhcmNoSW5kZXgiOiJwd2Etc2VhcmNoLXByb2R1Y3RzIiwiZG9jdW1lbnRJZCI6IjF8NzoxMDQxODYxIiwiZmluZ2VycHJpbnQiOiJzaGEyNTY6Yjg1YzgzOTlkYTQ2NDMzM2QwYTg0YWRlOTE1NWU1MzRjMTk3MTgwMWZjYTYxOWI5YmNhYTE0ODU0MDM1NmQ2MiIsImVsaWdpYmxlIjp7InB3YS1zZWFyY2gtcHJvZHVjdHMiOjg3fX0</span>
 
 <span class="cmd"><span class="prompt">$</span> lm search query Pompes --entity PwaSearchProduct --facet category_name=Pompes --limit 5</span>
 <span class="out">ENTITY            KEY                 SCORE  MATCH
@@ -153,11 +159,13 @@ facets:
 active          N (646)  Y (6761)
 category_name   Pompes (7407)
 
-5 hits shown · as of 2026-10-21 15:48
-more: lm search query Pompes --entity PwaSearchProduct --facet &#x27;category_name=Pompes&#x27; --limit 5 --cursor eyJzY29yZSI6MC4wODI3NDU2MzQwMTkzNzQ4NSwic2VhcmNoSW5kZXgiOiJwd2Etc2VhcmNoLXByb2R1Y3RzIiwiZG9jdW1lbnRJZCI6IjF8Njo3MjY3MTEiLCJmaW5nZXJwcmludCI6InNoYTI1NjozM2Q0ZTg2NjdjYzQ5YjU0YzA5ZDQzNjk2NGFkZWVmYjAwNmNmMGU0ZDkxN2QxMGQ0ZjljNjdhNWVhMTBhZTViIiwiZWxpZ2libGUiOnsicHdhLXNlYXJjaC1wcm9kdWN0cyI6Njd9fQ</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="query-result" aria-labelledby="query-result-tab" tabindex="0" hidden><dl class="facts"><dt>« Pompe Badu »</dt><dd>category_name=Pompes 1286 · active=Y 1164 · active=N 122</dd><dt>« Pompes », facette Pompes</dt><dd>category_name=Pompes 7407 · active=Y 6761 · active=N 646</dd></dl><p class="sources">preuves : replay.log · transform v1</p></div>
+5 hits shown · as of 2026-11-03 21:56
+more: lm search query Pompes --entity PwaSearchProduct --facet &#x27;category_name=Pompes&#x27; --limit 5 --cursor eyJzY29yZSI6MC4wODI3NDU2MzQwMTkzNzQ4NSwic2VhcmNoSW5kZXgiOiJwd2Etc2VhcmNoLXByb2R1Y3RzIiwiZG9jdW1lbnRJZCI6IjF8Njo3MjY3MTEiLCJmaW5nZXJwcmludCI6InNoYTI1NjozM2Q0ZTg2NjdjYzQ5YjU0YzA5ZDQzNjk2NGFkZWVmYjAwNmNmMGU0ZDkxN2QxMGQ0ZjljNjdhNWVhMTBhZTViIiwiZWxpZ2libGUiOnsicHdhLXNlYXJjaC1wcm9kdWN0cyI6ODd9fQ</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="query-result" aria-labelledby="query-result-tab" tabindex="0" hidden><dl class="facts"><dt>«Pompe Badu»</dt><dd>category_name=Pompes 1286 · active=Y 1164 · active=N 122</dd><dt>«Pompes», facette Pompes</dt><dd>category_name=Pompes 7407 · active=Y 6761 · active=N 646</dd></dl><p class="sources">preuves: replay.log · transform v1</p></div>
   </div>
 </section>
-  <section class="limits"><h2>Limites</h2><ul><li>Recherche par mots et préfixes ; pas de recherche sémantique.</li><li>Pas d&#x27;onglet Recherche sans fournisseur Search (édition Pro).</li><li>spec.tabs choisit la navigation ; les droits restent ceux du hub.</li><li>Données synthétiques.</li></ul></section>
+  <section class="limits"><h2>Limites</h2><ul><li>Recherche par mots et préfixes; pas de recherche sémantique.</li><li>Pas d&#x27;onglet Recherche sans fournisseur Search (édition Pro).</li><li>spec.tabs choisit la navigation; les droits restent ceux du hub.</li><li>Données synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Catalogue · recherche</p><h2>Un vendeur cherche une pompe.</h2><p class="brief-lead">Par un mot, ou le début d&#x27;une référence.</p><p>Puis il affine par catégorie ou par statut.</p><p class="brief-note">Catalogue synthétique</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Un filtre exact ne trouve pas un mot.</h2><ul class="brief-list tone-cyan"><li>La référence est longue.</li><li>La description est en français.</li><li>La catégorie est dans un autre fichier.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Rien n&#x27;est modifié</p><h2>Deux exports CSV, tels quels.</h2><ul class="brief-list tone-green"><li>Une entité joint la catégorie.</li><li>Un SearchIndex déclare ce qui se cherche.</li><li>Aucune application à développer.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>kind: SearchIndex</code></pre><h2>Les colonnes indexées et leur mode.</h2><p>Le scénario complet tient en 5 fichiers de déclaration, 96 lignes.</p></section><section class="brief-slide"><p class="brief-kicker">Ce que voit le vendeur</p><h2>«Pompes»: 7 407 articles.</h2><ul class="brief-list tone-green"><li>Facette catégorie: Pompes.</li><li>Facette statut: 6 761 actifs, 646 inactifs.</li><li>«Pompe Badu»: 1 286, dont 122 inactifs.</li></ul><p class="brief-note">Rejeu du 3 novembre 2026; captures du 21 octobre.</p></section><section class="brief-slide"><p class="brief-kicker">Qui voit quoi</p><h2>La recherche reste dans son périmètre.</h2><ul class="brief-list tone-cyan"><li>L&#x27;app cherche dans le scope pwa-search.</li><li>spec.tabs choisit la navigation.</li><li>Les droits restent ceux du hub.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>Des mots et des préfixes, pas du sens.</h2><ul class="brief-list tone-yellow"><li>Pas de recherche sémantique.</li><li>Il faut un fournisseur Search: édition Pro.</li><li>Données synthétiques.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue de bout en bout.</h2><p>CSV, entité, index, app: chaque étape est publiée avec sa sortie.</p></section></article>
   <section class="try"><p>Ce scénario demande lumnik Pro.</p><a class="try-button" href="../../offre.html">Voir l&#x27;offre →</a></section>
 </main>
 <script src="../assets/scenario.js" defer></script>
