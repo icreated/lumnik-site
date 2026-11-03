@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WinDev: l&#x27;export des clients avec des dates et une case Actif — lumnik</title>
+<meta name="description" content="Lire le fichier clients qu&#x27;une application WinDev exporte, et en faire des colonnes qu&#x27;on peut interroger. Une application WinDev exporte ses clients avec HExportCSV. Le fichier est reconstitué d&#x27;après la documentation de PC SOFT. Lu tel quel: six clients, mais tout en texte, dates 20190312, Actif 0 ou 1; Trois transformers: les dates en date, l&#x27;encours en nombre, Actif en vrai booléen; Une question en SQL: les clients actifs sans achat depuis octobre.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/windev-hfsql-export/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/windev-hfsql-export/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>WinDev: l&#x27;export des clients avec des dates et une case Actif</h1>
+    <p class="goal"><strong>Objectif</strong> Lire le fichier clients qu&#x27;une application WinDev exporte, et en faire des colonnes qu&#x27;on peut interroger.</p>
+    <p class="lede">Une application WinDev exporte ses clients avec HExportCSV. Le fichier est reconstitué d&#x27;après la documentation de PC SOFT.</p><ul class="lede-list"><li>lu tel quel: six clients, mais tout en texte, dates 20190312, Actif 0 ou 1;</li><li>trois transformers: les dates en date, l&#x27;encours en nombre, Actif en vrai booléen;</li><li>une question en SQL: les clients actifs sans achat depuis octobre.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Clients</li><li class="tag">WinDev</li><li class="tag kind">Connector</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="WinDev: l&#x27;export des clients, avec de vraies dates et une vraie case Actif.">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · Exporter</span><span class="sub">Le fichier</span></a><a href="#step-raw" data-step="raw"><span class="num">2 · Lire</span><span class="sub">Tel quel</span></a><a href="#step-typed" data-step="typed"><span class="num">3 · Typer</span><span class="sub">Trois transformers</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">Client.csv, tel que HExportCSV l&#x27;écrit</h2>
+      <p>Ce que dit la documentation de PC SOFT: une virgule entre les valeurs, et les noms des rubriques en première ligne. Ce qu&#x27;une application WinDev écrit couramment, sans que la doc le dise: Windows-1252, des dates AAAAMMJJ, des cases 0 ou 1.</p><ul class="prose-list"><li>6 clients, des accents: Évreux, Bœuf</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Un fichier reconstitué</strong><p>WinDev ne tourne que sous Windows, sous licence: ce fichier suit sa documentation, il n&#x27;est pas produit par lui.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>On part de ce que l&#x27;application sait déjà faire: exporter.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Exporter"><button type="button" role="tab" id="lab-source-tab" data-view="source" aria-controls="lab-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="lab-source" aria-labelledby="lab-source-tab" tabindex="0"><figure class="source"><figcaption>Client-utf8.csv</figcaption><pre class="code">IDClient,NomClient,Ville,DateCreation,DernierAchat,Actif,EncoursAutorise
+1,Établissements Dufour,Évreux,20190312,20261028,1,15000.00
+2,Boulangerie Lefèvre,Saint-Étienne,20200605,20261102,1,2500.50
+3,Garage Mécanique Nord,Lille,20151120,,0,0.00
+4,Câblerie de l&#x27;Est,Besançon,20230217,20261015,1,48000.00
+5,Menuiserie Bœuf &amp; Fils,Orléans,20180901,20250630,1,7200.75
+6,Épicerie Côté Mer,La Rochelle,20210414,20261030,0,1200.00</pre></figure></div><div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0" hidden><dl class="facts"><dt>bytes</dt><dd>line 2 starts 312cc9 — &quot;1&quot;, the comma, then É in one byte: Windows-1252</dd><dt>first line</dt><dd>IDClient,NomClient,Ville,DateCreation,DernierAchat,Actif,EncoursAutorise</dd></dl><p class="sources">preuves: replay.log, file.txt, Client.utf8.csv, types-raw.txt, rows-raw.txt, types-typed.txt, question.sql, answer.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-raw" aria-labelledby="raw-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="raw-title">Six clients, sept colonnes de texte</h2>
+      <p>Un connecteur csv-file, sans rien déclarer. L&#x27;encodage est reconnu, les accents sont justes. Mais chaque colonne est du texte.</p><ul class="prose-list"><li>DateCreation: 20190312</li><li>Actif: 0 ou 1</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Rien n&#x27;est perdu</strong><p>Les six clients sont là. Mais une date en texte ne se compare pas, et Actif n&#x27;est pas un oui ou un non.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Lire un fichier ne suffit pas: il faut lui rendre ses types.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="raw-manifest-tab" data-view="manifest" aria-controls="raw-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="raw-commands-tab" data-view="commands" aria-controls="raw-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="raw-result-tab" data-view="result" aria-controls="raw-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="raw-manifest" aria-labelledby="raw-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-clients-raw.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-windev-raw-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [sales-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/windev-hfsql-export/a/Client.csv   <span class="comment"># HExportCSV(Client, …, hExpCreation)</span></span><span class="line">  <span class="key">after_process</span>: none</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="raw-commands" aria-labelledby="raw-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-clients-raw.yaml</span>
+<span class="out">Applied connector &quot;scenario-windev-raw-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-windev-raw-a</span>
+<span class="out">run scheduled: 43d2fe61-5749-40cc-a3cb-039940c8d3f8</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 43d2fe61-5749-40cc-a3cb-039940c8d3f8</span>
+<span class="out">ID        CONNECTOR              ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+43d2fe61  scenario-windev-raw-a  default   Completed  6   6    0        0             2026-11-03 10:24  2026-11-03 10:24  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="raw-result" aria-labelledby="raw-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-windev-raw-a</dt><dd>Completed · IN 6 · OUT 6</dd><dt>IDClient</dt><dd>text</dd><dt>NomClient</dt><dd>text</dd><dt>Ville</dt><dd>text</dd><dt>DateCreation</dt><dd>text</dd><dt>DernierAchat</dt><dd>text</dd><dt>Actif</dt><dd>text</dd><dt>EncoursAutorise</dt><dd>text</dd><dt>row</dt><dd>Établissements Dufour | 20190312 | 1</dd><dt>row</dt><dd>Boulangerie Lefèvre | 20200605 | 1</dd><dt>row</dt><dd>Garage Mécanique Nord | 20151120 | 0</dd></dl><p class="sources">preuves: replay.log, file.txt, Client.utf8.csv, types-raw.txt, rows-raw.txt, types-typed.txt, question.sql, answer.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-typed" aria-labelledby="typed-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="typed-title">Des dates, un montant, un vrai booléen</h2>
+      <p>Le même fichier, un second connecteur: parse-date avec yyyyMMdd, parse-number, parse-boolean (#1760). Les colonnes ont leur type à la création de la table.</p><ul class="prose-list"><li>cree_le, dernier_achat: date</li><li>encours_autorise: numeric</li><li>actif: boolean</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>La question</strong><p>Les clients actifs sans achat depuis octobre: WHERE actif AND dernier_achat &lt; DATE &#x27;2026-10-01&#x27;.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un export WinDev devient une table qu&#x27;on interroge.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Typer"><button type="button" role="tab" id="typed-manifest-tab" data-view="manifest" aria-controls="typed-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="typed-commands-tab" data-view="commands" aria-controls="typed-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="typed-result-tab" data-view="result" aria-controls="typed-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="typed-manifest" aria-labelledby="typed-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-clients-typed.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-windev-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [sales-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/windev-hfsql-export/a/Client.csv   <span class="comment"># the same export</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">row</span>:</span><span class="line">      - map-columns:</span><span class="line">          <span class="key">rename</span>: { IDClient: id_client, NomClient: nom, Ville: ville, DateCreation: cree_le,</span><span class="line">                    <span class="key">DernierAchat</span>: dernier_achat, Actif: actif, EncoursAutorise: encours_autorise }</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      - parse-number: { column: id_client, integer: true }</span><span class="line hl">      - parse-date: { column: cree_le, formats: [yyyyMMdd] }          <span class="comment"># HFSQL writes a date AAAAMMJJ</span></span><span class="line hl">      - parse-date: { column: dernier_achat, formats: [yyyyMMdd] }</span><span class="line">      - parse-number: { column: encours_autorise, decimal-separator: <span class="str">&quot;.&quot;</span> }</span><span class="line hl">      - parse-boolean: { column: actif }                              <span class="comment"># 0 / 1</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="typed-commands" aria-labelledby="typed-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 20-clients-typed.yaml</span>
+<span class="out">Applied connector &quot;scenario-windev-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-windev-a</span>
+<span class="out">run scheduled: e2dac028-603b-43b4-9cc1-ce24eca48b57</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get e2dac028-603b-43b4-9cc1-ce24eca48b57</span>
+<span class="out">ID        CONNECTOR          ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+e2dac028  scenario-windev-a  default   Completed  6   6    0        0             2026-11-03 10:24  2026-11-03 10:24  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="typed-result" aria-labelledby="typed-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-windev-a</dt><dd>Completed · IN 6 · OUT 6</dd><dt>id_client</dt><dd>bigint</dd><dt>nom</dt><dd>text</dd><dt>ville</dt><dd>text</dd><dt>cree_le</dt><dd>date</dd><dt>dernier_achat</dt><dd>date</dd><dt>actif</dt><dd>boolean</dd><dt>encours_autorise</dt><dd>numeric</dd><dt>question</dt><dd>active clients, no purchase since 2026-10-01</dd><dt>answer</dt><dd>Menuiserie Bœuf &amp; Fils | Orléans | 2025-06-30</dd></dl><p class="sources">preuves: replay.log, file.txt, Client.utf8.csv, types-raw.txt, rows-raw.txt, types-typed.txt, question.sql, answer.txt · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>L&#x27;export est reconstitué d&#x27;après la documentation de PC SOFT, pas produit par WinDev.</li><li>Windows-1252, les dates AAAAMMJJ et les cases 0/1 sont des conventions courantes que la doc ne décrit pas.</li><li>Six clients fictifs.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Clients · WinDev</p><h2>Les clients sont dans une application WinDev.</h2><p class="brief-lead">Il faut les relire, chaque nuit.</p><p class="brief-note">Un export HExportCSV, reconstitué</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Pas de base lisible de l&#x27;extérieur.</h2><ul class="brief-list tone-cyan"><li>HFSQL n&#x27;a pas de pilote JDBC.</li><li>L&#x27;application sait exporter ses fichiers.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>L&#x27;application reste telle quelle.</h2><ul class="brief-list tone-green"><li>Son export existant.</li><li>Aucun module, aucun accès à sa base.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Lu tel quel</p><h2>Six clients, mais tout en texte.</h2><ul class="brief-list tone-cyan"><li>Les dates: 20190312.</li><li>Actif: 0 ou 1.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>parse-date: { formats: [yyyyMMdd] }
+parse-boolean: { column: actif }</code></pre><h2>Trois transformers.</h2><ul class="brief-list tone-green"><li>Des dates, un montant, un booléen.</li><li>Un connecteur de 22 lignes.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La question</p><h2>Les clients actifs sans achat depuis octobre.</h2><ul class="brief-list tone-green"><li>Une requête SQL simple.</li><li>Un client sort: Menuiserie Bœuf &amp; Fils.</li></ul></section><section class="brief-slide"><p class="brief-kicker">La limite</p><h2>Un export reconstitué.</h2><ul class="brief-list tone-cyan"><li>D&#x27;après la doc de PC SOFT, pas produit par WinDev.</li><li>L&#x27;encodage et les dates sont des conventions courantes.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>

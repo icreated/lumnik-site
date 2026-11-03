@@ -1057,6 +1057,23 @@
       "evidenceDigest": "sha256:e808faa5e8409fe3ba7856e1ca3367048ba088ffb10e54e7fe2006eea1383d15"
     },
     {
+      "slug": "windev-hfsql-export",
+      "title": "WinDev: l'export des clients, avec de vraies dates et une vraie case Actif.",
+      "lede": "Une application WinDev exporte ses clients avec HExportCSV. Le fichier est reconstitué d'après la documentation de PC SOFT.\n- lu tel quel: six clients, mais tout en texte, dates 20190312, Actif 0 ou 1;\n- trois transformers: les dates en date, l'encours en nombre, Actif en vrai booléen;\n- une question en SQL: les clients actifs sans achat depuis octobre.",
+      "tags": {
+        "domain": [
+          "Clients",
+          "WinDev"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:42a5b078864cfa5acf89257cf531465aa49cba68fb9a358215b9e0e2d4abbdb8"
+    },
+    {
       "slug": "zombie-cmms",
       "title": "Le système zombie : trente ans d'ordres de travail, la machine éteinte, le hub répond toujours.",
       "lede": "Une GMAO remplacée depuis des années reste allumée pour quelques lectures de conformité par an : la licence, la machine, et la seule personne qui sait la redémarrer. lumnik la lit une dernière fois, archive ce qu'il a lu sous une seule empreinte, puis on éteint la machine. Le run suivant dit pourquoi il échoue, la pause arrête le planning, et le hub rend les mêmes octets qu'avant.",
