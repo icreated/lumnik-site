@@ -296,9 +296,9 @@
     },
     {
       "slug": "entity-resolution",
-      "title": "Un client, deux systèmes, aucun identifiant commun.",
-      "goal": null,
-      "lede": "Un ERP, un CRM, une Entity. L'email rapproche les fiches ; une boîte partagée ouvre une ambiguïté. lumnik ne tranche pas : un humain décide, et la décision tient au rejeu.",
+      "title": "Un client dans deux systèmes sans identifiant commun",
+      "goal": "Rapprocher les clients de l'ERP et les contacts du CRM, sans jamais fusionner au hasard.",
+      "lede": "Un ERP, un CRM, aucun identifiant commun. L'email rapproche les fiches. Une boîte partagée désigne deux clients.\n- le rapprochement par une règle écrite;\n- deux candidats: une ambiguïté, pas une fusion;\n- un humain tranche, et sa décision tient au rejeu.",
       "tags": {
         "domain": [
           "Données de référence",
@@ -310,14 +310,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:ffe4a8455e06d5f2794d63fd918164cb00ffe45f1d1502fc05dab4f67d68c10d"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:979eebfd6186bb50fbe01e98dead089ea24d8a8f79e6afe1f489de4453d63ddc"
     },
     {
       "slug": "entity-resolution-drift",
-      "title": "Un client établi ne change pas de fiche en silence.",
-      "goal": null,
-      "lede": "Hier, le contact CRM CC-42 et le compte ERP AC-700 désignaient Nova Pumps. Aujourd'hui, son email pointe vers Helios Valves. lumnik ne déplace pas le contact : il le rend ambigu, et un humain tranche.",
+      "title": "Un client établi ne change pas de fiche en silence",
+      "goal": "Voir quand un contact du CRM se met à désigner un autre client, au lieu de le déplacer en silence.",
+      "lede": "Hier, le contact CC-42 et le compte AC-700 désignaient Nova Pumps. Aujourd'hui, son email pointe vers Helios Valves.\n- le lien d'hier ne bouge pas tout seul;\n- le contact devient ambigu;\n- un humain tranche, et l'historique nomme l'auteur.",
       "tags": {
         "domain": [
           "Données de référence",
@@ -329,8 +329,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:783138b77fcaa6c26745e209244f7bc67c3cfce06ecfddd25fb63b25667ac76a"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:0781b34d56fc82b39fcb6e8a0c63443db40049849f5b97f45318a4d7956287ac"
     },
     {
       "slug": "excel-merged-cells",
@@ -1096,9 +1096,9 @@
     },
     {
       "slug": "two-systems-one-member",
-      "title": "Deux systèmes, un adhérent : chacun fait foi pour ses propres champs.",
-      "goal": null,
-      "lede": "Une mutuelle tient ses adhérents dans sa gestion des contrats et dans son portail. Fusionnés avec un seul ordre de sources, l'un des deux a toujours tort. lumnik laisse chaque colonne nommer sa source de référence, et garde chaque désaccord visible jusqu'à ce que la source le règle.",
+      "title": "Deux systèmes et un adhérent chacun fait foi pour ses champs",
+      "goal": "Montrer chaque champ d'un adhérent depuis le système qui fait foi pour lui, sans cacher un désaccord.",
+      "lede": "Une mutuelle tient ses adhérents dans sa gestion des contrats et dans son portail. Avec un seul ordre de sources, l'un des deux a toujours tort.\n- l'adresse vient du portail, la formule de la gestion;\n- chaque désaccord reste listé;\n- il sort de la liste quand la source le règle.",
       "tags": {
         "domain": [
           "Mutuelle",
@@ -1110,8 +1110,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:34a4686b33cd9ed78ae22b0d2939162db85fb4efea44d82dd7dabaccda305e66"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:34944829b0e1402c41c0fb2d50d06707aac4eb55a28391689fd52fe4a47fdabb"
     },
     {
       "slug": "two-tenants-one-hub",
