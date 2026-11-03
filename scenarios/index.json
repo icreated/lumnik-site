@@ -1021,9 +1021,9 @@
     },
     {
       "slug": "shipping-rule-changed",
-      "title": "La règle a changé au 1er janvier : chaque commande dit quelle version l'a calculée.",
-      "goal": null,
-      "lede": "Les frais de port sont calculés par un script Kotlin que fournit l'opérateur du hub : port offert dès 150,00 en décembre, dès 200,00 à partir de janvier. L'opérateur remplace le script. Des mois plus tard, un auditeur demande pourquoi une commande de 172,50 n'a pas payé de port en décembre, et en a payé en janvier.",
+      "title": "Chaque commande dit quelle version de la règle l'a calculée",
+      "goal": "Savoir, des mois plus tard, quelle règle de port a calculé chaque commande.",
+      "lede": "Le port est calculé par un script Kotlin que fournit l'opérateur du hub. En décembre, il est offert dès 150,00. Au 1er janvier, dès 200,00. L'opérateur remplace le script.\n- deux commandes de 172,50: port offert en décembre, payé en janvier;\n- chaque run nomme la version de la règle par son empreinte;\n- chaque commande nomme son run: on remonte de la commande à la règle avec lm.",
       "tags": {
         "domain": [
           "Ventes",
@@ -1035,8 +1035,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:4b95ff1e65a7bab3bb0e57522cc13c138b794ffc58849e66d227c8a355b5d1b2"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:7fc0f21d8e7f84d321693a17f42afc6b7071ee0b4a8688698fd9d507ef2738a4"
     },
     {
       "slug": "siebel-soap-desk",
