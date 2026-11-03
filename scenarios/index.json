@@ -391,9 +391,9 @@
     },
     {
       "slug": "graphql-insurance-bff",
-      "title": "Les listes d'un formulaire de sinistre, sans exposer le GraphQL du CRM.",
-      "goal": null,
-      "lede": "Le type et le sous-type de sinistre vivent dans un CRM qui parle GraphQL. lumnik l'ingère page par page, en fait une entité canonique, et un petit BFF sert au formulaire du JSON REST stable : le schéma du CRM ne devient jamais un contrat du navigateur.",
+      "title": "Les listes d'un formulaire de sinistre viennent du CRM sans exposer son GraphQL",
+      "goal": "Alimenter les listes d'un formulaire depuis un CRM GraphQL sans que le navigateur dépende du schéma du CRM.",
+      "lede": "Le type et le sous-type de sinistre vivent dans un CRM qui parle GraphQL. lumnik l'ingère page par page et en fait une entité canonique.\n- un petit BFF sert au formulaire du JSON REST stable\n- passer d'Automobile à Habitation remplace la liste\n- un type inconnu répond 404",
       "tags": {
         "domain": [
           "Assurance",
@@ -405,14 +405,14 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:c4e7cfc5eba9c8095b2da7e7ef871f8de55a2c3121d95d6830fb0313111ac3c7"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:81638f79c0711724f257732f97137d1f82ac49f579adc0b3e542755e2ce3593c"
     },
     {
       "slug": "import-export",
-      "title": "Le catalogue part chez le partenaire dans son format, pas dans le nôtre.",
-      "goal": null,
-      "lede": "Deux CSV d'un ERP, produits et catégories, sont joints dans le hub puis livrés sur S3 au format d'un partenaire : en-têtes français, point-virgule, virgule décimale, statuts recodés, référence interne masquée. Un reçu prouve les octets livrés.",
+      "title": "Le catalogue part chez le partenaire dans son format à lui",
+      "goal": "Livrer le catalogue produits à un partenaire dans le format qu'il impose, sans écrire de code de conversion.",
+      "lede": "Deux CSV d'un ERP, produits et catégories, sont joints dans le hub puis livrés sur S3 au format d'un partenaire.\n- en-têtes français, point-virgule, virgule décimale\n- statuts recodés, référence interne masquée\n- un reçu prouve les octets livrés",
       "tags": {
         "domain": [
           "Catalogue",
@@ -425,8 +425,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:19279255a1f737e09bb4a5169bc241bba26a6a47c5b0f10017acd3ed6310324c"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:400faba3dd0f1e5917b581ab68329cb495867651a8e3e0564af130e8f8eae0e5"
     },
     {
       "slug": "invoices-dead-letters",
@@ -508,9 +508,9 @@
     },
     {
       "slug": "legacy-sales-grafana",
-      "title": "Un ERP figé alimente un vrai tableau Grafana, sans connecteur de plus.",
-      "goal": null,
-      "lede": "L'ERP exporte ses ventes et son catalogue en CSV. lumnik les joint, Grafana lit l'entité par un compte PostgreSQL en lecture seule, borné à son tenant. Lundi : 10 450 €. Mardi, l'export change : 14 200 €, et la vente modifiée n'apparaît qu'une fois.",
+      "title": "Un ERP figé alimente un vrai tableau Grafana",
+      "goal": "Donner à la direction un tableau de ventes à jour à partir des exports d'un ERP qu'on ne touche plus.",
+      "lede": "L'ERP exporte ses ventes et son catalogue en CSV. lumnik les joint, et Grafana lit l'entité par un compte PostgreSQL en lecture seule, borné à son tenant.\n- lundi: 10 450 €\n- mardi, l'export change: 14 200 €\n- la vente modifiée n'apparaît qu'une fois",
       "tags": {
         "domain": [
           "Ventes",
@@ -522,8 +522,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:c8f311c0fb15458e813e3953b2f5e5ccbcf37311ffc8541d21e8c70a2e594146"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:8e656db00ebb0aca2931ed304badf23420b48475f36260614a93aa9e561b8677"
     },
     {
       "slug": "marketplace-order-items",
@@ -1152,9 +1152,9 @@
     },
     {
       "slug": "zombie-cmms",
-      "title": "Le système zombie : trente ans d'ordres de travail, la machine éteinte, le hub répond toujours.",
-      "goal": null,
-      "lede": "Une GMAO remplacée depuis des années reste allumée pour quelques lectures de conformité par an : la licence, la machine, et la seule personne qui sait la redémarrer. lumnik la lit une dernière fois, archive ce qu'il a lu sous une seule empreinte, puis on éteint la machine. Le run suivant dit pourquoi il échoue, la pause arrête le planning, et le hub rend les mêmes octets qu'avant.",
+      "title": "La GMAO est éteinte et le hub rend toujours les mêmes octets",
+      "goal": "Éteindre une GMAO remplacée sans perdre ses trente ans d'ordres de travail ni les lectures de conformité.",
+      "lede": "Une GMAO remplacée reste allumée pour quelques lectures de conformité par an. lumnik la lit une dernière fois, archive ce qu'il a lu, puis on éteint la machine.\n- 3 600 ordres lus par le planning habituel\n- une archive S3 sous une seule empreinte\n- après l'extinction: la même ligne, les mêmes octets",
       "tags": {
         "domain": [
           "Maintenance",
@@ -1167,8 +1167,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:b2f4e260daf5ac892a89a3e7c309a3fb8dcff3479cd3ab6b9537ae1a4f577b95"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:f1774f6bbca1bdcba0052954690508c806b9789e7bd67c0bf712d3193398bf38"
     }
   ]
 }
