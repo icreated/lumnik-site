@@ -334,9 +334,9 @@
     },
     {
       "slug": "excel-merged-cells",
-      "title": "Un export Excel aux cellules fusionnées : chaque ligne avec sa région et son client.",
-      "goal": null,
-      "lede": "Les ventes envoient chaque mois un rapport Excel : un groupe par client, la région et le client dans des cellules fusionnées, un sous-total sous chaque groupe. Enregistrée en CSV, une cellule fusionnée ne garde sa valeur que sur la première ligne du groupe ; les suivantes sont vides. Les ventes veulent chaque ligne avec sa région et son client.",
+      "title": "Chaque ligne de l'export Excel retrouve sa région et son client",
+      "goal": "Lire un rapport Excel aux cellules fusionnées comme une table, une ligne par vente.",
+      "lede": "Les ventes envoient chaque mois un rapport Excel. Un groupe par client, la région et le client dans des cellules fusionnées, un sous-total sous chaque groupe. En CSV, une cellule fusionnée ne garde sa valeur que sur la première ligne.\n- les 15 sous-totaux écartés et comptés;\n- chaque ligne reçoit la région et le client de son groupe;\n- rien ne passe d'un fichier à l'autre.",
       "tags": {
         "domain": [
           "Ventes",
@@ -348,8 +348,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-24",
-      "evidenceDigest": "sha256:9515b1197282ecae8ac5fa281f972d4d5b45b212249b9472452b4421a770da36"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:69baebe77cc02e0641159af568d6cb3897f3c3e2f41cd1c345260e8603f55a03"
     },
     {
       "slug": "export-that-lies",
@@ -527,9 +527,9 @@
     },
     {
       "slug": "marketplace-order-items",
-      "title": "Les commandes d'une marketplace, une ligne par article à préparer : modèle, couleur, taille.",
-      "goal": null,
-      "lede": "L'export de la marketplace donne une ligne par commande, les articles serrés dans une cellule, et une référence qui serre à son tour modèle, couleur et taille. La logistique veut une ligne par article, pour compter ce qu'il faut sortir du stock. Le manifeste découpe la commande, puis la référence, et refuse un fichier dont la colonne a changé de nom.",
+      "title": "Une ligne par article à préparer avec modèle couleur et taille",
+      "goal": "Sortir de l'export d'une marketplace une ligne par article, pour préparer le stock.",
+      "lede": "L'export de la marketplace donne une ligne par commande. Les articles sont serrés dans une cellule, et chaque référence serre modèle, couleur et taille.\n- une ligne par article, même quand deux sont identiques;\n- la référence coupée en modèle, couleur et taille;\n- un fichier dont la colonne a changé de nom est refusé.",
       "tags": {
         "domain": [
           "Logistique",
@@ -541,8 +541,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:0c5b83354986a2a80be058fc89dbcfde39ab0775efbfa7b401a72e9317c2bdf5"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:69ef587c0021ffa045f4e926ee84334d73dd1ec689ec4ea45b27d1b1ad66f639"
     },
     {
       "slug": "one-app-per-metier",
@@ -1077,9 +1077,9 @@
     },
     {
       "slug": "supplier-master-edi",
-      "title": "Le fichier fournisseurs envoyé à l'EDI : ASCII, majuscules, 35 caractères, un identifiant stable.",
-      "goal": null,
-      "lede": "Les achats alimentent une plateforme EDI qui impose des noms en ASCII, en majuscules, de 35 caractères au plus, et un identifiant par fournisseur. L'export de l'ERP a des accents, de longues raisons sociales, des fournisseurs inactifs, et une colonne d'identifiant qui contient N/A, 0 ou rien. La contrainte de l'EDI est déclarée une fois dans le manifeste.",
+      "title": "Le fichier fournisseurs part à l'EDI en ASCII avec un identifiant stable",
+      "goal": "Envoyer à l'EDI des fournisseurs au format qu'il impose, avec un identifiant qui ne change pas.",
+      "lede": "La plateforme EDI des achats impose des noms en ASCII, en majuscules, de 35 caractères au plus, et un identifiant par fournisseur. L'export de l'ERP a des accents, de longues raisons sociales, des inactifs, et des identifiants N/A, 0 ou vides.\n- les noms mis au format de l'EDI;\n- N/A et 0 vidés et comptés, un identifiant manquant dérivé du code;\n- le lendemain, les mêmes identifiants.",
       "tags": {
         "domain": [
           "Achats",
@@ -1091,8 +1091,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:374c812a51ae0a399c6b06828002a7669b031b381cb10eaf03b472ac84e700a0"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:da72848c7a8284282d09de7dff01b18683d12ec376bf6ef77aa57f80a195948a"
     },
     {
       "slug": "two-systems-one-member",
