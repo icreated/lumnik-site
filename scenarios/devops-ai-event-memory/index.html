@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>k8s a oublié, lumnik se souvient: qui a crashé cette nuit? — lumnik</title>
+<title>k8s a oublié ses events et lumnik sait encore qui a crashé cette nuit — lumnik</title>
 <meta name="description" content="Demander quels déploiements ont crashé en boucle, après que Kubernetes a effacé leurs events, et recevoir la liste que kubectl donnait pendant l&#x27;incident. Kubernetes garde ses events une heure. Un déploiement réparé à l&#x27;aube n&#x27;a plus d&#x27;histoire le matin: Un nouveau pod, Running, 0 redémarrage; Plus aucun event Warning. lumnik lit les events pendant qu&#x27;ils existent et les garde; Ask répond encore quand kubectl ne sait plus.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
@@ -18,12 +18,12 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/devops-ai-event-memory/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>k8s a oublié, lumnik se souvient: qui a crashé cette nuit?</h1>
+    <h1>k8s a oublié ses events et lumnik sait encore qui a crashé cette nuit</h1>
     <p class="goal"><strong>Objectif</strong> Demander quels déploiements ont crashé en boucle, après que Kubernetes a effacé leurs events, et recevoir la liste que kubectl donnait pendant l&#x27;incident.</p>
     <p class="lede">Kubernetes garde ses events une heure. Un déploiement réparé à l&#x27;aube n&#x27;a plus d&#x27;histoire le matin:</p><ul class="lede-list"><li>un nouveau pod, Running, 0 redémarrage;</li><li>plus aucun event Warning.</li></ul><p class="lede">lumnik lit les events pendant qu&#x27;ils existent et les garde; Ask répond encore quand kubectl ne sait plus.</p>
     <ul class="tags"><li class="tag edition edition-pro"><a href="https://docs.lumnik.io/editions/">lumnik Pro</a></li><li class="tag">DevOps</li><li class="tag">Kubernetes</li><li class="tag">Post-mortem</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
   </section>
-  <div role="tablist" class="page-tabs" aria-label="k8s a oublié, lumnik se souvient: qui a crashé cette nuit?">
+  <div role="tablist" class="page-tabs" aria-label="k8s a oublié ses events et lumnik sait encore qui a crashé cette nuit">
     <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
     <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
   </div>
