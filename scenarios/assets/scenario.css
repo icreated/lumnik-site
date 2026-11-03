@@ -162,7 +162,7 @@ th { color: var(--brume); font: 500 12px var(--mono); }
 .view-rows .card .open { margin-top: 4px; }
 .card .goal { margin: 0; padding: 0; border: 0; background: none; color: var(--brume); font-size: 15px; max-width: none; }
 .view-tiles .card .goal { display: none; }
-.layout-switch { display: flex; gap: 6px; margin-top: 16px; }
+.layout-switch { display: flex; justify-content: flex-end; gap: 6px; margin-top: 16px; }
 .layout-switch button { font: inherit; font-size: 14px; color: var(--neige); background: none; cursor: pointer;
   border: 1px solid var(--givre); border-radius: 999px; padding: 4px 12px; }
 .layout-switch button[aria-pressed="true"] { border-color: var(--lumiere); color: var(--lumiere); }
