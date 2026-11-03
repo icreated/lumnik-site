@@ -160,11 +160,12 @@ th { color: var(--brume); font: 500 12px var(--mono); }
 .view-rows .cards { grid-template-columns: 1fr; gap: 10px; }
 .view-rows .card a { padding: 16px 20px; gap: 6px; }
 .view-rows .card .open { margin-top: 4px; }
+.card .goal { margin: 0; padding: 0; border: 0; background: none; color: var(--brume); font-size: 15px; max-width: none; }
 .view-tiles .card .goal { display: none; }
-.views { display: flex; gap: 6px; margin-top: 16px; }
-.views button { font: inherit; font-size: 14px; color: var(--neige); background: none; cursor: pointer;
+.layout-switch { display: flex; gap: 6px; margin-top: 16px; }
+.layout-switch button { font: inherit; font-size: 14px; color: var(--neige); background: none; cursor: pointer;
   border: 1px solid var(--givre); border-radius: 999px; padding: 4px 12px; }
-.views button[aria-pressed="true"] { border-color: var(--lumiere); color: var(--lumiere); }
+.layout-switch button[aria-pressed="true"] { border-color: var(--lumiere); color: var(--lumiere); }
 .card .open { margin-top: auto; color: var(--lumiere); font-size: 14px; }
 
 /* The catalogue's head: how many scenarios, how many on the free edition, and the families. */
