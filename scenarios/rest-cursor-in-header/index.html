@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Le transporteur lit son curseur dans un en-tête: placé ailleurs, le run échoue au lieu de mentir. — lumnik</title>
+<title>Le transporteur attend son curseur dans un en-tête sinon le run échoue — lumnik</title>
 <meta name="description" content="Lire tous les événements de suivi d&#x27;un transporteur dont l&#x27;API attend le curseur de page dans un en-tête de requête. L&#x27;API de suivi d&#x27;un transporteur pagine par curseur. Elle le lit dans l&#x27;en-tête X-Next-Cursor, et nulle part ailleurs: Envoyé en paramètre d&#x27;URL, le défaut, le curseur n&#x27;arrive pas: l&#x27;API renvoie la première page et dit qu&#x27;il y en a d&#x27;autres; le run échoue et dit pourquoi; Une ligne, cursor_binding: header, et les 1200 événements passent, 12 pages.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
@@ -18,12 +18,12 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/rest-cursor-in-header/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>Le transporteur lit son curseur dans un en-tête: placé ailleurs, le run échoue au lieu de mentir.</h1>
+    <h1>Le transporteur attend son curseur dans un en-tête sinon le run échoue</h1>
     <p class="goal"><strong>Objectif</strong> Lire tous les événements de suivi d&#x27;un transporteur dont l&#x27;API attend le curseur de page dans un en-tête de requête.</p>
     <p class="lede">L&#x27;API de suivi d&#x27;un transporteur pagine par curseur. Elle le lit dans l&#x27;en-tête X-Next-Cursor, et nulle part ailleurs:</p><ul class="lede-list"><li>envoyé en paramètre d&#x27;URL, le défaut, le curseur n&#x27;arrive pas: l&#x27;API renvoie la première page et dit qu&#x27;il y en a d&#x27;autres; le run échoue et dit pourquoi;</li><li>une ligne, cursor_binding: header, et les 1200 événements passent, 12 pages.</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Transport</li><li class="tag">Suivi</li><li class="tag">API partenaire</li><li class="tag kind">Connector</li></ul>
   </section>
-  <div role="tablist" class="page-tabs" aria-label="Le transporteur lit son curseur dans un en-tête: placé ailleurs, le run échoue au lieu de mentir.">
+  <div role="tablist" class="page-tabs" aria-label="Le transporteur attend son curseur dans un en-tête sinon le run échoue">
     <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
     <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
   </div>

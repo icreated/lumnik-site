@@ -4,6 +4,7 @@
     {
       "slug": "aged-balance-print",
       "title": "La balance âgée prisonnière d'un fichier d'impression",
+      "goal": "Transformer un fichier d'impression comptable paginé en créances par facture, en conservant le bon client malgré les changements de page et en écartant les en-têtes et les totaux.",
       "lede": "La compta imprime sa balance âgée dans un fichier spool.\n- un en-tête par page;\n- un client, ses factures en dessous, un total;\n- les factures d'un client continuent parfois page suivante.\nLe recouvrement veut chaque facture avec son client.",
       "tags": {
         "domain": [
@@ -22,6 +23,7 @@
     {
       "slug": "app-inventory-urls",
       "title": "Un inventaire applicatif aux URLs tapées à la main",
+      "goal": "Découper chaque URL en serveur, port et environnement, pour savoir ce qui tourne sur un serveur et ce qui est encore en recette.",
       "lede": "La DSI reprend un inventaire applicatif tenu des années dans un tableur.\nLa colonne URL est tapée à la main:\n- majuscules et minuscules mêlées;\n- espaces collés autour;\n- port tantôt là, tantôt absent.\nLe manifeste découpe l'URL en colonnes, sans code.",
       "tags": {
         "domain": [
@@ -40,6 +42,7 @@
     {
       "slug": "business-log-orders",
       "title": "Les commandes en erreur cachées dans les logs",
+      "goal": "Relier chaque erreur du log applicatif à sa commande, son client et son statut actuel, pour savoir quels clients rappeler.",
       "lede": "Des clients appellent: leur commande «n'est jamais passée».\n- le serveur écrit un log texte, un fichier par jour;\n- l'ERP connaît les commandes, leur client, leur statut;\n- aucun outil ne les rapproche.\nUn log métier, pas un outil de supervision.",
       "tags": {
         "domain": [
@@ -58,6 +61,7 @@
     {
       "slug": "catalogue-ean-check",
       "title": "Le code-barres faux repéré à l'import",
+      "goal": "Repérer à l'import les codes-barres faux.",
       "lede": "Un export catalogue porte des codes EAN-13, dont certains faux. Aucun transformateur intégré ne calcule la clé de contrôle.\n- l'opérateur du hub dépose un script Kotlin\n- le manifeste le nomme, sans transporter de code\n- un brouillon qui ne compile pas est refusé à la validation\n- chaque code reçoit un verdict à l'import.",
       "tags": {
         "domain": [
@@ -74,6 +78,7 @@
     {
       "slug": "cfonb-bank-statement",
       "title": "Un relevé CFONB où le signe se cache dans le dernier chiffre",
+      "goal": "Lire le relevé bancaire CFONB 120 comme une table: chaque mouvement signé, rattaché à son relevé, avec son payeur et sa facture.",
       "lede": "Les banques envoient encore leurs relevés au format CFONB 120.\n- 120 caractères par enregistrement, sans séparateur;\n- 01 ouvre le relevé, 04 est un mouvement, 05 le complète, 07 clôt;\n- le dernier caractère du montant porte son dernier chiffre et son signe.\nLa trésorerie veut chaque mouvement signé, avec ses compléments.",
       "tags": {
         "domain": [
@@ -93,6 +98,7 @@
     {
       "slug": "crm-contacts-reachable",
       "title": "Un export CRM aux accents cassés et aux emails faux",
+      "goal": "Reprendre les contacts du vieux CRM avec un nom réparé, un téléphone international et un email valide, et nommer ceux qu'on ne peut pas joindre.",
       "lede": "L'équipe commerciale quitte un vieux CRM. Son export de contacts mélange:\n- majuscules et accents cassés (BÃ©nÃ©dicte);\n- deux colonnes de téléphone, dont une souvent vide;\n- des emails mal saisis.\nLe manifeste en fait une liste exploitable.",
       "tags": {
         "domain": [
@@ -111,6 +117,7 @@
     {
       "slug": "deal-in-the-pocket",
       "title": "L'affaire à 240 000 € qui se confirme pendant le dîner",
+      "goal": "Prévenir le commercial sur son téléphone dès que le CRM passe une affaire à confirmer, avec la ligne, les pièces et le catalogue à portée de main, et qu'un clic sur Traiter fasse avancer le CRM et parte l'email client.",
       "lede": "Un technico-commercial dîne avec la directrice de Lumilait. Il doit répondre sans ouvrir quatre outils:\n- la ligne d'emballage: ERP et SAV ne disent pas la même chose;\n- les pièces du retrofit: en stock ou pas;\n- le catalogue: 360 pièces à chercher.\nPendant ce temps, le CRM passe l'affaire à confirmer.",
       "tags": {
         "domain": [
@@ -133,6 +140,7 @@
     {
       "slug": "delivery-date-two-warehouses",
       "title": "Une date de livraison que chaque entrepôt calcule autrement",
+      "goal": "Promettre au client la date que son entrepôt peut tenir: une seule règle de calcul, réglée par entrepôt (pays, délai, jours fermés).",
       "lede": "La date promise = la date de commande plus N jours ouvrés. Mais chaque entrepôt compte à sa façon:\n- Lyon, en France: 3 jours, deux jours d'inventaire;\n- Liège, en Belgique: 5 jours, d'autres fériés.\nL'opérateur écrit la règle une fois; l'intégrateur la règle par entrepôt.",
       "tags": {
         "domain": [
@@ -150,7 +158,8 @@
     },
     {
       "slug": "devops-ai-event-memory",
-      "title": "k8s a oublié, lumnik se souvient: qui a crashé cette nuit?",
+      "title": "k8s a oublié ses events et lumnik sait encore qui a crashé cette nuit",
+      "goal": "Demander quels déploiements ont crashé en boucle, après que Kubernetes a effacé leurs events, et recevoir la liste que kubectl donnait pendant l'incident.",
       "lede": "Kubernetes garde ses events une heure. Un déploiement réparé à l'aube n'a plus d'histoire le matin:\n- un nouveau pod, Running, 0 redémarrage;\n- plus aucun event Warning.\nlumnik lit les events pendant qu'ils existent et les garde; Ask répond encore quand kubectl ne sait plus.",
       "tags": {
         "domain": [
@@ -169,7 +178,8 @@
     },
     {
       "slug": "devops-ai-pod-triage",
-      "title": "k8s brûle, k9s dit Running: quel pod regarder d'abord?",
+      "title": "k9s dit Running mais le cluster brûle: quel pod regarder d'abord?",
+      "goal": "Demander à son cluster Kubernetes quels pods traiter en premier, et recevoir la liste triée par la règle de l'astreinte, vérifiée contre kubectl.",
       "lede": "Un vrai cluster, cinq équipes, cinq pods cassés par Kubernetes lui-même:\n- l'API des pods: état, redémarrages, raison de la dernière mort;\n- metrics.k8s.io: ce que chaque pod consomme maintenant;\n- les events Warning.\nUne règle Kotlin de l'astreinte fixe la priorité; le modèle traduit la question, il ne décide rien.",
       "tags": {
         "domain": [
@@ -188,7 +198,8 @@
     },
     {
       "slug": "devops-release-gate",
-      "title": "Un hotfix non approuvé en prod k8s: le pipeline s'arrête.",
+      "title": "Un hotfix non approuvé en prod k8s arrête le pipeline",
+      "goal": "Bloquer une mise en production quand un pod exécute une version que le comité n'a pas approuvée, par un code de sortie qu'une CI comprend.",
       "lede": "Le catalogue des versions approuvées est un CSV. Ce qui tourne vraiment est dans le cluster. lumnik lit l'image de chaque pod par l'API Kubernetes et la joint au catalogue:\n- la version approuvée passe;\n- un hotfix poussé avec kubectl set image fait renvoyer le code 1 à la porte: la CI arrête le pipeline;\n- après le rollback, la même commande repasse.",
       "tags": {
         "domain": [
@@ -207,7 +218,8 @@
     },
     {
       "slug": "dirty-order-statuses",
-      "title": "Un statut de commande, quatorze orthographes",
+      "title": "Un statut de commande écrit de quatorze façons",
+      "goal": "Compter les commandes par statut, quelle que soit l'orthographe, et être prévenu d'une orthographe nouvelle.",
       "lede": "Quinze ans de saisie à la main ont laissé EC, Livré, LIV, ANNUL… dans l'export des commandes. lumnik ne touche pas l'ERP:\n- un Workflow déclare quatre statuts et leurs orthographes\n- chaque import revérifie la colonne.",
       "tags": {
         "domain": [
@@ -226,6 +238,7 @@
     {
       "slug": "edi-flat-order-lines",
       "title": "Un fichier EDI à plat sorti d'un ERP : des lignes de commande en largeur fixe, lues sans outil de mapping.",
+      "goal": null,
       "lede": "Un fabricant échange avec son logisticien des fichiers à plat, un dossier par partenaire, un préfixe par type d'échange. Aucun séparateur : chaque champ a sa place et sa largeur, une ligne d'en-tête en tête, de l'ISO-8859-1, et parfois pas de fin de ligne après la dernière. Le logisticien veut les lignes de commande en colonnes.",
       "tags": {
         "domain": [
@@ -244,6 +257,7 @@
     {
       "slug": "edi-order-cycle",
       "title": "Quatre fichiers EDI pour une seule ligne de commande",
+      "goal": "Merger les quatre flux pour savoir si chaque ligne est commandée, confirmée ou livrée, et être alerté quand une date confirmée passe sans livraison.",
       "lede": "Un fabricant et son logisticien s'échangent quatre fichiers à plat autour d'une ligne de commande: la commande, l'accusé, la date confirmée, le bon de livraison.\nL'ADV demande, ligne par ligne:\n- jamais accusée?\n- confirmée mais pas livrée?\n- livrée dans une autre quantité?",
       "tags": {
         "domain": [
@@ -264,6 +278,7 @@
     {
       "slug": "edifact-orders",
       "title": "Un message EDIFACT ORDERS : une ligne, découpée en segments, l'apostrophe échappée respectée.",
+      "goal": null,
       "lede": "La distribution et l'industrie échangent encore de l'EDIFACT : un message ORDERS de l'acheteur, souvent écrit sur une seule ligne, ses segments terminés par une apostrophe, ses éléments séparés par + et :. Une apostrophe dans un libellé s'écrit ?'. L'acheteur veut lire le message segment par segment.",
       "tags": {
         "domain": [
@@ -282,6 +297,7 @@
     {
       "slug": "entity-resolution",
       "title": "Un client, deux systèmes, aucun identifiant commun.",
+      "goal": null,
       "lede": "Un ERP, un CRM, une Entity. L'email rapproche les fiches ; une boîte partagée ouvre une ambiguïté. lumnik ne tranche pas : un humain décide, et la décision tient au rejeu.",
       "tags": {
         "domain": [
@@ -300,6 +316,7 @@
     {
       "slug": "entity-resolution-drift",
       "title": "Un client établi ne change pas de fiche en silence.",
+      "goal": null,
       "lede": "Hier, le contact CRM CC-42 et le compte ERP AC-700 désignaient Nova Pumps. Aujourd'hui, son email pointe vers Helios Valves. lumnik ne déplace pas le contact : il le rend ambigu, et un humain tranche.",
       "tags": {
         "domain": [
@@ -318,6 +335,7 @@
     {
       "slug": "excel-merged-cells",
       "title": "Un export Excel aux cellules fusionnées : chaque ligne avec sa région et son client.",
+      "goal": null,
       "lede": "Les ventes envoient chaque mois un rapport Excel : un groupe par client, la région et le client dans des cellules fusionnées, un sous-total sous chaque groupe. Enregistrée en CSV, une cellule fusionnée ne garde sa valeur que sur la première ligne du groupe ; les suivantes sont vides. Les ventes veulent chaque ligne avec sa région et son client.",
       "tags": {
         "domain": [
@@ -336,6 +354,7 @@
     {
       "slug": "export-that-lies",
       "title": "L'export qui ment : une ligne illisible ne passe pas en silence.",
+      "goal": null,
       "lede": "Un ERP exporte chaque nuit son catalogue d'articles en un seul fichier. Un libellé contient le séparateur, sans guillemets. lumnik met la ligne de côté avec ses valeurs brutes, ne retire rien du catalogue tant qu'elle est illisible, et ne ferme la lettre morte que sur le run qui l'a vraiment relue.",
       "tags": {
         "domain": [
@@ -353,6 +372,7 @@
     {
       "slug": "gmao-candy-line-incident",
       "title": "Un incident critique, aucun technicien",
+      "goal": "Prévenir le responsable maintenance dès qu'un incident critique n'a pas de technicien.",
       "lede": "Une GMAO exporte ses incidents en CSV. Le convoyeur de la ligne de bonbons gélifiés est à l'arrêt, sans technicien. La GMAO ne prévient personne.\n- un Workflow suit le statut de chaque incident\n- un Process signale l'incident critique non affecté\n- une seule décision; l'affectation la fait avancer.",
       "tags": {
         "domain": [
@@ -372,6 +392,7 @@
     {
       "slug": "graphql-insurance-bff",
       "title": "Les listes d'un formulaire de sinistre, sans exposer le GraphQL du CRM.",
+      "goal": null,
       "lede": "Le type et le sous-type de sinistre vivent dans un CRM qui parle GraphQL. lumnik l'ingère page par page, en fait une entité canonique, et un petit BFF sert au formulaire du JSON REST stable : le schéma du CRM ne devient jamais un contrat du navigateur.",
       "tags": {
         "domain": [
@@ -390,6 +411,7 @@
     {
       "slug": "import-export",
       "title": "Le catalogue part chez le partenaire dans son format, pas dans le nôtre.",
+      "goal": null,
       "lede": "Deux CSV d'un ERP, produits et catégories, sont joints dans le hub puis livrés sur S3 au format d'un partenaire : en-têtes français, point-virgule, virgule décimale, statuts recodés, référence interne masquée. Un reçu prouve les octets livrés.",
       "tags": {
         "domain": [
@@ -409,6 +431,7 @@
     {
       "slug": "invoices-dead-letters",
       "title": "Un montant illisible n'entre pas : la facture attend, corrigée à la source.",
+      "goal": null,
       "lede": "Un export de factures fournisseurs porte deux montants mal saisis et une facture de test. Au lieu d'écrire des factures sans montant, le hub les met de côté avec la ligne telle qu'elle a été lue. On écarte la facture de test, on corrige à la source, et chaque lettre est fermée par la lecture qui a apporté la bonne ligne.",
       "tags": {
         "domain": [
@@ -427,6 +450,7 @@
     {
       "slug": "jdbc-merge-oracle-postgresql",
       "title": "Une fiche produit, deux bases : PostgreSQL et Oracle restent où elles sont.",
+      "goal": null,
       "lede": "Les produits vivent dans PostgreSQL, leurs catégories dans Oracle. Deux connecteurs jdbc les lisent sans rien y écrire, et une entité les joint : 40 234 produits, chacun avec sa catégorie quand elle existe.",
       "tags": {
         "domain": [
@@ -445,6 +469,7 @@
     {
       "slug": "kafka-after-hours-energy",
       "title": "À 23 h 15, le même chiffre ne veut pas dire la même chose partout.",
+      "goal": null,
       "lede": "Trois compteurs publient leur puissance sur Kafka. Lyon tire 18,7 kW, le laboratoire de Grenoble 28,4 kW. Seul Lyon dépasse son seuil de nuit : une décision, un email à sa responsable, et un tableau Grafana qui suit les trois états.",
       "tags": {
         "domain": [
@@ -463,7 +488,8 @@
     },
     {
       "slug": "kafka-freezer-door-dormancy",
-      "title": "Une porte ouverte, un capteur muet",
+      "title": "Une porte de congélateur ouverte et un capteur muet",
+      "goal": "Être alerté quand une porte de congélateur reste ouverte plus d'une minute, avec le laboratoire et le responsable.",
       "lede": "Des capteurs publient l'état des portes de congélateurs sur Kafka. FZ-17 s'ouvre et se tait. FZ-18 s'ouvre et se referme.\n- un Workflow surveille le silence\n- une seule alerte, pour la porte restée ouverte plus d'une minute\n- elle nomme le laboratoire et le responsable.",
       "tags": {
         "domain": [
@@ -483,6 +509,7 @@
     {
       "slug": "legacy-sales-grafana",
       "title": "Un ERP figé alimente un vrai tableau Grafana, sans connecteur de plus.",
+      "goal": null,
       "lede": "L'ERP exporte ses ventes et son catalogue en CSV. lumnik les joint, Grafana lit l'entité par un compte PostgreSQL en lecture seule, borné à son tenant. Lundi : 10 450 €. Mardi, l'export change : 14 200 €, et la vente modifiée n'apparaît qu'une fois.",
       "tags": {
         "domain": [
@@ -501,6 +528,7 @@
     {
       "slug": "marketplace-order-items",
       "title": "Les commandes d'une marketplace, une ligne par article à préparer : modèle, couleur, taille.",
+      "goal": null,
       "lede": "L'export de la marketplace donne une ligne par commande, les articles serrés dans une cellule, et une référence qui serre à son tour modèle, couleur et taille. La logistique veut une ligne par article, pour compter ce qu'il faut sortir du stock. Le manifeste découpe la commande, puis la référence, et refuse un fichier dont la colonne a changé de nom.",
       "tags": {
         "domain": [
@@ -519,6 +547,7 @@
     {
       "slug": "one-app-per-metier",
       "title": "Un hub, une app par métier.",
+      "goal": null,
       "lede": "La maintenance et les achats partagent un ERP où chacun voit tout. Sur le même hub, lumnik compose une app par métier ; un technicien qui ne tient que le rôle scope:maintenance voit son app, ses ordres et ses décisions, et chaque porte des achats lui répond par un refus.",
       "tags": {
         "domain": [
@@ -541,6 +570,7 @@
     {
       "slug": "orders-where-they-sleep",
       "title": "Audit des durées de statut des commandes",
+      "goal": "Savoir combien de temps chaque commande reste dans chaque statut, et lesquelles ne bougent plus.",
       "lede": "L'ERP ne garde que le statut du jour: hier En cours, aujourd'hui Livrée. Rien sur l'attente entre les deux. L'ERP ne peut pas être modifié.\n- un Workflow suit chaque commande par sa clé\n- chaque changement de statut entre dans un journal, daté\n- une commande immobile trop longtemps alerte\n- le journal dit combien de temps chaque commande est restée dans chaque état.",
       "tags": {
         "domain": [
@@ -559,6 +589,7 @@
     {
       "slug": "purchasing-ask-abstains",
       "title": "La question à laquelle Ask refuse de répondre : une marge sans coût, un « meilleur » sans critère.",
+      "goal": null,
       "lede": "Un directeur achats pose ses questions à un an de commandes fournisseurs, avec ses mots. Trois questions reçoivent leur chiffre, avec le SQL qui l'a produit. Trois autres n'ont pas de réponse dans ces données : une marge sans prix de revient, un meilleur fournisseur sans critère, des retards sans date de livraison. Ask les refuse au lieu d'inventer un chiffre qu'on répéterait en réunion.",
       "tags": {
         "domain": [
@@ -577,6 +608,7 @@
     {
       "slug": "purchasing-follow-up",
       "title": "« Et SUP-004 ? » : une question de suite, répondue comme la question entière.",
+      "goal": null,
       "lede": "Un acheteur demande combien de commandes ont été annulées, puis « Et pour le fournisseur SUP-003 ? », puis « Et SUP-004 ? ». Il ne retape pas la question. Ask lit chaque suite avec la question d'avant, répond à la question complète et affiche celle qu'il a comprise.",
       "tags": {
         "domain": [
@@ -595,6 +627,7 @@
     {
       "slug": "pwa-chat",
       "title": "Questionner 40 000 articles, SQL à l'appui.",
+      "goal": null,
       "lede": "Deux exports CSV, une entité, une app réduite au chat. La question devient une requête en lecture seule ; la réponse montre son SQL.",
       "tags": {
         "domain": [
@@ -614,6 +647,7 @@
     {
       "slug": "pwa-pagination",
       "title": "40 000 articles, parcourus page par page.",
+      "goal": null,
       "lede": "Deux exports CSV, deux entités, deux vues liées, une app. Le hub sert le catalogue par pages de 50 ; la PWA n'en charge jamais plus.",
       "tags": {
         "domain": [
@@ -634,6 +668,7 @@
     {
       "slug": "pwa-search",
       "title": "Chercher dans 40 000 articles, facettes comprises.",
+      "goal": null,
       "lede": "Deux exports CSV, une entité, un SearchIndex, une app réduite à la recherche. Le hub indexe les colonnes déclarées ; la PWA filtre par facette.",
       "tags": {
         "domain": [
@@ -654,6 +689,7 @@
     {
       "slug": "quantity-script-one-in-500",
       "title": "Une valeur imprévue sur 500 : la ligne en lettre morte, les 499 autres écrites.",
+      "goal": null,
       "lede": "Un bon de réception saisi à la main : 500 lignes, des quantités écrites « 12,5 kg » ou « 3 pce ». Un script Kotlin de l'opérateur les lit en nombre et en unité. La ligne 317 dit « env. 4 kg ». Que deviennent les 499 autres ?",
       "tags": {
         "domain": [
@@ -671,7 +707,8 @@
     },
     {
       "slug": "rest-cursor-in-header",
-      "title": "Le transporteur lit son curseur dans un en-tête: placé ailleurs, le run échoue au lieu de mentir.",
+      "title": "Le transporteur attend son curseur dans un en-tête sinon le run échoue",
+      "goal": "Lire tous les événements de suivi d'un transporteur dont l'API attend le curseur de page dans un en-tête de requête.",
       "lede": "L'API de suivi d'un transporteur pagine par curseur. Elle le lit dans l'en-tête X-Next-Cursor, et nulle part ailleurs:\n- envoyé en paramètre d'URL, le défaut, le curseur n'arrive pas: l'API renvoie la première page et dit qu'il y en a d'autres; le run échoue et dit pourquoi;\n- une ligne, cursor_binding: header, et les 1200 événements passent, 12 pages.",
       "tags": {
         "domain": [
@@ -689,7 +726,8 @@
     },
     {
       "slug": "rest-drupal-jsonapi",
-      "title": "Drupal parle JSON:API: on nomme le standard, une ligne lit tout le site.",
+      "title": "Drupal: tout le site lu par JSON:API en une ligne",
+      "goal": "Lire tous les articles d'un site Drupal par son module JSON:API, sans écrire la pagination.",
       "lede": "Drupal 11 expose ses contenus par JSON:API, un module de son cœur. La page suivante est dans links.next, que Drupal écrit comme un objet {\"href\": …}. lumnik a un preset pour ce standard:\n- pagination: { kind: json-api }, et les 5 pages sont suivies;\n- 45 articles lus, 45 écrits dans le hub.",
       "tags": {
         "domain": [
@@ -708,6 +746,7 @@
     {
       "slug": "rest-incremental-orders",
       "title": "L'API qui n'envoie que ce qui a changé : une commande modifiée pendant la lecture n'est pas perdue.",
+      "goal": null,
       "lede": "Une API de commandes sait répondre à « ce qui a changé depuis telle date ». lumnik la lit en entier une fois, puis chaque nuit seulement ce qui a bougé. Une commande modifiée pendant qu'un run lit encore les pages suivantes aurait pu passer entre deux nuits : le run suivant repart un peu avant sa dernière marque, et la récupère.",
       "tags": {
         "domain": [
@@ -723,7 +762,8 @@
     },
     {
       "slug": "rest-legacy-session-login",
-      "title": "Une vieille app derrière un login: lumnik se connecte comme un utilisateur.",
+      "title": "Une vieille app derrière un login: lumnik se connecte comme un utilisateur",
+      "goal": "Lire les vétérinaires de Spring PetClinic, protégé par le login du serveur Tomcat, sans toucher à l'app.",
       "lede": "Spring PetClinic d'avant Spring Boot, derrière le login du serveur (j_security_check). Pas de jeton d'API: un formulaire et un cookie de session.\n- sans auth, Tomcat rend sa page de login en 200: le hub la refuse, ce n'est pas du JSON;\n- auth: { kind: session }: le hub se connecte et garde la session, 6 vétérinaires;\n- l'app redémarre, la session est perdue: le hub se reconnecte seul, une fois.",
       "tags": {
         "domain": [
@@ -740,7 +780,8 @@
     },
     {
       "slug": "rest-legacy-spring-mvc",
-      "title": "Une vieille app Spring MVC: toute la liste d'un coup, une ligne la lit.",
+      "title": "Une vieille app Spring MVC rend toute la liste d'un coup et une ligne la lit",
+      "goal": "Lire les vétérinaires de Spring PetClinic, une app Spring MVC d'avant Spring Boot, sans toucher à son code.",
       "lede": "Spring PetClinic tel qu'il était avant Spring Boot: un WAR sur Tomcat. Son contrôleur rend toute la liste d'un coup, sans pages.\n- /vets.xml: le hub lit du JSON, il refuse l'XML par son nom au lieu de lire 0 ligne;\n- lm source rest probe sur /vets.json trouve la liste et propose kind: none;\n- pagination: { kind: none }: 6 vétérinaires en une requête.",
       "tags": {
         "domain": [
@@ -757,7 +798,8 @@
     },
     {
       "slug": "rest-link-header-tickets",
-      "title": "Un ticket fermé reste ouvert dans le hub, tant qu'on ne lit que les ouverts.",
+      "title": "Un ticket fermé dans Gitea reste ouvert dans le hub si on ne lit que les ouverts",
+      "goal": "Suivre les tickets ouverts d'une forge Gitea, paginée par l'en-tête Link, sans garder ouvert un ticket que le support a fermé.",
       "lede": "Le support suit ses tickets clients dans Gitea. Son API pagine comme GitHub: la page suivante est dans l'en-tête Link. lumnik suit l'en-tête, page après page:\n- lire state=open laisse ouverts, dans le hub, les tickets fermés depuis: ils sortent du filtre de l'API;\n- lire tous les états, par ce qui a changé depuis le dernier run, garde le hub juste: 57 ouverts, comme Gitea.",
       "tags": {
         "domain": [
@@ -775,7 +817,8 @@
     },
     {
       "slug": "rest-netbox-inventory",
-      "title": "NetBox, l'inventaire réseau: on nomme Django REST, on dit Token, tout est lu.",
+      "title": "NetBox: tout l'inventaire réseau lu avec un jeton en lecture",
+      "goal": "Lire chaque nuit tous les équipements d'un NetBox, la référence de l'équipe réseau, avec un jeton en lecture seule.",
       "lede": "NetBox est bâti sur Django REST Framework: count, next et results dans chaque réponse, et un jeton présenté par le mot Token, pas Bearer. lumnik nomme les deux:\n- pagination: { kind: drf-limit-offset }: 120 équipements en 3 requêtes;\n- auth: { kind: bearer, scheme: Token }: le mot que NetBox attend;\n- la nuit suivante, les 6 switchs passés hors ligne sont dans le hub.",
       "tags": {
         "domain": [
@@ -794,6 +837,7 @@
     {
       "slug": "rest-paperless-drf",
       "title": "Paperless-ngx: la liste qui bouge pendant la lecture est relue",
+      "goal": "Lire tous les correspondants d'une archive Paperless-ngx par son API, même quand quelqu'un y travaille.",
       "lede": "Un vrai Paperless-ngx 2.13 et 100 correspondants, lus dix par page.\n- au calme: les 100, le count de chaque page vérifié;\n- un correspondant supprimé pendant la lecture: les pages se décalent, la liste est relue;\n- de nouveaux correspondants sans arrêt: le run refuse de se dire complet.",
       "tags": {
         "domain": [
@@ -811,6 +855,7 @@
     {
       "slug": "rest-partner-loses-rows",
       "title": "L'API du partenaire perd une page, le run ne ment pas.",
+      "goal": null,
       "lede": "Un partenaire publie 2 400 partenaires et leur nombre. Une nuit, une page de 100 disparaît, le nombre reste juste. lumnik compare ce qu'il a lu au total que la source déclare : le run échoue en nommant l'endpoint et les deux chiffres, au lieu de passer au vert.",
       "tags": {
         "domain": [
@@ -827,7 +872,8 @@
     },
     {
       "slug": "rest-prestashop",
-      "title": "PrestaShop: le catalogue XML lu en une ligne.",
+      "title": "PrestaShop: le catalogue XML lu en une ligne",
+      "goal": "Lire tous les produits d'une boutique PrestaShop 8 par son Webservice, en XML, tel qu'il répond.",
       "lede": "Un vrai PrestaShop 8.2.8 et son catalogue de démo. Son Webservice répond en XML.\n- sans le dire, le hub refuse l'XML et dit quoi ajouter;\n- response_format: xml: le hub lit l'XML; PrestaShop ignore offset=, la page répétée est refusée;\n- pagination: { kind: prestashop }: les 19 produits, leur nom lu dans l'XML.",
       "tags": {
         "domain": [
@@ -844,7 +890,8 @@
     },
     {
       "slug": "rest-spring-behind-proxy",
-      "title": "L'appli Spring derrière un proxy: on nomme le framework, la clé reste le SKU.",
+      "title": "Une appli Spring derrière un proxy garde chaque produit sous son SKU",
+      "goal": "Lire tout le stock d'une application Spring Data REST maison, page par page, et garder chaque produit sous son SKU, quel que soit l'hôte par lequel on l'atteint.",
       "lede": "Un ancien prestataire a laissé une application de stock en Spring Data REST, derrière nginx. lumnik la lit avec le preset spring-hateoas:\n- ses liens pointent vers son nom interne: le run refuse de les suivre et le dit;\n- une propriété côté application, et les 63 pages passent;\n- chaque produit est rangé sous son SKU, lu dans son lien: la nuit suivante, aucune copie.",
       "tags": {
         "domain": [
@@ -862,7 +909,8 @@
     },
     {
       "slug": "rest-spring-page",
-      "title": "Un Page de Spring: quand Spring change son JSON, une ligne suit.",
+      "title": "Spring change le JSON de ses pages et une ligne suit",
+      "goal": "Lire tout le catalogue d'une app Spring Boot, page après page, avant et après que l'équipe change la sérialisation de ses Page.",
       "lede": "Un contrôleur Spring renvoie le Page du repository. lumnik le lit avec un preset:\n- pagination: { kind: spring-page }: 130 articles en 3 requêtes;\n- l'équipe suit l'avertissement de Spring et passe en VIA_DTO: le total passe sous page, le même manifeste lit tout, avec une page vide de trop;\n- une ligne, spring-paged-model: de nouveau 3 requêtes.",
       "tags": {
         "domain": [
@@ -879,7 +927,8 @@
     },
     {
       "slug": "rest-stripe-customers",
-      "title": "L'API de Stripe: on la nomme, starting_after fait le reste.",
+      "title": "Stripe: tous les clients lus sans écrire la pagination",
+      "goal": "Lire tous les clients d'un compte Stripe, page après page, sans écrire la pagination.",
       "lede": "Stripe pagine par curseur: chaque page dit has_more, la suivante se demande avec starting_after, l'id du dernier client lu. lumnik a un preset du même nom:\n- pagination: { kind: stripe }: 25 clients en 3 requêtes;\n- le lendemain, 5 nouveaux clients: 30 lignes, une par client.",
       "tags": {
         "domain": [
@@ -897,7 +946,8 @@
     },
     {
       "slug": "rest-wordpress-total-header",
-      "title": "WordPress annonce 46 articles et en sert 31: le run échoue au lieu de passer vert.",
+      "title": "WordPress annonce 46 articles et en sert 31: le run échoue",
+      "goal": "Lire tous les articles d'un site WordPress, et refuser une lecture partielle quand un plugin en cache sans changer le compte.",
       "lede": "L'API REST de WordPress pagine par l'en-tête Link et publie son compte dans X-WP-Total. lumnik suit l'un et vérifie l'autre:\n- 46 articles annoncés, 46 lus: le run passe;\n- un plugin « réservé aux membres » cache 15 articles, le compte reste 46: le run échoue et donne les deux chiffres;\n- lu en tant que membre, avec un mot de passe d'application, les 46 articles reviennent.",
       "tags": {
         "domain": [
@@ -916,6 +966,7 @@
     {
       "slug": "saas-oauth2-orders",
       "title": "Le SaaS derrière OAuth2 : des jetons de 30 secondes, un run de 40, aucune page perdue.",
+      "goal": null,
       "lede": "L'ERP ne bouge plus, mais une partie des commandes arrive par un SaaS récent. Ce SaaS ne prend plus de jeton fixe : il donne un identifiant client et un secret, et veut un jeton de courte durée à chaque appel. lumnik demande le jeton, le renouvelle avant qu'il expire, encaisse une rotation de clés en plein run, et dit pourquoi quand le secret est révoqué, sans jamais le montrer.",
       "tags": {
         "domain": [
@@ -933,6 +984,7 @@
     {
       "slug": "sap-idoc-orders",
       "title": "Des IDocs SAP ORDERS05 à plat : chaque ligne de commande avec sa commande client.",
+      "goal": null,
       "lede": "Le SAP d'un client envoie ses commandes en IDocs ORDERS05, écrits dans un fichier à plat : un enregistrement de contrôle EDI_DC40 par IDoc, puis des enregistrements de données à largeur fixe. Le numéro de commande est dans E2EDK02, la quantité dans le poste E2EDP01, notre article dans le E2EDP19 qui le suit. L'administration des ventes veut une ligne par ligne de commande.",
       "tags": {
         "domain": [
@@ -952,6 +1004,7 @@
     {
       "slug": "sftp-carrier-drop",
       "title": "Le dépôt SFTP du transporteur : chaque nuit lue, rangée, et rien sur parole.",
+      "goal": null,
       "lede": "Un transporteur dépose chaque nuit livraisons.csv sur son serveur SFTP, toujours sous le même nom. lumnik relit une nuit de même taille, range chaque nuit sous son propre nom, dit sur le run un fichier qu'il n'a pas pu archiver, et refuse un serveur dont la clé a changé.",
       "tags": {
         "domain": [
@@ -969,6 +1022,7 @@
     {
       "slug": "shipping-rule-changed",
       "title": "La règle a changé au 1er janvier : chaque commande dit quelle version l'a calculée.",
+      "goal": null,
       "lede": "Les frais de port sont calculés par un script Kotlin que fournit l'opérateur du hub : port offert dès 150,00 en décembre, dès 200,00 à partir de janvier. L'opérateur remplace le script. Des mois plus tard, un auditeur demande pourquoi une commande de 172,50 n'a pas payé de port en décembre, et en a payé en janvier.",
       "tags": {
         "domain": [
@@ -987,6 +1041,7 @@
     {
       "slug": "siebel-soap-desk",
       "title": "Le guichet SOAP du CRM : chaque service lu à sa façon, rien de lu deux fois.",
+      "goal": null,
       "lede": "Un CRM des années 2000 expose ses données par des services web SOAP sur mesure : les actions d'une demande en un appel, les opportunités d'un client page par page sur un numéro de page. Le mot de passe voyage dans l'enveloppe. lumnik lit chacun comme il se lit, dit le Fault du service tel quel, et n'envoie jamais deux fois la même requête.",
       "tags": {
         "domain": [
@@ -1004,6 +1059,7 @@
     {
       "slug": "siem-bank-account-change",
       "title": "Un RIB changé que le SIEM ne voit pas",
+      "goal": "Que le SIEM voie un changement d'IBAN fournisseur, sans que l'IBAN apparaisse dans l'inbox.",
       "lede": "L'ERP exporte ses fournisseurs en CSV. Il n'émet aucun événement. Un changement de RIB passe inaperçu jusqu'au prochain paiement.\n- lumnik relit l'export chaque minute\n- une décision signée part au SIEM par webhook\n- le SIEM alerte sur le compte qui change\n- l'inbox ne montre jamais le compte.",
       "tags": {
         "domain": [
@@ -1022,6 +1078,7 @@
     {
       "slug": "supplier-master-edi",
       "title": "Le fichier fournisseurs envoyé à l'EDI : ASCII, majuscules, 35 caractères, un identifiant stable.",
+      "goal": null,
       "lede": "Les achats alimentent une plateforme EDI qui impose des noms en ASCII, en majuscules, de 35 caractères au plus, et un identifiant par fournisseur. L'export de l'ERP a des accents, de longues raisons sociales, des fournisseurs inactifs, et une colonne d'identifiant qui contient N/A, 0 ou rien. La contrainte de l'EDI est déclarée une fois dans le manifeste.",
       "tags": {
         "domain": [
@@ -1040,6 +1097,7 @@
     {
       "slug": "two-systems-one-member",
       "title": "Deux systèmes, un adhérent : chacun fait foi pour ses propres champs.",
+      "goal": null,
       "lede": "Une mutuelle tient ses adhérents dans sa gestion des contrats et dans son portail. Fusionnés avec un seul ordre de sources, l'un des deux a toujours tort. lumnik laisse chaque colonne nommer sa source de référence, et garde chaque désaccord visible jusqu'à ce que la source le règle.",
       "tags": {
         "domain": [
@@ -1058,6 +1116,7 @@
     {
       "slug": "two-tenants-one-hub",
       "title": "Deux clients, un hub, une table : chacun ne lit que ses lignes.",
+      "goal": null,
       "lede": "Deux intégrateurs de deux clients appliquent les mêmes fichiers sur le même hub. Même connecteur, même entité, même table. Chacun charge ses commandes, sous les mêmes numéros. Chacun relit, interroge et compte : il ne voit que les siennes.",
       "tags": {
         "domain": [
@@ -1075,7 +1134,8 @@
     },
     {
       "slug": "windev-hfsql-export",
-      "title": "WinDev: l'export des clients, avec de vraies dates et une vraie case Actif.",
+      "title": "WinDev: l'export des clients avec de vraies dates et une vraie case Actif",
+      "goal": "Lire le fichier clients qu'une application WinDev exporte, et en faire des colonnes qu'on peut interroger.",
       "lede": "Une application WinDev exporte ses clients avec HExportCSV. Le fichier est reconstitué d'après la documentation de PC SOFT.\n- lu tel quel: six clients, mais tout en texte, dates 20190312, Actif 0 ou 1;\n- trois transformers: les dates en date, l'encours en nombre, Actif en vrai booléen;\n- une question en SQL: les clients actifs sans achat depuis octobre.",
       "tags": {
         "domain": [
@@ -1093,6 +1153,7 @@
     {
       "slug": "zombie-cmms",
       "title": "Le système zombie : trente ans d'ordres de travail, la machine éteinte, le hub répond toujours.",
+      "goal": null,
       "lede": "Une GMAO remplacée depuis des années reste allumée pour quelques lectures de conformité par an : la licence, la machine, et la seule personne qui sait la redémarrer. lumnik la lit une dernière fois, archive ce qu'il a lu sous une seule empreinte, puis on éteint la machine. Le run suivant dit pourquoi il échoue, la pause arrête le planning, et le hub rend les mêmes octets qu'avant.",
       "tags": {
         "domain": [
