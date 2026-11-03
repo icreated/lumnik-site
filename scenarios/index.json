@@ -588,9 +588,9 @@
     },
     {
       "slug": "purchasing-ask-abstains",
-      "title": "La question à laquelle Ask refuse de répondre : une marge sans coût, un « meilleur » sans critère.",
-      "goal": null,
-      "lede": "Un directeur achats pose ses questions à un an de commandes fournisseurs, avec ses mots. Trois questions reçoivent leur chiffre, avec le SQL qui l'a produit. Trois autres n'ont pas de réponse dans ces données : une marge sans prix de revient, un meilleur fournisseur sans critère, des retards sans date de livraison. Ask les refuse au lieu d'inventer un chiffre qu'on répéterait en réunion.",
+      "title": "Ask refuse une marge sans coût et un meilleur fournisseur sans critère",
+      "goal": "Laisser un directeur achats interroger ses commandes avec ses mots, sans qu'on lui invente un chiffre que les données ne portent pas.",
+      "lede": "Un directeur achats pose ses questions à un an de commandes fournisseurs. Trois questions reçoivent leur chiffre, avec le SQL qui l'a produit.\n- une marge sans prix de revient: refusée\n- un meilleur fournisseur sans critère: refusé\n- des retards sans date de livraison: refusés",
       "tags": {
         "domain": [
           "Achats",
@@ -602,14 +602,14 @@
         ]
       },
       "edition": "pro",
-      "replayedAt": "2026-10-22",
-      "evidenceDigest": "sha256:4fc2a8f4570862eae39d0c4bfd265abf89722596a361e48f0b6173e021168859"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:9a93335740bfba272cddd74a5d33cad5c24221c82b7a28ef7d585e83051edd67"
     },
     {
       "slug": "purchasing-follow-up",
-      "title": "« Et SUP-004 ? » : une question de suite, répondue comme la question entière.",
-      "goal": null,
-      "lede": "Un acheteur demande combien de commandes ont été annulées, puis « Et pour le fournisseur SUP-003 ? », puis « Et SUP-004 ? ». Il ne retape pas la question. Ask lit chaque suite avec la question d'avant, répond à la question complète et affiche celle qu'il a comprise.",
+      "title": "Et SUP-004? Ask répond à la question de suite comme à la question entière",
+      "goal": "Laisser un acheteur enchaîner ses questions sans les retaper, en lui montrant chaque fois la question comprise.",
+      "lede": "Un acheteur demande combien de commandes ont été annulées, puis «Et pour le fournisseur SUP-003?», puis «Et SUP-004?». Il ne retape pas la question.\n- Ask lit chaque suite avec la question d'avant\n- il répond à la question complète et l'affiche\n- une suite que les données ne portent pas est refusée",
       "tags": {
         "domain": [
           "Achats",
@@ -621,8 +621,8 @@
         ]
       },
       "edition": "pro",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:e78e1e66fedf9e58c79861c1caa836eadde835862d626e93e1be6b167302d6cf"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:9a325fae011c677c7ff72a89629c6e36d3b9002a81bfed76a511bd02ef63ffbc"
     },
     {
       "slug": "pwa-chat",
