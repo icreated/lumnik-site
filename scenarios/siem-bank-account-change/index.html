@@ -56,7 +56,7 @@ cb621230  scenario-siem-suppliers-e  default   Completed  1   1    0        0   
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="wire-title">Le compte part au SIEM, pas dans la phrase</h2>
-      <p>Process lit chaque ligne écrite dans la table.</p><ul class="prose-list"><li>event: data.row.changed: la clé du traitement. Le Process part sur chaque ligne nouvelle ou modifiée, une ligne inchangée ne déclenche rien</li><li>when: status=ACTIVE: seuls les fournisseurs actifs comptent</li><li>emit.message: la phrase de l&#x27;inbox, sans le compte</li><li>emit.fields: [iban]: le compte, dans le payload signé seulement</li></ul>
+      <p>Un Process lit chaque ligne nouvelle ou modifiée de la table. Une ligne inchangée ne déclenche rien.</p><ul class="prose-list"><li>when: status=ACTIVE: seuls les fournisseurs actifs</li><li>emit.message: la phrase de l&#x27;inbox, sans le compte</li><li>emit.fields: [iban]: le compte, dans le payload signé seulement</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Pourquoi ACTIVE</strong><p>La ligne d&#x27;étalonnage est INACTIVE: elle ne part pas au SIEM. Un fournisseur inactif n&#x27;est pas payé: son compte n&#x27;est pas un risque.</p></div></li><li><span class="n">2</span><div><strong>Signé</strong><p>L&#x27;intégration webhook signe chaque livraison avec son secret.</p></div></li><li><span class="n">3</span><div><strong>Inbox</strong><p>Le lecteur voit «Bank account observed for supplier SUP-0042 (Atelier Orion)», jamais le compte.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Ce dont un outil a besoin n&#x27;est pas montré à chaque lecteur.</p></div>

@@ -371,7 +371,7 @@
     },
     {
       "slug": "gmao-candy-line-incident",
-      "title": "Un incident critique, aucun technicien",
+      "title": "Un incident critique reste sans technicien",
       "goal": "Prévenir le responsable maintenance dès qu'un incident critique n'a pas de technicien.",
       "lede": "Une GMAO exporte ses incidents en CSV. Le convoyeur de la ligne de bonbons gélifiés est à l'arrêt, sans technicien. La GMAO ne prévient personne.\n- un Workflow suit le statut de chaque incident\n- un Process signale l'incident critique non affecté\n- une seule décision; l'affectation la fait avancer.",
       "tags": {
@@ -468,9 +468,9 @@
     },
     {
       "slug": "kafka-after-hours-energy",
-      "title": "À 23 h 15, le même chiffre ne veut pas dire la même chose partout.",
-      "goal": null,
-      "lede": "Trois compteurs publient leur puissance sur Kafka. Lyon tire 18,7 kW, le laboratoire de Grenoble 28,4 kW. Seul Lyon dépasse son seuil de nuit : une décision, un email à sa responsable, et un tableau Grafana qui suit les trois états.",
+      "title": "Lyon tire 18,7 kW la nuit et seule sa responsable est alertée",
+      "goal": "Être alerté quand un site fermé consomme au-delà de son seuil de nuit, sans alerter les sites où cette charge est normale.",
+      "lede": "Trois compteurs publient leur puissance sur Kafka à 23 h 15. Un registre CSV dit ce qu'est chaque site.\n- Lyon tire 18,7 kW pour un seuil de 10 kW: une décision, un email\n- le laboratoire tire 28,4 kW, sous son seuil de 40 kW: rien\n- Grafana suit les trois états",
       "tags": {
         "domain": [
           "Énergie",
@@ -483,8 +483,8 @@
         ]
       },
       "edition": "pro",
-      "replayedAt": "2026-10-21",
-      "evidenceDigest": "sha256:cd8aa75aec35af4ca81fef172bd8802b2cc6f6c98ec7b77542d97417367f0d86"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:534437228df33228dc34ea2647d362d40c9152be7ec6cde1be47c41e111c5671"
     },
     {
       "slug": "kafka-freezer-door-dormancy",

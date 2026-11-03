@@ -136,7 +136,7 @@ VLV-5216,Îlot de distribution 40 postes,Électrovanne,FL-WRAP 200,Y</pre><p cla
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="model-title">Rapprocher l&#x27;ERP et le terrain</h2>
-      <p>LumilaitLine fusionne le dossier ERP et la vérité du SAV.</p><ul class="prose-list"><li>match: line_id, une ligne pour les deux sources</li><li>sources: l&#x27;ERP donne modèle et formats au dossier, le SAV l&#x27;automate et les formats constatés</li><li>label: ce que la PWA et le chat affichent</li></ul><p>LumilaitRetrofitPart dit quelles pièces conviennent; PackagingPart donne sens au catalogue.</p>
+      <p>LumilaitLine fusionne le dossier ERP et la vérité du SAV. Deux autres entités donnent sens au catalogue.</p><ul class="prose-list"><li>match: line_id, une ligne pour les deux sources</li><li>l&#x27;ERP donne le dossier, le SAV ce qui est constaté sur place</li><li>LumilaitRetrofitPart: les pièces qui conviennent</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Terrain</strong><p>Le SAV ajoute le format 300x160, absent de l&#x27;ERP.</p></div></li><li><span class="n">2</span><div><strong>Pourquoi deux colonnes</strong><p>Automate au dossier et automate constaté restent côte à côte: l&#x27;écart se voit.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une seule ligne, deux sources réconciliées.</p></div>
@@ -193,7 +193,7 @@ KIT-S7-1500-MF400  Kit automate S7-1500 pour MF-PACK 400  2                    1
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="app-title">Chercher, puis être prévenu</h2>
-      <p>Un SearchIndex ouvre le catalogue à la recherche.</p><ul class="prose-list"><li>titleField: description: la désignation devient le titre du résultat</li><li>match: prefix: une référence se trouve par son début</li><li>match: text: une description se trouve par ses mots (language: french)</li><li>facet: true: filtres par famille et modèle compatible</li></ul><p>L&#x27;App donne son nom et ses couleurs à la PWA. Le Process surveille le CRM:</p><ul class="prose-list"><li>event: data.row.changed: chaque ligne modifiée du CRM est évaluée</li><li>when: status=PRET_CONFIRMATION_CLIENT: la seule affaire qui compte</li><li>emit: une décision, avec un message lisible</li></ul>
+      <p>Un SearchIndex ouvre le catalogue à la recherche. Un Process surveille le CRM.</p><ul class="prose-list"><li>match: prefix pour les références, text pour les descriptions</li><li>facet: true: filtres par famille et modèle compatible</li><li>when: status=PRET_CONFIRMATION_CLIENT: la seule affaire qui compte</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>variateur</strong><p>30 variateurs, 11 pour la MF-PACK 400.</p></div></li><li><span class="n">2</span><div><strong>Webhook</strong><p>L&#x27;intégration lumi-lumilait-automation reçoit les décisions et leur traitement.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le catalogue est indexé et la règle d&#x27;accord est en place.</p></div>
