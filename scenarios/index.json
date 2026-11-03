@@ -17,8 +17,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-24",
-      "evidenceDigest": "sha256:4b5d35a43dea6ed789968d58b7ab43c9cf9ab4ae0d3b473500a8f3974d8ed3ee"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:981df85c035ea063812782f3883ea735606a6b50701634a41562310dbf149729"
     },
     {
       "slug": "app-inventory-urls",
@@ -55,8 +55,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-23",
-      "evidenceDigest": "sha256:504241b86a19491ea48c0372bd9786bfdb907114dc29dcace40e6df16343e967"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:23e7006035aba0600827fa91a3d112e12b9df19ace82f4b54e717f31b089dbe6"
     },
     {
       "slug": "catalogue-ean-check",
@@ -92,8 +92,8 @@
         ]
       },
       "edition": "open",
-      "replayedAt": "2026-10-24",
-      "evidenceDigest": "sha256:c345db6596e6d9b5edf6b22469510693de2950fd964d94569e18ae83444f8d4d"
+      "replayedAt": "2026-11-03",
+      "evidenceDigest": "sha256:8e90b728bc532d5bb7004559d0544c6495c04a864ea55b733c6b95cf44696170"
     },
     {
       "slug": "crm-contacts-reachable",
