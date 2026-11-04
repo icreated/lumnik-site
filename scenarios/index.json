@@ -1112,6 +1112,27 @@
       "evidenceDigest": "sha256:86ec6030a58cdfe8be82890844fb65cb17acab57e785a4a0a83bda5b75817a0f"
     },
     {
+      "slug": "senaite-culture-plates",
+      "title": "SENAITE: la boîte de Fleming qui attend sa vérification",
+      "goal": "Être prévenu quand un résultat du LIMS SENAITE dépasse sa limite, puis quand il reste sans vérification.",
+      "lede": "Un vrai SENAITE 2.6, cinq équipes de recherche, 120 boîtes de culture lues par son API JSON.\n- body-link: les 120 analyses en cinq pages, le total vérifié;\n- 2400 colonies sur la boîte de Fleming: une décision, clé analysisrequest-24;\n- non vérifiée: la boîte devient dormante, une seconde alerte.",
+      "tags": {
+        "domain": [
+          "Laboratoire",
+          "LIMS",
+          "SENAITE"
+        ],
+        "kinds": [
+          "Connector",
+          "Process",
+          "Workflow"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-05",
+      "evidenceDigest": "sha256:5f914cf598044a0c200e7459a8d10431a97e2623a266f334a5f0118ad6195424"
+    },
+    {
       "slug": "sftp-carrier-drop",
       "title": "Le dépôt SFTP du transporteur lu chaque nuit sans rien croire sur parole",
       "goal": "Lire chaque nuit le fichier du transporteur, le ranger, et refuser un serveur dont la clé a changé.",
