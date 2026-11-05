@@ -1112,6 +1112,27 @@
       "evidenceDigest": "sha256:86ec6030a58cdfe8be82890844fb65cb17acab57e785a4a0a83bda5b75817a0f"
     },
     {
+      "slug": "sap-odata-v2-sales-orders",
+      "title": "SAP OData v2: la commande de 48 000 EUR restée non traitée",
+      "goal": "Lire les commandes SAP par le Gateway OData v2, puis être prévenu quand une grosse commande reste non traitée.",
+      "lede": "L'API Sales Order de SAP, API_SALES_ORDER_SRV, servie comme un Gateway: 130 commandes d'octobre.\n- odata-v2: trois pages $skiptoken, le total __count vérifié;\n- from_odata_date: les 130 dates /Date()/ deviennent des dates;\n- 48 000 EUR en statut A: une décision, puis une alerte de dormance.",
+      "tags": {
+        "domain": [
+          "Ventes",
+          "SAP",
+          "OData"
+        ],
+        "kinds": [
+          "Connector",
+          "Process",
+          "Workflow"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-05",
+      "evidenceDigest": "sha256:8f092ded88b6a56f611309587aa93bf603b20a90241c7328e4d82864b50e61c3"
+    },
+    {
       "slug": "senaite-culture-plates",
       "title": "SENAITE: la boîte de Fleming qui attend sa vérification",
       "goal": "Être prévenu quand un résultat du LIMS SENAITE dépasse sa limite, puis quand il reste sans vérification.",
