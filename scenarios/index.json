@@ -708,6 +708,26 @@
       "evidenceDigest": "sha256:b480783fa4804a91c2db3b7f6906db0d7983031d81a64149119cbce138306271"
     },
     {
+      "slug": "progress-openedge-customers",
+      "title": "Progress OpenEdge: la commande de 1999 qui ne doit pas devenir 2099",
+      "goal": "Lire les fichiers EXPORT d'un ERP Progress, années sur deux chiffres comprises, et être prévenu quand un client dormant est réactivé.",
+      "lede": "Un ERP Progress OpenEdge exporte sa table Customer avec l'EXPORT d'ABL: un fichier .d, 40 clients.\n- des espaces, des chaînes entre guillemets, ? pour l'inconnu, yes/no, ISO-8859-1;\n- MM/DD/YY: une année sur deux chiffres doit dire son siècle, sinon validate refuse;\n- la campagne de relance: deux clients sans commande depuis 1999 et 2003, deux décisions.",
+      "tags": {
+        "domain": [
+          "Ventes",
+          "Progress",
+          "OpenEdge"
+        ],
+        "kinds": [
+          "Connector",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-06",
+      "evidenceDigest": "sha256:48410205e01de80341d1f28218cc5e5da5c2d9e81e1dea4bd3d4eb13e99822a2"
+    },
+    {
       "slug": "purchasing-ask-abstains",
       "title": "Ask refuse une marge sans coût et un meilleur fournisseur sans critère",
       "goal": "Laisser un directeur achats interroger ses commandes avec ses mots, sans qu'on lui invente un chiffre que les données ne portent pas.",
