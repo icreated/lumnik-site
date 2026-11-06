@@ -546,6 +546,27 @@
       "evidenceDigest": "sha256:8e656db00ebb0aca2931ed304badf23420b48475f36260614a93aa9e561b8677"
     },
     {
+      "slug": "lims-expired-calibrations",
+      "title": "Calibrations expirées: les résultats mesurés sur un instrument hors validité",
+      "goal": "Signaler chaque résultat de labo mesuré hors de la validité de calibration de son instrument (ISO 17025), depuis le registre et le LIMS tels qu'ils exportent.",
+      "lede": "Un registre de métrologie et un LIMS, deux exports CSV: 6 instruments, 144 résultats.\n- une Entity joint le registre à chaque résultat;\n- un Process compare deux colonnes de la ligne jointe: measured_at après valid_until;\n- le registre change: les résultats déjà là sont jugés à nouveau.",
+      "tags": {
+        "domain": [
+          "Laboratoire",
+          "ISO 17025",
+          "Métrologie"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-06",
+      "evidenceDigest": "sha256:fc46f83260ffc482e80ae0b19ad93aac0d6fafd4b69a18994ea87b6a0e1da7d7"
+    },
+    {
       "slug": "marketplace-order-items",
       "title": "Une ligne par article à préparer avec modèle couleur et taille",
       "goal": "Sortir de l'export d'une marketplace une ligne par article, pour préparer le stock.",
