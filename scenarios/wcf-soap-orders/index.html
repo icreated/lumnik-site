@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOAP WCF et WS-Security: le mot de passe a tourné, le Fault le dit — lumnik</title>
+<meta name="description" content="Lire un service WCF protégé par un UsernameToken, survivre à la rotation de son mot de passe, et être prévenu d&#x27;une commande confirmée après sa date promise. Un distributeur expose ses commandes ouvertes par un service WCF: HTTPS sous la CA de l&#x27;entreprise, un UsernameToken dans l&#x27;enveloppe. La CA et le mot de passe vivent dans lm secret, jamais dans le manifeste; Le mot de passe tourne: en HTTP/2 le Fault se perd, en HTTP/1.1 il nomme la cause; Trois commandes confirmées après leur date promise, trois décisions.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/wcf-soap-orders/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/wcf-soap-orders/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>SOAP WCF et WS-Security: le mot de passe a tourné, le Fault le dit</h1>
+    <p class="goal"><strong>Objectif</strong> Lire un service WCF protégé par un UsernameToken, survivre à la rotation de son mot de passe, et être prévenu d&#x27;une commande confirmée après sa date promise.</p>
+    <p class="lede">Un distributeur expose ses commandes ouvertes par un service WCF: HTTPS sous la CA de l&#x27;entreprise, un UsernameToken dans l&#x27;enveloppe.</p><ul class="lede-list"><li>la CA et le mot de passe vivent dans lm secret, jamais dans le manifeste;</li><li>le mot de passe tourne: en HTTP/2 le Fault se perd, en HTTP/1.1 il nomme la cause;</li><li>trois commandes confirmées après leur date promise, trois décisions.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Ventes</li><li class="tag">SOAP</li><li class="tag">WCF</li><li class="tag">WS-Security</li><li class="tag kind">Connector</li><li class="tag kind">Process</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="SOAP WCF et WS-Security: le mot de passe a tourné, le Fault le dit">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · Service</span><span class="sub">CoreWCF</span></a><a href="#step-read" data-step="read"><span class="num">2 · Lire</span><span class="sub">soap</span></a><a href="#step-rule" data-step="rule"><span class="num">3 · Déclarer</span><span class="sub">Process</span></a><a href="#step-rotate" data-step="rotate"><span class="num">4 · Rotation</span><span class="sub">I/O error</span></a><a href="#step-http11" data-step="http11"><span class="num">5 · HTTP/1.1</span><span class="sub">le Fault</span></a><a href="#step-renewed" data-step="renewed"><span class="num">6 · Reprendre</span><span class="sub">3 décisions</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">Un service de commandes WCF, sous la CA de l&#x27;entreprise</h2>
+      <p>BasicHttpBinding en TransportWithMessageCredential, identifiant UserName: le service exige un UsernameToken WS-Security dans l&#x27;enveloppe.</p><ul class="prose-list"><li>HTTPS signé par la CA interne de l&#x27;entreprise</li><li>GetOpenOrders(page, pageSize), le drapeau IsLastPage</li><li>la CA et le mot de passe vont dans lm secret</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>CoreWCF</strong><p>Le portage de WCF sur .NET 8. Binding et valeurs par défaut sont ceux de WCF; le service tourne sous Kestrel, pas sous IIS.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Les deux secrets sont dans le registre avant la première ligne de manifeste.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Service"><button type="button" role="tab" id="lab-source-tab" data-view="source" aria-controls="lab-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="lab-commands-tab" data-view="commands" aria-controls="lab-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="lab-source" aria-labelledby="lab-source-tab" tabindex="0"><figure class="source"><figcaption>orders-20261105.tsv</figcaption><pre class="code">OrderNo	Customer	OrderDate	PromisedDate	ConfirmedDate	Warehouse	Amount
+CV-26-0001	Auto Bérard	2026-10-02	2026-10-24	2026-10-23	Valence	509.25
+CV-26-0002	Pneus du Sud	2026-10-03	2026-10-26	2026-10-24	Grenoble	898.50
+CV-26-0003	Carrosserie Lefèvre	2026-10-04	2026-10-28	2026-10-25	Lyon	1287.75
+CV-26-0004	Moto Évasion	2026-10-05	2026-10-30	2026-10-30	Valence	1676.00
+CV-26-0005	Cycles Gaëtan	2026-10-06	2026-11-01	2026-10-31	Grenoble	2065.25
+CV-26-0006	Dépannage Noël	2026-10-07	2026-11-03	2026-11-01	Lyon	2454.50
+CV-26-0007	Agri-Méca	2026-10-08	2026-11-05	2026-11-02	Lyon	2843.75
+CV-26-0008	Poids Lourds Rhône	2026-10-09	2026-11-07	2026-11-07	Grenoble	3232.00
+CV-26-0009	Taxi Côte	2026-10-10	2026-10-31	2026-10-30	Lyon	3621.25
+CV-26-0010	Location Hébert	2026-10-11	2026-11-02	2026-10-31	Valence	4010.50
+CV-26-0011	Électro-Diesel	2026-10-12	2026-11-04	2026-11-01	Grenoble	399.75
+CV-26-0012	Garage Martin	2026-10-13	2026-11-06	2026-11-06	Lyon	788.00
+CV-26-0013	Auto Bérard	2026-10-14	2026-11-08	2026-11-07	Valence	1177.25
+CV-26-0014	Pneus du Sud	2026-10-15	2026-11-10	2026-11-08	Grenoble	1566.50
+CV-26-0015	Carrosserie Lefèvre	2026-10-16	2026-11-12	2026-11-09	Lyon	1955.75
+CV-26-0016	Moto Évasion	2026-10-17	2026-11-14	2026-11-14	Lyon	2344.00
+CV-26-0017	Cycles Gaëtan	2026-10-18	2026-11-16	2026-11-15	Grenoble	2733.25
+CV-26-0018	Dépannage Noël	2026-10-19	2026-11-09	2026-11-07	Lyon	3122.50
+CV-26-0019	Agri-Méca	2026-10-20	2026-11-11	2026-11-08	Valence	3511.75</pre><p class="source-more">… 11 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-commands" id="lab-commands" aria-labelledby="lab-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm secret set SCENARIO_WCF_CA_A -</span>
+<span class="out">Created secret &quot;SCENARIO_WCF_CA_A&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm secret set SCENARIO_WCF_PASSWORD_A -</span>
+<span class="out">Created secret &quot;SCENARIO_WCF_PASSWORD_A&quot;</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0" hidden><dl class="facts"><dt>lm secret</dt><dd>Created secret &quot;SCENARIO_WCF_CA_A&quot;</dd><dt>lm secret</dt><dd>Created secret &quot;SCENARIO_WCF_PASSWORD_A&quot;</dd></dl><p class="sources">preuves: replay.log, posts-rotate.txt, posts-http11.txt, inbox-renewed.json, service-access.log · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-read" aria-labelledby="read-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="read-title">30 commandes ouvertes, trois pages</h2>
+      <p>Le connecteur rest-generic, forme soap.</p><ul class="prose-list"><li>tls.ca_secret: cette CA seule est crue, pour ce connecteur</li><li>header: le UsernameToken, le mot de passe par {{secret:…}}</li><li>body: {{page}} et {{page_size}}, IsLastPage arrête la boucle</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Sans Timestamp</strong><p>CoreWCF accepte un UsernameToken sans wsu:Timestamp. Il refuse un Timestamp périmé: un horodatage figé dans le manifeste serait refusé dès le lendemain.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un service WCF sécurisé dans l&#x27;enveloppe se lit sans proxy ni code .NET.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-manifest-tab" data-view="manifest" aria-controls="read-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="read-manifest" aria-labelledby="read-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-orders.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># A distributor&#x27;s order service on WCF: BasicHttpBinding over HTTPS (TransportWithMessageCredential), the caller</span></span><span class="line"><span class="comment"># authenticated by a WS-Security UsernameToken inside the envelope. The certificate is signed by the company&#x27;s own</span></span><span class="line"><span class="comment"># CA, trusted for this connector only. The password lives in lm secret, never in the manifest.</span></span><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-wcf-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [sales-wcf-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: https://wcf-orders:8443</span><span class="line">  <span class="key">tls</span>:</span><span class="line">    <span class="key">ca_secret</span>: SCENARIO_WCF_CA_A          <span class="comment"># lm secret set SCENARIO_WCF_CA_A - &lt; ca.crt</span></span><span class="line">  <span class="key">auth</span>:</span><span class="line">    <span class="key">kind</span>: none                            <span class="comment"># no HTTP auth: the credential travels in the envelope</span></span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: open-orders</span><span class="line">      <span class="key">kind</span>: soap</span><span class="line">      <span class="key">path</span>: /OrderService.svc</span><span class="line">      <span class="key">soap_action</span>: <span class="str">&quot;http://distrib.example/orders/IOrderService/GetOpenOrders&quot;</span></span><span class="line">      <span class="key">header</span>: |</span><span class="line">        &lt;wsse:Security soap:mustUnderstand=<span class="str">&quot;1&quot;</span> xmlns:wsse=<span class="str">&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot;</span>&gt;</span><span class="line">          &lt;wsse:UsernameToken&gt;</span><span class="line">            &lt;wsse:Username&gt;lumnik-reader&lt;/wsse:Username&gt;</span><span class="line hl">            &lt;wsse:Password Type=<span class="str">&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText&quot;</span>&gt;{{secret:SCENARIO_WCF_PASSWORD_A}}&lt;/wsse:Password&gt;</span><span class="line">          &lt;/wsse:UsernameToken&gt;</span><span class="line">        &lt;/wsse:Security&gt;</span><span class="line">      <span class="key">body</span>: |</span><span class="line">        &lt;GetOpenOrders xmlns=<span class="str">&quot;http://distrib.example/orders&quot;</span>&gt;</span><span class="line">          &lt;page&gt;{{page}}&lt;/page&gt;</span><span class="line">          &lt;pageSize&gt;{{page_size}}&lt;/pageSize&gt;</span><span class="line">        &lt;/GetOpenOrders&gt;</span><span class="line">      <span class="key">pagination</span>:</span><span class="line">        <span class="key">kind</span>: soap</span><span class="line">        <span class="key">page_size</span>: 10</span><span class="line">        <span class="key">last_page_path</span>: <span class="str">&quot;$.Body.GetOpenOrdersResponse.GetOpenOrdersResult.IsLastPage&quot;</span></span><span class="line">        <span class="key">response_path</span>: <span class="str">&quot;$.Body.GetOpenOrdersResponse.GetOpenOrdersResult.Orders.Order&quot;</span></span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_wcf_a</span><span class="line">        <span class="key">unique_key</span>: <span class="str">&quot;$.OrderNo&quot;</span></span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: order_no, path: <span class="str">&quot;$.OrderNo&quot;</span>, type: text }</span><span class="line">          - { name: customer, path: <span class="str">&quot;$.Customer&quot;</span>, type: text }</span><span class="line">          - { name: promised_date, path: <span class="str">&quot;$.PromisedDate&quot;</span>, type: date }</span><span class="line">          - { name: confirmed_date, path: <span class="str">&quot;$.ConfirmedDate&quot;</span>, type: date }</span><span class="line">          - { name: warehouse, path: <span class="str">&quot;$.Warehouse&quot;</span>, type: text }</span><span class="line">          - { name: amount, path: <span class="str">&quot;$.Amount&quot;</span>, type: decimal }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-orders.yaml</span>
+<span class="out">Applied connector &quot;scenario-wcf-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm source rest test scenario-wcf-a</span>
+<span class="out">ENDPOINT     METHOD  STATUS  ITEMS  VERDICT
+open-orders  POST    200     10     ok</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-wcf-a</span>
+<span class="out">run scheduled: 214fba70-d4e0-451c-94fa-f35fec323747</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 214fba70-d4e0-451c-94fa-f35fec323747</span>
+<span class="out">ID        CONNECTOR       ENDPOINT     STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+214fba70  scenario-wcf-a  open-orders  Completed  30  30   0        0             2026-11-07 00:16  2026-11-07 00:16  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>lm source rest test</dt><dd>ok</dd><dt>open-orders</dt><dd>Completed · IN 30 · OUT 30</dd></dl><p class="sources">preuves: replay.log, posts-rotate.txt, posts-http11.txt, inbox-renewed.json, service-access.log · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-rule" aria-labelledby="rule-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="rule-title">Confirmée après la date promise au client</h2>
+      <p>Le Process écoute la table ext.* du connecteur.</p><ul class="prose-list"><li>confirmed_date&gt;{promised_date}: deux colonnes de la même ligne</li><li>key: order_no, la décision porte le numéro de commande</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Avant l&#x27;appel du client</strong><p>La décision arrive le matin où l&#x27;entrepôt confirme, pas le jour où la commande manque.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une règle compare deux dates du même document, sans date écrite en dur.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="rule-manifest-tab" data-view="manifest" aria-controls="rule-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="rule-commands-tab" data-view="commands" aria-controls="rule-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="rule-result-tab" data-view="result" aria-controls="rule-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="rule-manifest" aria-labelledby="rule-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-confirmed-late.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-wcf-late-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: sales-wcf-a</span><span class="line">  <span class="key">on</span>: { event: data.row.changed, table: ext.scenario_wcf_a }</span><span class="line">  <span class="key">when</span>:</span><span class="line hl">    - <span class="str">&quot;confirmed_date&gt;{promised_date}&quot;</span>     <span class="comment"># the warehouse confirms a ship date past the customer&#x27;s promise</span></span><span class="line">  <span class="key">emit</span>:</span><span class="line">    <span class="key">type</span>: decision.confirmed-late-a</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;{order_no} {customer}: promised {promised_date}, confirmed {confirmed_date} by {warehouse} — call the customer before they call&quot;</span></span><span class="line">    <span class="key">key</span>: order_no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="rule-commands" aria-labelledby="rule-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm process apply -f manifests/20-confirmed-late.yaml</span>
+<span class="out">Applied process &quot;scenario-wcf-late-a&quot; → table ext.scenario_wcf_a, emits decision.confirmed-late-a</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="rule-result" aria-labelledby="rule-result-tab" tabindex="0" hidden><dl class="facts"><dt>apply</dt><dd>Applied process &quot;scenario-wcf-late-a&quot; → table ext.scenario_wcf_a, emits decision.confirmed-late-a</dd></dl><p class="sources">preuves: replay.log, posts-rotate.txt, posts-http11.txt, inbox-renewed.json, service-access.log · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-rotate" aria-labelledby="rotate-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="rotate-title">Le mot de passe a tourné: I/O error, six requêtes</h2>
+      <p>Le lendemain matin, l&#x27;informatique fait tourner le mot de passe du compte. Le secret garde l&#x27;ancien.</p><ul class="prose-list"><li>le service répond 500 et son Fault, puis coupe le flux HTTP/2</li><li>le hub négocie HTTP/2: la coupure efface la réponse déjà reçue</li><li>pré-requête et run: I/O error, chaque appel réessayé</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Le journal du service</strong><p>Six POST en HTTP/2, six 500, pour une pré-requête et un run: le refus d&#x27;identifiants est réessayé comme une panne réseau.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le défaut est montré tel qu&#x27;il était: un refus devenu une panne réseau (#1859).</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Rotation"><button type="button" role="tab" id="rotate-commands-tab" data-view="commands" aria-controls="rotate-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="rotate-result-tab" data-view="result" aria-controls="rotate-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="rotate-commands" aria-labelledby="rotate-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm source rest test scenario-wcf-a</span>
+<span class="out">ENDPOINT     METHOD  STATUS  ITEMS  VERDICT
+open-orders  POST    -       0      I/O error (IOException)</span>
+<span class="note">Error: 1 of 1 enabled endpoint(s) did not answer with readable data</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-wcf-a</span>
+<span class="out">run scheduled: f3eb3ee1-c4ee-4993-a2eb-b9da719be202</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get f3eb3ee1-c4ee-4993-a2eb-b9da719be202</span>
+<span class="out">ID        CONNECTOR       ENDPOINT     STATUS  IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+f3eb3ee1  scenario-wcf-a  open-orders  Failed  0   0    0        0             2026-11-07 00:16  2026-11-07 00:17  yes</span>
+<span class="note">✖ run failed: I/O error (IOException)</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="rotate-result" aria-labelledby="rotate-result-tab" tabindex="0" hidden><dl class="facts"><dt>lm source rest test</dt><dd>I/O error (IOException)</dd><dt>open-orders</dt><dd>Failed · IN 0 · OUT 0</dd><dt>run</dt><dd>run failed: I/O error (IOException)</dd><dt>service</dt><dd>6 POST(s) to the service for the pre-flight and the run</dd></dl><p class="sources">preuves: replay.log, posts-rotate.txt, posts-http11.txt, inbox-renewed.json, service-access.log · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-http11" aria-labelledby="http11-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="http11-title">En HTTP/1.1, le Fault nomme la cause</h2>
+      <p>Une ligne dans le connecteur: http_version: &quot;1.1&quot;.</p><ul class="prose-list"><li>le run échoue avec le faultstring du service</li><li>un Fault n&#x27;est pas réessayé: deux requêtes, une par porte</li><li>la pré-requête ne dit encore que HTTP 500 (#1861)</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Entre guillemets</strong><p>1.1 sans guillemets est un nombre pour YAML: lm validate le refuse.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>L&#x27;intégrateur lit « Unknown user name or incorrect password », pas une panne réseau.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="HTTP/1.1"><button type="button" role="tab" id="http11-manifest-tab" data-view="manifest" aria-controls="http11-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="http11-commands-tab" data-view="commands" aria-controls="http11-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="http11-result-tab" data-view="result" aria-controls="http11-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="http11-manifest" aria-labelledby="http11-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/11-orders-http11.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># The same connector, speaking HTTP/1.1: the service answers a refused credential with its Fault, then</span></span><span class="line"><span class="comment"># resets the HTTP/2 stream, and over HTTP/2 the answer is lost on the way (#1859).</span></span><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-wcf-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [sales-wcf-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: https://wcf-orders:8443</span><span class="line hl">  <span class="key">http_version</span>: <span class="str">&quot;1.1&quot;</span>                     <span class="comment"># Kestrel resets an HTTP/2 stream after a Fault: ask for HTTP/1.1</span></span><span class="line">  <span class="key">tls</span>:</span><span class="line">    <span class="key">ca_secret</span>: SCENARIO_WCF_CA_A          <span class="comment"># lm secret set SCENARIO_WCF_CA_A - &lt; ca.crt</span></span><span class="line">  <span class="key">auth</span>:</span><span class="line">    <span class="key">kind</span>: none                            <span class="comment"># no HTTP auth: the credential travels in the envelope</span></span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: open-orders</span><span class="line">      <span class="key">kind</span>: soap</span><span class="line">      <span class="key">path</span>: /OrderService.svc</span><span class="line">      <span class="key">soap_action</span>: <span class="str">&quot;http://distrib.example/orders/IOrderService/GetOpenOrders&quot;</span></span><span class="line">      <span class="key">header</span>: |</span><span class="line">        &lt;wsse:Security soap:mustUnderstand=<span class="str">&quot;1&quot;</span> xmlns:wsse=<span class="str">&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot;</span>&gt;</span><span class="line">          &lt;wsse:UsernameToken&gt;</span><span class="line">            &lt;wsse:Username&gt;lumnik-reader&lt;/wsse:Username&gt;</span><span class="line">            &lt;wsse:Password Type=<span class="str">&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText&quot;</span>&gt;{{secret:SCENARIO_WCF_PASSWORD_A}}&lt;/wsse:Password&gt;</span><span class="line">          &lt;/wsse:UsernameToken&gt;</span><span class="line">        &lt;/wsse:Security&gt;</span><span class="line">      <span class="key">body</span>: |</span><span class="line">        &lt;GetOpenOrders xmlns=<span class="str">&quot;http://distrib.example/orders&quot;</span>&gt;</span><span class="line">          &lt;page&gt;{{page}}&lt;/page&gt;</span><span class="line">          &lt;pageSize&gt;{{page_size}}&lt;/pageSize&gt;</span><span class="line">        &lt;/GetOpenOrders&gt;</span><span class="line">      <span class="key">pagination</span>:</span><span class="line">        <span class="key">kind</span>: soap</span><span class="line">        <span class="key">page_size</span>: 10</span><span class="line">        <span class="key">last_page_path</span>: <span class="str">&quot;$.Body.GetOpenOrdersResponse.GetOpenOrdersResult.IsLastPage&quot;</span></span><span class="line">        <span class="key">response_path</span>: <span class="str">&quot;$.Body.GetOpenOrdersResponse.GetOpenOrdersResult.Orders.Order&quot;</span></span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_wcf_a</span><span class="line">        <span class="key">unique_key</span>: <span class="str">&quot;$.OrderNo&quot;</span></span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: order_no, path: <span class="str">&quot;$.OrderNo&quot;</span>, type: text }</span><span class="line">          - { name: customer, path: <span class="str">&quot;$.Customer&quot;</span>, type: text }</span><span class="line">          - { name: promised_date, path: <span class="str">&quot;$.PromisedDate&quot;</span>, type: date }</span><span class="line">          - { name: confirmed_date, path: <span class="str">&quot;$.ConfirmedDate&quot;</span>, type: date }</span><span class="line">          - { name: warehouse, path: <span class="str">&quot;$.Warehouse&quot;</span>, type: text }</span><span class="line">          - { name: amount, path: <span class="str">&quot;$.Amount&quot;</span>, type: decimal }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="http11-commands" aria-labelledby="http11-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/11-orders-http11.yaml</span>
+<span class="out">Applied connector &quot;scenario-wcf-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm source rest test scenario-wcf-a</span>
+<span class="out">ENDPOINT     METHOD  STATUS  ITEMS  VERDICT
+open-orders  POST    500     0      HTTP 500</span>
+<span class="note">Error: 1 of 1 enabled endpoint(s) did not answer with readable data</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-wcf-a</span>
+<span class="out">run scheduled: 52fa5451-b2e4-426e-abbe-046eff34afc5</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 52fa5451-b2e4-426e-abbe-046eff34afc5</span>
+<span class="out">ID        CONNECTOR       ENDPOINT     STATUS  IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+52fa5451  scenario-wcf-a  open-orders  Failed  0   0    0        0             2026-11-07 00:17  2026-11-07 00:17  yes</span>
+<span class="note">✖ run failed: SOAP Fault: Unknown user name or incorrect password.</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="http11-result" aria-labelledby="http11-result-tab" tabindex="0" hidden><dl class="facts"><dt>lm source rest test</dt><dd>HTTP 500</dd><dt>open-orders</dt><dd>Failed · IN 0 · OUT 0</dd><dt>run</dt><dd>run failed: SOAP Fault: Unknown user name or incorrect password.</dd><dt>service</dt><dd>2 POST(s) to the service for the pre-flight and the run</dd></dl><p class="sources">preuves: replay.log, posts-rotate.txt, posts-http11.txt, inbox-renewed.json, service-access.log · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-renewed" aria-labelledby="renewed-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="renewed-title">Nouveau secret, même manifeste: trois commandes en retard</h2>
+      <p>Le nouveau mot de passe va dans lm secret. Le manifeste ne change pas.</p><ul class="prose-list"><li>28 commandes ouvertes: deux sont parties dans la nuit</li><li>l&#x27;entrepôt de Lyon manque de stock: trois confirmations dépassent la promesse</li><li>trois décisions, CV-26-0007, 0016 et 0023</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Le message</strong><p>Commande, client, date promise, date confirmée, entrepôt: de quoi appeler le client.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une rotation de mot de passe se répare dans le registre, sans redéployer le connecteur.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Reprendre"><button type="button" role="tab" id="renewed-source-tab" data-view="source" aria-controls="renewed-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="renewed-commands-tab" data-view="commands" aria-controls="renewed-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="renewed-result-tab" data-view="result" aria-controls="renewed-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="renewed-source" aria-labelledby="renewed-source-tab" tabindex="0"><figure class="source"><figcaption>orders-20261106.tsv</figcaption><pre class="code">OrderNo	Customer	OrderDate	PromisedDate	ConfirmedDate	Warehouse	Amount
+CV-26-0001	Auto Bérard	2026-10-02	2026-10-24	2026-10-23	Valence	509.25
+CV-26-0002	Pneus du Sud	2026-10-03	2026-10-26	2026-10-24	Grenoble	898.50
+CV-26-0004	Moto Évasion	2026-10-05	2026-10-30	2026-10-30	Valence	1676.00
+CV-26-0005	Cycles Gaëtan	2026-10-06	2026-11-01	2026-10-31	Grenoble	2065.25
+CV-26-0006	Dépannage Noël	2026-10-07	2026-11-03	2026-11-01	Lyon	2454.50
+CV-26-0007	Agri-Méca	2026-10-08	2026-11-05	2026-11-14	Lyon	2843.75
+CV-26-0008	Poids Lourds Rhône	2026-10-09	2026-11-07	2026-11-07	Grenoble	3232.00
+CV-26-0009	Taxi Côte	2026-10-10	2026-10-31	2026-10-30	Lyon	3621.25
+CV-26-0010	Location Hébert	2026-10-11	2026-11-02	2026-10-31	Valence	4010.50
+CV-26-0012	Garage Martin	2026-10-13	2026-11-06	2026-11-06	Lyon	788.00
+CV-26-0013	Auto Bérard	2026-10-14	2026-11-08	2026-11-07	Valence	1177.25
+CV-26-0014	Pneus du Sud	2026-10-15	2026-11-10	2026-11-08	Grenoble	1566.50
+CV-26-0015	Carrosserie Lefèvre	2026-10-16	2026-11-12	2026-11-09	Lyon	1955.75
+CV-26-0016	Moto Évasion	2026-10-17	2026-11-14	2026-11-18	Lyon	2344.00
+CV-26-0017	Cycles Gaëtan	2026-10-18	2026-11-16	2026-11-15	Grenoble	2733.25
+CV-26-0018	Dépannage Noël	2026-10-19	2026-11-09	2026-11-07	Lyon	3122.50
+CV-26-0019	Agri-Méca	2026-10-20	2026-11-11	2026-11-08	Valence	3511.75
+CV-26-0020	Poids Lourds Rhône	2026-10-21	2026-11-13	2026-11-13	Grenoble	3900.00
+CV-26-0021	Taxi Côte	2026-10-22	2026-11-15	2026-11-14	Lyon	289.25</pre><p class="source-more">… 9 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-commands" id="renewed-commands" aria-labelledby="renewed-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm secret set SCENARIO_WCF_PASSWORD_A -</span>
+<span class="out">Updated secret &quot;SCENARIO_WCF_PASSWORD_A&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-wcf-a</span>
+<span class="out">run scheduled: c4e29c72-1c68-4ff1-9f3b-74ea05ce9a83</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get c4e29c72-1c68-4ff1-9f3b-74ea05ce9a83</span>
+<span class="out">ID        CONNECTOR       ENDPOINT     STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+c4e29c72  scenario-wcf-a  open-orders  Completed  28  28   0        0             2026-11-07 00:17  2026-11-07 00:17  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm inbox --process scenario-wcf-late-a</span>
+<span class="out">ID     WHEN      PROCESS              MESSAGE                                                                                                            ENTITY_KEY
+24950  just now  scenario-wcf-late-a  CV-26-0023 Électro-Diesel: promised 2026-11-19, confirmed 2026-12-01 by Lyon — call the customer before they call  CV-26-0023
+24949  just now  scenario-wcf-late-a  CV-26-0016 Moto Évasion: promised 2026-11-14, confirmed 2026-11-18 by Lyon — call the customer before they call    CV-26-0016
+24948  just now  scenario-wcf-late-a  CV-26-0007 Agri-Méca: promised 2026-11-05, confirmed 2026-11-14 by Lyon — call the customer before they call       CV-26-0007</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="renewed-result" aria-labelledby="renewed-result-tab" tabindex="0" hidden><dl class="facts"><dt>open-orders</dt><dd>Completed · IN 28 · OUT 28</dd><dt>CV-26-0007</dt><dd>CV-26-0007 Agri-Méca: promised 2026-11-05, confirmed 2026-11-14 by Lyon — call the customer before they call</dd><dt>CV-26-0016</dt><dd>CV-26-0016 Moto Évasion: promised 2026-11-14, confirmed 2026-11-18 by Lyon — call the customer before they call</dd><dt>CV-26-0023</dt><dd>CV-26-0023 Électro-Diesel: promised 2026-11-19, confirmed 2026-12-01 by Lyon — call the customer before they call</dd><dt>access</dt><dd>Request finished HTTP/2 POST https://wcf-orders:8443/OrderService.svc - 200</dd><dt>access</dt><dd>Request finished HTTP/2 POST https://wcf-orders:8443/OrderService.svc - 200</dd><dt>access</dt><dd>Request finished HTTP/2 POST https://wcf-orders:8443/OrderService.svc - 200</dd><dt>access</dt><dd>Request finished HTTP/2 POST https://wcf-orders:8443/OrderService.svc - 200</dd><dt>access</dt><dd>Request finished HTTP/2 POST https://wcf-orders:8443/OrderService.svc - 500</dd><dt>access</dt><dd>Request finished HTTP/2 POST https://wcf-orders:8443/OrderService.svc - 500</dd><dt>access</dt><dd>Request finished HTTP/2 POST https://wcf-orders:8443/OrderService.svc - 500</dd><dt>access</dt><dd>Request finished HTTP/2 POST https://wcf-orders:8443/OrderService.svc - 500</dd><dt>access</dt><dd>Request finished HTTP/2 POST https://wcf-orders:8443/OrderService.svc - 500</dd><dt>access</dt><dd>Request finished HTTP/2 POST https://wcf-orders:8443/OrderService.svc - 500</dd><dt>access</dt><dd>Request finished HTTP/1.1 POST https://wcf-orders:8443/OrderService.svc - 500</dd><dt>access</dt><dd>Request finished HTTP/1.1 POST https://wcf-orders:8443/OrderService.svc - 500</dd><dt>access</dt><dd>Request finished HTTP/1.1 POST https://wcf-orders:8443/OrderService.svc - 200</dd><dt>access</dt><dd>Request finished HTTP/1.1 POST https://wcf-orders:8443/OrderService.svc - 200</dd><dt>access</dt><dd>Request finished HTTP/1.1 POST https://wcf-orders:8443/OrderService.svc - 200</dd></dl><p class="sources">preuves: replay.log, posts-rotate.txt, posts-http11.txt, inbox-renewed.json, service-access.log · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Joué contre CoreWCF sous Kestrel. Un WCF .NET Framework sous IIS n&#x27;a pas été joué: sa tolérance à un UsernameToken sans Timestamp n&#x27;est pas vérifiée ici.</li><li>Le mot de passe part en clair dans l&#x27;enveloppe (PasswordText), protégé par HTTPS. Un PasswordDigest demande un nonce et une date à chaque appel: aucun placeholder ne les fabrique.</li><li>La pré-requête lit HTTP 500 là où le run nomme le Fault (#1861).</li><li>SOAP 1.1 seulement: un service en SOAP 1.2 (wsHttpBinding) n&#x27;est pas lu.</li><li>Commandes, clients et mots de passe synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Ventes · WCF</p><h2>Les commandes vivent derrière un service WCF.</h2><p class="brief-lead">SOAP, HTTPS, un UsernameToken dans l&#x27;enveloppe.</p><p class="brief-note">&lt;wsse:UsernameToken&gt;</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Le mot de passe a tourné. Le hub disait: I/O error.</h2><ul class="brief-list tone-cyan"><li>Le service avait répondu son Fault, puis coupé le flux HTTP/2.</li><li>Trois tentatives pour un refus d&#x27;identifiants.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>Le service reste tel quel.</h2><ul class="brief-list tone-green"><li>Son binding, sa CA, son contrat.</li><li>Aucun proxy, aucun code .NET.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>http_version: &quot;1.1&quot;</code></pre><h2>Une ligne dans le connecteur.</h2><ul class="brief-list tone-green"><li>Le Fault arrive entier.</li><li>Il n&#x27;est pas réessayé.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui a été corrigé</p><h2>La version HTTP se choisit par connecteur (#1859).</h2><ul class="brief-list tone-green"><li>Nouveau secret, même manifeste: la lecture reprend.</li><li>Trois commandes en retard: trois décisions.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
