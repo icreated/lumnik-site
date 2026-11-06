@@ -449,6 +449,26 @@
       "evidenceDigest": "sha256:81638f79c0711724f257732f97137d1f82ac49f579adc0b3e542755e2ce3593c"
     },
     {
+      "slug": "hl7-analyser-results",
+      "title": "HL7 v2: le résultat d'analyseur hors norme, signalé ou non",
+      "goal": "Lire les messages HL7 v2 que deux analyseurs déposent pour le LIMS, et être prévenu quand un résultat dépasse sa norme.",
+      "lede": "Deux analyseurs de chimie, HL7 v2.5.1 ORU^R01: des segments terminés par un retour chariot seul.\n- csv-file lit un segment par ligne, MSH, PID, OBR, OBX;\n- l'échantillon descend sur chaque résultat;\n- un Process compare la valeur à la norme envoyée à côté, quel que soit le drapeau.",
+      "tags": {
+        "domain": [
+          "Laboratoire",
+          "HL7",
+          "Analyseurs"
+        ],
+        "kinds": [
+          "Connector",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-06",
+      "evidenceDigest": "sha256:de011b8d735c0b7daa0eae0a8d568491da26d4dcaf06ccfcc92d84a486994be8"
+    },
+    {
       "slug": "import-export",
       "title": "Le catalogue part chez le partenaire dans son format à lui",
       "goal": "Livrer le catalogue produits à un partenaire dans le format qu'il impose, sans écrire de code de conversion.",
