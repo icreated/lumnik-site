@@ -116,6 +116,26 @@
       "evidenceDigest": "sha256:182940ec4d12384c857dc8a5957a4cfbd96238300b82af432f7bd9cde39f4d96"
     },
     {
+      "slug": "chromatograph-report",
+      "title": "Rapport HPLC: l'impureté hors limite, lue dans l'export de l'instrument",
+      "goal": "Lire les rapports d'injection qu'exporte un HPLC, unités collées et virgules décimales, et être prévenu quand une impureté dépasse sa spécification.",
+      "lede": "Le logiciel d'acquisition d'un HPLC exporte un rapport par injection: UTF-16, un bloc d'en-tête, puis les pics.\n- csv-file le lit ligne par ligne et porte l'échantillon sur chaque pic;\n- regex-extract sépare chaque valeur de son unité: 0,21% devient 0.21 et %;\n- une impureté au-delà de 0,15 %: une décision.",
+      "tags": {
+        "domain": [
+          "Laboratoire",
+          "HPLC",
+          "Pharmacie"
+        ],
+        "kinds": [
+          "Connector",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-06",
+      "evidenceDigest": "sha256:18872fe713e49ae8f6f57150ad67f8f2f66a2df6e68080ddd00426700c52724f"
+    },
+    {
       "slug": "crm-contacts-reachable",
       "title": "Un export CRM aux accents cassés et aux emails faux",
       "goal": "Reprendre les contacts du vieux CRM avec un nom réparé, un téléphone international et un email valide, et nommer ceux qu'on ne peut pas joindre.",
