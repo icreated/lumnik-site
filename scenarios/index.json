@@ -40,6 +40,26 @@
       "evidenceDigest": "sha256:16f88a482fa660e16e18b58296e8a94f33821b483b7a3d86f763f3c5d161e310"
     },
     {
+      "slug": "as400-customer-credit",
+      "title": "AS/400: le client au-delà de son encours autorisé, lu en EBCDIC",
+      "goal": "Lire le fichier clients d'un IBM i dans son EBCDIC français, et être prévenu quand l'encours d'un client dépasse son plafond.",
+      "lede": "Un fichier clients d'IBM i, CLIENTS, CCSID 297: 30 clients.\n- transféré en binaire: pas de délimiteur, des champs packés, chaque ligne en dead letter avec sa cause;\n- l'export de l'IBM i lui-même, CPYTOIMPF, lu avec encoding: IBM297;\n- le lendemain: deux clients au-delà de leur plafond, deux décisions.",
+      "tags": {
+        "domain": [
+          "Crédit",
+          "IBM i",
+          "EBCDIC"
+        ],
+        "kinds": [
+          "Connector",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-06",
+      "evidenceDigest": "sha256:5d9093d9f2460cf74d79fac7d5a4cd6855f0d60064442a76127643f822a811f7"
+    },
+    {
       "slug": "business-log-orders",
       "title": "Les commandes en erreur cachées dans les logs",
       "goal": "Relier chaque erreur du log applicatif à sa commande, son client et son statut actuel, pour savoir quels clients rappeler.",

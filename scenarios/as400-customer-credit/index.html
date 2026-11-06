@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AS/400: le client au-delà de son encours autorisé, lu en EBCDIC — lumnik</title>
+<meta name="description" content="Lire le fichier clients d&#x27;un IBM i dans son EBCDIC français, et être prévenu quand l&#x27;encours d&#x27;un client dépasse son plafond. Un fichier clients d&#x27;IBM i, CLIENTS, CCSID 297: 30 clients. Transféré en binaire: pas de délimiteur, des champs packés, chaque ligne en dead letter avec sa cause; L&#x27;export de l&#x27;IBM i lui-même, CPYTOIMPF, lu avec encoding: IBM297; Le lendemain: deux clients au-delà de leur plafond, deux décisions.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/as400-customer-credit/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/as400-customer-credit/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>AS/400: le client au-delà de son encours autorisé, lu en EBCDIC</h1>
+    <p class="goal"><strong>Objectif</strong> Lire le fichier clients d&#x27;un IBM i dans son EBCDIC français, et être prévenu quand l&#x27;encours d&#x27;un client dépasse son plafond.</p>
+    <p class="lede">Un fichier clients d&#x27;IBM i, CLIENTS, CCSID 297: 30 clients.</p><ul class="lede-list"><li>transféré en binaire: pas de délimiteur, des champs packés, chaque ligne en dead letter avec sa cause;</li><li>l&#x27;export de l&#x27;IBM i lui-même, CPYTOIMPF, lu avec encoding: IBM297;</li><li>le lendemain: deux clients au-delà de leur plafond, deux décisions.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Crédit</li><li class="tag">IBM i</li><li class="tag">EBCDIC</li><li class="tag kind">Connector</li><li class="tag kind">Process</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="AS/400: le client au-delà de son encours autorisé, lu en EBCDIC">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-binary" data-step="binary" aria-current="step"><span class="num">1 · Binaire</span><span class="sub">dead letters</span></a><a href="#step-export" data-step="export"><span class="num">2 · CPYTOIMPF</span><span class="sub">CCSID 297</span></a><a href="#step-read" data-step="read"><span class="num">3 · Lire</span><span class="sub">IBM297</span></a><a href="#step-rule" data-step="rule"><span class="num">4 · Déclarer</span><span class="sub">Process</span></a><a href="#step-day2" data-step="day2"><span class="num">5 · Lendemain</span><span class="sub">2 décisions</span></a></nav>
+  <section class="step" id="step-binary" aria-labelledby="binary-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="binary-title">Le fichier physique, transféré en binaire</h2>
+      <p>Un FTP en mode BINARY livre CLIENTS tel que l&#x27;IBM i le stocke.</p><ul class="prose-list"><li>des enregistrements de 70 octets, sans délimiteur</li><li>ENCOURS et PLAFOND packés: 00 00 00 03 52 50 0c</li><li>le fichier ne se coupe que là où un octet packé vaut 0D ou 25</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Rien d&#x27;écrit à moitié</strong><p>Chaque ligne contient des octets NUL: elle part en dead letter, avec la cause et le geste. Le run aboutit.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un fichier que le hub ne sait pas lire laisse une trace lisible, jamais un échec obscur.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Binaire"><button type="button" role="tab" id="binary-manifest-tab" data-view="manifest" aria-controls="binary-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="binary-commands-tab" data-view="commands" aria-controls="binary-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="binary-result-tab" data-view="result" aria-controls="binary-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="binary-manifest" aria-labelledby="binary-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-clients-binary.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># The first attempt: the physical file CLIENTS, transferred in binary, read as text.</span></span><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-as400-bin-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [credit-as400-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/as400-customer-credit/a/CLIENTS.bin</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">lines</span>: true</span><span class="line">    <span class="key">encoding</span>: IBM297               <span class="comment"># CCSID 297, the IBM i&#x27;s French EBCDIC</span></span><span class="line">  <span class="key">after_process</span>: none</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="binary-commands" aria-labelledby="binary-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-clients-binary.yaml</span>
+<span class="out">Applied connector &quot;scenario-as400-bin-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-as400-bin-a</span>
+<span class="out">run scheduled: 6a289dfb-1299-49b7-a4e0-e888674dcd71</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 6a289dfb-1299-49b7-a4e0-e888674dcd71</span>
+<span class="out">ID        CONNECTOR             ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+6a289dfb  scenario-as400-bin-a  default   Completed  9   0    9        9             2026-11-06 21:08  2026-11-06 21:08  yes</span>
+<span class="note">⚠ 9 rows quarantined — see: lm dlq list --run 6a289dfb-1299-49b7-a4e0-e888674dcd71</span>
+
+<span class="cmd"><span class="prompt">$</span> lm dlq list --run 6a289dfb-1299-49b7-a4e0-e888674dcd71</span>
+<span class="out">ID        CONNECTOR             RUN       REASON         ATTEMPTS  RESOLUTION  MESSAGE
+a5d500a9  scenario-as400-bin-a  6a289dfb  MappingFailed  1                     line: the value holds a NUL byte (0x00), which cannot be sto…
+a6c07660  scenario-as400-bin-a  6a289dfb  MappingFailed  1                     line: the value holds a NUL byte (0x00), which cannot be sto…
+a5be8e84  scenario-as400-bin-a  6a289dfb  MappingFailed  1                     line: the value holds a NUL byte (0x00), which cannot be sto…
+1c9d8642  scenario-as400-bin-a  6a289dfb  MappingFailed  1                     line: the value holds a NUL byte (0x00), which cannot be sto…
+12a044c9  scenario-as400-bin-a  6a289dfb  MappingFailed  1                     line: the value holds a NUL byte (0x00), which cannot be sto…
+5b705c50  scenario-as400-bin-a  6a289dfb  MappingFailed  1                     line: the value holds a NUL byte (0x00), which cannot be sto…
+82deddf5  scenario-as400-bin-a  6a289dfb  MappingFailed  1                     line: the value holds a NUL byte (0x00), which cannot be sto…
+2823aa38  scenario-as400-bin-a  6a289dfb  MappingFailed  1                     line: the value holds a NUL byte (0x00), which cannot be sto…
+bbc449b7  scenario-as400-bin-a  6a289dfb  MappingFailed  1                     line: the value holds a NUL byte (0x00), which cannot be sto…</span>
+
+<span class="cmd"><span class="prompt">$</span> lm dlq get 12a044c9-4a3f-4302-a88b-234d6340160b</span>
+<span class="out">ID:        12a044c9-4a3f-4302-a88b-234d6340160b
+Connector: scenario-as400-bin-a (337399dc-2059-4724-bc17-0d4bd62df993)
+Run:       6a289dfb-1299-49b7-a4e0-e888674dcd71
+Reason:    MappingFailed
+Attempts:  1
+Message:   line: the value holds a NUL byte (0x00), which cannot be stored — remove it with cell: clean: { columns: [line], remove-control-chars: true }
+Detail:    {&quot;field&quot;:&quot;line&quot;,&quot;message&quot;:&quot;the value holds a NUL byte (0x00), which cannot be stored — remove it with cell: clean: { columns: [line], remove-control-chars: true }&quot;}
+Payload:   {&quot;line&quot;:&quot;�\f���\u0095��\f410013Outillage Lefèvre             Grenoble            ���\u0011Â&amp;\f���\u0004&amp;�\f410014Bois &amp; Dérivés                Chambéry            ���\u0019\u0080�\f��� ��\f410015Sanitaires Pétain             Annecy              ���\u001BÂ&amp;\f���â&amp;�\f410016Chauffage Rémy                Mâcon               ���\u0096[�\f���á��\f410017Vitrerie Séverin              Vienne              ���\u0080[�\f���å&amp;�\f410018Maçonnerie Gérôme             Bourg-en-Bresse     ���\u0003\t�\f���\t��\f410019Jardinerie Aimée              Villefranche        ���\te�\f���\u007F&amp;�\f410020Équipements Josué             Lyon                ���\u009C��\f���\u0010��\f410021Clôtures Hélène               Saint-Étienne       ���\u007F\u0012&amp;\f���\u0012&amp;�\f410022Escaliers Thérèse             Valence             ���\u0011\u0010�\f���&quot;}
+Resolution: open</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="binary-result" aria-labelledby="binary-result-tab" tabindex="0" hidden><dl class="facts"><dt>record 1</dt><dd>f4 f1 f0 f0 f0 f1 d8 a4 89 95 83 81 89 93 93 85 99 89 85 40 c4 a4 82 96 85 a4 86 40 40 40 40 40 40 40 40 40 e2 81 89 95 a3 60 71 a3 89 85 95 95 85 40 40 40 40 40 40 40 00 00 00 03 52 50 0c 00 00 00 07 50 00 0c</dd><dt>default</dt><dd>Completed · IN 9 · OUT 0</dd><dt>reason</dt><dd>MappingFailed</dd><dt>message</dt><dd>line: the value holds a NUL byte (0x00), which cannot be stored — remove it with cell: clean: { columns: [line], remove-control-chars: true }</dd></dl><p class="sources">preuves: replay.log, binary-record-1.txt, dlq-letter.txt, export-record-1.txt, clients.txt, count-read.txt, over-limit.txt, inbox-day2.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-export" aria-labelledby="export-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="export-title">L&#x27;export de l&#x27;IBM i lui-même</h2>
+      <p>CPYTOIMPF écrit le fichier dans l&#x27;IFS, toujours en EBCDIC.</p><ul class="prose-list"><li>DTAFMT(*FIXED): les colonnes de la DDS, fixes</li><li>des nombres en clair, avec leur point décimal: 4B</li><li>RCDDLM(*CRLF): 0D 25 termine chaque enregistrement</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Aucune conversion</strong><p>STMFCCSID(297) garde le jeu de caractères de l&#x27;IBM i: le hub le lit tel quel.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>L&#x27;IBM i livre ses données avec une commande qu&#x27;il a déjà.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="CPYTOIMPF"><button type="button" role="tab" id="export-result-tab" data-view="result" aria-controls="export-result" aria-selected="true" tabindex="0">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-result" id="export-result" aria-labelledby="export-result-tab" tabindex="0"><dl class="facts"><dt>record 1</dt><dd>f4 f1 f0 f0 f0 f1 d8 a4 89 95 83 81 89 93 93 85 99 89 85 40 c4 a4 82 96 85 a4 86 40 40 40 40 40 40 40 40 40 e2 81 89 95 a3 60 71 a3 89 85 95 95 85 40 40 40 40 40 40 40 f0 f0 f0 f0 f0 f0 f3 f5 f2 f5 4b f0 f0 f0 f0 f0 f0 f0 f0 f7 f5 f0 f0 4b f0 f0 0d 25</dd></dl><p class="sources">preuves: replay.log, binary-record-1.txt, dlq-letter.txt, export-record-1.txt, clients.txt, count-read.txt, over-limit.txt, inbox-day2.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-read" aria-labelledby="read-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="read-title">30 clients, les accents intacts</h2>
+      <p>csv-file lit l&#x27;export ligne par ligne.</p><ul class="prose-list"><li>encoding: IBM297, l&#x27;EBCDIC français</li><li>un regex: CLINUM 6, RAISOC 30, VILLE 20, ENCOURS 13, PLAFOND 13</li><li>clean, parse-number</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>La DDS, en une ligne</strong><p>Les largeurs de la description du fichier deviennent les groupes du regex.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un fichier EBCDIC se lit sans le convertir d&#x27;abord.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-manifest-tab" data-view="manifest" aria-controls="read-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="read-manifest" aria-labelledby="read-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-clients.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-as400-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [credit-as400-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="comment"># CPYTOIMPF FROMFILE(GESCOM/CLIENTS) TOSTMF(&#x27;/exports/CLIENTS-&lt;date&gt;.txt&#x27;) DTAFMT(*FIXED) RCDDLM(*CRLF) STMFCCSID(297)</span></span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/as400-customer-credit/a/cpytoimpf/CLIENTS-*.txt</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">lines</span>: true                    <span class="comment"># fixed columns, one record per line</span></span><span class="line hl">    <span class="key">encoding</span>: IBM297</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      <span class="comment"># CLINUM 6, RAISOC 30, VILLE 20, ENCOURS 13, PLAFOND 13: the file&#x27;s DDS, column by column</span></span><span class="line">      - regex-extract:</span><span class="line">          <span class="key">column</span>: line</span><span class="line">          <span class="key">pattern</span>: <span class="str">&quot;^(.{6})(.{30})(.{20})(.{13})(.{13})$&quot;</span></span><span class="line">          <span class="key">groups</span>: { 1: clinum, 2: raisoc, 3: ville, 4: encours, 5: plafond }</span><span class="line">      <span class="dash">-</span> <span class="key">clean</span>: { columns: [raisoc, ville], strip: true }</span><span class="line">      - parse-number: { column: encours, decimal-separator: <span class="str">&quot;.&quot;</span> }</span><span class="line">      - parse-number: { column: plafond, decimal-separator: <span class="str">&quot;.&quot;</span> }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/20-clients.yaml</span>
+<span class="out">Applied connector &quot;scenario-as400-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-as400-a</span>
+<span class="out">run scheduled: 56e41938-ade2-48a2-b294-00298044c520</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 56e41938-ade2-48a2-b294-00298044c520</span>
+<span class="out">ID        CONNECTOR         ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+56e41938  scenario-as400-a  default   Completed  30  30   0        0             2026-11-06 21:08  2026-11-06 21:08  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>default</dt><dd>Completed · IN 30 · OUT 30</dd><dt>hub</dt><dd>410001 | Quincaillerie Duboeuf | Saint-Étienne | 3525.0000 | 7500.0000</dd><dt>hub</dt><dd>410002 | Établissements Légère | Valence | 6400.0000 | 10000.0000</dd><dt>hub</dt><dd>410004 | Bâtiment Côte d&#x27;Azur | Chambéry | 6450.0000 | 15000.0000</dd><dt>hub</dt><dd>410012 | Serrurerie Façon | Valence | 24150.0000 | 35000.0000</dd><dt>hub</dt><dd>30 customers, 0 over their credit limit</dd></dl><p class="sources">preuves: replay.log, binary-record-1.txt, dlq-letter.txt, export-record-1.txt, clients.txt, count-read.txt, over-limit.txt, inbox-day2.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-rule" aria-labelledby="rule-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="rule-title">Le plafond de chaque client</h2>
+      <p>Le Process compare deux colonnes de la ligne.</p><ul class="prose-list"><li>&quot;encours&gt;{plafond}&quot;: l&#x27;encours au-delà du plafond</li><li>key: clinum, la décision porte le numéro client</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Le plafond reste sur l&#x27;IBM i</strong><p>Il se règle là où le responsable crédit le règle; la règle le lit.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une règle de crédit lit le plafond que le métier entretient déjà.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="rule-manifest-tab" data-view="manifest" aria-controls="rule-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="rule-commands-tab" data-view="commands" aria-controls="rule-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="rule-result-tab" data-view="result" aria-controls="rule-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="rule-manifest" aria-labelledby="rule-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-over-limit.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-as400-over-limit-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: credit-as400-a</span><span class="line">  <span class="key">on</span>: { event: data.row.changed, table: connector.t_scenario_as400_a }</span><span class="line">  <span class="key">when</span>:</span><span class="line hl">    - <span class="str">&quot;encours&gt;{plafond}&quot;</span>            <span class="comment"># the outstanding balance above the customer&#x27;s own credit limit</span></span><span class="line">  <span class="key">emit</span>:</span><span class="line">    <span class="key">type</span>: decision.credit-over-limit-a</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;{clinum} {raisoc} ({ville}): {encours} € outstanding, credit limit {plafond} €&quot;</span></span><span class="line">    <span class="key">key</span>: clinum</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="rule-commands" aria-labelledby="rule-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm process apply -f manifests/30-over-limit.yaml</span>
+<span class="out">Applied process &quot;scenario-as400-over-limit-a&quot; → table connector.t_scenario_as400_a, emits decision.credit-over-limit-a</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="rule-result" aria-labelledby="rule-result-tab" tabindex="0" hidden><dl class="facts"><dt>apply</dt><dd>Applied process &quot;scenario-as400-over-limit-a&quot; → table connector.t_scenario_as400_a, emits decision.credit-over-limit-a</dd></dl><p class="sources">preuves: replay.log, binary-record-1.txt, dlq-letter.txt, export-record-1.txt, clients.txt, count-read.txt, over-limit.txt, inbox-day2.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-day2" aria-labelledby="day2-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="day2-title">L&#x27;export suivant: deux clients au-delà de leur plafond</h2>
+      <p>L&#x27;export du 6 novembre arrive.</p><ul class="prose-list"><li>410007 et 410022 passent au-delà de leur plafond</li><li>le paiement de 410015 est arrivé: il bouge, il reste dans le plafond</li><li>deux décisions</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Le message</strong><p>Client, raison sociale, ville, encours et plafond: de quoi appeler le client.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un client au-delà de son plafond arrive dans l&#x27;inbox, à son numéro.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lendemain"><button type="button" role="tab" id="day2-commands-tab" data-view="commands" aria-controls="day2-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="day2-result-tab" data-view="result" aria-controls="day2-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="day2-commands" aria-labelledby="day2-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-as400-a</span>
+<span class="out">run scheduled: 6233527a-5fda-44fe-946b-8eb0e5df1bdd</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 6233527a-5fda-44fe-946b-8eb0e5df1bdd</span>
+<span class="out">ID        CONNECTOR         ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+6233527a  scenario-as400-a  default   Completed  30  30   0        0             2026-11-06 21:08  2026-11-06 21:08  yes</span>
+<span class="note">• 1 file(s) unchanged since they were last read — not read again</span>
+
+<span class="cmd"><span class="prompt">$</span> lm inbox --process scenario-as400-over-limit-a</span>
+<span class="out">ID     WHEN      PROCESS                      MESSAGE                                                                        ENTITY_KEY
+24813  just now  scenario-as400-over-limit-a  410022 Escaliers Thérèse (Valence): 16470 € outstanding, credit limit 15000 €  410022
+24812  just now  scenario-as400-over-limit-a  410007 Plomberie Gaëtan (Vienne): 23820 € outstanding, credit limit 22500 €    410007
+24802  just now  scenario-as400-over-limit-a  410022 Escaliers Thérèse (Valence): 16470 € outstanding, credit limit 15000 €  410022
+24801  just now  scenario-as400-over-limit-a  410007 Plomberie Gaëtan (Vienne): 23820 € outstanding, credit limit 22500 €    410007</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="day2-result" aria-labelledby="day2-result-tab" tabindex="0" hidden><dl class="facts"><dt>default</dt><dd>Completed · IN 30 · OUT 30</dd><dt>hub</dt><dd>410007 | Plomberie Gaëtan | 23820.0000 | 22500.0000</dd><dt>hub</dt><dd>410022 | Escaliers Thérèse | 16470.0000 | 15000.0000</dd><dt>410007</dt><dd>410007 Plomberie Gaëtan (Vienne): 23820 € outstanding, credit limit 22500 €</dd><dt>410022</dt><dd>410022 Escaliers Thérèse (Valence): 16470 € outstanding, credit limit 15000 €</dd></dl><p class="sources">preuves: replay.log, binary-record-1.txt, dlq-letter.txt, export-record-1.txt, clients.txt, count-read.txt, over-limit.txt, inbox-day2.json · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Un transfert binaire ne se lit pas: pas de longueur d&#x27;enregistrement fixe, pas de décimal packé. L&#x27;export passe par CPYTOIMPF.</li><li>Le CCSID 297 n&#x27;a pas de œ: un nom écrit avec ne peut pas exister sur l&#x27;IBM i.</li><li>L&#x27;export de chaque jour est gardé: la table tient une ligne par client et par export.</li><li>Clients, encours et plafonds synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Crédit · IBM i</p><h2>Les clients vivent sur un AS/400.</h2><p class="brief-lead">En EBCDIC, CCSID 297.</p><p class="brief-note">CLIENTS: 30 clients, encours et plafond</p></section><section class="brief-slide"><p class="brief-kicker">Le fichier binaire</p><h2>Un transfert binaire ne se lit pas.</h2><ul class="brief-list tone-cyan"><li>Pas de délimiteur, des champs packés.</li><li>Chaque ligne en dead letter, la cause nommée.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>L&#x27;IBM i reste tel quel.</h2><ul class="brief-list tone-green"><li>CPYTOIMPF, sa propre commande d&#x27;export.</li><li>Aucune conversion en ASCII, aucun RPG.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>encoding: IBM297
+when: [&quot;encours&gt;{plafond}&quot;]</code></pre><h2>Le CCSID, les largeurs de la DDS, une condition.</h2><ul class="brief-list tone-green"><li>csv-file: les colonnes fixes.</li><li>Un Process: l&#x27;encours au-delà du plafond.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui a été corrigé</p><h2>Un octet NUL faisait échouer le run.</h2><ul class="brief-list tone-green"><li>Désormais: une dead letter, la cause, le geste (#1855).</li><li>Avant: « Error invoking subclass method ».</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
