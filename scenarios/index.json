@@ -1406,6 +1406,27 @@
       "evidenceDigest": "sha256:a7606c4a38ca66439c86c2ac8750ba35c026ff5a2461acca4170b7f64cefa132"
     },
     {
+      "slug": "wcf-soap-orders",
+      "title": "SOAP WCF et WS-Security: le mot de passe a tourné, le Fault le dit",
+      "goal": "Lire un service WCF protégé par un UsernameToken, survivre à la rotation de son mot de passe, et être prévenu d'une commande confirmée après sa date promise.",
+      "lede": "Un distributeur expose ses commandes ouvertes par un service WCF: HTTPS sous la CA de l'entreprise, un UsernameToken dans l'enveloppe.\n- la CA et le mot de passe vivent dans lm secret, jamais dans le manifeste;\n- le mot de passe tourne: en HTTP/2 le Fault se perd, en HTTP/1.1 il nomme la cause;\n- trois commandes confirmées après leur date promise, trois décisions.",
+      "tags": {
+        "domain": [
+          "Ventes",
+          "SOAP",
+          "WCF",
+          "WS-Security"
+        ],
+        "kinds": [
+          "Connector",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-07",
+      "evidenceDigest": "sha256:5a115e5aec7ee44ca83af4a4b0f9202abb7d94aee517e3c68759a0c734178fc4"
+    },
+    {
       "slug": "windev-hfsql-export",
       "title": "WinDev: l'export des clients avec de vraies dates et une vraie case Actif",
       "goal": "Lire le fichier clients qu'une application WinDev exporte, et en faire des colonnes qu'on peut interroger.",
