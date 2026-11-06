@@ -390,6 +390,26 @@
       "evidenceDigest": "sha256:99d22064292dcb6ead4b52f4aad94bc309eba96a715569fa6118df21f934095f"
     },
     {
+      "slug": "firebird-delphi-stock",
+      "title": "Firebird (Delphi): refusé en JDBC, lu par son export",
+      "goal": "Lire la base Firebird d'une application Delphi, et être prévenu quand un article passe sous son seuil de réapprovisionnement.",
+      "lede": "Une application de stock Delphi sur Firebird 5: 40 articles, une base WIN1252.\n- jdbc-generic n'a pas de dialecte Firebird: l'apply refuse, et dit ce qui est installé;\n- l'export que la boutique planifie déjà, isql, est lu par csv-file;\n- une journée de ventes: trois articles sous leur seuil, trois décisions de réappro.",
+      "tags": {
+        "domain": [
+          "Stock",
+          "Delphi",
+          "Firebird"
+        ],
+        "kinds": [
+          "Connector",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-06",
+      "evidenceDigest": "sha256:5b2f3d1ea47906c01eda88d0bed52191261bee44baa0f91460bd3266f46ceaaa"
+    },
+    {
       "slug": "gmao-candy-line-incident",
       "title": "Un incident critique reste sans technicien",
       "goal": "Prévenir le responsable maintenance dès qu'un incident critique n'a pas de technicien.",
