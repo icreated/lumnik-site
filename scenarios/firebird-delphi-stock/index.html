@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Firebird (Delphi): refusé en JDBC, lu par son export — lumnik</title>
+<meta name="description" content="Lire la base Firebird d&#x27;une application Delphi, et être prévenu quand un article passe sous son seuil de réapprovisionnement. Une application de stock Delphi sur Firebird 5: 40 articles, une base WIN1252. Jdbc-generic n&#x27;a pas de dialecte Firebird: l&#x27;apply refuse, et dit ce qui est installé; L&#x27;export que la boutique planifie déjà, isql, est lu par csv-file; Une journée de ventes: trois articles sous leur seuil, trois décisions de réappro.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/firebird-delphi-stock/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/firebird-delphi-stock/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Firebird (Delphi): refusé en JDBC, lu par son export</h1>
+    <p class="goal"><strong>Objectif</strong> Lire la base Firebird d&#x27;une application Delphi, et être prévenu quand un article passe sous son seuil de réapprovisionnement.</p>
+    <p class="lede">Une application de stock Delphi sur Firebird 5: 40 articles, une base WIN1252.</p><ul class="lede-list"><li>jdbc-generic n&#x27;a pas de dialecte Firebird: l&#x27;apply refuse, et dit ce qui est installé;</li><li>l&#x27;export que la boutique planifie déjà, isql, est lu par csv-file;</li><li>une journée de ventes: trois articles sous leur seuil, trois décisions de réappro.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Stock</li><li class="tag">Delphi</li><li class="tag">Firebird</li><li class="tag kind">Connector</li><li class="tag kind">Process</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="Firebird (Delphi): refusé en JDBC, lu par son export">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-refused" data-step="refused" aria-current="step"><span class="num">1 · JDBC</span><span class="sub">refusé</span></a><a href="#step-export" data-step="export"><span class="num">2 · Export</span><span class="sub">isql</span></a><a href="#step-read" data-step="read"><span class="num">3 · Lire</span><span class="sub">csv-file</span></a><a href="#step-rule" data-step="rule"><span class="num">4 · Déclarer</span><span class="sub">Process</span></a><a href="#step-sales" data-step="sales"><span class="num">5 · Vendre</span><span class="sub">3 décisions</span></a></nav>
+  <section class="step" id="step-refused" aria-labelledby="refused-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="refused-title">Firebird, lu en direct: refusé</h2>
+      <p>Premier essai: jdbc-generic, comme pour PostgreSQL. L&#x27;apply refuse avant toute connexion.</p><ul class="prose-list"><li>aucun dialecte installé n&#x27;accepte jdbc:firebirdsql</li><li>schema est exigé, et Firebird n&#x27;a pas de schémas</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Un refus honnête</strong><p>Le message nomme les dialectes que ce hub porte. Un fournisseur Firebird s&#x27;écrit quand un client en a besoin.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une base que le hub ne sait pas lire est refusée à l&#x27;apply, jamais lue à moitié.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="JDBC"><button type="button" role="tab" id="refused-manifest-tab" data-view="manifest" aria-controls="refused-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="refused-commands-tab" data-view="commands" aria-controls="refused-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="refused-result-tab" data-view="result" aria-controls="refused-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="refused-manifest" aria-labelledby="refused-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-firebird-jdbc.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># The first attempt: read the Firebird database directly, as jdbc-generic reads PostgreSQL.</span></span><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-fb-jdbc-a</span><span class="line">  <span class="key">connector_type</span>: jdbc-generic</span><span class="line">  <span class="key">scopes</span>: [stock-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">connection</span>:</span><span class="line">    <span class="key">url</span>: jdbc:firebirdsql://host.docker.internal:3061//var/lib/firebird/data/gestock.fdb</span><span class="line">    <span class="key">user</span>: SYSDBA</span><span class="line">    <span class="key">password_env</span>: SCENARIO_FIREBIRD_PASSWORD</span><span class="line">  <span class="key">source</span>:</span><span class="line">    <span class="key">tables</span>:</span><span class="line">      <span class="dash">-</span> <span class="key">name</span>: ARTICLES</span><span class="line">        <span class="key">mode</span>: full</span><span class="line">        <span class="key">pk_columns</span>: [ART_ID]</span><span class="line">        <span class="key">target</span>: articles_a</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="refused-commands" aria-labelledby="refused-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-firebird-jdbc.yaml</span>
+<span class="out">✗ 10-firebird-jdbc.yaml — 2 error(s), 0 warning(s)
+
+  ERROR    spec.connection.url
+          no installed JDBC dialect accepts url scheme &#x27;jdbc:firebirdsql&#x27; — install its provider, or set &#x27;dialect&#x27;. Available: oracle, postgres
+
+  ERROR    spec.source.tables[0].schema
+          required field missing
+
+Fix errors above before running &#x27;lm apply -f manifests/10-firebird-jdbc.yaml&#x27;.</span>
+<span class="note">Error: validation failed: 2 error(s)</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="refused-result" aria-labelledby="refused-result-tab" tabindex="0" hidden><dl class="facts"><dt>spec.connection.url</dt><dd>no installed JDBC dialect accepts url scheme &#x27;jdbc:firebirdsql&#x27; — install its provider, or set &#x27;dialect&#x27;. Available: oracle, postgres</dd><dt>spec.source.tables[0].schema</dt><dd>required field missing</dd></dl><p class="sources">preuves: replay.log, export-head.txt, articles.txt, count-read.txt, sold.txt, inbox-sales.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-export" aria-labelledby="export-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="export-title">L&#x27;export que la boutique planifie déjà</h2>
+      <p>isql, le client de Firebird, écrit les articles sur un partage, dans le jeu de caractères de la base.</p><ul class="prose-list"><li>WIN1252: é est l&#x27;octet E9</li><li>chaque ligne complétée à la largeur de l&#x27;expression</li><li>l&#x27;en-tête aussi: le hub rogne ses noms (#1853)</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>OUTPUT ajoute</strong><p>isql ajoute à un fichier existant. Le job supprime d&#x27;abord l&#x27;export de la veille.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La base sort par un geste que la boutique connaît déjà.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Export"><button type="button" role="tab" id="export-manifest-tab" data-view="manifest" aria-controls="export-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="export-result-tab" data-view="result" aria-controls="export-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="export-manifest" aria-labelledby="export-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/lab-docker-compose.yml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># The Delphi stock application&#x27;s database: Firebird 5, a WIN1252 database (lab/init.sql).</span></span><span class="line"><span class="key">name</span>: scenario-firebird-stock</span><span class="line"><span class="key">services</span>:</span><span class="line">  <span class="key">firebird</span>:</span><span class="line">    <span class="key">image</span>: firebirdsql/firebird:5.0.1</span><span class="line">    <span class="key">environment</span>:</span><span class="line">      <span class="key">FIREBIRD_ROOT_PASSWORD</span>: masterkey   <span class="comment"># the lab&#x27;s own; Firebird&#x27;s historical default</span></span><span class="line">    <span class="key">ports</span>: [<span class="str">&quot;127.0.0.1:${FIREBIRD_PORT:-3061}:3050&quot;</span>]</span><span class="line">    <span class="key">volumes</span>:</span><span class="line">      - ../lab:/lab:ro</span><span class="line">      - ../manifests:/manifests:ro   <span class="comment"># export-articles.sql, the scheduled export</span></span></code></pre><div class="file"><span class="filename">manifests/export-articles.sql</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line">-- The scheduled export, run by isql next to the Delphi application.</span><span class="line">-- rm -f /exports/articles.csv &amp;&amp; isql -user SYSDBA -ch WIN1252 -q -i export-articles.sql gestock.fdb</span><span class="line">SET HEADING OFF;</span><span class="line">SET BAIL ON;</span><span class="line hl">OUTPUT /exports/articles.csv;             -- appends: the job removes the previous file first</span><span class="line">SELECT &#x27;art_id;ref;libelle;qte_stock;seuil;prix_ht;date_maj&#x27; FROM RDB$DATABASE;   -- padded too: the hub trims it</span><span class="line">SELECT ART_ID || &#x27;;&#x27; || REF || &#x27;;&#x27; || COALESCE(LIBELLE, &#x27;&#x27;) || &#x27;;&#x27; || QTE_STOCK || &#x27;;&#x27; || SEUIL || &#x27;;&#x27; || PRIX_HT</span><span class="line">       || &#x27;;&#x27; || DATE_MAJ</span><span class="line">  FROM ARTICLES ORDER BY ART_ID;</span><span class="line hl">OUTPUT;</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="export-result" aria-labelledby="export-result-tab" tabindex="0" hidden><dl class="facts"><dt>line</dt><dd>art_id;ref;libelle;qte_stock;seuil;prix_ht;date_maj </dd><dt>line</dt><dd>1;ART-0001;Cl&lt;E9&gt; &lt;E0&gt; molette 14 mm;23.00;12.00;5.73;2026-10-04[113 spaces]</dd><dt>line</dt><dd>2;ART-0002;Tournevis cruciforme PH2;35.00;19.00;9.46;2026-10-07[108 spaces]</dd><dt>line</dt><dd>3;ART-0003;Pince coupante 160 mm;31.00;10.00;13.19;2026-10-10[110 spaces]</dd></dl><p class="sources">preuves: replay.log, export-head.txt, articles.txt, count-read.txt, sold.txt, inbox-sales.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-read" aria-labelledby="read-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="read-title">40 articles, les accents intacts</h2>
+      <p>csv-file lit l&#x27;export tel qu&#x27;il sort.</p><ul class="prose-list"><li>encoding: windows-1252, delimiter: ;</li><li>clean retire le remplissage</li><li>parse-number, parse-date</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>L&#x27;encodage déclaré</strong><p>Déclaré, les octets WIN1252 deviennent Clé à molette, Ø8, ¼&quot;.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une base Delphi se lit sans une ligne de Delphi.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-manifest-tab" data-view="manifest" aria-controls="read-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="read-manifest" aria-labelledby="read-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-articles.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-fb-articles-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [stock-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/firebird-delphi-stock/a/articles.csv   <span class="comment"># the share the export writes to</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line hl">    <span class="key">encoding</span>: windows-1252          <span class="comment"># the database&#x27;s character set, as isql -ch WIN1252 writes it</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      <span class="dash">-</span> <span class="key">clean</span>: { columns: [date_maj], strip: true }   <span class="comment"># isql pads every line to the expression&#x27;s width</span></span><span class="line">      - parse-number: { column: qte_stock }</span><span class="line">      - parse-number: { column: seuil }</span><span class="line">      - parse-number: { column: prix_ht }</span><span class="line">      - parse-date: { column: date_maj, formats: [<span class="str">&quot;yyyy-MM-dd&quot;</span>] }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/20-articles.yaml</span>
+<span class="out">Applied connector &quot;scenario-fb-articles-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-fb-articles-a</span>
+<span class="out">run scheduled: 62b9c5f4-13f4-4642-85a9-f5b7fe9d24d3</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 62b9c5f4-13f4-4642-85a9-f5b7fe9d24d3</span>
+<span class="out">ID        CONNECTOR               ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+62b9c5f4  scenario-fb-articles-a  default   Completed  40  40   0        0             2026-11-06 16:51  2026-11-06 16:51  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>default</dt><dd>Completed · IN 40 · OUT 40</dd><dt>hub</dt><dd>ART-0001 | Clé à molette 14 mm | 23.0000 | 12.0000 | 5.7300 | 2026-10-04</dd><dt>hub</dt><dd>ART-0011 | Chevilles nylon Ø8 (boîte) | 49.0000 | 18.0000 | 43.0300 | 2026-10-04</dd><dt>hub</dt><dd>ART-0038 | Douilles ¼&quot; (coffret) | 31.0000 | 15.0000 | 47.7400 | 2026-10-25</dd><dt>hub</dt><dd>40 articles, 0 under their threshold</dd></dl><p class="sources">preuves: replay.log, export-head.txt, articles.txt, count-read.txt, sold.txt, inbox-sales.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-rule" aria-labelledby="rule-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="rule-title">Un seuil par article</h2>
+      <p>Chaque article porte son propre seuil, SEUIL. Le Process compare les deux colonnes de la ligne.</p><ul class="prose-list"><li>&quot;qte_stock&lt;{seuil}&quot;: les accolades nomment une colonne</li><li>key: ref, la décision porte la référence de l&#x27;article</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Aucun chiffre en dur</strong><p>Le seuil reste dans l&#x27;application Delphi, là où la boutique le règle.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une règle lit le seuil que le métier entretient déjà.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="rule-manifest-tab" data-view="manifest" aria-controls="rule-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="rule-commands-tab" data-view="commands" aria-controls="rule-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="rule-result-tab" data-view="result" aria-controls="rule-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="rule-manifest" aria-labelledby="rule-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-below-threshold.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-fb-reorder-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: stock-a</span><span class="line">  <span class="key">on</span>: { event: data.row.changed, table: connector.t_scenario_fb_articles_a }</span><span class="line">  <span class="key">when</span>:</span><span class="line hl">    - <span class="str">&quot;qte_stock&lt;{seuil}&quot;</span>            <span class="comment"># the stock fell under the article&#x27;s own threshold</span></span><span class="line">  <span class="key">emit</span>:</span><span class="line">    <span class="key">type</span>: decision.reorder-a</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;{ref} {libelle}: {qte_stock} in stock, threshold {seuil}&quot;</span></span><span class="line">    <span class="key">key</span>: ref</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="rule-commands" aria-labelledby="rule-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm process apply -f manifests/30-below-threshold.yaml</span>
+<span class="out">Applied process &quot;scenario-fb-reorder-a&quot; → table connector.t_scenario_fb_articles_a, emits decision.reorder-a</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="rule-result" aria-labelledby="rule-result-tab" tabindex="0" hidden><dl class="facts"><dt>apply</dt><dd>Applied process &quot;scenario-fb-reorder-a&quot; → table connector.t_scenario_fb_articles_a, emits decision.reorder-a</dd></dl><p class="sources">preuves: replay.log, export-head.txt, articles.txt, count-read.txt, sold.txt, inbox-sales.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-sales" aria-labelledby="sales-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="sales-title">Une journée de ventes: trois réappros</h2>
+      <p>Six articles sont vendus dans l&#x27;application Delphi. L&#x27;export suivant est relu.</p><ul class="prose-list"><li>40 lignes, six modifiées</li><li>trois passent sous leur seuil, trois restent au-dessus</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Seulement ce qui a changé</strong><p>Les 34 articles inchangés ne décident rien.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un stock sous son seuil arrive dans l&#x27;inbox, à sa référence.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Vendre"><button type="button" role="tab" id="sales-commands-tab" data-view="commands" aria-controls="sales-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="sales-result-tab" data-view="result" aria-controls="sales-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="sales-commands" aria-labelledby="sales-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-fb-articles-a</span>
+<span class="out">run scheduled: e03443a2-eaf1-4cfc-9a68-b26d628acc31</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get e03443a2-eaf1-4cfc-9a68-b26d628acc31</span>
+<span class="out">ID        CONNECTOR               ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+e03443a2  scenario-fb-articles-a  default   Completed  40  40   0        0             2026-11-06 16:51  2026-11-06 16:51  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm inbox --process scenario-fb-reorder-a</span>
+<span class="out">ID     WHEN      PROCESS                MESSAGE                                                       ENTITY_KEY
+24402  just now  scenario-fb-reorder-a  ART-0023 Pistolet à mastic: 4 in stock, threshold 6           ART-0023
+24401  just now  scenario-fb-reorder-a  ART-0012 Vis à bois 4x40 (boîte): 7 in stock, threshold 9     ART-0012
+24400  just now  scenario-fb-reorder-a  ART-0002 Tournevis cruciforme PH2: 17 in stock, threshold 19  ART-0002
+24389  just now  scenario-fb-reorder-a  ART-0023 Pistolet à mastic: 4 in stock, threshold 6           ART-0023
+24388  just now  scenario-fb-reorder-a  ART-0012 Vis à bois 4x40 (boîte): 7 in stock, threshold 9     ART-0012
+24387  just now  scenario-fb-reorder-a  ART-0002 Tournevis cruciforme PH2: 17 in stock, threshold 19  ART-0002
+24330  1h        scenario-fb-reorder-a  ART-0023 Pistolet à mastic: 4 in stock, threshold 6           ART-0023
+24329  1h        scenario-fb-reorder-a  ART-0012 Vis à bois 4x40 (boîte): 7 in stock, threshold 9     ART-0012
+24328  1h        scenario-fb-reorder-a  ART-0002 Tournevis cruciforme PH2: 17 in stock, threshold 19  ART-0002</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="sales-result" aria-labelledby="sales-result-tab" tabindex="0" hidden><dl class="facts"><dt>default</dt><dd>Completed · IN 40 · OUT 40</dd><dt>hub</dt><dd>ART-0002 | Tournevis cruciforme PH2 | 17.0000 | 19.0000 | 2026-11-05</dd><dt>hub</dt><dd>ART-0005 | Mètre ruban 5 m | 11.0000 | 8.0000 | 2026-11-05</dd><dt>hub</dt><dd>ART-0012 | Vis à bois 4x40 (boîte) | 7.0000 | 9.0000 | 2026-11-05</dd><dt>hub</dt><dd>ART-0017 | Gants de manutention T9 | 15.0000 | 12.0000 | 2026-11-05</dd><dt>hub</dt><dd>ART-0023 | Pistolet à mastic | 4.0000 | 6.0000 | 2026-11-05</dd><dt>hub</dt><dd>ART-0031 | Serre-joint 300 mm | 17.0000 | 14.0000 | 2026-11-05</dd><dt>ART-0002</dt><dd>ART-0002 Tournevis cruciforme PH2: 17 in stock, threshold 19</dd><dt>ART-0012</dt><dd>ART-0012 Vis à bois 4x40 (boîte): 7 in stock, threshold 9</dd><dt>ART-0023</dt><dd>ART-0023 Pistolet à mastic: 4 in stock, threshold 6</dd></dl><p class="sources">preuves: replay.log, export-head.txt, articles.txt, count-read.txt, sold.txt, inbox-sales.json · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Ce hub porte les dialectes oracle et postgres (Pro); un hub Open liste postgres seul.</li><li>L&#x27;export est un fichier quotidien: une vente se voit à l&#x27;export suivant, pas en caisse.</li><li>Articles, stocks et prix synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Stock · Delphi</p><h2>Le stock vit dans une application Delphi.</h2><p class="brief-lead">Sa base est Firebird.</p><p class="brief-note">40 articles, WIN1252, Firebird 5</p></section><section class="brief-slide"><p class="brief-kicker">Le refus</p><h2>Pas de dialecte Firebird.</h2><ul class="brief-list tone-cyan"><li>L&#x27;apply refuse, et nomme ce qui est installé.</li><li>Tant qu&#x27;aucun client n&#x27;en a besoin, l&#x27;export suffit.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>L&#x27;application Delphi reste telle quelle.</h2><ul class="brief-list tone-green"><li>L&#x27;export isql qu&#x27;elle planifie déjà.</li><li>Accents WIN1252, lignes complétées d&#x27;espaces.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>encoding: windows-1252
+when: [&quot;qte_stock&lt;{seuil}&quot;]</code></pre><h2>Un encodage, une condition entre deux colonnes.</h2><ul class="brief-list tone-green"><li>csv-file: l&#x27;export tel qu&#x27;il sort.</li><li>Un Process: une décision par article.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui a été trouvé</p><h2>Un en-tête complété d&#x27;espaces devenait un nom de colonne.</h2><ul class="brief-list tone-green"><li>Le hub le rogne désormais (#1853).</li><li>OUTPUT d&#x27;isql ajoute: le job supprime d&#x27;abord le fichier.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>

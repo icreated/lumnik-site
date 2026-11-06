@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calibrations expirées: les résultats mesurés sur un instrument hors validité — lumnik</title>
+<meta name="description" content="Signaler chaque résultat de labo mesuré hors de la validité de calibration de son instrument (ISO 17025), depuis le registre et le LIMS tels qu&#x27;ils exportent. Un registre de métrologie et un LIMS, deux exports CSV: 6 instruments, 144 résultats. Une Entity joint le registre à chaque résultat; Un Process compare deux colonnes de la ligne jointe: measured_at après valid_until; Le registre change: les résultats déjà là sont jugés à nouveau.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/lims-expired-calibrations/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/lims-expired-calibrations/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Calibrations expirées: les résultats mesurés sur un instrument hors validité</h1>
+    <p class="goal"><strong>Objectif</strong> Signaler chaque résultat de labo mesuré hors de la validité de calibration de son instrument (ISO 17025), depuis le registre et le LIMS tels qu&#x27;ils exportent.</p>
+    <p class="lede">Un registre de métrologie et un LIMS, deux exports CSV: 6 instruments, 144 résultats.</p><ul class="lede-list"><li>une Entity joint le registre à chaque résultat;</li><li>un Process compare deux colonnes de la ligne jointe: measured_at après valid_until;</li><li>le registre change: les résultats déjà là sont jugés à nouveau.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Laboratoire</li><li class="tag">ISO 17025</li><li class="tag">Métrologie</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li><li class="tag kind">Process</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="Calibrations expirées: les résultats mesurés sur un instrument hors validité">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · Exports</span><span class="sub">csv-file</span></a><a href="#step-entity" data-step="entity"><span class="num">2 · Joindre</span><span class="sub">Entity</span></a><a href="#step-watch" data-step="watch"><span class="num">3 · Déclarer</span><span class="sub">Process</span></a><a href="#step-november" data-step="november"><span class="num">4 · Mesurer</span><span class="sub">BAL-03</span></a><a href="#step-register" data-step="register"><span class="num">5 · Recalibrer</span><span class="sub">HPLC-01</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">Le registre et les résultats d&#x27;octobre</h2>
+      <p>Deux exports, deux connecteurs.</p><ul class="prose-list"><li>instruments.csv: chaque instrument, son certificat, valid_until</li><li>results-2026-10.csv: 120 résultats, chacun avec l&#x27;instrument qui l&#x27;a mesuré</li><li>results-*.csv: le LIMS dépose un fichier par mois</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Deux systèmes</strong><p>Aucun export ne connaît l&#x27;autre: les résultats ne portent pas la validité.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le registre et les résultats se lisent comme chaque système les exporte.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Exports"><button type="button" role="tab" id="lab-source-tab" data-view="source" aria-controls="lab-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="lab-manifest-tab" data-view="manifest" aria-controls="lab-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="lab-commands-tab" data-view="commands" aria-controls="lab-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="lab-source" aria-labelledby="lab-source-tab" tabindex="0"><figure class="source"><figcaption>instruments.csv</figcaption><pre class="code">instrument_id,label,calibrated_on,valid_until,certificate
+BAL-01,Analytical balance QC bench 1,2026-03-02,2027-03-01,CAL-2026-0112
+BAL-03,Analytical balance QC bench 3,2025-11-03,2026-11-02,CAL-2025-0871
+HPLC-01,HPLC assay line,2026-05-12,2027-05-11,CAL-2026-0348
+HPLC-02,HPLC impurities line,2026-01-20,2027-01-19,CAL-2026-0041
+PH-02,pH meter buffers,2026-09-01,2026-12-01,CAL-2026-0655
+UV-01,UV-Vis spectrophotometer,2026-02-16,2027-02-15,CAL-2026-0090</pre></figure><figure class="source"><figcaption>results-2026-10.csv</figcaption><pre class="code">result_id,sample,analyte,value,unit,instrument_id,measured_at
+R-00001,S-2026-1000,mass,100.0,mg,BAL-03,2026-10-12T08:37:00Z
+R-00002,S-2026-1000,assay,99.396,%,HPLC-01,2026-10-23T09:14:00Z
+R-00003,S-2026-1001,impurity B,0.0799,%,HPLC-02,2026-10-03T09:51:00Z
+R-00004,S-2026-1001,pH,6.8204,,PH-02,2026-10-14T10:28:00Z
+R-00005,S-2026-1001,absorbance,0.511,AU,UV-01,2026-10-25T11:05:00Z
+R-00006,S-2026-1002,mass,250.5,mg,BAL-01,2026-10-05T11:42:00Z
+R-00007,S-2026-1002,mass,99.7,mg,BAL-03,2026-10-16T12:19:00Z
+R-00008,S-2026-1002,assay,99.099,%,HPLC-01,2026-10-27T12:56:00Z
+R-00009,S-2026-1003,impurity B,0.0797,%,HPLC-02,2026-10-07T13:33:00Z
+R-00010,S-2026-1003,pH,6.8,,PH-02,2026-10-18T14:10:00Z
+R-00011,S-2026-1003,absorbance,0.514,AU,UV-01,2026-10-29T14:47:00Z
+R-00012,S-2026-1004,mass,249.75,mg,BAL-01,2026-10-09T15:24:00Z
+R-00013,S-2026-1004,mass,100.3,mg,BAL-03,2026-10-20T08:01:00Z
+R-00014,S-2026-1004,assay,98.802,%,HPLC-01,2026-10-31T08:38:00Z
+R-00015,S-2026-1005,impurity B,0.0802,%,HPLC-02,2026-10-11T09:15:00Z
+R-00016,S-2026-1005,pH,6.7796,,PH-02,2026-10-22T09:52:00Z
+R-00017,S-2026-1005,absorbance,0.5125,AU,UV-01,2026-10-02T10:29:00Z
+R-00018,S-2026-1006,mass,249.0,mg,BAL-01,2026-10-13T11:06:00Z
+R-00019,S-2026-1006,mass,100.0,mg,BAL-03,2026-10-24T11:43:00Z</pre><p class="source-more">… 101 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="lab-manifest" aria-labelledby="lab-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/10-instrument-register.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-calib-reg-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [qc-lab-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/lims-expired-calibrations/a/register/instruments.csv   <span class="comment"># the metrology register&#x27;s export</span></span><span class="line">  <span class="key">after_process</span>: none</span></code></pre><div class="file"><span class="filename">manifests/11-lims-results.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-calib-res-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [qc-lab-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/lims-expired-calibrations/a/results/results-*.csv   <span class="comment"># the LIMS drops one file a month</span></span><span class="line">  <span class="key">after_process</span>: none</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="lab-commands" aria-labelledby="lab-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-instrument-register.yaml</span>
+<span class="out">Applied connector &quot;scenario-calib-reg-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f manifests/11-lims-results.yaml</span>
+<span class="out">Applied connector &quot;scenario-calib-res-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-calib-reg-a</span>
+<span class="out">run scheduled: abdc8200-229f-4060-bfe0-2b46951da224</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get abdc8200-229f-4060-bfe0-2b46951da224</span>
+<span class="out">ID        CONNECTOR             ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+abdc8200  scenario-calib-reg-a  default   Completed  6   6    0        0             2026-11-06 14:49  2026-11-06 14:49  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-calib-res-a</span>
+<span class="out">run scheduled: a8d9bf7e-6948-486a-b362-05942470315e</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get a8d9bf7e-6948-486a-b362-05942470315e</span>
+<span class="out">ID        CONNECTOR             ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+a8d9bf7e  scenario-calib-res-a  default   Completed  120  120  0        0             2026-11-06 14:49  2026-11-06 14:49  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-calib-reg-a</dt><dd>Completed · IN 6 · OUT 6</dd><dt>scenario-calib-res-a</dt><dd>Completed · IN 120 · OUT 120</dd></dl><p class="sources">preuves: replay.log, joined.txt, count-october.txt, inbox-november.json, inbox-all.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-entity" aria-labelledby="entity-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="entity-title">La validité sur chaque résultat</h2>
+      <p>L&#x27;Entity a pour clé le résultat. Sa jointure va chercher la ligne de l&#x27;instrument dans le registre.</p><ul class="prose-list"><li>match: result_id</li><li>joins: depuis instrument_id, trois colonnes du registre</li><li>en octobre, tous les résultats sont dans la validité</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Une jointure, pas une fusion</strong><p>Une jointure enrichit les lignes de résultats. Elle n&#x27;en ajoute jamais.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une ligne porte désormais la mesure et la validité de son instrument.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Joindre"><button type="button" role="tab" id="entity-manifest-tab" data-view="manifest" aria-controls="entity-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="entity-commands-tab" data-view="commands" aria-controls="entity-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="entity-result-tab" data-view="result" aria-controls="entity-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="entity-manifest" aria-labelledby="entity-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-calibrated-result.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: calib_result_a</span><span class="line"><span class="key">match</span>: [result_id]</span><span class="line"><span class="key">scopes</span>: [qc-lab-a]</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_calib_res_a</span><span class="line">    <span class="key">map</span>: { result_id: result_id, sample: sample, analyte: analyte, value: value, unit: unit,</span><span class="line">           <span class="key">instrument_id</span>: instrument_id, measured_at: measured_at }</span><span class="line hl"><span class="key">joins</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_calib_reg_a      <span class="comment"># per instrument, not per result</span></span><span class="line">    <span class="key">from</span>: instrument_id</span><span class="line">    <span class="key">to</span>: instrument_id</span><span class="line">    <span class="key">map</span>: { calibrated_on: calibrated_on, valid_until: valid_until, certificate: certificate }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="entity-commands" aria-labelledby="entity-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f manifests/20-calibrated-result.yaml</span>
+<span class="out">Applied entity &quot;calib_result_a&quot; → connector.&quot;v_calib_result_a&quot;</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="entity-result" aria-labelledby="entity-result-tab" tabindex="0" hidden><dl class="facts"><dt>joined</dt><dd>R-00002 | HPLC-01 | 2026-10-23T09:14:00Z | CAL-2026-0348 | 2027-05-11</dd><dt>joined</dt><dd>R-00004 | PH-02 | 2026-10-14T10:28:00Z | CAL-2026-0655 | 2026-12-01</dd><dt>hub</dt><dd>120 results, 120 with their instrument&#x27;s validity, 0 measured out of calibration</dd></dl><p class="sources">preuves: replay.log, joined.txt, count-october.txt, inbox-november.json, inbox-all.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-watch" aria-labelledby="watch-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="watch-title">Une règle sur la ligne jointe</h2>
+      <p>Le Process écoute la vue de l&#x27;Entity, connector.v_calib_result_a.</p><ul class="prose-list"><li>&quot;measured_at&gt;{valid_until}&quot;: les accolades nomment une colonne, pas un texte</li><li>key: result_id, la décision porte le numéro du résultat</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Appliqué après octobre</strong><p>Un Process ne juge pas les lignes déjà là: seules les nouvelles, et celles qui changent.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une règle compare deux colonnes venues de deux systèmes.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="watch-manifest-tab" data-view="manifest" aria-controls="watch-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="watch-commands-tab" data-view="commands" aria-controls="watch-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="watch-result-tab" data-view="result" aria-controls="watch-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="watch-manifest" aria-labelledby="watch-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-out-of-calibration.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-calib-expired-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: qc-lab-a</span><span class="line">  <span class="key">on</span>: { event: data.row.changed, table: connector.v_calib_result_a }</span><span class="line">  <span class="key">when</span>:</span><span class="line hl">    - <span class="str">&quot;measured_at&gt;{valid_until}&quot;</span>      <span class="comment"># measured after the instrument&#x27;s certificate ran out</span></span><span class="line">  <span class="key">emit</span>:</span><span class="line">    <span class="key">type</span>: decision.out-of-calibration-a</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;{result_id} ({sample}, {analyte}) measured on {instrument_id} at {measured_at}: certificate {certificate} valid until {valid_until}&quot;</span></span><span class="line">    <span class="key">key</span>: result_id</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="watch-commands" aria-labelledby="watch-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm process apply -f manifests/30-out-of-calibration.yaml</span>
+<span class="out">Applied process &quot;scenario-calib-expired-a&quot; → table connector.v_calib_result_a, emits decision.out-of-calibration-a</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="watch-result" aria-labelledby="watch-result-tab" tabindex="0" hidden><dl class="facts"><dt>apply</dt><dd>Applied process &quot;scenario-calib-expired-a&quot; → table connector.v_calib_result_a, emits decision.out-of-calibration-a</dd></dl><p class="sources">preuves: replay.log, joined.txt, count-october.txt, inbox-november.json, inbox-all.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-november" aria-labelledby="november-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="november-title">Novembre: quatre résultats hors calibration</h2>
+      <p>Les 24 premiers résultats de novembre arrivent. BAL-03 a pesé quatre échantillons après le 2 novembre.</p><ul class="prose-list"><li>24 lignes nouvelles, le fichier d&#x27;octobre n&#x27;est pas relu</li><li>quatre décisions, toutes sur BAL-03</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Le message</strong><p>Résultat, échantillon, instrument, heure de mesure, certificat et sa date de fin: ce dont le responsable qualité a besoin.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Chaque résultat mesuré hors calibration arrive dans l&#x27;inbox, à son numéro.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Mesurer"><button type="button" role="tab" id="november-source-tab" data-view="source" aria-controls="november-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="november-commands-tab" data-view="commands" aria-controls="november-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="november-result-tab" data-view="result" aria-controls="november-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="november-source" aria-labelledby="november-source-tab" tabindex="0"><figure class="source"><figcaption>results-2026-11.csv</figcaption><pre class="code">result_id,sample,analyte,value,unit,instrument_id,measured_at
+R-00121,S-2026-1040,mass,250.75,mg,BAL-01,2026-11-02T10:37:00Z
+R-00122,S-2026-1040,mass,99.8,mg,BAL-03,2026-11-03T11:14:00Z
+R-00123,S-2026-1041,assay,99.198,%,HPLC-01,2026-11-04T11:51:00Z
+R-00124,S-2026-1041,impurity B,0.0798,%,HPLC-02,2026-11-05T12:28:00Z
+R-00125,S-2026-1041,pH,6.8068,,PH-02,2026-11-02T13:05:00Z
+R-00126,S-2026-1042,absorbance,0.51,AU,UV-01,2026-11-03T13:42:00Z
+R-00127,S-2026-1042,mass,250.0,mg,BAL-01,2026-11-04T14:19:00Z
+R-00128,S-2026-1042,mass,100.4,mg,BAL-03,2026-11-04T14:56:00Z
+R-00129,S-2026-1043,assay,98.901,%,HPLC-01,2026-11-02T15:33:00Z
+R-00130,S-2026-1043,impurity B,0.0802,%,HPLC-02,2026-11-03T08:10:00Z
+R-00131,S-2026-1043,pH,6.7864,,PH-02,2026-11-04T08:47:00Z
+R-00132,S-2026-1044,absorbance,0.513,AU,UV-01,2026-11-05T09:24:00Z
+R-00133,S-2026-1044,mass,249.25,mg,BAL-01,2026-11-02T10:01:00Z
+R-00134,S-2026-1044,mass,100.1,mg,BAL-03,2026-11-05T10:38:00Z
+R-00135,S-2026-1045,assay,98.604,%,HPLC-01,2026-11-04T11:15:00Z
+R-00136,S-2026-1045,impurity B,0.08,%,HPLC-02,2026-11-05T11:52:00Z
+R-00137,S-2026-1045,pH,6.8272,,PH-02,2026-11-02T12:29:00Z
+R-00138,S-2026-1046,absorbance,0.5115,AU,UV-01,2026-11-03T13:06:00Z
+R-00139,S-2026-1046,mass,250.75,mg,BAL-01,2026-11-04T13:43:00Z</pre><p class="source-more">… 5 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-commands" id="november-commands" aria-labelledby="november-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-calib-res-a</span>
+<span class="out">run scheduled: 423ca3c4-e5fb-4472-8ed2-1e5737a8a1d3</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 423ca3c4-e5fb-4472-8ed2-1e5737a8a1d3</span>
+<span class="out">ID        CONNECTOR             ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+423ca3c4  scenario-calib-res-a  default   Completed  24  24   0        0             2026-11-06 14:49  2026-11-06 14:49  yes</span>
+<span class="note">• 1 file(s) unchanged since they were last read — not read again</span>
+
+<span class="cmd"><span class="prompt">$</span> lm inbox --process scenario-calib-expired-a</span>
+<span class="out">ID     WHEN      PROCESS                   MESSAGE                                                                                                                   ENTITY_KEY
+24274  just now  scenario-calib-expired-a  R-00140 (S-2026-1046, mass) measured on BAL-03 at 2026-11-03T14:20:00Z: certificate CAL-2025-0871 valid until 2026-11-02  R-00140
+24273  just now  scenario-calib-expired-a  R-00134 (S-2026-1044, mass) measured on BAL-03 at 2026-11-05T10:38:00Z: certificate CAL-2025-0871 valid until 2026-11-02  R-00134
+24272  just now  scenario-calib-expired-a  R-00128 (S-2026-1042, mass) measured on BAL-03 at 2026-11-04T14:56:00Z: certificate CAL-2025-0871 valid until 2026-11-02  R-00128
+24271  just now  scenario-calib-expired-a  R-00122 (S-2026-1040, mass) measured on BAL-03 at 2026-11-03T11:14:00Z: certificate CAL-2025-0871 valid until 2026-11-02  R-00122</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="november-result" aria-labelledby="november-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-calib-res-a</dt><dd>Completed · IN 24 · OUT 24</dd><dt>R-00122</dt><dd>R-00122 (S-2026-1040, mass) measured on BAL-03 at 2026-11-03T11:14:00Z: certificate CAL-2025-0871 valid until 2026-11-02</dd><dt>R-00128</dt><dd>R-00128 (S-2026-1042, mass) measured on BAL-03 at 2026-11-04T14:56:00Z: certificate CAL-2025-0871 valid until 2026-11-02</dd><dt>R-00134</dt><dd>R-00134 (S-2026-1044, mass) measured on BAL-03 at 2026-11-05T10:38:00Z: certificate CAL-2025-0871 valid until 2026-11-02</dd><dt>R-00140</dt><dd>R-00140 (S-2026-1046, mass) measured on BAL-03 at 2026-11-03T14:20:00Z: certificate CAL-2025-0871 valid until 2026-11-02</dd></dl><p class="sources">preuves: replay.log, joined.txt, count-october.txt, inbox-november.json, inbox-all.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-register" aria-labelledby="register-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="register-title">Le registre change: le passé est jugé à nouveau</h2>
+      <p>HPLC-01 échoue sa vérification intermédiaire du 27 octobre. La métrologie raccourcit sa validité dans le registre.</p><ul class="prose-list"><li>une ligne du registre change</li><li>le hub réévalue chaque résultat qui lui est joint</li><li>8 résultats déjà dans le hub remontent</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Aucun nouveau résultat</strong><p>Le changement vient du registre. Les résultats n&#x27;ont pas bougé.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une correction du registre retrouve les résultats qu&#x27;elle remet en cause.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Recalibrer"><button type="button" role="tab" id="register-commands-tab" data-view="commands" aria-controls="register-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="register-result-tab" data-view="result" aria-controls="register-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="register-commands" aria-labelledby="register-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-calib-reg-a</span>
+<span class="out">run scheduled: 5712b74e-c1df-4d5a-8ca9-142ab9683af7</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 5712b74e-c1df-4d5a-8ca9-142ab9683af7</span>
+<span class="out">ID        CONNECTOR             ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+5712b74e  scenario-calib-reg-a  default   Completed  6   6    0        0             2026-11-06 14:49  2026-11-06 14:49  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm inbox --process scenario-calib-expired-a</span>
+<span class="out">ID     WHEN      PROCESS                   MESSAGE                                                                                                                     ENTITY_KEY
+24285  just now  scenario-calib-expired-a  R-00141 (S-2026-1047, assay) measured on HPLC-01 at 2026-11-02T14:57:00Z: certificate CAL-2026-0348 valid until 2026-10-27  R-00141
+24284  just now  scenario-calib-expired-a  R-00135 (S-2026-1045, assay) measured on HPLC-01 at 2026-11-04T11:15:00Z: certificate CAL-2026-0348 valid until 2026-10-27  R-00135
+24283  just now  scenario-calib-expired-a  R-00129 (S-2026-1043, assay) measured on HPLC-01 at 2026-11-02T15:33:00Z: certificate CAL-2026-0348 valid until 2026-10-27  R-00129
+24282  just now  scenario-calib-expired-a  R-00123 (S-2026-1041, assay) measured on HPLC-01 at 2026-11-04T11:51:00Z: certificate CAL-2026-0348 valid until 2026-10-27  R-00123
+24281  just now  scenario-calib-expired-a  R-00104 (S-2026-1034, assay) measured on HPLC-01 at 2026-10-29T08:08:00Z: certificate CAL-2026-0348 valid until 2026-10-27  R-00104
+24280  just now  scenario-calib-expired-a  R-00056 (S-2026-1018, assay) measured on HPLC-01 at 2026-10-28T10:32:00Z: certificate CAL-2026-0348 valid until 2026-10-27  R-00056
+24279  just now  scenario-calib-expired-a  R-00014 (S-2026-1004, assay) measured on HPLC-01 at 2026-10-31T08:38:00Z: certificate CAL-2026-0348 valid until 2026-10-27  R-00014
+24278  just now  scenario-calib-expired-a  R-00008 (S-2026-1002, assay) measured on HPLC-01 at 2026-10-27T12:56:00Z: certificate CAL-2026-0348 valid until 2026-10-27  R-00008
+24274  just now  scenario-calib-expired-a  R-00140 (S-2026-1046, mass) measured on BAL-03 at 2026-11-03T14:20:00Z: certificate CAL-2025-0871 valid until 2026-11-02    R-00140
+24273  just now  scenario-calib-expired-a  R-00134 (S-2026-1044, mass) measured on BAL-03 at 2026-11-05T10:38:00Z: certificate CAL-2025-0871 valid until 2026-11-02    R-00134
+24272  just now  scenario-calib-expired-a  R-00128 (S-2026-1042, mass) measured on BAL-03 at 2026-11-04T14:56:00Z: certificate CAL-2025-0871 valid until 2026-11-02    R-00128
+24271  just now  scenario-calib-expired-a  R-00122 (S-2026-1040, mass) measured on BAL-03 at 2026-11-03T11:14:00Z: certificate CAL-2025-0871 valid until 2026-11-02    R-00122</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="register-result" aria-labelledby="register-result-tab" tabindex="0" hidden><dl class="facts"><dt>register</dt><dd>HPLC-01: valid until 2027-05-11 → 2026-10-27</dd><dt>scenario-calib-reg-a</dt><dd>Completed · IN 6 · OUT 6</dd><dt>R-00008</dt><dd>R-00008 (S-2026-1002, assay) measured on HPLC-01 at 2026-10-27T12:56:00Z: certificate CAL-2026-0348 valid until 2026-10-27</dd><dt>R-00014</dt><dd>R-00014 (S-2026-1004, assay) measured on HPLC-01 at 2026-10-31T08:38:00Z: certificate CAL-2026-0348 valid until 2026-10-27</dd><dt>R-00056</dt><dd>R-00056 (S-2026-1018, assay) measured on HPLC-01 at 2026-10-28T10:32:00Z: certificate CAL-2026-0348 valid until 2026-10-27</dd><dt>R-00104</dt><dd>R-00104 (S-2026-1034, assay) measured on HPLC-01 at 2026-10-29T08:08:00Z: certificate CAL-2026-0348 valid until 2026-10-27</dd><dt>R-00123</dt><dd>R-00123 (S-2026-1041, assay) measured on HPLC-01 at 2026-11-04T11:51:00Z: certificate CAL-2026-0348 valid until 2026-10-27</dd><dt>R-00129</dt><dd>R-00129 (S-2026-1043, assay) measured on HPLC-01 at 2026-11-02T15:33:00Z: certificate CAL-2026-0348 valid until 2026-10-27</dd><dt>R-00135</dt><dd>R-00135 (S-2026-1045, assay) measured on HPLC-01 at 2026-11-04T11:15:00Z: certificate CAL-2026-0348 valid until 2026-10-27</dd><dt>R-00141</dt><dd>R-00141 (S-2026-1047, assay) measured on HPLC-01 at 2026-11-02T14:57:00Z: certificate CAL-2026-0348 valid until 2026-10-27</dd><dt>inbox</dt><dd>12 decisions: 4 on BAL-03, 8 on HPLC-01</dd></dl><p class="sources">preuves: replay.log, joined.txt, count-october.txt, inbox-november.json, inbox-all.json · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Les conditions se combinent en ET: « mesuré avant la calibration » demande un second Process.</li><li>Une date seule vaut minuit UTC: un certificat valable jusqu&#x27;au 2 novembre se termine au début du 2.</li><li>Un résultat supprimé, ou dont le numéro change, n&#x27;est pas jugé.</li><li>Les résultats déjà là quand le Process est appliqué ne sont jugés que s&#x27;ils changent, ou si leur instrument change.</li><li>Instruments, certificats et résultats synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Laboratoire · ISO 17025</p><h2>Un résultat ne vaut que si son instrument était calibré.</h2><p class="brief-lead">Le registre et les résultats vivent dans deux systèmes.</p><p class="brief-note">6 instruments, 144 résultats, deux exports CSV</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Le certificat de BAL-03 a expiré le 2 novembre.</h2><ul class="brief-list tone-cyan"><li>Elle a pesé les 3, 4 et 5.</li><li>Les deux exports se croisent à la main.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>Le LIMS et le registre restent tels quels.</h2><ul class="brief-list tone-green"><li>Leurs exports CSV habituels.</li><li>Aucun développement dans l&#x27;un ou l&#x27;autre.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>joins: [{ table: registre, from: instrument_id }]
+when: [&quot;measured_at&gt;{valid_until}&quot;]</code></pre><h2>Une jointure, une condition entre deux colonnes.</h2><ul class="brief-list tone-green"><li>Une Entity: la validité sur chaque résultat.</li><li>Un Process: une décision par résultat.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le registre change</p><h2>HPLC-01 échoue sa vérification du 27 octobre.</h2><ul class="brief-list tone-green"><li>Sa validité est raccourcie dans le registre.</li><li>8 résultats déjà validés remontent.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>

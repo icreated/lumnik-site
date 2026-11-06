@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HL7 v2: le résultat d&#x27;analyseur hors norme, signalé ou non — lumnik</title>
+<meta name="description" content="Lire les messages HL7 v2 que deux analyseurs déposent pour le LIMS, et être prévenu quand un résultat dépasse sa norme. Deux analyseurs de chimie, HL7 v2.5.1 ORU^R01: des segments terminés par un retour chariot seul. Csv-file lit un segment par ligne, MSH, PID, OBR, OBX; L&#x27;échantillon descend sur chaque résultat; Un Process compare la valeur à la norme envoyée à côté, quel que soit le drapeau.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/hl7-analyser-results/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/hl7-analyser-results/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>HL7 v2: le résultat d&#x27;analyseur hors norme, signalé ou non</h1>
+    <p class="goal"><strong>Objectif</strong> Lire les messages HL7 v2 que deux analyseurs déposent pour le LIMS, et être prévenu quand un résultat dépasse sa norme.</p>
+    <p class="lede">Deux analyseurs de chimie, HL7 v2.5.1 ORU^R01: des segments terminés par un retour chariot seul.</p><ul class="lede-list"><li>csv-file lit un segment par ligne, MSH, PID, OBR, OBX;</li><li>l&#x27;échantillon descend sur chaque résultat;</li><li>un Process compare la valeur à la norme envoyée à côté, quel que soit le drapeau.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Laboratoire</li><li class="tag">HL7</li><li class="tag">Analyseurs</li><li class="tag kind">Connector</li><li class="tag kind">Process</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="HL7 v2: le résultat d&#x27;analyseur hors norme, signalé ou non">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · HL7</span><span class="sub">ORU^R01</span></a><a href="#step-read" data-step="read"><span class="num">2 · Lire</span><span class="sub">csv-file</span></a><a href="#step-rule" data-step="rule"><span class="num">3 · Déclarer</span><span class="sub">Process</span></a><a href="#step-batch" data-step="batch"><span class="num">4 · Mesurer</span><span class="sub">2 décisions</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">Deux analyseurs, huit messages par lot</h2>
+      <p>Chaque échantillon est un message. Chaque segment se termine par un retour chariot seul, \r.</p><ul class="prose-list"><li>MSH: l&#x27;analyseur et l&#x27;identifiant du message</li><li>PID: l&#x27;échantillon et son lot</li><li>OBX: un résultat, son unité, sa norme, son drapeau</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Un firmware ancien</strong><p>CHEM-02 laisse vide OBX-8, le drapeau d&#x27;anomalie.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Les fichiers des analyseurs se lisent comme ils les déposent.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="HL7"><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="true" tabindex="0">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0"><dl class="facts"><dt>segment</dt><dd>MSH|^~\&amp;|CHEM-01|QC-LAB|LIMS|QC|20261105090700||ORU^R01|CHEM-01-1001|P|2.5.1\r</dd><dt>segment</dt><dd>PID|1||S-2026-1111^^^QC||LOT 26-0451\r</dd><dt>segment</dt><dd>OBR|1||S-2026-1111|CHEM^Chemistry panel|||20261105090700\r</dd><dt>segment</dt><dd>OBX|1|NM|GLU^Glucose||5.25|mmol/L|3.9-6.1|N|||F|||20261105090700\r</dd><dt>segment</dt><dd>OBX|2|NM|LAC^Lactate||1.43|mmol/L|0.5-2.2|N|||F|||20261105090700\r</dd><dt>segment</dt><dd>OBX|3|NM|CREA^Creatinine||82.4|umol/L|45-110|N|||F|||20261105090700\r</dd><dt>segment</dt><dd>OBX|4|NM|K^Potassium||4.17|mmol/L|3.5-5.1|N|||F|||20261105090700\r</dd></dl><p class="sources">preuves: replay.log, message-1.txt, message-rows.txt, count-read.txt, out-of-range.txt, inbox-batch.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-read" aria-labelledby="read-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="read-title">Un segment par ligne, l&#x27;échantillon sur chaque résultat</h2>
+      <p>lines: true lit un segment par ligne: le \r seul en termine un. Un regex par type de segment découpe ses champs.</p><ul class="prose-list"><li>fill-down porte l&#x27;analyseur et l&#x27;échantillon sur les lignes OBX</li><li>reset-when: MSH, un nouveau message repart vide</li><li>parse-number, parse-date</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Chaque segment reste</strong><p>MSH, PID et OBR sont aussi des lignes: un filtre passe avant fill-down, jamais après. La règle lit segment=OBX.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un message HL7 devient des lignes qu&#x27;une règle sait lire, sans moteur d&#x27;interface.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-manifest-tab" data-view="manifest" aria-controls="read-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="read-manifest" aria-labelledby="read-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-analyser-results.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-hl7-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [qc-chem-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/hl7-analyser-results/a/*.hl7   <span class="comment"># the folder the analysers drop their batches in</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">lines</span>: true                    <span class="comment"># one segment per row; HL7&#x27;s lone carriage return ends a segment</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      - regex-extract: { column: line, pattern: <span class="str">&quot;^([A-Z][A-Z0-9]{2})\\|&quot;</span>, groups: { 1: segment } }</span><span class="line">      <span class="comment"># MSH: the analyser (MSH-3) and the message&#x27;s control id (MSH-10)</span></span><span class="line">      - regex-extract: { column: line, pattern: <span class="str">&quot;^MSH\\|[^|]*\\|([^|]*)\\|(?:[^|]*\\|){6}([^|]*)\\|&quot;</span>, groups: { 1: analyser, 2: message_id } }</span><span class="line">      <span class="comment"># PID: the sample (PID-3, first component) and the lot (PID-5)</span></span><span class="line">      - regex-extract: { column: line, pattern: <span class="str">&quot;^PID\\|[^|]*\\|\\|([^^|]*)[^|]*\\|\\|([^|]*)&quot;</span>, groups: { 1: sample, 2: lot } }</span><span class="line">      <span class="comment"># OBX: the test, the value, the unit, the reference range, the flag, the time of observation</span></span><span class="line">      - regex-extract:</span><span class="line">          <span class="key">column</span>: line</span><span class="line">          <span class="key">pattern</span>: <span class="str">&quot;^OBX\\|(\\d+)\\|NM\\|([^^|]*)\\^([^|]*)\\|\\|([^|]*)\\|([^|]*)\\|([^-|]*)-([^|]*)\\|([^|]*)\\|(?:[^|]*\\|){5}(\\d{14})&quot;</span></span><span class="line">          <span class="key">groups</span>: { 1: obx_seq, 2: test_code, 3: test_name, 4: value, 5: unit, 6: range_low, 7: range_high, 8: flag, 9: observed_at }</span><span class="line">      <span class="comment"># the message&#x27;s analyser and sample, on every segment of the message</span></span><span class="line hl">      - fill-down: { columns: [analyser, message_id, sample, lot], reset-when: { column: segment, in: [MSH] } }</span><span class="line">      - parse-number: { column: value }</span><span class="line">      - parse-number: { column: range_low }</span><span class="line">      - parse-number: { column: range_high }</span><span class="line">      - parse-date: { column: observed_at, formats: [<span class="str">&quot;yyyyMMddHHmmss&quot;</span>] }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-analyser-results.yaml</span>
+<span class="out">Applied connector &quot;scenario-hl7-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-hl7-a</span>
+<span class="out">run scheduled: bb0a75fa-d518-4213-ad2c-4bcf69d0022a</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get bb0a75fa-d518-4213-ad2c-4bcf69d0022a</span>
+<span class="out">ID        CONNECTOR       ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+bb0a75fa  scenario-hl7-a  default   Completed  56  56   0        0             2026-11-06 16:56  2026-11-06 16:56  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>default</dt><dd>Completed · IN 56 · OUT 56</dd><dt>hub</dt><dd>MSH | CHEM-02 |  |  |  |  |  |  |  | </dd><dt>hub</dt><dd>PID | CHEM-02 | S-2026-1112 |  |  |  |  |  |  | </dd><dt>hub</dt><dd>OBR | CHEM-02 | S-2026-1112 |  |  |  |  |  |  | </dd><dt>hub</dt><dd>OBX | CHEM-02 | S-2026-1112 | GLU | 5.0400 | mmol/L | 3.9000 | 6.1000 |  | 2026-11-05 10:14:00+00</dd><dt>hub</dt><dd>OBX | CHEM-02 | S-2026-1112 | LAC | 1.3700 | mmol/L | 0.5000 | 2.2000 |  | 2026-11-05 10:14:00+00</dd><dt>hub</dt><dd>OBX | CHEM-02 | S-2026-1112 | CREA | 79.2000 | umol/L | 45.0000 | 110.0000 |  | 2026-11-05 10:14:00+00</dd><dt>hub</dt><dd>OBX | CHEM-02 | S-2026-1112 | K | 4.3000 | mmol/L | 3.5000 | 5.1000 |  | 2026-11-05 10:14:00+00</dd><dt>hub</dt><dd>56 segments, 32 results, 32 with their sample, 16 without a flag</dd></dl><p class="sources">preuves: replay.log, message-1.txt, message-rows.txt, count-read.txt, out-of-range.txt, inbox-batch.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-rule" aria-labelledby="rule-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="rule-title">La norme, pas le drapeau</h2>
+      <p>Le Process compare chaque résultat à la norme que l&#x27;analyseur a envoyée à côté.</p><ul class="prose-list"><li>segment=OBX: les résultats seulement</li><li>&quot;value&gt;{range_high}&quot;: deux colonnes de la ligne</li><li>key: sample, la décision porte l&#x27;échantillon</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Appliqué après le premier lot</strong><p>Un Process ne juge que les lignes nouvelles. Le premier lot est entièrement dans la norme.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une règle tient même quand le drapeau de l&#x27;analyseur manque.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="rule-manifest-tab" data-view="manifest" aria-controls="rule-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="rule-commands-tab" data-view="commands" aria-controls="rule-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="rule-result-tab" data-view="result" aria-controls="rule-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="rule-manifest" aria-labelledby="rule-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-above-range.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-hl7-above-range-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: qc-chem-a</span><span class="line">  <span class="key">on</span>: { event: data.row.changed, table: connector.t_scenario_hl7_a }</span><span class="line">  <span class="key">when</span>:</span><span class="line">    - segment=OBX</span><span class="line hl">    - <span class="str">&quot;value&gt;{range_high}&quot;</span>           <span class="comment"># above the range the analyser sent with the result, whatever its flag</span></span><span class="line">  <span class="key">emit</span>:</span><span class="line">    <span class="key">type</span>: decision.above-range-a</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;{sample} ({lot}) {test_name}: {value} {unit}, above {range_low}-{range_high} on {analyser}, flag &#x27;{flag}&#x27;&quot;</span></span><span class="line">    <span class="key">key</span>: sample</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="rule-commands" aria-labelledby="rule-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm process apply -f manifests/20-above-range.yaml</span>
+<span class="out">Applied process &quot;scenario-hl7-above-range-a&quot; → table connector.t_scenario_hl7_a, emits decision.above-range-a</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="rule-result" aria-labelledby="rule-result-tab" tabindex="0" hidden><dl class="facts"><dt>apply</dt><dd>Applied process &quot;scenario-hl7-above-range-a&quot; → table connector.t_scenario_hl7_a, emits decision.above-range-a</dd></dl><p class="sources">preuves: replay.log, message-1.txt, message-rows.txt, count-read.txt, out-of-range.txt, inbox-batch.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-batch" aria-labelledby="batch-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="batch-title">Le second lot: deux résultats au-dessus de leur norme</h2>
+      <p>Trois résultats sont hors norme.</p><ul class="prose-list"><li>lactate 3,1 sur CHEM-01, signalé H</li><li>créatinine 162 sur CHEM-02, drapeau vide</li><li>potassium 3,1, en dessous: pas cette règle</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Le drapeau vide</strong><p>La décision le cite: flag &#x27;&#x27;. La valeur seule l&#x27;a levée.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un résultat au-dessus de sa norme arrive dans l&#x27;inbox, à son échantillon, signalé ou non.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Mesurer"><button type="button" role="tab" id="batch-commands-tab" data-view="commands" aria-controls="batch-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="batch-result-tab" data-view="result" aria-controls="batch-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="batch-commands" aria-labelledby="batch-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-hl7-a</span>
+<span class="out">run scheduled: 2b726035-44f7-4408-87a8-b0f7e0a3b8c9</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 2b726035-44f7-4408-87a8-b0f7e0a3b8c9</span>
+<span class="out">ID        CONNECTOR       ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+2b726035  scenario-hl7-a  default   Completed  56  56   0        0             2026-11-06 16:57  2026-11-06 16:57  yes</span>
+<span class="note">• 1 file(s) unchanged since they were last read — not read again</span>
+
+<span class="cmd"><span class="prompt">$</span> lm inbox --process scenario-hl7-above-range-a</span>
+<span class="out">ID     WHEN      PROCESS                     MESSAGE                                                                             ENTITY_KEY
+24534  just now  scenario-hl7-above-range-a  S-2026-1126 (LOT 26-0456) Creatinine: 162 umol/L, above 45-110 on CHEM-02, flag &#x27;&#x27;  S-2026-1126
+24533  just now  scenario-hl7-above-range-a  S-2026-1123 (LOT 26-0453) Lactate: 3.1 mmol/L, above 0.5-2.2 on CHEM-01, flag &#x27;H&#x27;   S-2026-1123</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="batch-result" aria-labelledby="batch-result-tab" tabindex="0" hidden><dl class="facts"><dt>default</dt><dd>Completed · IN 56 · OUT 56</dd><dt>hub</dt><dd>CHEM-01 | S-2026-1123 | LAC | 3.1000 | mmol/L | 0.5000 | 2.2000 | H</dd><dt>hub</dt><dd>CHEM-02 | S-2026-1126 | CREA | 162.0000 | umol/L | 45.0000 | 110.0000 | </dd><dt>hub</dt><dd>CHEM-01 | S-2026-1127 | K | 3.1000 | mmol/L | 3.5000 | 5.1000 | L</dd><dt>S-2026-1123</dt><dd>S-2026-1123 (LOT 26-0453) Lactate: 3.1 mmol/L, above 0.5-2.2 on CHEM-01, flag &#x27;H&#x27;</dd><dt>S-2026-1126</dt><dd>S-2026-1126 (LOT 26-0456) Creatinine: 162 umol/L, above 45-110 on CHEM-02, flag &#x27;&#x27;</dd></dl><p class="sources">preuves: replay.log, message-1.txt, message-rows.txt, count-read.txt, out-of-range.txt, inbox-batch.json · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>La table garde chaque segment: une View ou une règle lit segment=OBX. Aucun hook ne retire une ligne après fill-down.</li><li>Les conditions se combinent en ET: sous la norme, c&#x27;est un second Process.</li><li>Seuls les résultats NM sont lus; un OBX texte (ST) ou codé (CE) garde sa ligne sans colonnes.</li><li>Des fichiers, pas MLLP: les analyseurs écrivent dans un dossier, le hub n&#x27;écoute pas de socket.</li><li>Échantillons, lots et résultats synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Laboratoire · HL7 v2</p><h2>Les analyseurs parlent HL7 v2.</h2><p class="brief-lead">Un message par échantillon, un segment par ligne.</p><p class="brief-note">ORU^R01, MSH · PID · OBR · OBX</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Un analyseur n&#x27;envoie aucun drapeau.</h2><ul class="brief-list tone-cyan"><li>Sa créatinine à 162 µmol/L passe inaperçue.</li><li>La norme était pourtant dans le message.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>Les analyseurs restent tels quels.</h2><ul class="brief-list tone-green"><li>Leurs fichiers HL7, dans leur dossier.</li><li>Aucun moteur d&#x27;interface, aucun code.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>fill-down: { columns: [sample], reset-when: MSH }
+when: [segment=OBX, &quot;value&gt;{range_high}&quot;]</code></pre><h2>Un regex par segment, une condition.</h2><ul class="brief-list tone-green"><li>csv-file: les segments en lignes.</li><li>Un Process: la norme, pas le drapeau.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Le résultat</p><h2>Deux décisions, dont une sans drapeau.</h2><ul class="brief-list tone-green"><li>Lactate 3,1, signalé H.</li><li>Créatinine 162, drapeau vide.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
