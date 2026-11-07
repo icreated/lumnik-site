@@ -509,6 +509,26 @@
       "evidenceDigest": "sha256:de011b8d735c0b7daa0eae0a8d568491da26d4dcaf06ccfcc92d84a486994be8"
     },
     {
+      "slug": "hrms-qc-mass-accuracy",
+      "title": "Spectrométrie haute résolution: le QC dérive de 3,84 ppm, les échantillons suivants le savent",
+      "goal": "Lire l'export QC d'un criblage LC-HRMS sans perdre une décimale, et signaler chaque échantillon acquis après un QC hors de sa tolérance en masse.",
+      "lede": "Un laboratoire d'environnement crible des micropolluants dans l'eau sur un Orbitrap. Les transitoires et les spectres restent sur l'instrument; lumnik lit ce que le logiciel de traitement exporte.\n- un bloc clé;valeur, un en-tête sur deux lignes, n.d. et < LOD dans la colonne d'intensité;\n- chaque m/z gardé avec ses cinq décimales;\n- la climatisation tombe en panne: le QC lit 3,84 ppm, les quatre échantillons suivants lèvent une décision.",
+      "tags": {
+        "domain": [
+          "Laboratoire",
+          "Spectrométrie de masse",
+          "Contrôle qualité"
+        ],
+        "kinds": [
+          "Connector",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-07",
+      "evidenceDigest": "sha256:b8f7c09c87dcb4bfb057f78f149fa3466d80ae6e88b9ad6bc305ce40cabc0928"
+    },
+    {
       "slug": "import-export",
       "title": "Le catalogue part chez le partenaire dans son format à lui",
       "goal": "Livrer le catalogue produits à un partenaire dans le format qu'il impose, sans écrire de code de conversion.",
