@@ -175,6 +175,27 @@
       "evidenceDigest": "sha256:ad98251130ee5f08373937d5fdfd0a3d030450d15289a5ae0816d3602945c732"
     },
     {
+      "slug": "dates-across-sources",
+      "title": "Trois systèmes, une date de réception: le lot de 00:30 et le jour de l'usine",
+      "goal": "Fusionner en une entité la date d'arrivée d'un lot telle que le LIMS, l'ERP et le transporteur la donnent, et ne garder en litige que les vrais écarts.",
+      "lede": "Une usine reçoit ses lots de matière première. Trois systèmes disent quand: le LIMS scanne l'échantillon (un instant), l'ERP saisit la réception (une date), le transporteur écrit « Livré le » dans un CSV (du texte).\n- lus tels quels, le texte du transporteur met la colonne en texte: douze lots en litige;\n- typée, une date rencontre une heure au jour UTC: le lot de l'équipe de nuit est en litige;\n- avec zone: Europe/Paris, il reste un litige, la vraie faute de saisie.",
+      "tags": {
+        "domain": [
+          "Réception",
+          "LIMS",
+          "ERP",
+          "Dates et fuseaux"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-07",
+      "evidenceDigest": "sha256:578db2240c7172e95ec92a1c92d13a3647f514da85918aaa9e399e7b1b94115d"
+    },
+    {
       "slug": "deal-in-the-pocket",
       "title": "L'affaire à 240 000 € qui se confirme pendant le dîner",
       "goal": "Prévenir le commercial sur son téléphone dès que le CRM passe une affaire à confirmer, avec la ligne, les pièces et le catalogue à portée de main, et qu'un clic sur Traiter fasse avancer le CRM et parte l'email client.",
