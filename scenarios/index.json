@@ -296,6 +296,26 @@
       "evidenceDigest": "sha256:5267b7d7ff4f6add37ece37a8f8681d9a40db27b81af171db51123c4aaadc7df"
     },
     {
+      "slug": "domino-quality-complaints",
+      "title": "Lotus Notes: les réclamations qualité lues par le Domino Data Service",
+      "goal": "Lire une vue Notes sans toucher à la base, vérifier le compte de la vue, et être prévenu d'une réclamation critique laissée sans responsable.",
+      "lede": "Le service qualité d'un fabricant de vannes suit ses réclamations clients dans une base Lotus Notes depuis vingt ans. Le Domino Data Service l'expose en JSON.\n- start et count, le compte de la vue dans Content-Range;\n- un champ multi-valeur: une chaîne avec un nom, une liste avec plusieurs;\n- deux réclamations critiques sans responsable, deux décisions.",
+      "tags": {
+        "domain": [
+          "Qualité",
+          "Lotus Notes",
+          "Domino"
+        ],
+        "kinds": [
+          "Connector",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-07",
+      "evidenceDigest": "sha256:f3857547ce5547539c6bbbf3ce7c682eabd14ee011e44e4faa1cf9127856af06"
+    },
+    {
       "slug": "edi-flat-order-lines",
       "title": "Les lignes de commande d'un fichier EDI à plat lues à leur place",
       "goal": "Lire en colonnes les lignes de commande d'un fichier EDI à largeur fixe, sans outil de mapping.",
