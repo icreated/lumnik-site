@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spectrométrie haute résolution: le QC dérive de 3,84 ppm, les échantillons suivants le savent — lumnik</title>
+<meta name="description" content="Lire l&#x27;export QC d&#x27;un criblage LC-HRMS sans perdre une décimale, et signaler chaque échantillon acquis après un QC hors de sa tolérance en masse. Un laboratoire d&#x27;environnement crible des micropolluants dans l&#x27;eau sur un Orbitrap. Les transitoires et les spectres restent sur l&#x27;instrument; lumnik lit ce que le logiciel de traitement exporte. Un bloc clé;valeur, un en-tête sur deux lignes, n.d. et &lt; LOD dans la colonne d&#x27;intensité; Chaque m/z gardé avec ses cinq décimales; La climatisation tombe en panne: le QC lit 3,84 ppm, les quatre échantillons suivants lèvent une décision.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/hrms-qc-mass-accuracy/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/hrms-qc-mass-accuracy/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Spectrométrie haute résolution: le QC dérive de 3,84 ppm, les échantillons suivants le savent</h1>
+    <p class="goal"><strong>Objectif</strong> Lire l&#x27;export QC d&#x27;un criblage LC-HRMS sans perdre une décimale, et signaler chaque échantillon acquis après un QC hors de sa tolérance en masse.</p>
+    <p class="lede">Un laboratoire d&#x27;environnement crible des micropolluants dans l&#x27;eau sur un Orbitrap. Les transitoires et les spectres restent sur l&#x27;instrument; lumnik lit ce que le logiciel de traitement exporte.</p><ul class="lede-list"><li>un bloc clé;valeur, un en-tête sur deux lignes, n.d. et &lt; LOD dans la colonne d&#x27;intensité;</li><li>chaque m/z gardé avec ses cinq décimales;</li><li>la climatisation tombe en panne: le QC lit 3,84 ppm, les quatre échantillons suivants lèvent une décision.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Laboratoire</li><li class="tag">Spectrométrie de masse</li><li class="tag">Contrôle qualité</li><li class="tag kind">Connector</li><li class="tag kind">Process</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="Spectrométrie haute résolution: le QC dérive de 3,84 ppm, les échantillons suivants le savent">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · Export</span><span class="sub">QC</span></a><a href="#step-read" data-step="read"><span class="num">2 · Lire</span><span class="sub">csv-file</span></a><a href="#step-rule" data-step="rule"><span class="num">3 · Déclarer</span><span class="sub">Process</span></a><a href="#step-batch" data-step="batch"><span class="num">4 · Lot de l&#x27;après-midi</span><span class="sub">4 décisions</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">L&#x27;export QC du lot du matin</h2>
+      <p>Le logiciel de traitement écrit un fichier par lot.</p><ul class="prose-list"><li>un bloc clé;valeur: lot, instrument, méthode, calibration</li><li>l&#x27;en-tête sur deux lignes: les noms, puis les unités</li><li>une ligne par ion cible; l&#x27;injection et son résumé QC sur sa première ligne seulement</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Des masses calculées</strong><p>Chaque m/z théorique vient des masses atomiques monoisotopiques et de la masse de l&#x27;électron: [M+H]+ de la caféine, 195.08765. Chaque Δm est recalculé depuis la valeur écrite.</p></div></li><li><span class="n">2</span><div><strong>Le pouvoir de résolution</strong><p>70 000 FWHM à m/z 200, en 1/√(m/z): environ 70 900 sur la caféine, 40 100 sur la réserpine.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>L&#x27;export est lu tel que le logiciel l&#x27;écrit, sans retouche.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Export"><button type="button" role="tab" id="lab-source-tab" data-view="source" aria-controls="lab-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="lab-source" aria-labelledby="lab-source-tab" tabindex="0"><figure class="source"><figcaption>HRMS-26-1106-A.csv</figcaption><pre class="code">Batch;HRMS-26-1106-A
+Instrument;FTMS-01 (Orbitrap, positive ESI)
+Method;Screening_pos_R70k
+Mass calibration;2026-11-05 17:40 (external, positive calibration solution)
+QC acceptance;|Δm| &lt;= 3.0 ppm on caffeine, MRFA and reserpine
+
+Inj;Type;Sample;Acquired;Compound;Ion;m/z theo;m/z meas;Δm;Intensity;R;Max |Δm|
+;;;;;;(Th);(Th);(ppm);(counts);(FWHM);(ppm)
+1;QC;QC-SST;06/11/2026 07:30;Caffeine;[C8H10N4O2+H]+;195.08765;195.08771;0.30;25894746;69900;0.52
+;;;;MRFA;[C23H37N7O5S+H]+;524.26496;524.26524;0.52;117023040;42400;
+;;;;Reserpine;[C33H40N2O9+H]+;609.28066;609.28075;0.15;69156004;40600;
+2;Blank;Solvent blank;06/11/2026 07:48;Atrazine;[C8H14ClN5+H]+;216.10105;;;n.d.;;
+;;;;Carbamazepine;[C15H12N2O+H]+;237.10224;;;n.d.;;
+;;;;Sulfamethoxazole;[C10H11N3O3S+H]+;254.05939;;;n.d.;;
+;;;;Diclofenac;[C14H11Cl2NO2+H]+;296.02396;;;n.d.;;
+3;Sample;W-26-0401;06/11/2026 08:06;Atrazine;[C8H14ClN5+H]+;216.10105;216.10099;-0.28;2620037;;
+;;;;Carbamazepine;[C15H12N2O+H]+;237.10224;;;n.d.;;
+;;;;Sulfamethoxazole;[C10H11N3O3S+H]+;254.05939;;;n.d.;;
+;;;;Diclofenac;[C14H11Cl2NO2+H]+;296.02396;296.02400;0.13;406567;;
+4;Sample;W-26-0402;06/11/2026 08:24;Atrazine;[C8H14ClN5+H]+;216.10105;;;n.d.;;</pre><p class="source-more">… 49 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0" hidden><dl class="facts"><dt>line</dt><dd>Batch;HRMS-26-1106-A</dd><dt>line</dt><dd>Instrument;FTMS-01 (Orbitrap, positive ESI)</dd><dt>line</dt><dd>Method;Screening_pos_R70k</dd><dt>line</dt><dd>Mass calibration;2026-11-05 17:40 (external, positive calibration solution)</dd><dt>line</dt><dd>QC acceptance;|Δm| &lt;= 3.0 ppm on caffeine, MRFA and reserpine</dd><dt>line</dt><dd>Inj;Type;Sample;Acquired;Compound;Ion;m/z theo;m/z meas;Δm;Intensity;R;Max |Δm|</dd><dt>line</dt><dd>;;;;;;(Th);(Th);(ppm);(counts);(FWHM);(ppm)</dd><dt>line</dt><dd>1;QC;QC-SST;06/11/2026 07:30;Caffeine;[C8H10N4O2+H]+;195.08765;195.08771;0.30;25894746;69900;0.52</dd><dt>line</dt><dd>;;;;MRFA;[C23H37N7O5S+H]+;524.26496;524.26524;0.52;117023040;42400;</dd><dt>line</dt><dd>;;;;Reserpine;[C33H40N2O9+H]+;609.28066;609.28075;0.15;69156004;40600;</dd><dt>line</dt><dd>2;Blank;Solvent blank;06/11/2026 07:48;Atrazine;[C8H14ClN5+H]+;216.10105;;;n.d.;;</dd><dt>line</dt><dd>;;;;Carbamazepine;[C15H12N2O+H]+;237.10224;;;n.d.;;</dd><dt>line</dt><dd>;;;;Sulfamethoxazole;[C10H11N3O3S+H]+;254.05939;;;n.d.;;</dd></dl><p class="sources">preuves: replay.log, export-head.txt, lines-0401.txt, count-read.txt, batch-b.txt, inbox-batch.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-read" aria-labelledby="read-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="read-title">61 lignes d&#x27;ions, chaque m/z avec ses cinq décimales</h2>
+      <p>Le connecteur csv-file, séparateur point-virgule.</p><ul class="prose-list"><li>short_rows: skip-leading: le bloc clé;valeur est sauté, compté, jamais en lettre morte</li><li>filter-where: les deux lignes d&#x27;en-tête n&#x27;ont pas de m/z</li><li>fill-down: l&#x27;injection sur chacun de ses ions, le dernier QC sur les échantillons suivants</li><li>n.d. et &lt; LOD vont dans detection, l&#x27;intensité reste un nombre</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>n.d. n&#x27;est pas &lt; LOD</strong><p>n.d.: aucun pic dans la fenêtre. &lt; LOD: un pic trouvé, sous la limite de détection; son m/z mesuré est gardé.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une masse exacte arrive dans le hub comme l&#x27;instrument l&#x27;a écrite.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-manifest-tab" data-view="manifest" aria-controls="read-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="read-manifest" aria-labelledby="read-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-qc-export.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-hrms-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [qc-hrms-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/hrms-qc-mass-accuracy/a/*.csv   <span class="comment"># the folder the processing software exports to</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">    <span class="key">has_header</span>: false              <span class="comment"># the header runs over two lines, under a key;value block</span></span><span class="line">    <span class="key">columns</span>: [inj, type, sample, acquired, compound, ion, mz_theo, mz_meas, dm_ppm, intensity, resolution, qc_max_ppm]</span><span class="line hl">    <span class="key">short_rows</span>: skip-leading       <span class="comment"># the key;value block before the table: skipped, never a dead letter</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">dataset</span>:</span><span class="line">      <span class="comment"># the two header lines (the names, then the units) carry no theoretical m/z</span></span><span class="line">      - filter-where: { column: mz_theo, regex: <span class="str">&quot;[0-9]+\\.[0-9]+&quot;</span> }</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      <span class="comment"># the injection&#x27;s fields are printed on its first line only; inj is left as written: one line per injection</span></span><span class="line">      - fill-down: { columns: [type, sample, acquired] }</span><span class="line">      <span class="comment"># the last QC speaks for the samples after it, until the instrument is recalibrated</span></span><span class="line hl">      - fill-down: { columns: [qc_max_ppm], reset-when: { column: type, in: [Cal] } }</span><span class="line">      <span class="comment"># n.d.: no peak in the window; &lt; LOD: a peak below the limit of detection. Kept apart from the number.</span></span><span class="line">      - regex-extract: { column: intensity, pattern: <span class="str">&quot;^(n\\.d\\.|&lt; LOD)$&quot;</span>, groups: { 1: detection } }</span><span class="line">      - regex-replace: { column: intensity, pattern: <span class="str">&quot;^(n\\.d\\.|&lt; LOD)$&quot;</span>, replacement: <span class="str">&quot;&quot;</span> }</span><span class="line">      - parse-number: { column: inj, integer: true }</span><span class="line">      - parse-number: { column: mz_theo, decimal-separator: <span class="str">&quot;.&quot;</span> }</span><span class="line">      - parse-number: { column: mz_meas, decimal-separator: <span class="str">&quot;.&quot;</span> }</span><span class="line">      - parse-number: { column: dm_ppm, decimal-separator: <span class="str">&quot;.&quot;</span> }</span><span class="line">      - parse-number: { column: intensity, integer: true }</span><span class="line">      - parse-number: { column: resolution, integer: true }</span><span class="line">      - parse-number: { column: qc_max_ppm, decimal-separator: <span class="str">&quot;.&quot;</span> }</span><span class="line">      - parse-date: { column: acquired, formats: [<span class="str">&quot;dd/MM/yyyy HH:mm&quot;</span>], zone: Europe/Paris }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-qc-export.yaml</span>
+<span class="out">Applied connector &quot;scenario-hrms-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-hrms-a</span>
+<span class="out">run scheduled: b9769028-f3fb-42b8-a679-1d459b639997</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get b9769028-f3fb-42b8-a679-1d459b639997</span>
+<span class="out">ID        CONNECTOR        ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+b9769028  scenario-hrms-a  default   Completed  68  61   7        0             2026-11-07 02:06  2026-11-07 02:06  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>default</dt><dd>Completed · IN 68 · OUT 61 · SKIPPED 7 · DEAD-LETTERS 0</dd><dt>hub</dt><dd>1 | QC | QC-SST | 2026-11-06 06:30:00+00 | Caffeine | 195.08765 | 195.08771 | 0.30 | 25894746 |  | 0.52</dd><dt>hub</dt><dd> | QC | QC-SST | 2026-11-06 06:30:00+00 | MRFA | 524.26496 | 524.26524 | 0.52 | 117023040 |  | 0.52</dd><dt>hub</dt><dd> | QC | QC-SST | 2026-11-06 06:30:00+00 | Reserpine | 609.28066 | 609.28075 | 0.15 | 69156004 |  | 0.52</dd><dt>hub</dt><dd>61 of 61 m/z with their five decimals, 14 n.d., 9 &lt; LOD, 0 sample line without its QC</dd></dl><p class="sources">preuves: replay.log, export-head.txt, lines-0401.txt, count-read.txt, batch-b.txt, inbox-batch.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-rule" aria-labelledby="rule-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="rule-title">Acquis après un QC hors tolérance</h2>
+      <p>Le Process écoute la table du connecteur.</p><ul class="prose-list"><li>type=Sample, sur la première ligne de l&#x27;injection: une décision par échantillon, pas par composé</li><li>qc_max_ppm&gt;3: la tolérance du lot, |Δm| &lt;= 3,0 ppm sur chaque ion du QC</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Le pire ion</strong><p>Le résumé QC du logiciel donne le plus grand |Δm| des trois ions: un seul ion hors tolérance suffit.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une règle de recevabilité du laboratoire s&#x27;écrit en trois conditions.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="rule-manifest-tab" data-view="manifest" aria-controls="rule-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="rule-commands-tab" data-view="commands" aria-controls="rule-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="rule-result-tab" data-view="result" aria-controls="rule-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="rule-manifest" aria-labelledby="rule-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-after-a-failed-qc.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-hrms-qc-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: qc-hrms-a</span><span class="line">  <span class="key">on</span>: { event: data.row.changed, table: connector.t_scenario_hrms_a }</span><span class="line">  <span class="key">when</span>:</span><span class="line">    - type=Sample</span><span class="line">    - inj&gt;0                          <span class="comment"># the injection&#x27;s first line: one decision per sample, not per compound</span></span><span class="line hl">    - qc_max_ppm&gt;3                   <span class="comment"># the QC acceptance: |Δm| &lt;= 3.0 ppm on every calibrant ion</span></span><span class="line">  <span class="key">emit</span>:</span><span class="line">    <span class="key">type</span>: decision.after-failed-qc-a</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;{sample} (injection {inj}): the QC before it reads {qc_max_ppm} ppm, acceptance 3.0 ppm&quot;</span></span><span class="line">    <span class="key">key</span>: sample</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="rule-commands" aria-labelledby="rule-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm process apply -f manifests/20-after-a-failed-qc.yaml</span>
+<span class="out">Applied process &quot;scenario-hrms-qc-a&quot; → table connector.t_scenario_hrms_a, emits decision.after-failed-qc-a</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="rule-result" aria-labelledby="rule-result-tab" tabindex="0" hidden><dl class="facts"><dt>apply</dt><dd>Applied process &quot;scenario-hrms-qc-a&quot; → table connector.t_scenario_hrms_a, emits decision.after-failed-qc-a</dd></dl><p class="sources">preuves: replay.log, export-head.txt, lines-0401.txt, count-read.txt, batch-b.txt, inbox-batch.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-batch" aria-labelledby="batch-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="batch-title">La climatisation tombe en panne: quatre échantillons à réinjecter</h2>
+      <p>L&#x27;instrument dérive d&#x27;environ +3,6 ppm. Le deuxième QC lit 3,84 ppm.</p><ul class="prose-list"><li>W-26-0419 à 0422, acquis après lui: quatre décisions</li><li>l&#x27;opérateur recalibre: le QC est oublié, W-26-0423 et 0424 ne sont couverts par aucun QC</li><li>le QC suivant lit 0,25 ppm: W-26-0425 et 0426 sont recevables</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>La dérive se voit aussi sur les échantillons</strong><p>Leurs propres Δm vont de 3,2 à 4,2 ppm: la même dérive que le QC, sur des ions de m/z 216 à 296.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un échantillon acquis après un QC raté est signalé le jour même, avec le QC qui le condamne.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lot de l&#x27;après-midi"><button type="button" role="tab" id="batch-source-tab" data-view="source" aria-controls="batch-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="batch-commands-tab" data-view="commands" aria-controls="batch-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="batch-result-tab" data-view="result" aria-controls="batch-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="batch-source" aria-labelledby="batch-source-tab" tabindex="0"><figure class="source"><figcaption>HRMS-26-1106-B.csv</figcaption><pre class="code">Batch;HRMS-26-1106-B
+Instrument;FTMS-01 (Orbitrap, positive ESI)
+Method;Screening_pos_R70k
+Mass calibration;2026-11-05 17:40 (external, positive calibration solution)
+QC acceptance;|Δm| &lt;= 3.0 ppm on caffeine, MRFA and reserpine
+
+Inj;Type;Sample;Acquired;Compound;Ion;m/z theo;m/z meas;Δm;Intensity;R;Max |Δm|
+;;;;;;(Th);(Th);(ppm);(counts);(FWHM);(ppm)
+1;QC;QC-SST;06/11/2026 13:30;Caffeine;[C8H10N4O2+H]+;195.08765;195.08770;0.25;24385043;70900;0.35
+;;;;MRFA;[C23H37N7O5S+H]+;524.26496;524.26515;0.35;117614317;43000;
+;;;;Reserpine;[C33H40N2O9+H]+;609.28066;609.28082;0.27;62832434;40800;
+2;Sample;W-26-0413;06/11/2026 13:48;Atrazine;[C8H14ClN5+H]+;216.10105;216.10114;0.42;123219;;
+;;;;Carbamazepine;[C15H12N2O+H]+;237.10224;237.10245;0.89;1641533;;
+;;;;Sulfamethoxazole;[C10H11N3O3S+H]+;254.05939;254.05960;0.83;5112642;;
+;;;;Diclofenac;[C14H11Cl2NO2+H]+;296.02396;296.02395;-0.04;4000786;;
+3;Sample;W-26-0414;06/11/2026 14:06;Atrazine;[C8H14ClN5+H]+;216.10105;;;n.d.;;
+;;;;Carbamazepine;[C15H12N2O+H]+;237.10224;;;n.d.;;
+;;;;Sulfamethoxazole;[C10H11N3O3S+H]+;254.05939;254.05949;0.40;57442;;
+;;;;Diclofenac;[C14H11Cl2NO2+H]+;296.02396;296.02414;0.61;92461;;
+4;Sample;W-26-0415;06/11/2026 14:24;Atrazine;[C8H14ClN5+H]+;216.10105;216.10121;0.74;55256;;</pre><p class="source-more">… 56 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-commands" id="batch-commands" aria-labelledby="batch-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-hrms-a</span>
+<span class="out">run scheduled: 97d08501-09b6-4476-8e71-2227be9f201a</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 97d08501-09b6-4476-8e71-2227be9f201a</span>
+<span class="out">ID        CONNECTOR        ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+97d08501  scenario-hrms-a  default   Completed  75  68   7        0             2026-11-07 02:06  2026-11-07 02:06  yes</span>
+<span class="note">• 1 file(s) unchanged since they were last read — not read again</span>
+
+<span class="cmd"><span class="prompt">$</span> lm inbox --process scenario-hrms-qc-a</span>
+<span class="out">ID     WHEN      PROCESS             MESSAGE                                                                        ENTITY_KEY
+25178  just now  scenario-hrms-qc-a  W-26-0422 (injection 12): the QC before it reads 3.84 ppm, acceptance 3.0 ppm  W-26-0422
+25177  just now  scenario-hrms-qc-a  W-26-0421 (injection 11): the QC before it reads 3.84 ppm, acceptance 3.0 ppm  W-26-0421
+25176  just now  scenario-hrms-qc-a  W-26-0420 (injection 10): the QC before it reads 3.84 ppm, acceptance 3.0 ppm  W-26-0420
+25175  just now  scenario-hrms-qc-a  W-26-0419 (injection 9): the QC before it reads 3.84 ppm, acceptance 3.0 ppm   W-26-0419</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="batch-result" aria-labelledby="batch-result-tab" tabindex="0" hidden><dl class="facts"><dt>default</dt><dd>Completed · IN 75 · OUT 68 · SKIPPED 7 · DEAD-LETTERS 0</dd><dt>hub</dt><dd>1 | QC | QC-SST | 13:30 | 0.35 | 0.35</dd><dt>hub</dt><dd>2 | Sample | W-26-0413 | 13:48 | 0.35 | 0.89</dd><dt>hub</dt><dd>3 | Sample | W-26-0414 | 14:06 | 0.35 | 0.61</dd><dt>hub</dt><dd>4 | Sample | W-26-0415 | 14:24 | 0.35 | 0.74</dd><dt>hub</dt><dd>5 | Sample | W-26-0416 | 14:42 | 0.35 | 1.38</dd><dt>hub</dt><dd>6 | Sample | W-26-0417 | 15:00 | 0.35 | 2.57</dd><dt>hub</dt><dd>7 | Sample | W-26-0418 | 15:18 | 0.35 | 3.29</dd><dt>hub</dt><dd>8 | QC | QC-SST | 15:36 | 3.84 | 3.84</dd><dt>hub</dt><dd>9 | Sample | W-26-0419 | 15:54 | 3.84 | 3.75</dd><dt>hub</dt><dd>10 | Sample | W-26-0420 | 16:12 | 3.84 | 4.10</dd><dt>hub</dt><dd>11 | Sample | W-26-0421 | 16:30 | 3.84 | 3.23</dd><dt>hub</dt><dd>12 | Sample | W-26-0422 | 16:48 | 3.84 | 4.17</dd><dt>hub</dt><dd>13 | Cal | Recalibration | 17:06 |  | 0.12</dd><dt>hub</dt><dd>14 | Sample | W-26-0423 | 17:24 |  | 0.79</dd><dt>hub</dt><dd>15 | Sample | W-26-0424 | 17:42 |  | 0.56</dd><dt>hub</dt><dd>16 | QC | QC-SST | 18:00 | 0.25 | 0.25</dd><dt>hub</dt><dd>17 | Sample | W-26-0425 | 18:18 | 0.25 | 0.79</dd><dt>hub</dt><dd>18 | Sample | W-26-0426 | 18:36 | 0.25 | 0.70</dd><dt>W-26-0419</dt><dd>W-26-0419 (injection 9): the QC before it reads 3.84 ppm, acceptance 3.0 ppm</dd><dt>W-26-0420</dt><dd>W-26-0420 (injection 10): the QC before it reads 3.84 ppm, acceptance 3.0 ppm</dd><dt>W-26-0421</dt><dd>W-26-0421 (injection 11): the QC before it reads 3.84 ppm, acceptance 3.0 ppm</dd><dt>W-26-0422</dt><dd>W-26-0422 (injection 12): the QC before it reads 3.84 ppm, acceptance 3.0 ppm</dd></dl><p class="sources">preuves: replay.log, export-head.txt, lines-0401.txt, count-read.txt, batch-b.txt, inbox-batch.json · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>La règle lit le QC précédent, pas l&#x27;encadrement: W-26-0417 et 0418, acquis avant le QC raté pendant que la dérive montait, atteignent 2,6 et 3,3 ppm et ne sont pas signalés.</li><li>Un échantillon acquis après une recalibration et avant le QC suivant n&#x27;est couvert par aucun QC; la page le montre, aucune décision ne le dit.</li><li>Seule l&#x27;erreur en masse est jugée. Le pouvoir de résolution et l&#x27;intensité du QC sont lus, aucune règle ne les juge ici.</li><li>Une perte d&#x27;identification par la dérive (un n.d. faux) n&#x27;est pas détectée: la décision dit seulement de ne pas croire l&#x27;échantillon.</li><li>Échantillons, intensités et dérive synthétiques; les masses théoriques sont exactes.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Laboratoire · HRMS</p><h2>Un standard QC entre chaque série d&#x27;échantillons.</h2><p class="brief-lead">Caféine, MRFA, réserpine: leur erreur en masse dit si les échantillons suivants sont crédibles.</p><p class="brief-note">195.08765 · 524.26496 · 609.28066</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Le QC lit 3,84 ppm. Le lot continue.</h2><ul class="brief-list tone-cyan"><li>La tolérance est de 3,0 ppm.</li><li>Quatre échantillons sont acquis après lui, comme si de rien n&#x27;était.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>L&#x27;instrument et son logiciel restent tels quels.</h2><ul class="brief-list tone-green"><li>L&#x27;export reste celui du logiciel de traitement.</li><li>Aucun spectre ne quitte l&#x27;instrument.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>fill-down: { columns: [qc_max_ppm],
+  reset-when: { column: type, in: [Cal] } }</code></pre><h2>Le dernier QC parle pour les échantillons suivants.</h2><ul class="brief-list tone-green"><li>Jusqu&#x27;à la recalibration.</li><li>Une règle: qc_max_ppm&gt;3.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui a été corrigé</p><h2>Le hub gardait quatre décimales (#1862).</h2><ul class="brief-list tone-green"><li>195.08765 devenait 195.0877: 0,26 ppm d&#x27;erreur ajoutée.</li><li>Le bloc d&#x27;en-tête n&#x27;est plus une lettre morte (#1863).</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
