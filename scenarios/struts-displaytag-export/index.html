@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Struts 1 sans API: l&#x27;export CSV de l&#x27;écran, lu tel qu&#x27;il sort — lumnik</title>
+<meta name="description" content="Lire une application Struts 1 qui n&#x27;a pour toute sortie que l&#x27;export CSV de son écran, et être prévenu d&#x27;un retour client qui attend une pièce depuis plus de 30 jours. Un fabricant de pompes gère ses retours clients dans un intranet Struts 1 écrit en 2007: Tomcat, JSP, DisplayTag. Aucune API; l&#x27;écran a un lien d&#x27;export CSV, et une tâche planifiée le récupère chaque nuit. Pas d&#x27;en-tête, ISO-8859-1, un guillemet échappé par une barre oblique inverse; Des montants groupés par une espace insécable: « 2 310,00 »; Le lendemain, les retours clos sortent de la table, sept retours en attente de pièce lèvent une décision.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/struts-displaytag-export/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/struts-displaytag-export/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Struts 1 sans API: l&#x27;export CSV de l&#x27;écran, lu tel qu&#x27;il sort</h1>
+    <p class="goal"><strong>Objectif</strong> Lire une application Struts 1 qui n&#x27;a pour toute sortie que l&#x27;export CSV de son écran, et être prévenu d&#x27;un retour client qui attend une pièce depuis plus de 30 jours.</p>
+    <p class="lede">Un fabricant de pompes gère ses retours clients dans un intranet Struts 1 écrit en 2007: Tomcat, JSP, DisplayTag. Aucune API; l&#x27;écran a un lien d&#x27;export CSV, et une tâche planifiée le récupère chaque nuit.</p><ul class="lede-list"><li>pas d&#x27;en-tête, ISO-8859-1, un guillemet échappé par une barre oblique inverse;</li><li>des montants groupés par une espace insécable: « 2 310,00 »;</li><li>le lendemain, les retours clos sortent de la table, sept retours en attente de pièce lèvent une décision.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Service après-vente</li><li class="tag">Struts 1</li><li class="tag">Java legacy</li><li class="tag">Export CSV</li><li class="tag kind">Connector</li><li class="tag kind">Process</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="Struts 1 sans API: l&#x27;export CSV de l&#x27;écran, lu tel qu&#x27;il sort">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · Écran</span><span class="sub">DisplayTag</span></a><a href="#step-read" data-step="read"><span class="num">2 · Lire</span><span class="sub">csv-file</span></a><a href="#step-rule" data-step="rule"><span class="num">3 · Déclarer</span><span class="sub">Process</span></a><a href="#step-next" data-step="next"><span class="num">4 · La nuit suivante</span><span class="sub">7 décisions</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">Un intranet Struts 1 et son lien d&#x27;export</h2>
+      <p>Struts 1.3.10 et DisplayTag 1.2 sur Tomcat 9, en Java 8. L&#x27;écran des retours ouverts affiche 25 lignes par page.</p><ul class="prose-list"><li>le lien d&#x27;export appelle la même action, avec 6578706f7274: « export » en hexadécimal</li><li>une tâche cron le récupère à 2 h dans le dossier du hub</li><li>l&#x27;export contient les 46 retours, pas seulement la page affichée</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Ce que DisplayTag écrit</strong><p>Les valeurs telles que l&#x27;écran les formate: date en dd/MM/yyyy, montant en #,##0.00 à la française. Aucun en-tête: export.csv.include_header vaut false par défaut.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La seule sortie de l&#x27;application suffit: aucune ligne de Java n&#x27;est modifiée.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Écran"><button type="button" role="tab" id="lab-source-tab" data-view="source" aria-controls="lab-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="lab-source" aria-labelledby="lab-source-tab" tabindex="0"><figure class="source"><figcaption>rma-ouverts-2026-11-05.csv</figcaption><pre class="code">RMA-26-0001,20/08/2026,Agri-Services Dubreuil,Vanne V-40,Surchauffe,Reçu,&quot;89,90&quot;,77
+RMA-26-0002,21/08/2026,&quot;Léon, Fils &amp; Cie&quot;,Surpresseur S-3,Casse au transport,Avoir à émettre,&quot;2 310,00&quot;,76
+RMA-26-0003,22/08/2026,Établissements Morvan,Pompe P-220,Erreur de référence,Ouvert,&quot;1 234,50&quot;,75
+RMA-26-0004,27/08/2026,Thermique de l&#x27;Ouest,Pompe P-220,Ne démarre pas,En attente pièce,&quot;1 234,50&quot;,70
+RMA-26-0005,28/08/2026,Agri-Services Dubreuil,Vanne V-40,&quot;Client: \&quot;pièce jamais reçue\&quot;, relancé&quot;,En expertise,&quot;179,80&quot;,69
+RMA-26-0006,28/08/2026,Quincaillerie Bérard,Carte électronique CE-12,Ne démarre pas,En attente pièce,&quot;636,00&quot;,69
+RMA-26-0007,29/08/2026,Côté Jardin Négoce,Carte électronique CE-12,Erreur de référence,En attente pièce,&quot;318,00&quot;,68
+RMA-26-0008,31/08/2026,Thermique de l&#x27;Ouest,Surpresseur S-3,&quot;Bruit anormal, vibrations&quot;,En attente pièce,&quot;4 620,00&quot;,66
+RMA-26-0009,01/09/2026,Plomberie Garnier SARL,Carte électronique CE-12,Erreur de référence,Ouvert,&quot;318,00&quot;,65
+RMA-26-0010,03/09/2026,Hydro Saône,Carte électronique CE-12,Fuite au joint,En attente pièce,&quot;636,00&quot;,63
+RMA-26-0011,04/09/2026,&quot;Léon, Fils &amp; Cie&quot;,Pompe P-220,&quot;Client: \&quot;pièce jamais reçue\&quot;, relancé&quot;,Avoir à émettre,&quot;1 234,50&quot;,62
+RMA-26-0012,08/09/2026,Plomberie Garnier SARL,Carte électronique CE-12,&quot;Client: \&quot;pièce jamais reçue\&quot;, relancé&quot;,Avoir à émettre,&quot;636,00&quot;,58
+RMA-26-0013,11/09/2026,Thermique de l&#x27;Ouest,Surpresseur S-3,Surchauffe,En attente pièce,&quot;2 310,00&quot;,55
+RMA-26-0014,13/09/2026,&quot;Léon, Fils &amp; Cie&quot;,&quot;Moteur M-1,5 kW&quot;,&quot;Client: \&quot;pièce jamais reçue\&quot;, relancé&quot;,En expertise,&quot;612,75&quot;,53
+RMA-26-0015,14/09/2026,Thermique de l&#x27;Ouest,Vanne V-40,Ne démarre pas,Ouvert,&quot;89,90&quot;,52
+RMA-26-0016,16/09/2026,Établissements Morvan,Vanne V-40,Fuite au joint,Reçu,&quot;89,90&quot;,50
+RMA-26-0017,17/09/2026,Plomberie Garnier SARL,Pressostat PR-6,&quot;Bruit anormal, vibrations&quot;,En attente pièce,&quot;46,20&quot;,49
+RMA-26-0018,19/09/2026,Plomberie Garnier SARL,Pompe P-220,Casse au transport,Ouvert,&quot;1 234,50&quot;,47
+RMA-26-0019,19/09/2026,Agri-Services Dubreuil,Surpresseur S-3,Erreur de référence,Ouvert,&quot;2 310,00&quot;,47
+RMA-26-0020,21/09/2026,&quot;Léon, Fils &amp; Cie&quot;,Pompe P-220,Surchauffe,En expertise,&quot;1 234,50&quot;,45</pre><p class="source-more">… 26 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0" hidden><dl class="facts"><dt>screen</dt><dd>&lt;span class=&quot;pagebanner&quot;&gt;46 items found, displaying 1 to 25.</dd><dt>screen</dt><dd>&lt;a href=&quot;/sav/rma/list.do?6578706f7274=1&amp;amp;d-16516-e=1&quot;</dd><dt>export</dt><dd>Content-Type: text/csv;charset=ISO-8859-1</dd></dl><p class="sources">preuves: replay.log, screen.txt, export-headers.txt, rows-read.txt, count-read.txt, count-next.txt, waiting.txt, inbox-next.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-read" aria-labelledby="read-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="read-title">46 retours, chaque motif avec ses guillemets</h2>
+      <p>Le connecteur csv-file lit le fichier tel que DisplayTag l&#x27;écrit.</p><ul class="prose-list"><li>encoding: ISO-8859-1, le charset de la réponse</li><li>has_header: false et columns: les noms donnés dans le manifeste</li><li>escape: &quot;\\&quot;: un guillemet échappé par une barre oblique inverse</li><li>parse-number: 2 310,00 devient 2310.00, l&#x27;espace insécable comprise</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Avant le correctif</strong><p>Au premier \&quot;, la lecture s&#x27;arrêtait: 5 lignes sur 46, une lettre morte, et un run Completed (#1877). Chaque montant de 1 000 ou plus était perdu (#1878).</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un export Java formaté à la française arrive dans le hub sans retouche du fichier.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-manifest-tab" data-view="manifest" aria-controls="read-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="read-manifest" aria-labelledby="read-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-rma-export.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-struts-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [sav-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/struts-displaytag-export/a/rma-ouverts.csv   <span class="comment"># one file, rewritten every night: the table follows it</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;,&quot;</span></span><span class="line hl">    <span class="key">encoding</span>: ISO-8859-1           <span class="comment"># DisplayTag writes the response&#x27;s charset: text/csv;charset=ISO-8859-1</span></span><span class="line">    <span class="key">has_header</span>: false              <span class="comment"># export.csv.include_header=false, DisplayTag&#x27;s default</span></span><span class="line">    <span class="key">columns</span>: [rma_no, opened, customer, item, reason, status, amount, age_days]</span><span class="line hl">    <span class="key">escape</span>: <span class="str">&quot;\\&quot;</span>                   <span class="comment"># DisplayTag&#x27;s CsvView escapes a quote with a backslash, never doubles it</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      - parse-date: { column: opened, formats: [<span class="str">&quot;dd/MM/yyyy&quot;</span>] }</span><span class="line">      - parse-number: { column: amount, decimal-separator: <span class="str">&quot;,&quot;</span> }   <span class="comment"># &quot;2 310,00&quot;: grouped by a no-break space</span></span><span class="line">      - parse-number: { column: age_days, integer: true }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-rma-export.yaml</span>
+<span class="out">Applied connector &quot;scenario-struts-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-struts-a</span>
+<span class="out">run scheduled: 17728e66-68e6-4f47-9f51-012e3d12141f</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 17728e66-68e6-4f47-9f51-012e3d12141f</span>
+<span class="out">ID        CONNECTOR          ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+17728e66  scenario-struts-a  default   Completed  46  46   0        0             2026-11-07 16:14  2026-11-07 16:14  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>default</dt><dd>Completed · IN 46 · OUT 46 · DEAD-LETTERS 0</dd><dt>hub</dt><dd>RMA-26-0002 | 2026-08-21 | Léon, Fils &amp; Cie | Surpresseur S-3 | Casse au transport | Avoir à émettre | 2310.00 | 76</dd><dt>hub</dt><dd>RMA-26-0005 | 2026-08-28 | Agri-Services Dubreuil | Vanne V-40 | Client: &quot;pièce jamais reçue&quot;, relancé | En expertise | 179.80 | 69</dd><dt>hub</dt><dd>RMA-26-0014 | 2026-09-13 | Léon, Fils &amp; Cie | Moteur M-1,5 kW | Client: &quot;pièce jamais reçue&quot;, relancé | En expertise | 612.75 | 53</dd><dt>hub</dt><dd>46 RMAs, 22 of 1,000 or more, 6 reasons with their quotes, 46891.65 excl. VAT</dd></dl><p class="sources">preuves: replay.log, screen.txt, export-headers.txt, rows-read.txt, count-read.txt, count-next.txt, waiting.txt, inbox-next.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-rule" aria-labelledby="rule-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="rule-title">En attente de pièce depuis plus de 30 jours</h2>
+      <p>Le Process écoute la table du connecteur.</p><ul class="prose-list"><li>status=En attente pièce</li><li>age_days&gt;30: la colonne « Ancienneté (j) » que l&#x27;écran calcule</li><li>key: rma_no, une décision par retour</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Le calcul reste dans l&#x27;application</strong><p>L&#x27;ancienneté vient de l&#x27;écran, comme le voit le technicien SAV. La règle ne recalcule rien.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La règle du service SAV s&#x27;écrit en deux conditions.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="rule-manifest-tab" data-view="manifest" aria-controls="rule-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="rule-commands-tab" data-view="commands" aria-controls="rule-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="rule-result-tab" data-view="result" aria-controls="rule-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="rule-manifest" aria-labelledby="rule-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-waiting-for-a-part.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-struts-waiting-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: sav-a</span><span class="line">  <span class="key">on</span>: { event: data.row.changed, table: connector.t_scenario_struts_a }</span><span class="line">  <span class="key">when</span>:</span><span class="line">    - status=En attente pièce</span><span class="line hl">    - age_days&gt;30                    <span class="comment"># the screen&#x27;s own Ancienneté (j): the application computes it</span></span><span class="line">  <span class="key">emit</span>:</span><span class="line">    <span class="key">type</span>: decision.waiting-for-a-part-a</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;{rma_no} ({customer}, {item}): waiting for a part for {age_days} days&quot;</span></span><span class="line">    <span class="key">key</span>: rma_no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="rule-commands" aria-labelledby="rule-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm process apply -f manifests/20-waiting-for-a-part.yaml</span>
+<span class="out">Applied process &quot;scenario-struts-waiting-a&quot; → table connector.t_scenario_struts_a, emits decision.waiting-for-a-part-a</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="rule-result" aria-labelledby="rule-result-tab" tabindex="0" hidden><dl class="facts"><dt>apply</dt><dd>Applied process &quot;scenario-struts-waiting-a&quot; → table connector.t_scenario_struts_a, emits decision.waiting-for-a-part-a</dd></dl><p class="sources">preuves: replay.log, screen.txt, export-headers.txt, rows-read.txt, count-read.txt, count-next.txt, waiting.txt, inbox-next.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-next" aria-labelledby="next-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="next-title">Trois retours clos, sept retours qui attendent une pièce</h2>
+      <p>La nuit suivante, l&#x27;export réécrit le même fichier.</p><ul class="prose-list"><li>RMA-26-0004, 0019 et 0030 sont crédités: ils sortent de la table</li><li>RMA-26-0040 passe à Reçu, RMA-26-0047 et 0048 sont ouverts</li><li>sept retours attendent une pièce depuis 43 à 70 jours: sept décisions</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Un fichier, la table</strong><p>Le chemin nomme un seul fichier: un run qui le lit en entier retire les lignes qu&#x27;il ne contient plus. Le garde-fou refuse une chute de plus de 30%.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un retour clos dans l&#x27;application disparaît du hub la nuit même.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="La nuit suivante"><button type="button" role="tab" id="next-source-tab" data-view="source" aria-controls="next-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="next-commands-tab" data-view="commands" aria-controls="next-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="next-result-tab" data-view="result" aria-controls="next-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="next-source" aria-labelledby="next-source-tab" tabindex="0"><figure class="source"><figcaption>rma-ouverts-2026-11-06.csv</figcaption><pre class="code">RMA-26-0001,20/08/2026,Agri-Services Dubreuil,Vanne V-40,Surchauffe,Reçu,&quot;89,90&quot;,78
+RMA-26-0002,21/08/2026,&quot;Léon, Fils &amp; Cie&quot;,Surpresseur S-3,Casse au transport,Avoir à émettre,&quot;2 310,00&quot;,77
+RMA-26-0003,22/08/2026,Établissements Morvan,Pompe P-220,Erreur de référence,Ouvert,&quot;1 234,50&quot;,76
+RMA-26-0005,28/08/2026,Agri-Services Dubreuil,Vanne V-40,&quot;Client: \&quot;pièce jamais reçue\&quot;, relancé&quot;,En expertise,&quot;179,80&quot;,70
+RMA-26-0006,28/08/2026,Quincaillerie Bérard,Carte électronique CE-12,Ne démarre pas,En attente pièce,&quot;636,00&quot;,70
+RMA-26-0007,29/08/2026,Côté Jardin Négoce,Carte électronique CE-12,Erreur de référence,En attente pièce,&quot;318,00&quot;,69
+RMA-26-0008,31/08/2026,Thermique de l&#x27;Ouest,Surpresseur S-3,&quot;Bruit anormal, vibrations&quot;,En attente pièce,&quot;4 620,00&quot;,67
+RMA-26-0009,01/09/2026,Plomberie Garnier SARL,Carte électronique CE-12,Erreur de référence,Ouvert,&quot;318,00&quot;,66
+RMA-26-0010,03/09/2026,Hydro Saône,Carte électronique CE-12,Fuite au joint,En attente pièce,&quot;636,00&quot;,64
+RMA-26-0011,04/09/2026,&quot;Léon, Fils &amp; Cie&quot;,Pompe P-220,&quot;Client: \&quot;pièce jamais reçue\&quot;, relancé&quot;,Avoir à émettre,&quot;1 234,50&quot;,63
+RMA-26-0012,08/09/2026,Plomberie Garnier SARL,Carte électronique CE-12,&quot;Client: \&quot;pièce jamais reçue\&quot;, relancé&quot;,Avoir à émettre,&quot;636,00&quot;,59
+RMA-26-0013,11/09/2026,Thermique de l&#x27;Ouest,Surpresseur S-3,Surchauffe,En attente pièce,&quot;2 310,00&quot;,56
+RMA-26-0014,13/09/2026,&quot;Léon, Fils &amp; Cie&quot;,&quot;Moteur M-1,5 kW&quot;,&quot;Client: \&quot;pièce jamais reçue\&quot;, relancé&quot;,En expertise,&quot;612,75&quot;,54
+RMA-26-0015,14/09/2026,Thermique de l&#x27;Ouest,Vanne V-40,Ne démarre pas,Ouvert,&quot;89,90&quot;,53
+RMA-26-0016,16/09/2026,Établissements Morvan,Vanne V-40,Fuite au joint,Reçu,&quot;89,90&quot;,51
+RMA-26-0017,17/09/2026,Plomberie Garnier SARL,Pressostat PR-6,&quot;Bruit anormal, vibrations&quot;,En attente pièce,&quot;46,20&quot;,50
+RMA-26-0018,19/09/2026,Plomberie Garnier SARL,Pompe P-220,Casse au transport,Ouvert,&quot;1 234,50&quot;,48
+RMA-26-0020,21/09/2026,&quot;Léon, Fils &amp; Cie&quot;,Pompe P-220,Surchauffe,En expertise,&quot;1 234,50&quot;,46
+RMA-26-0021,23/09/2026,Hydro Saône,Surpresseur S-3,&quot;Bruit anormal, vibrations&quot;,Reçu,&quot;2 310,00&quot;,44
+RMA-26-0022,24/09/2026,Hydro Saône,Pressostat PR-6,Surchauffe,En attente pièce,&quot;46,20&quot;,43</pre><p class="source-more">… 25 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-commands" id="next-commands" aria-labelledby="next-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-struts-a</span>
+<span class="out">run scheduled: c963af0f-d820-4fec-abd0-760c0f7a0505</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get c963af0f-d820-4fec-abd0-760c0f7a0505</span>
+<span class="out">ID        CONNECTOR          ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+c963af0f  scenario-struts-a  default   Completed  45  45   0        0             2026-11-07 16:14  2026-11-07 16:14  yes</span>
+<span class="note">• 1 row(s) removed — the source no longer holds them</span>
+
+<span class="cmd"><span class="prompt">$</span> lm inbox --process scenario-struts-waiting-a</span>
+<span class="out">ID     WHEN      PROCESS                    MESSAGE                                                                                       ENTITY_KEY
+25492  just now  scenario-struts-waiting-a  RMA-26-0022 (Hydro Saône, Pressostat PR-6): waiting for a part for 43 days                    RMA-26-0022
+25491  just now  scenario-struts-waiting-a  RMA-26-0017 (Plomberie Garnier SARL, Pressostat PR-6): waiting for a part for 50 days         RMA-26-0017
+25490  just now  scenario-struts-waiting-a  RMA-26-0013 (Thermique de l&#x27;Ouest, Surpresseur S-3): waiting for a part for 56 days           RMA-26-0013
+25489  just now  scenario-struts-waiting-a  RMA-26-0010 (Hydro Saône, Carte électronique CE-12): waiting for a part for 64 days           RMA-26-0010
+25488  just now  scenario-struts-waiting-a  RMA-26-0008 (Thermique de l&#x27;Ouest, Surpresseur S-3): waiting for a part for 67 days           RMA-26-0008
+25487  just now  scenario-struts-waiting-a  RMA-26-0007 (Côté Jardin Négoce, Carte électronique CE-12): waiting for a part for 69 days    RMA-26-0007
+25486  just now  scenario-struts-waiting-a  RMA-26-0006 (Quincaillerie Bérard, Carte électronique CE-12): waiting for a part for 70 days  RMA-26-0006</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="next-result" aria-labelledby="next-result-tab" tabindex="0" hidden><dl class="facts"><dt>default</dt><dd>Completed · IN 45 · OUT 45 · DEAD-LETTERS 0</dd><dt>hub</dt><dd>45 RMAs in the table; gone: RMA-26-0004, RMA-26-0019, RMA-26-0030; RMA-26-0040: Reçu</dd><dt>RMA-26-0006</dt><dd>RMA-26-0006 (Quincaillerie Bérard, Carte électronique CE-12): waiting for a part for 70 days</dd><dt>RMA-26-0007</dt><dd>RMA-26-0007 (Côté Jardin Négoce, Carte électronique CE-12): waiting for a part for 69 days</dd><dt>RMA-26-0008</dt><dd>RMA-26-0008 (Thermique de l&#x27;Ouest, Surpresseur S-3): waiting for a part for 67 days</dd><dt>RMA-26-0010</dt><dd>RMA-26-0010 (Hydro Saône, Carte électronique CE-12): waiting for a part for 64 days</dd><dt>RMA-26-0013</dt><dd>RMA-26-0013 (Thermique de l&#x27;Ouest, Surpresseur S-3): waiting for a part for 56 days</dd><dt>RMA-26-0017</dt><dd>RMA-26-0017 (Plomberie Garnier SARL, Pressostat PR-6): waiting for a part for 50 days</dd><dt>RMA-26-0022</dt><dd>RMA-26-0022 (Hydro Saône, Pressostat PR-6): waiting for a part for 43 days</dd></dl><p class="sources">preuves: replay.log, screen.txt, export-headers.txt, rows-read.txt, count-read.txt, count-next.txt, waiting.txt, inbox-next.json · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Le run dit « 1 row(s) removed »: c&#x27;est la baisse de la table. Les lignes n&#x27;ont pas de clé; trois retours clos et deux ouverts font 1.</li><li>L&#x27;ancienneté change chaque nuit, donc chaque ligne est réécrite: c&#x27;est ainsi que la règle, déclarée après la première lecture, voit les sept retours. Ce que devient la décision d&#x27;un retour qui attend encore la troisième nuit n&#x27;a pas été joué.</li><li>Le lien d&#x27;export est appelé sans session. Une application qui exige une connexion pour son écran demande un cookie de session: non joué ici.</li><li>La tâche cron est jouée par le script du scénario, pas par un crontab.</li><li>Retours, clients et montants synthétiques; Struts 1.3.10, DisplayTag 1.2 et Tomcat 9 sont réels.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">SAV · Struts 1</p><h2>Les retours clients vivent dans un intranet de 2007.</h2><p class="brief-lead">Struts 1, DisplayTag, Tomcat. Aucune API, un lien « Export CSV ».</p><p class="brief-note">?6578706f7274=1&amp;d-16516-e=1</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Le hub lisait 5 lignes sur 46.</h2><ul class="brief-list tone-cyan"><li>DisplayTag écrit \&quot; dans un guillemet, au lieu de le doubler.</li><li>Et 2 310,00 est groupé par une espace insécable: le montant était perdu.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>L&#x27;application reste telle quelle.</h2><ul class="brief-list tone-green"><li>Aucune ligne de Java, aucune JSP touchée.</li><li>L&#x27;export est celui de l&#x27;écran, appelé chaque nuit.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>escape: &quot;\\&quot;
+encoding: ISO-8859-1</code></pre><h2>Deux lignes dans le connecteur.</h2><ul class="brief-list tone-green"><li>Le motif garde ses guillemets.</li><li>Un seul fichier: la table le suit.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui a été corrigé</p><h2>parser.escape existe (#1877).</h2><ul class="brief-list tone-green"><li>parse-number enlève l&#x27;espace insécable (#1878).</li><li>46 retours lus, 7 décisions le lendemain.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>

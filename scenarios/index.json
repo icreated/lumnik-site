@@ -296,6 +296,26 @@
       "evidenceDigest": "sha256:5267b7d7ff4f6add37ece37a8f8681d9a40db27b81af171db51123c4aaadc7df"
     },
     {
+      "slug": "domino-quality-complaints",
+      "title": "Lotus Notes: les réclamations qualité lues par le Domino Data Service",
+      "goal": "Lire une vue Notes sans toucher à la base, vérifier le compte de la vue, et être prévenu d'une réclamation critique laissée sans responsable.",
+      "lede": "Le service qualité d'un fabricant de vannes suit ses réclamations clients dans une base Lotus Notes depuis vingt ans. Le Domino Data Service l'expose en JSON.\n- start et count, le compte de la vue dans Content-Range;\n- un champ multi-valeur: une chaîne avec un nom, une liste avec plusieurs;\n- deux réclamations critiques sans responsable, deux décisions.",
+      "tags": {
+        "domain": [
+          "Qualité",
+          "Lotus Notes",
+          "Domino"
+        ],
+        "kinds": [
+          "Connector",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-07",
+      "evidenceDigest": "sha256:f3857547ce5547539c6bbbf3ce7c682eabd14ee011e44e4faa1cf9127856af06"
+    },
+    {
       "slug": "edi-flat-order-lines",
       "title": "Les lignes de commande d'un fichier EDI à plat lues à leur place",
       "goal": "Lire en colonnes les lignes de commande d'un fichier EDI à largeur fixe, sans outil de mapping.",
@@ -1367,6 +1387,27 @@
       "edition": "open",
       "replayedAt": "2026-10-22",
       "evidenceDigest": "sha256:2b3ff54db7df095b8ff9531a6a89d679651c8827fe8bfc48c27c989ddd11501c"
+    },
+    {
+      "slug": "struts-displaytag-export",
+      "title": "Struts 1 sans API: l'export CSV de l'écran, lu tel qu'il sort",
+      "goal": "Lire une application Struts 1 qui n'a pour toute sortie que l'export CSV de son écran, et être prévenu d'un retour client qui attend une pièce depuis plus de 30 jours.",
+      "lede": "Un fabricant de pompes gère ses retours clients dans un intranet Struts 1 écrit en 2007: Tomcat, JSP, DisplayTag. Aucune API; l'écran a un lien d'export CSV, et une tâche planifiée le récupère chaque nuit.\n- pas d'en-tête, ISO-8859-1, un guillemet échappé par une barre oblique inverse;\n- des montants groupés par une espace insécable: « 2 310,00 »;\n- le lendemain, les retours clos sortent de la table, sept retours en attente de pièce lèvent une décision.",
+      "tags": {
+        "domain": [
+          "Service après-vente",
+          "Struts 1",
+          "Java legacy",
+          "Export CSV"
+        ],
+        "kinds": [
+          "Connector",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-07",
+      "evidenceDigest": "sha256:d274ec6ef1eb0a7fe16a3c55f8fc1a5a1829d604c4fc11b08dc08a3378011eb0"
     },
     {
       "slug": "supplier-master-edi",

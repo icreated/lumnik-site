@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lotus Notes: les réclamations qualité lues par le Domino Data Service — lumnik</title>
+<meta name="description" content="Lire une vue Notes sans toucher à la base, vérifier le compte de la vue, et être prévenu d&#x27;une réclamation critique laissée sans responsable. Le service qualité d&#x27;un fabricant de vannes suit ses réclamations clients dans une base Lotus Notes depuis vingt ans. Le Domino Data Service l&#x27;expose en JSON. Start et count, le compte de la vue dans Content-Range; Un champ multi-valeur: une chaîne avec un nom, une liste avec plusieurs; Deux réclamations critiques sans responsable, deux décisions.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/domino-quality-complaints/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/domino-quality-complaints/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Lotus Notes: les réclamations qualité lues par le Domino Data Service</h1>
+    <p class="goal"><strong>Objectif</strong> Lire une vue Notes sans toucher à la base, vérifier le compte de la vue, et être prévenu d&#x27;une réclamation critique laissée sans responsable.</p>
+    <p class="lede">Le service qualité d&#x27;un fabricant de vannes suit ses réclamations clients dans une base Lotus Notes depuis vingt ans. Le Domino Data Service l&#x27;expose en JSON.</p><ul class="lede-list"><li>start et count, le compte de la vue dans Content-Range;</li><li>un champ multi-valeur: une chaîne avec un nom, une liste avec plusieurs;</li><li>deux réclamations critiques sans responsable, deux décisions.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Qualité</li><li class="tag">Lotus Notes</li><li class="tag">Domino</li><li class="tag kind">Connector</li><li class="tag kind">Process</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="Lotus Notes: les réclamations qualité lues par le Domino Data Service">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · Service</span><span class="sub">Domino</span></a><a href="#step-read" data-step="read"><span class="num">2 · Lire</span><span class="sub">start · count</span></a><a href="#step-rule" data-step="rule"><span class="num">3 · Déclarer</span><span class="sub">Process</span></a><a href="#step-next" data-step="next"><span class="num">4 · Le lendemain</span><span class="sub">2 décisions</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">La vue OpenComplaints, en Lecteur</h2>
+      <p>Le Domino Data Service expose les vues d&#x27;une base Notes.</p><ul class="prose-list"><li>GET /quality/complaints.nsf/api/data/collections/name/OpenComplaints</li><li>HTTP Basic, un utilisateur Notes avec l&#x27;accès Lecteur</li><li>le mot de passe va dans lm secret</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Une entrée de vue</strong><p>Les champs système (@unid, @noteid, @position, @form), puis les colonnes de la vue par leur nom programmatique. Une colonne calculée porte le nom de sa position: $7.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le secret est dans le registre avant la première ligne de manifeste.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Service"><button type="button" role="tab" id="lab-source-tab" data-view="source" aria-controls="lab-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="lab-commands-tab" data-view="commands" aria-controls="lab-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="lab-source" aria-labelledby="lab-source-tab" tabindex="0"><figure class="source"><figcaption>complaints-20261105.json</figcaption><pre class="code">[
+ {
+  &quot;@unid&quot;: &quot;ADF73C1ECCB7805890D15213E40BE291&quot;,
+  &quot;@noteid&quot;: &quot;8F6&quot;,
+  &quot;@position&quot;: &quot;1&quot;,
+  &quot;@form&quot;: &quot;Complaint&quot;,
+  &quot;@modified&quot;: &quot;2026-09-04T17:00:00Z&quot;,
+  &quot;ComplaintNo&quot;: &quot;RQ-26-0001&quot;,
+  &quot;Customer&quot;: &quot;Fromagerie Vercors&quot;,
+  &quot;Product&quot;: &quot;Vanne papillon DN80&quot;,
+  &quot;Severity&quot;: &quot;3 - Mineure&quot;,
+  &quot;Status&quot;: &quot;En analyse&quot;,
+  &quot;Received&quot;: &quot;2026-09-02T17:00:00Z&quot;,
+  &quot;$7&quot;: &quot;Attribuée&quot;,
+  &quot;Owner&quot;: &quot;Marc Roche/QUALITE/Acme&quot;
+ },
+ {
+  &quot;@unid&quot;: &quot;FE1B06C01F04F16A7158FAC2298E43B0&quot;,
+  &quot;@noteid&quot;: &quot;8FA&quot;,
+  &quot;@position&quot;: &quot;2&quot;,</pre><p class="source-more">… 870 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-commands" id="lab-commands" aria-labelledby="lab-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm secret set SCENARIO_DOMINO_PASSWORD_A -</span>
+<span class="out">Created secret &quot;SCENARIO_DOMINO_PASSWORD_A&quot;</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0" hidden><dl class="facts"><dt>lm secret</dt><dd>Created secret &quot;SCENARIO_DOMINO_PASSWORD_A&quot;</dd></dl><p class="sources">preuves: replay.log, requests-read.txt, owners.txt, inbox-next.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-read" aria-labelledby="read-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="read-title">57 réclamations, trois pages, le compte vérifié</h2>
+      <p>Le connecteur rest-generic, pagination offset.</p><ul class="prose-list"><li>start et count: les noms de Domino</li><li>total_header: Content-Range, items 0-19/57: la vue en compte 57</li><li>unique_key: @unid, l&#x27;identifiant du document dans toutes les répliques</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Un champ multi-valeur</strong><p>Owner est une chaîne avec un seul nom, une liste avec plusieurs. La liste est gardée telle que Domino l&#x27;a écrite, noms canoniques compris.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une base Notes se lit sans agent, sans export, sans toucher au design.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-manifest-tab" data-view="manifest" aria-controls="read-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="read-manifest" aria-labelledby="read-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-complaints.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-domino-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [quality-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://notes-quality</span><span class="line">  <span class="key">auth</span>: { kind: basic, username: lumnik reader, password_env: SCENARIO_DOMINO_PASSWORD_A }   <span class="comment"># a Notes user with Reader access</span></span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: open-complaints</span><span class="line">      <span class="key">path</span>: /quality/complaints.nsf/api/data/collections/name/OpenComplaints</span><span class="line">      <span class="key">method</span>: GET</span><span class="line">      <span class="key">pagination</span>:</span><span class="line">        <span class="key">kind</span>: offset</span><span class="line">        <span class="key">offset_param</span>: start</span><span class="line">        <span class="key">limit_param</span>: count</span><span class="line">        <span class="key">limit</span>: 20</span><span class="line">        <span class="key">response_path</span>: $</span><span class="line hl">        <span class="key">total_header</span>: Content-Range          <span class="comment"># items 0-19/57: the view&#x27;s count after the slash</span></span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: ext.scenario_domino_a</span><span class="line">        <span class="key">unique_key</span>: $[&#x27;@unid&#x27;]</span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: complaint_no, path: $.ComplaintNo, type: text }</span><span class="line">          - { name: customer, path: $.Customer, type: text }</span><span class="line">          - { name: product, path: $.Product, type: text }</span><span class="line">          - { name: severity, path: $.Severity, type: text }</span><span class="line">          - { name: status, path: $.Status, type: text }</span><span class="line">          - { name: received, path: $.Received, type: timestamptz }</span><span class="line">          - { name: owner, path: $.Owner, type: text }</span><span class="line hl">          - { name: assignment, path: <span class="str">&quot;$[&#x27;$7&#x27;]&quot;</span>, type: text }   <span class="comment"># the view&#x27;s computed column, named by its position</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-complaints.yaml</span>
+<span class="out">Applied connector &quot;scenario-domino-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm source rest test scenario-domino-a</span>
+<span class="out">ENDPOINT         METHOD  STATUS  ITEMS  VERDICT
+open-complaints  GET     200     20     ok</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-domino-a</span>
+<span class="out">run scheduled: a11d4ef1-8b27-4036-9b1a-4601493648e4</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get a11d4ef1-8b27-4036-9b1a-4601493648e4</span>
+<span class="out">ID        CONNECTOR          ENDPOINT         STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+a11d4ef1  scenario-domino-a  open-complaints  Completed  57  57   0        0             2026-11-07 12:49  2026-11-07 12:49  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>lm source rest test</dt><dd>200     20     ok</dd><dt>open-complaints</dt><dd>Completed · IN 57 · OUT 57</dd><dt>service</dt><dd>OpenComplaints?count=20&amp;start=0</dd><dt>service</dt><dd>OpenComplaints?count=20&amp;start=20</dd><dt>service</dt><dd>OpenComplaints?count=20&amp;start=40</dd><dt>hub</dt><dd>RQ-26-0005 | 3 - Mineure | En analyse | [&quot;Marc Roche/QUALITE/Acme&quot;,&quot;Inès Faure/QUALITE/Acme&quot;] | Attribuée</dd><dt>hub</dt><dd>RQ-26-0006 | 2 - Majeure | Action corrective | Inès Faure/QUALITE/Acme | Attribuée</dd><dt>hub</dt><dd>RQ-26-0009 | 1 - Critique | Action corrective | Marc Roche/QUALITE/Acme | Attribuée</dd></dl><p class="sources">preuves: replay.log, requests-read.txt, owners.txt, inbox-next.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-rule" aria-labelledby="rule-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="rule-title">Critique, et personne dessus</h2>
+      <p>Le Process écoute la table ext.* du connecteur.</p><ul class="prose-list"><li>severity=1 - Critique</li><li>assignment=Non attribuée: la colonne $7 de la vue, @If(Owner = &quot;&quot;; &quot;Non attribuée&quot;; &quot;Attribuée&quot;)</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>La formule reste dans Notes</strong><p>La règle lit le verdict de la vue. La formule @ n&#x27;est pas réécrite hors de Notes.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une règle se pose sur une colonne calculée par Notes lui-même.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="rule-manifest-tab" data-view="manifest" aria-controls="rule-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="rule-commands-tab" data-view="commands" aria-controls="rule-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="rule-result-tab" data-view="result" aria-controls="rule-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="rule-manifest" aria-labelledby="rule-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-critical-unassigned.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-domino-critical-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: quality-a</span><span class="line">  <span class="key">on</span>: { event: data.row.changed, table: ext.scenario_domino_a }</span><span class="line">  <span class="key">when</span>:</span><span class="line">    - severity=1 - Critique</span><span class="line hl">    - assignment=Non attribuée</span><span class="line">  <span class="key">emit</span>:</span><span class="line">    <span class="key">type</span>: decision.critical-unassigned-a</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;{complaint_no}: critical complaint from {customer} on {product}, received {received}, nobody assigned&quot;</span></span><span class="line">    <span class="key">key</span>: complaint_no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="rule-commands" aria-labelledby="rule-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm process apply -f manifests/20-critical-unassigned.yaml</span>
+<span class="out">Applied process &quot;scenario-domino-critical-a&quot; → table ext.scenario_domino_a, emits decision.critical-unassigned-a</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="rule-result" aria-labelledby="rule-result-tab" tabindex="0" hidden><dl class="facts"><dt>apply</dt><dd>Applied process &quot;scenario-domino-critical-a&quot; → table ext.scenario_domino_a, emits decision.critical-unassigned-a</dd></dl><p class="sources">preuves: replay.log, requests-read.txt, owners.txt, inbox-next.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-next" aria-labelledby="next-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="next-title">Quatre nouvelles réclamations, deux critiques sans responsable</h2>
+      <p>La vue compte 61 réclamations ouvertes.</p><ul class="prose-list"><li>RQ-26-0059 et RQ-26-0061: critiques, arrivées en fin de journée, aucun responsable</li><li>RQ-26-0058 et RQ-26-0060: mineures, déjà attribuées</li><li>deux décisions, avec le client et le produit</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Le message</strong><p>Réclamation, client, produit, date de réception: de quoi désigner un responsable dès le matin.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une réclamation critique laissée sans responsable est signalée, sans changer la base Notes.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Le lendemain"><button type="button" role="tab" id="next-source-tab" data-view="source" aria-controls="next-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="next-commands-tab" data-view="commands" aria-controls="next-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="next-result-tab" data-view="result" aria-controls="next-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="next-source" aria-labelledby="next-source-tab" tabindex="0"><figure class="source"><figcaption>complaints-20261106.json</figcaption><pre class="code">[
+ {
+  &quot;@unid&quot;: &quot;ADF73C1ECCB7805890D15213E40BE291&quot;,
+  &quot;@noteid&quot;: &quot;8F6&quot;,
+  &quot;@position&quot;: &quot;1&quot;,
+  &quot;@form&quot;: &quot;Complaint&quot;,
+  &quot;@modified&quot;: &quot;2026-09-04T17:00:00Z&quot;,
+  &quot;ComplaintNo&quot;: &quot;RQ-26-0001&quot;,
+  &quot;Customer&quot;: &quot;Fromagerie Vercors&quot;,
+  &quot;Product&quot;: &quot;Vanne papillon DN80&quot;,
+  &quot;Severity&quot;: &quot;3 - Mineure&quot;,
+  &quot;Status&quot;: &quot;En analyse&quot;,
+  &quot;Received&quot;: &quot;2026-09-02T17:00:00Z&quot;,
+  &quot;$7&quot;: &quot;Attribuée&quot;,
+  &quot;Owner&quot;: &quot;Marc Roche/QUALITE/Acme&quot;
+ },
+ {
+  &quot;@unid&quot;: &quot;FE1B06C01F04F16A7158FAC2298E43B0&quot;,
+  &quot;@noteid&quot;: &quot;8FA&quot;,
+  &quot;@position&quot;: &quot;2&quot;,</pre><p class="source-more">… 928 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-commands" id="next-commands" aria-labelledby="next-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-domino-a</span>
+<span class="out">run scheduled: 056164dc-6c52-4ee2-8436-9aeab5522b0e</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 056164dc-6c52-4ee2-8436-9aeab5522b0e</span>
+<span class="out">ID        CONNECTOR          ENDPOINT         STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+056164dc  scenario-domino-a  open-complaints  Completed  61  61   0        0             2026-11-07 12:49  2026-11-07 12:49  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm inbox --process scenario-domino-critical-a</span>
+<span class="out">ID     WHEN      PROCESS                     MESSAGE                                                                                                                        ENTITY_KEY
+25350  just now  scenario-domino-critical-a  RQ-26-0061: critical complaint from Fromagerie Vercors on Vanne papillon DN80, received 2026-11-05T18:00:00Z, nobody assigned  RQ-26-0061
+25349  just now  scenario-domino-critical-a  RQ-26-0059: critical complaint from Pâtes Léonard on Clapet anti-retour DN65, received 2026-11-05T16:00:00Z, nobody assigned   RQ-26-0059</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="next-result" aria-labelledby="next-result-tab" tabindex="0" hidden><dl class="facts"><dt>open-complaints</dt><dd>Completed · IN 61 · OUT 61</dd><dt>RQ-26-0059</dt><dd>RQ-26-0059: critical complaint from Pâtes Léonard on Clapet anti-retour DN65, received 2026-11-05T16:00:00Z, nobody assigned</dd><dt>RQ-26-0061</dt><dd>RQ-26-0061: critical complaint from Fromagerie Vercors on Vanne papillon DN80, received 2026-11-05T18:00:00Z, nobody assigned</dd></dl><p class="sources">preuves: replay.log, requests-read.txt, owners.txt, inbox-next.json · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Joué contre une doublure du Domino Data Service écrite pour ce scénario, pas contre un serveur Domino: ses en-têtes, sa page au-delà de la fin et son plafond de count ne sont pas vérifiés ici.</li><li>La vue est relue entière à chaque run: rien de Domino ne dit ici ce qui a changé depuis la dernière lecture.</li><li>Une vue catégorisée (lignes de catégorie, documents réponses en @position 1.2) n&#x27;a pas été jouée.</li><li>L&#x27;authentification par session (formulaire de login Domino, cookie LtpaToken) n&#x27;a pas été jouée: seul HTTP Basic.</li><li>Réclamations, clients et noms synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Qualité · Notes</p><h2>Les réclamations vivent dans une base Notes.</h2><p class="brief-lead">Vingt ans de formulaires, de vues et de formules @.</p><p class="brief-note">complaints.nsf</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Une réclamation critique arrive le soir. Elle attend le matin.</h2><ul class="brief-list tone-cyan"><li>Le champ Responsable est vide.</li><li>La vue le montre à qui l&#x27;ouvre.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>La base Notes reste telle quelle.</h2><ul class="brief-list tone-green"><li>Ses formulaires, ses vues, ses ACL.</li><li>Un utilisateur Notes en Lecteur.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>offset_param: start
+limit_param: count
+total_header: Content-Range</code></pre><h2>La pagination de Domino, déclarée.</h2><ul class="brief-list tone-green"><li>Le compte de la vue vérifie la lecture.</li><li>La colonne calculée $7 dit l&#x27;attribution.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui a été corrigé</p><h2>Content-Range se lit comme un compte (#1866).</h2><ul class="brief-list tone-green"><li>items 0-19/57: 57.</li><li>Une liste promue en texte n&#x27;échappe plus ses / (#1867).</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
