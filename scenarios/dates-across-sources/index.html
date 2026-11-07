@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trois systèmes, une date de réception: le lot de 00:30 et le jour de l&#x27;usine — lumnik</title>
+<meta name="description" content="Fusionner en une entité la date d&#x27;arrivée d&#x27;un lot telle que le LIMS, l&#x27;ERP et le transporteur la donnent, et ne garder en litige que les vrais écarts. Une usine reçoit ses lots de matière première. Trois systèmes disent quand: le LIMS scanne l&#x27;échantillon (un instant), l&#x27;ERP saisit la réception (une date), le transporteur écrit « Livré le » dans un CSV (du texte). Lus tels quels, le texte du transporteur met la colonne en texte: douze lots en litige; Typée, une date rencontre une heure au jour UTC: le lot de l&#x27;équipe de nuit est en litige; Avec zone: Europe/Paris, il reste un litige, la vraie faute de saisie.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/dates-across-sources/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/dates-across-sources/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Trois systèmes, une date de réception: le lot de 00:30 et le jour de l&#x27;usine</h1>
+    <p class="goal"><strong>Objectif</strong> Fusionner en une entité la date d&#x27;arrivée d&#x27;un lot telle que le LIMS, l&#x27;ERP et le transporteur la donnent, et ne garder en litige que les vrais écarts.</p>
+    <p class="lede">Une usine reçoit ses lots de matière première. Trois systèmes disent quand: le LIMS scanne l&#x27;échantillon (un instant), l&#x27;ERP saisit la réception (une date), le transporteur écrit « Livré le » dans un CSV (du texte).</p><ul class="lede-list"><li>lus tels quels, le texte du transporteur met la colonne en texte: douze lots en litige;</li><li>typée, une date rencontre une heure au jour UTC: le lot de l&#x27;équipe de nuit est en litige;</li><li>avec zone: Europe/Paris, il reste un litige, la vraie faute de saisie.</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Réception</li><li class="tag">LIMS</li><li class="tag">ERP</li><li class="tag">Dates et fuseaux</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
+  </section>
+  <div role="tablist" class="page-tabs" aria-label="Trois systèmes, une date de réception: le lot de 00:30 et le jour de l&#x27;usine">
+    <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
+    <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
+  </div>
+  <div role="tabpanel" class="page-panel" id="walkthrough" aria-labelledby="walkthrough-tab">
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-lab" data-step="lab" aria-current="step"><span class="num">1 · Sources</span><span class="sub">3 systèmes</span></a><a href="#step-raw" data-step="raw"><span class="num">2 · Lire</span><span class="sub">texte</span></a><a href="#step-type" data-step="type"><span class="num">3 · Typer</span><span class="sub">parse-date</span></a><a href="#step-zone" data-step="zone"><span class="num">4 · Le jour de l&#x27;usine</span><span class="sub">zone</span></a></nav>
+  <section class="step" id="step-lab" aria-labelledby="lab-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="lab-title">Douze lots, trois façons de dire la même date</h2>
+      <p>Le LIMS et l&#x27;ERP dans un PostgreSQL, le rapport du transporteur en CSV.</p><ul class="prose-list"><li>lims.sample.received_at: timestamptz, l&#x27;instant du scan au labo</li><li>erp.goods_receipt.receipt_date: date, saisie par le magasinier</li><li>livraisons.csv, ISO-8859-1: « Livré le » en dd/MM/yyyy</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Deux lots qui comptent</strong><p>L-0104 arrive avec l&#x27;équipe de nuit: scan à 00:30 le 6, heure de Paris. L-0109: le magasinier a saisi la réception le 4, le lot est arrivé le 6.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Chaque système garde son type: un instant, une date, du texte.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Sources"><button type="button" role="tab" id="lab-source-tab" data-view="source" aria-controls="lab-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="lab-commands-tab" data-view="commands" aria-controls="lab-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="lab-result-tab" data-view="result" aria-controls="lab-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="lab-source" aria-labelledby="lab-source-tab" tabindex="0"><figure class="source"><figcaption>plant.sql</figcaption><pre class="code">CREATE SCHEMA lims;
+CREATE SCHEMA erp;
+CREATE TABLE lims.sample (sample_id text PRIMARY KEY, batch_no text NOT NULL, received_at timestamptz NOT NULL);
+CREATE TABLE erp.goods_receipt (batch_no text PRIMARY KEY, supplier text NOT NULL, receipt_date date NOT NULL);
+INSERT INTO lims.sample VALUES (&#x27;E-26-4410&#x27;, &#x27;L-0101&#x27;, &#x27;2026-11-05T08:12:00+01:00&#x27;);
+INSERT INTO erp.goods_receipt VALUES (&#x27;L-0101&#x27;, &#x27;Chimie du Rhône&#x27;, &#x27;2026-11-05&#x27;);
+INSERT INTO lims.sample VALUES (&#x27;E-26-4411&#x27;, &#x27;L-0102&#x27;, &#x27;2026-11-05T10:47:00+01:00&#x27;);
+INSERT INTO erp.goods_receipt VALUES (&#x27;L-0102&#x27;, &#x27;Solvants de l&#x27;&#x27;Est&#x27;, &#x27;2026-11-05&#x27;);
+INSERT INTO lims.sample VALUES (&#x27;E-26-4412&#x27;, &#x27;L-0103&#x27;, &#x27;2026-11-05T14:20:00+01:00&#x27;);
+INSERT INTO erp.goods_receipt VALUES (&#x27;L-0103&#x27;, &#x27;Arômes Provence&#x27;, &#x27;2026-11-05&#x27;);
+INSERT INTO lims.sample VALUES (&#x27;E-26-4413&#x27;, &#x27;L-0104&#x27;, &#x27;2026-11-06T00:30:00+01:00&#x27;);
+INSERT INTO erp.goods_receipt VALUES (&#x27;L-0104&#x27;, &#x27;Polymères Atlantique&#x27;, &#x27;2026-11-06&#x27;);
+INSERT INTO lims.sample VALUES (&#x27;E-26-4414&#x27;, &#x27;L-0105&#x27;, &#x27;2026-11-05T16:05:00+01:00&#x27;);
+INSERT INTO erp.goods_receipt VALUES (&#x27;L-0105&#x27;, &#x27;Chimie du Rhône&#x27;, &#x27;2026-11-05&#x27;);
+INSERT INTO lims.sample VALUES (&#x27;E-26-4415&#x27;, &#x27;L-0106&#x27;, &#x27;2026-11-05T23:40:00+01:00&#x27;);
+INSERT INTO erp.goods_receipt VALUES (&#x27;L-0106&#x27;, &#x27;Solvants de l&#x27;&#x27;Est&#x27;, &#x27;2026-11-05&#x27;);
+INSERT INTO lims.sample VALUES (&#x27;E-26-4416&#x27;, &#x27;L-0107&#x27;, &#x27;2026-11-06T07:55:00+01:00&#x27;);
+INSERT INTO erp.goods_receipt VALUES (&#x27;L-0107&#x27;, &#x27;Arômes Provence&#x27;, &#x27;2026-11-06&#x27;);
+INSERT INTO lims.sample VALUES (&#x27;E-26-4417&#x27;, &#x27;L-0108&#x27;, &#x27;2026-11-06T09:31:00+01:00&#x27;);
+INSERT INTO erp.goods_receipt VALUES (&#x27;L-0108&#x27;, &#x27;Polymères Atlantique&#x27;, &#x27;2026-11-06&#x27;);</pre><p class="source-more">… 8 lignes de plus</p></figure><figure class="source"><figcaption>livraisons.csv</figcaption><pre class="code">N° lot;Fournisseur;Livré le;Quai
+L-0101;Chimie du Rhône;05/11/2026;Q1
+L-0102;Solvants de l&#x27;Est;05/11/2026;Q2
+L-0103;Arômes Provence;05/11/2026;Q3
+L-0104;Polymères Atlantique;06/11/2026;Q1
+L-0105;Chimie du Rhône;05/11/2026;Q2
+L-0106;Solvants de l&#x27;Est;05/11/2026;Q3
+L-0107;Arômes Provence;06/11/2026;Q1
+L-0108;Polymères Atlantique;06/11/2026;Q2
+L-0109;Chimie du Rhône;06/11/2026;Q3
+L-0110;Solvants de l&#x27;Est;06/11/2026;Q1
+L-0111;Arômes Provence;06/11/2026;Q2
+L-0112;Polymères Atlantique;06/11/2026;Q3</pre></figure></div><div role="tabpanel" class="view-panel view-panel-commands" id="lab-commands" aria-labelledby="lab-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm secret set SCENARIO_DATES_PASSWORD_A -</span>
+<span class="out">Created secret &quot;SCENARIO_DATES_PASSWORD_A&quot;</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="lab-result" aria-labelledby="lab-result-tab" tabindex="0" hidden><dl class="facts"><dt>sources</dt><dd> batch_no |    lims_received_at    | erp_receipt_date </dd><dt>sources</dt><dd>----------+------------------------+------------------</dd><dt>sources</dt><dd> L-0103   | 2026-11-05 14:20:00+01 | 2026-11-05</dd><dt>sources</dt><dd> L-0104   | 2026-11-06 00:30:00+01 | 2026-11-06</dd><dt>sources</dt><dd> L-0106   | 2026-11-05 23:40:00+01 | 2026-11-05</dd><dt>sources</dt><dd> L-0109   | 2026-11-06 11:02:00+01 | 2026-11-04</dd><dt>sources</dt><dd>(4 rows)</dd><dt>sources</dt><dd>N° lot;Fournisseur;Livré le;Quai</dd><dt>sources</dt><dd>L-0103;Arômes Provence;05/11/2026;Q3</dd><dt>sources</dt><dd>L-0104;Polymères Atlantique;06/11/2026;Q1</dd><dt>sources</dt><dd>L-0106;Solvants de l&#x27;Est;05/11/2026;Q3</dd><dt>sources</dt><dd>L-0109;Chimie du Rhône;06/11/2026;Q3</dd></dl><p class="sources">preuves: replay.log, sources.txt, landing-raw.txt, apply-typed.txt, type-after-run.txt, conflicts-raw.txt, conflicts-type.txt, conflicts-zone.txt, entity-zone.txt, paris.txt, type-raw.txt, type-type.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-raw" aria-labelledby="raw-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="raw-title">Lus tels quels: douze lots en litige</h2>
+      <p>Deux connecteurs, une entité qui associe les trois colonnes à received.</p><ul class="prose-list"><li>received_at arrive en timestamptz, receipt_date en date</li><li>delivered_on reste du texte: rien ne le type</li><li>une source en texte met la colonne fusionnée en texte: « 05/11/2026 » ne vaut pas « 2026-11-05 »</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Le hub ne devine pas</strong><p>01/07 peut être le 1er juillet ou le 7 janvier: le hub ne choisit pas pour le transporteur. La colonne reste en texte, et chaque lot est en litige.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une date écrite en texte n&#x27;est jamais lue comme une date par hasard.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="raw-manifest-tab" data-view="manifest" aria-controls="raw-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="raw-commands-tab" data-view="commands" aria-controls="raw-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="raw-result-tab" data-view="result" aria-controls="raw-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="raw-manifest" aria-labelledby="raw-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-plant-db.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-dates-plant-a</span><span class="line">  <span class="key">connector_type</span>: jdbc-generic</span><span class="line">  <span class="key">scopes</span>: [receiving-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">connection</span>:</span><span class="line">    <span class="key">url</span>: jdbc:postgresql://dates-plant-db:5432/plant</span><span class="line">    <span class="key">user</span>: hub_reader</span><span class="line">    <span class="key">password_env</span>: SCENARIO_DATES_PASSWORD_A</span><span class="line">    <span class="key">dialect</span>: postgres</span><span class="line">  <span class="key">source</span>:</span><span class="line">    <span class="key">tables</span>:</span><span class="line">      <span class="dash">-</span> <span class="key">name</span>: sample                 <span class="comment"># the LIMS: received_at timestamptz, the instant the lab scanned the sample</span></span><span class="line">        <span class="key">schema</span>: lims</span><span class="line">        <span class="key">mode</span>: full</span><span class="line">        <span class="key">pk_columns</span>: [sample_id]</span><span class="line">        <span class="key">target</span>: scenario_dates_lims_a</span><span class="line">      <span class="dash">-</span> <span class="key">name</span>: goods_receipt          <span class="comment"># the ERP: receipt_date date, typed by the warehouse clerk</span></span><span class="line">        <span class="key">schema</span>: erp</span><span class="line">        <span class="key">mode</span>: full</span><span class="line">        <span class="key">pk_columns</span>: [batch_no]</span><span class="line">        <span class="key">target</span>: scenario_dates_erp_a</span></code></pre><div class="file"><span class="filename">manifests/20-carrier.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-dates-carrier-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [receiving-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/dates-across-sources/a/livraisons.csv   <span class="comment"># the carrier&#x27;s delivery report</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">    <span class="key">encoding</span>: ISO-8859-1</span><span class="line">    <span class="key">has_header</span>: false</span><span class="line">    <span class="key">columns</span>: [batch_no, supplier, delivered_on, dock]</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">dataset</span>:</span><span class="line">      - filter-where: { column: batch_no, regex: <span class="str">&quot;L-[0-9]+&quot;</span> }    <span class="comment"># the header line</span></span></code></pre><div class="file"><span class="filename">manifests/30-batch.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ScenarioReceivedBatchA</span><span class="line"><span class="key">description</span>: <span class="str">&quot;One batch of raw material as three systems saw it arrive: the lab&#x27;s scan, the ERP&#x27;s goods receipt, the carrier.&quot;</span></span><span class="line"><span class="key">scopes</span>: [receiving-a]</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_dates_lims_a</span><span class="line">    <span class="key">map</span>: { batch_no: batch_no, received_at: received }</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_dates_erp_a</span><span class="line">    <span class="key">map</span>: { batch_no: batch_no, receipt_date: received, supplier: supplier }</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_dates_carrier_a</span><span class="line hl">    <span class="key">map</span>: { batch_no: batch_no, delivered_on: received, dock: dock }</span><span class="line"><span class="key">match</span>: [batch_no]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="raw-commands" aria-labelledby="raw-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/10-plant-db.yaml</span>
+<span class="out">Applied connector &quot;scenario-dates-plant-a&quot; — 2 endpoints</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f manifests/20-carrier.yaml</span>
+<span class="out">Applied connector &quot;scenario-dates-carrier-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-dates-plant-a</span>
+<span class="out">run scheduled: ffd3da96-c5ca-4c04-a91f-19a98a1e25de
+run scheduled: 2aa514ea-169b-4859-a1f1-4de5fe00309a</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get ffd3da96-c5ca-4c04-a91f-19a98a1e25de</span>
+<span class="out">ID        CONNECTOR               ENDPOINT       STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+ffd3da96  scenario-dates-plant-a  goods_receipt  Completed  12  12   0        0             2026-11-07 21:49  2026-11-07 21:49  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 2aa514ea-169b-4859-a1f1-4de5fe00309a</span>
+<span class="out">ID        CONNECTOR               ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+2aa514ea  scenario-dates-plant-a  sample    Completed  12  12   0        0             2026-11-07 21:49  2026-11-07 21:49  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-dates-carrier-a</span>
+<span class="out">run scheduled: f278cadc-8941-40d9-8d34-17c5febca822</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get f278cadc-8941-40d9-8d34-17c5febca822</span>
+<span class="out">ID        CONNECTOR                 ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+f278cadc  scenario-dates-carrier-a  default   Completed  13  12   1        0             2026-11-07 21:49  2026-11-07 21:49  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f manifests/30-batch.yaml</span>
+<span class="out">Applied entity &quot;ScenarioReceivedBatchA&quot; → connector.&quot;v_scenarioreceivedbatcha&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get ScenarioReceivedBatchA</span>
+<span class="out">BATCH_NO  RECEIVED                SUPPLIER              DOCK  _CONFLICTS
+L-0101    2026-11-05 07:12:00+00  Chimie du Rhône       Q1    {&quot;received&quot;: [{&quot;src&quot;: &quot;t_scenario_dates_lims_a&quot;, &quot;value&quot;: &quot;2026-11-05 07:12:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_erp_a&quot;, &quot;value&quot;: &quot;2026-11-05&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_carrier_a&quot;, &quot;value&quot;: &quot;05/11/2026&quot;}]}
+L-0102    2026-11-05 09:47:00+00  Solvants de l&#x27;Est     Q2    {&quot;received&quot;: [{&quot;src&quot;: &quot;t_scenario_dates_lims_a&quot;, &quot;value&quot;: &quot;2026-11-05 09:47:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_erp_a&quot;, &quot;value&quot;: &quot;2026-11-05&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_carrier_a&quot;, &quot;value&quot;: &quot;05/11/2026&quot;}]}
+L-0103    2026-11-05 13:20:00+00  Arômes Provence       Q3    {&quot;received&quot;: [{&quot;src&quot;: &quot;t_scenario_dates_lims_a&quot;, &quot;value&quot;: &quot;2026-11-05 13:20:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_erp_a&quot;, &quot;value&quot;: &quot;2026-11-05&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_carrier_a&quot;, &quot;value&quot;: &quot;05/11/2026&quot;}]}
+L-0104    2026-11-05 23:30:00+00  Polymères Atlantique  Q1    {&quot;received&quot;: [{&quot;src&quot;: &quot;t_scenario_dates_lims_a&quot;, &quot;value&quot;: &quot;2026-11-05 23:30:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_erp_a&quot;, &quot;value&quot;: &quot;2026-11-06&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_carrier_a&quot;, &quot;value&quot;: &quot;06/11/2026&quot;}]}
+L-0105    2026-11-05 15:05:00+00  Chimie du Rhône       Q2    {&quot;received&quot;: [{&quot;src&quot;: &quot;t_scenario_dates_lims_a&quot;, &quot;value&quot;: &quot;2026-11-05 15:05:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_erp_a&quot;, &quot;value&quot;: &quot;2026-11-05&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_carrier_a&quot;, &quot;value&quot;: &quot;05/11/2026&quot;}]}
+L-0106    2026-11-05 22:40:00+00  Solvants de l&#x27;Est     Q3    {&quot;received&quot;: [{&quot;src&quot;: &quot;t_scenario_dates_lims_a&quot;, &quot;value&quot;: &quot;2026-11-05 22:40:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_erp_a&quot;, &quot;value&quot;: &quot;2026-11-05&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_carrier_a&quot;, &quot;value&quot;: &quot;05/11/2026&quot;}]}
+L-0107    2026-11-06 06:55:00+00  Arômes Provence       Q1    {&quot;received&quot;: [{&quot;src&quot;: &quot;t_scenario_dates_lims_a&quot;, &quot;value&quot;: &quot;2026-11-06 06:55:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_erp_a&quot;, &quot;value&quot;: &quot;2026-11-06&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_carrier_a&quot;, &quot;value&quot;: &quot;06/11/2026&quot;}]}
+L-0108    2026-11-06 08:31:00+00  Polymères Atlantique  Q2    {&quot;received&quot;: [{&quot;src&quot;: &quot;t_scenario_dates_lims_a&quot;, &quot;value&quot;: &quot;2026-11-06 08:31:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_erp_a&quot;, &quot;value&quot;: &quot;2026-11-06&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_carrier_a&quot;, &quot;value&quot;: &quot;06/11/2026&quot;}]}
+L-0109    2026-11-06 10:02:00+00  Chimie du Rhône       Q3    {&quot;received&quot;: [{&quot;src&quot;: &quot;t_scenario_dates_lims_a&quot;, &quot;value&quot;: &quot;2026-11-06 10:02:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_erp_a&quot;, &quot;value&quot;: &quot;2026-11-04&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_carrier_a&quot;, &quot;value&quot;: &quot;06/11/2026&quot;}]}
+L-0110    2026-11-06 12:48:00+00  Solvants de l&#x27;Est     Q1    {&quot;received&quot;: [{&quot;src&quot;: &quot;t_scenario_dates_lims_a&quot;, &quot;value&quot;: &quot;2026-11-06 12:48:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_erp_a&quot;, &quot;value&quot;: &quot;2026-11-06&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_carrier_a&quot;, &quot;value&quot;: &quot;06/11/2026&quot;}]}
+L-0111    2026-11-06 14:26:00+00  Arômes Provence       Q2    {&quot;received&quot;: [{&quot;src&quot;: &quot;t_scenario_dates_lims_a&quot;, &quot;value&quot;: &quot;2026-11-06 14:26:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_erp_a&quot;, &quot;value&quot;: &quot;2026-11-06&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_carrier_a&quot;, &quot;value&quot;: &quot;06/11/2026&quot;}]}
+L-0112    2026-11-06 16:10:00+00  Polymères Atlantique  Q3    {&quot;received&quot;: [{&quot;src&quot;: &quot;t_scenario_dates_lims_a&quot;, &quot;value&quot;: &quot;2026-11-06 16:10:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_erp_a&quot;, &quot;value&quot;: &quot;2026-11-06&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_carrier_a&quot;, &quot;value&quot;: &quot;06/11/2026&quot;}]}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm conflicts list</span>
+<span class="out">ENTITY                    KEY                                   COLUMNS     SOURCES
+AcmeCustomer              P-1000                                name        t_acme_desk_erp,t_acme_desk_crm
+AcmeCustomer              P-1002                                city        t_acme_desk_erp,t_acme_desk_crm
+AcmeCustomer              P-1008                                city        t_acme_desk_erp,t_acme_desk_crm
+Customer                  C-004                                 city        t_customers,t_crm_contacts
+CustomerOfRecord          2c3830ad-a769-4a17-96fc-cc7948093f8b  name        t_scenario_resolution_erp,t_scenario_resolution_crm
+CustomerOfRecord          f6811b2c-307d-4810-8c53-c02b81fbfdb2  name,email  t_scenario_resolution_erp,t_scenario_resolution_crm
+member_a                  M-1001                                full_name   t_scenario_member_gestion_a,t_scenario_member_portail_a
+member_a                  M-1003                                plan        t_scenario_member_gestion_a,t_scenario_member_portail_a
+PiscineCustomer           C-001                                 city,name   t_piscine_ent_erp,t_piscine_ent_crm
+PiscineCustomer3          C-001                                 city,name   t_piscine_ent_erp,t_piscine_ent_crm,t_piscine_ent_legacy
+PiscineCustomerCrmFirst   C-001                                 city,name   t_piscine_ent_crm,t_piscine_ent_erp
+PiscineDup                C-020                                 city        t_piscine_ent_dup
+PiscineGrounded           C-001                                 city,name   t_piscine_ent_erp,t_piscine_ent_crm
+PiscineOrderLine          CMD-1/1                               qty         t_piscine_ent_ord_a,t_piscine_ent_ord_b
+ScenarioReceivedBatchA    L-0101                                received    t_scenario_dates_lims_a,t_scenario_dates_erp_a,t_scenario_dates_carrier_a
+ScenarioReceivedBatchA    L-0102                                received    t_scenario_dates_lims_a,t_scenario_dates_erp_a,t_scenario_dates_carrier_a
+ScenarioReceivedBatchA    L-0103                                received    t_scenario_dates_lims_a,t_scenario_dates_erp_a,t_scenario_dates_carrier_a
+ScenarioReceivedBatchA    L-0104                                received    t_scenario_dates_lims_a,t_scenario_dates_erp_a,t_scenario_dates_carrier_a
+ScenarioReceivedBatchA    L-0105                                received    t_scenario_dates_lims_a,t_scenario_dates_erp_a,t_scenario_dates_carrier_a
+ScenarioReceivedBatchA    L-0106                                received    t_scenario_dates_lims_a,t_scenario_dates_erp_a,t_scenario_dates_carrier_a
+ScenarioReceivedBatchA    L-0107                                received    t_scenario_dates_lims_a,t_scenario_dates_erp_a,t_scenario_dates_carrier_a
+ScenarioReceivedBatchA    L-0108                                received    t_scenario_dates_lims_a,t_scenario_dates_erp_a,t_scenario_dates_carrier_a
+ScenarioReceivedBatchA    L-0109                                received    t_scenario_dates_lims_a,t_scenario_dates_erp_a,t_scenario_dates_carrier_a
+ScenarioReceivedBatchA    L-0110                                received    t_scenario_dates_lims_a,t_scenario_dates_erp_a,t_scenario_dates_carrier_a
+ScenarioReceivedBatchA    L-0111                                received    t_scenario_dates_lims_a,t_scenario_dates_erp_a,t_scenario_dates_carrier_a
+ScenarioReceivedBatchA    L-0112                                received    t_scenario_dates_lims_a,t_scenario_dates_erp_a,t_scenario_dates_carrier_a
+ScenarioResolutionDriftA  12a10f8c-9583-4b3f-ab05-707a27418933  email       t_scenario_resolution_drift_erp_a,t_scenario_resolution_drift_crm_a
+ScenarioResolutionDriftB  ee105795-90ef-4634-8eba-0cae7b839b4e  email       t_scenario_resolution_drift_erp_b,t_scenario_resolution_drift_crm_b
+ScenarioResolutionDriftC  ab091eb3-0425-477f-b98c-1f46d237dc5b  email       t_scenario_resolution_drift_erp_c,t_scenario_resolution_drift_crm_c
+ScenarioResolutionDriftD  25e2850f-95c1-483d-bd08-9bef07408c27  email       t_scenario_resolution_drift_erp_d,t_scenario_resolution_drift_crm_d</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="raw-result" aria-labelledby="raw-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-dates-plant-a/goods_receipt</dt><dd>Completed · IN 12 · OUT 12 · SKIPPED 0</dd><dt>scenario-dates-plant-a/sample</dt><dd>Completed · IN 12 · OUT 12 · SKIPPED 0</dd><dt>scenario-dates-carrier-a/default</dt><dd>Completed · IN 13 · OUT 12 · SKIPPED 1</dd><dt>hub</dt><dd>t_scenario_dates_lims_a.received_at: timestamp with time zone</dd><dt>hub</dt><dd>t_scenario_dates_erp_a.receipt_date: date</dd><dt>hub</dt><dd>t_scenario_dates_carrier_a.delivered_on: text</dd><dt>lm conflicts list</dt><dd>12 disputed: L-0101 … L-0112</dd><dt>entity</dt><dd>received: text</dd></dl><p class="sources">preuves: replay.log, sources.txt, landing-raw.txt, apply-typed.txt, type-after-run.txt, conflicts-raw.txt, conflicts-type.txt, conflicts-zone.txt, entity-zone.txt, paris.txt, type-raw.txt, type-type.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-type" aria-labelledby="type-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="type-title">Un parse-date ajouté: l&#x27;apply le dit</h2>
+      <p>Le format du transporteur est déclaré: parse-date en dd/MM/yyyy.</p><ul class="prose-list"><li>lm apply avertit: la table garde le type text avec lequel elle a été créée</li><li>le run relit le fichier: un mapping changé n&#x27;est pas « inchangé »</li><li>les quatre gestes: supprimer l&#x27;entité, supprimer le connecteur, l&#x27;appliquer, le lancer, puis appliquer l&#x27;entité</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Typée, une seule erreur de plus</strong><p>La colonne est un timestamptz. Une date et une heure se comparent au jour: L-0104 est en litige, car à 23:30 UTC c&#x27;est encore le 5. L-0109 est le vrai écart.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>L&#x27;intégrateur lit ce qu&#x27;il doit faire au moment où il applique, pas après un run muet.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Typer"><button type="button" role="tab" id="type-manifest-tab" data-view="manifest" aria-controls="type-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="type-commands-tab" data-view="commands" aria-controls="type-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="type-result-tab" data-view="result" aria-controls="type-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="type-manifest" aria-labelledby="type-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/21-carrier-typed.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-dates-carrier-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [receiving-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/dates-across-sources/a/livraisons.csv   <span class="comment"># the carrier&#x27;s delivery report</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">    <span class="key">encoding</span>: ISO-8859-1</span><span class="line">    <span class="key">has_header</span>: false</span><span class="line">    <span class="key">columns</span>: [batch_no, supplier, delivered_on, dock]</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">dataset</span>:</span><span class="line">      - filter-where: { column: batch_no, regex: <span class="str">&quot;L-[0-9]+&quot;</span> }    <span class="comment"># the header line</span></span><span class="line">    <span class="key">cell</span>:</span><span class="line hl">      - parse-date: { column: delivered_on, formats: [<span class="str">&quot;dd/MM/yyyy&quot;</span>] }   <span class="comment"># a day, no time: a date</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="type-commands" aria-labelledby="type-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f manifests/21-carrier-typed.yaml</span>
+<span class="out">Applied connector &quot;scenario-dates-carrier-a&quot; — 1 endpoint</span>
+<span class="note">! 21-carrier-typed.yaml — 0 error(s), 1 warning(s)</span>
+<span class="note"></span>
+<span class="note">  WARN     spec.mapping.cell</span>
+<span class="note">          column &quot;delivered_on&quot; is text in connector.t_scenario_dates_carrier_a, and `parse-date` types it: a table keeps the types it was created with, so the next run writes the values into a text column</span>
+<span class="note">          → to retype it, delete the entities over this table, then `lm connector delete &lt;connector&gt; --force` (drops the table and its rows), apply the connector again and run it</span>
+<span class="note"></span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-dates-carrier-a</span>
+<span class="out">run scheduled: befc3999-ff93-4fef-872a-943ae484878b</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get befc3999-ff93-4fef-872a-943ae484878b</span>
+<span class="out">ID        CONNECTOR                 ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+befc3999  scenario-dates-carrier-a  default   Completed  13  12   1        0             2026-11-07 21:49  2026-11-07 21:49  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity delete ScenarioReceivedBatchA --force</span>
+<span class="out">deleted: ScenarioReceivedBatchA</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector delete scenario-dates-carrier-a --force</span>
+<span class="out">deleted: scenario-dates-carrier-a</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f manifests/21-carrier-typed.yaml</span>
+<span class="out">Applied connector &quot;scenario-dates-carrier-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-dates-carrier-a</span>
+<span class="out">run scheduled: 0b95d4ce-9438-46bb-9085-d13f14d2d199</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 0b95d4ce-9438-46bb-9085-d13f14d2d199</span>
+<span class="out">ID        CONNECTOR                 ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+0b95d4ce  scenario-dates-carrier-a  default   Completed  13  12   1        0             2026-11-07 21:49  2026-11-07 21:49  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f manifests/30-batch.yaml</span>
+<span class="out">Applied entity &quot;ScenarioReceivedBatchA&quot; → connector.&quot;v_scenarioreceivedbatcha&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get ScenarioReceivedBatchA</span>
+<span class="out">BATCH_NO  RECEIVED              SUPPLIER              DOCK  _CONFLICTS
+L-0101    2026-11-05T07:12:00Z  Chimie du Rhône       Q1    {}
+L-0102    2026-11-05T09:47:00Z  Solvants de l&#x27;Est     Q2    {}
+L-0103    2026-11-05T13:20:00Z  Arômes Provence       Q3    {}
+L-0104    2026-11-05T23:30:00Z  Polymères Atlantique  Q1    {&quot;received&quot;: [{&quot;src&quot;: &quot;t_scenario_dates_lims_a&quot;, &quot;value&quot;: &quot;2026-11-05 23:30:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_erp_a&quot;, &quot;value&quot;: &quot;2026-11-06 00:00:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_carrier_a&quot;, &quot;value&quot;: &quot;2026-11-06 00:00:00+00&quot;}]}
+L-0105    2026-11-05T15:05:00Z  Chimie du Rhône       Q2    {}
+L-0106    2026-11-05T22:40:00Z  Solvants de l&#x27;Est     Q3    {}
+L-0107    2026-11-06T06:55:00Z  Arômes Provence       Q1    {}
+L-0108    2026-11-06T08:31:00Z  Polymères Atlantique  Q2    {}
+L-0109    2026-11-06T10:02:00Z  Chimie du Rhône       Q3    {&quot;received&quot;: [{&quot;src&quot;: &quot;t_scenario_dates_lims_a&quot;, &quot;value&quot;: &quot;2026-11-06 10:02:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_erp_a&quot;, &quot;value&quot;: &quot;2026-11-04 00:00:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_carrier_a&quot;, &quot;value&quot;: &quot;2026-11-06 00:00:00+00&quot;}]}
+L-0110    2026-11-06T12:48:00Z  Solvants de l&#x27;Est     Q1    {}
+L-0111    2026-11-06T14:26:00Z  Arômes Provence       Q2    {}
+L-0112    2026-11-06T16:10:00Z  Polymères Atlantique  Q3    {}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm conflicts list</span>
+<span class="out">ENTITY                    KEY                                   COLUMNS     SOURCES
+AcmeCustomer              P-1000                                name        t_acme_desk_erp,t_acme_desk_crm
+AcmeCustomer              P-1002                                city        t_acme_desk_erp,t_acme_desk_crm
+AcmeCustomer              P-1008                                city        t_acme_desk_erp,t_acme_desk_crm
+Customer                  C-004                                 city        t_customers,t_crm_contacts
+CustomerOfRecord          2c3830ad-a769-4a17-96fc-cc7948093f8b  name        t_scenario_resolution_erp,t_scenario_resolution_crm
+CustomerOfRecord          f6811b2c-307d-4810-8c53-c02b81fbfdb2  name,email  t_scenario_resolution_erp,t_scenario_resolution_crm
+member_a                  M-1001                                full_name   t_scenario_member_gestion_a,t_scenario_member_portail_a
+member_a                  M-1003                                plan        t_scenario_member_gestion_a,t_scenario_member_portail_a
+PiscineCustomer           C-001                                 city,name   t_piscine_ent_erp,t_piscine_ent_crm
+PiscineCustomer3          C-001                                 city,name   t_piscine_ent_erp,t_piscine_ent_crm,t_piscine_ent_legacy
+PiscineCustomerCrmFirst   C-001                                 city,name   t_piscine_ent_crm,t_piscine_ent_erp
+PiscineDup                C-020                                 city        t_piscine_ent_dup
+PiscineGrounded           C-001                                 city,name   t_piscine_ent_erp,t_piscine_ent_crm
+PiscineOrderLine          CMD-1/1                               qty         t_piscine_ent_ord_a,t_piscine_ent_ord_b
+ScenarioReceivedBatchA    L-0104                                received    t_scenario_dates_lims_a,t_scenario_dates_erp_a,t_scenario_dates_carrier_a
+ScenarioReceivedBatchA    L-0109                                received    t_scenario_dates_lims_a,t_scenario_dates_erp_a,t_scenario_dates_carrier_a
+ScenarioResolutionDriftA  12a10f8c-9583-4b3f-ab05-707a27418933  email       t_scenario_resolution_drift_erp_a,t_scenario_resolution_drift_crm_a
+ScenarioResolutionDriftB  ee105795-90ef-4634-8eba-0cae7b839b4e  email       t_scenario_resolution_drift_erp_b,t_scenario_resolution_drift_crm_b
+ScenarioResolutionDriftC  ab091eb3-0425-477f-b98c-1f46d237dc5b  email       t_scenario_resolution_drift_erp_c,t_scenario_resolution_drift_crm_c
+ScenarioResolutionDriftD  25e2850f-95c1-483d-bd08-9bef07408c27  email       t_scenario_resolution_drift_erp_d,t_scenario_resolution_drift_crm_d</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="type-result" aria-labelledby="type-result-tab" tabindex="0" hidden><dl class="facts"><dt>lm apply</dt><dd>WARN     spec.mapping.cell</dd><dt>lm apply</dt><dd>column &quot;delivered_on&quot; is text in connector.t_scenario_dates_carrier_a, and `parse-date` types it: a table keeps the types it was created with, so the next run writes the values into a text column</dd><dt>lm apply</dt><dd>→ to retype it, delete the entities over this table, then `lm connector delete &lt;connector&gt; --force` (drops the table and its rows), apply the connector again and run it</dd><dt>hub</dt><dd>after the run: delivered_on text</dd><dt>scenario-dates-carrier-a/default</dt><dd>Completed · IN 13 · OUT 12 · SKIPPED 1</dd><dt>scenario-dates-carrier-a/default</dt><dd>Completed · IN 13 · OUT 12 · SKIPPED 1</dd><dt>lm conflicts list</dt><dd>2 disputed: L-0104, L-0109</dd><dt>entity</dt><dd>received: timestamp with time zone</dd></dl><p class="sources">preuves: replay.log, sources.txt, landing-raw.txt, apply-typed.txt, type-after-run.txt, conflicts-raw.txt, conflicts-type.txt, conflicts-zone.txt, entity-zone.txt, paris.txt, type-raw.txt, type-type.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-zone" aria-labelledby="zone-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="zone-title">zone: Europe/Paris: il reste la faute de saisie</h2>
+      <p>Une ligne dans l&#x27;entité: zone: Europe/Paris.</p><ul class="prose-list"><li>une date est son minuit à Paris, une heure tombe sur son jour à Paris</li><li>L-0104, scanné à 00:30 le 6: le LIMS, l&#x27;ERP et le transporteur sont d&#x27;accord</li><li>L-0109 reste en litige: l&#x27;ERP dit le 4, le labo et le transporteur le 6</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Une région, pas un décalage</strong><p>Europe/Paris connaît l&#x27;heure d&#x27;été; +01:00 est refusé. En été, la fenêtre fautive allait de minuit à 02:00.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un seul litige reste, et c&#x27;est une vraie erreur à corriger dans l&#x27;ERP.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Le jour de l&#x27;usine"><button type="button" role="tab" id="zone-manifest-tab" data-view="manifest" aria-controls="zone-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="zone-commands-tab" data-view="commands" aria-controls="zone-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="zone-result-tab" data-view="result" aria-controls="zone-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="zone-manifest" aria-labelledby="zone-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/31-batch-zone.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ScenarioReceivedBatchA</span><span class="line"><span class="key">description</span>: <span class="str">&quot;One batch of raw material as three systems saw it arrive: the lab&#x27;s scan, the ERP&#x27;s goods receipt, the carrier.&quot;</span></span><span class="line"><span class="key">scopes</span>: [receiving-a]</span><span class="line hl"><span class="key">zone</span>: Europe/Paris                <span class="comment"># the plant&#x27;s day: a date meets a time on the day it has in Paris</span></span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_dates_lims_a</span><span class="line">    <span class="key">map</span>: { batch_no: batch_no, received_at: received }</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_dates_erp_a</span><span class="line">    <span class="key">map</span>: { batch_no: batch_no, receipt_date: received, supplier: supplier }</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_dates_carrier_a</span><span class="line">    <span class="key">map</span>: { batch_no: batch_no, delivered_on: received, dock: dock }</span><span class="line"><span class="key">match</span>: [batch_no]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="zone-commands" aria-labelledby="zone-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f manifests/31-batch-zone.yaml</span>
+<span class="out">Applied entity &quot;ScenarioReceivedBatchA&quot; → connector.&quot;v_scenarioreceivedbatcha&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get ScenarioReceivedBatchA</span>
+<span class="out">BATCH_NO  RECEIVED              SUPPLIER              DOCK  _CONFLICTS
+L-0101    2026-11-05T07:12:00Z  Chimie du Rhône       Q1    {}
+L-0102    2026-11-05T09:47:00Z  Solvants de l&#x27;Est     Q2    {}
+L-0103    2026-11-05T13:20:00Z  Arômes Provence       Q3    {}
+L-0104    2026-11-05T23:30:00Z  Polymères Atlantique  Q1    {}
+L-0105    2026-11-05T15:05:00Z  Chimie du Rhône       Q2    {}
+L-0106    2026-11-05T22:40:00Z  Solvants de l&#x27;Est     Q3    {}
+L-0107    2026-11-06T06:55:00Z  Arômes Provence       Q1    {}
+L-0108    2026-11-06T08:31:00Z  Polymères Atlantique  Q2    {}
+L-0109    2026-11-06T10:02:00Z  Chimie du Rhône       Q3    {&quot;received&quot;: [{&quot;src&quot;: &quot;t_scenario_dates_lims_a&quot;, &quot;value&quot;: &quot;2026-11-06 10:02:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_erp_a&quot;, &quot;value&quot;: &quot;2026-11-03 23:00:00+00&quot;}, {&quot;src&quot;: &quot;t_scenario_dates_carrier_a&quot;, &quot;value&quot;: &quot;2026-11-05 23:00:00+00&quot;}]}
+L-0110    2026-11-06T12:48:00Z  Solvants de l&#x27;Est     Q1    {}
+L-0111    2026-11-06T14:26:00Z  Arômes Provence       Q2    {}
+L-0112    2026-11-06T16:10:00Z  Polymères Atlantique  Q3    {}</span>
+
+<span class="cmd"><span class="prompt">$</span> lm conflicts list</span>
+<span class="out">ENTITY                    KEY                                   COLUMNS     SOURCES
+AcmeCustomer              P-1000                                name        t_acme_desk_erp,t_acme_desk_crm
+AcmeCustomer              P-1002                                city        t_acme_desk_erp,t_acme_desk_crm
+AcmeCustomer              P-1008                                city        t_acme_desk_erp,t_acme_desk_crm
+Customer                  C-004                                 city        t_customers,t_crm_contacts
+CustomerOfRecord          2c3830ad-a769-4a17-96fc-cc7948093f8b  name        t_scenario_resolution_erp,t_scenario_resolution_crm
+CustomerOfRecord          f6811b2c-307d-4810-8c53-c02b81fbfdb2  name,email  t_scenario_resolution_erp,t_scenario_resolution_crm
+member_a                  M-1001                                full_name   t_scenario_member_gestion_a,t_scenario_member_portail_a
+member_a                  M-1003                                plan        t_scenario_member_gestion_a,t_scenario_member_portail_a
+PiscineCustomer           C-001                                 city,name   t_piscine_ent_erp,t_piscine_ent_crm
+PiscineCustomer3          C-001                                 city,name   t_piscine_ent_erp,t_piscine_ent_crm,t_piscine_ent_legacy
+PiscineCustomerCrmFirst   C-001                                 city,name   t_piscine_ent_crm,t_piscine_ent_erp
+PiscineDup                C-020                                 city        t_piscine_ent_dup
+PiscineGrounded           C-001                                 city,name   t_piscine_ent_erp,t_piscine_ent_crm
+PiscineOrderLine          CMD-1/1                               qty         t_piscine_ent_ord_a,t_piscine_ent_ord_b
+ScenarioReceivedBatchA    L-0109                                received    t_scenario_dates_lims_a,t_scenario_dates_erp_a,t_scenario_dates_carrier_a
+ScenarioResolutionDriftA  12a10f8c-9583-4b3f-ab05-707a27418933  email       t_scenario_resolution_drift_erp_a,t_scenario_resolution_drift_crm_a
+ScenarioResolutionDriftB  ee105795-90ef-4634-8eba-0cae7b839b4e  email       t_scenario_resolution_drift_erp_b,t_scenario_resolution_drift_crm_b
+ScenarioResolutionDriftC  ab091eb3-0425-477f-b98c-1f46d237dc5b  email       t_scenario_resolution_drift_erp_c,t_scenario_resolution_drift_crm_c
+ScenarioResolutionDriftD  25e2850f-95c1-483d-bd08-9bef07408c27  email       t_scenario_resolution_drift_erp_d,t_scenario_resolution_drift_crm_d</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="zone-result" aria-labelledby="zone-result-tab" tabindex="0" hidden><dl class="facts"><dt>lm conflicts list</dt><dd>1 disputed: L-0109</dd><dt>hub</dt><dd> batch_no |        received        |      paris       </dd><dt>hub</dt><dd>----------+------------------------+------------------</dd><dt>hub</dt><dd> L-0104   | 2026-11-05 23:30:00+00 | 2026-11-06 00:30</dd><dt>hub</dt><dd> L-0106   | 2026-11-05 22:40:00+00 | 2026-11-05 23:40</dd><dt>hub</dt><dd> L-0109   | 2026-11-06 10:02:00+00 | 2026-11-06 11:02</dd><dt>hub</dt><dd>(3 rows)</dd></dl><p class="sources">preuves: replay.log, sources.txt, landing-raw.txt, apply-typed.txt, type-after-run.txt, conflicts-raw.txt, conflicts-type.txt, conflicts-zone.txt, entity-zone.txt, paris.txt, type-raw.txt, type-type.txt · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>La zone vaut pour toute l&#x27;entité: une usine sur deux fuseaux demande deux entités.</li><li>La table du transporteur n&#x27;est pas retypée sur place: elle est recréée, et ses lignes relues.</li><li>Le hub compare au jour; il ne dit pas lequel des trois systèmes a raison.</li><li>Lots, fournisseurs et heures synthétiques.</li></ul></section>
+  </div>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Réception · trois systèmes</p><h2>Un lot arrive. Trois systèmes le disent.</h2><p class="brief-lead">Le LIMS: un instant. L&#x27;ERP: une date. Le transporteur: du texte.</p><p class="brief-note">00:30 · 2026-11-06 · 06/11/2026</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>Le lot de 00:30 était en litige.</h2><ul class="brief-list tone-cyan"><li>À Paris, c&#x27;est le 6. En UTC, c&#x27;est encore le 5.</li><li>L&#x27;ERP dit le 6: le hub comparait au jour UTC.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>Les trois systèmes restent tels quels.</h2><ul class="brief-list tone-green"><li>Le LIMS garde son instant, l&#x27;ERP sa date.</li><li>Le CSV du transporteur n&#x27;est pas retouché.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>zone: Europe/Paris</code></pre><h2>Une ligne dans l&#x27;entité.</h2><ul class="brief-list tone-green"><li>Une date tombe à minuit à Paris.</li><li>Une heure tombe sur son jour à Paris.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui a été corrigé</p><h2>L&#x27;entité déclare le jour de l&#x27;usine (#1881).</h2><ul class="brief-list tone-green"><li>Un parse-date ajouté se dit à l&#x27;apply (#1882).</li><li>Il reste un litige: L-0109, le 4 au lieu du 6.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
