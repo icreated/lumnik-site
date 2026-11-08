@@ -751,6 +751,26 @@
       "evidenceDigest": "sha256:fc46f83260ffc482e80ae0b19ad93aac0d6fafd4b69a18994ea87b6a0e1da7d7"
     },
     {
+      "slug": "mail-relay-password-changed",
+      "title": "Le relais SMTP a changé de mot de passe: trois alertes de chambre froide ne partent pas, l'astreinte le sait",
+      "goal": "Envoyer par mail les sorties de plage d'une chambre froide, savoir le jour même qu'un mail n'est pas parti et pourquoi, puis le renvoyer sans doublon.",
+      "lede": "Une centrale pharmaceutique stocke ses médicaments entre 2 et 8 °C dans deux chambres froides. L'enregistreur exporte ses relevés une fois par jour; une sortie de plage part par mail au responsable qualité, par le relais SMTP de l'entreprise.\n- lundi, l'alerte de CF-2 part;\n- dans la nuit, l'informatique change le mot de passe du compte d'envoi, le hub garde l'ancien;\n- mardi, le compresseur de CF-1 s'arrête: trois mails abandonnés, l'astreinte prévenue par un webhook, la colonne ERROR dit quoi corriger.",
+      "tags": {
+        "domain": [
+          "Pharmacie",
+          "Chaîne du froid",
+          "Messagerie"
+        ],
+        "kinds": [
+          "Connector",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-08",
+      "evidenceDigest": "sha256:b2a7b1957e5154ba20f0c57d83199c45c5113241b54008421ed33974ec7b9a3a"
+    },
+    {
       "slug": "marketplace-order-items",
       "title": "Une ligne par article à préparer avec modèle couleur et taille",
       "goal": "Sortir de l'export d'une marketplace une ligne par article, pour préparer le stock.",
