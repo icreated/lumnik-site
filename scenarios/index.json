@@ -668,6 +668,28 @@
       "evidenceDigest": "sha256:011475bb49e03bdfe8a987e15f9e9e98503d0adb249c38a7c2dfca69b03616f6"
     },
     {
+      "slug": "legacy-desktop-exports",
+      "title": "Progress, FoxPro, Access: trois dinosaures, un parc de machines",
+      "goal": "Lire les registres de machines de trois ateliers tels que leurs vieilles bases les exportent, sans retoucher un fichier, et les réunir en un seul parc.",
+      "lede": "Un groupe industriel a trois ateliers, et chaque atelier tient son parc de machines dans sa propre base de bureau, installée il y a vingt ou trente ans.\n- Nord exporte depuis Progress OpenEdge, Est depuis FoxPro pour DOS, Sud depuis Access;\n- chaque format demande son geste: ? pour inconnu, -1 pour oui, une heure de minuit, une année sur deux chiffres;\n- l'export FoxPro, lu sans sa page de code, est deviné en windows-1252: le run le dit et s'arrête sur le É de « Électroérosion »;\n- réunis, les trois registres font 17 machines et un litige: la rectifieuse passée d'Est à Sud.",
+      "tags": {
+        "domain": [
+          "Maintenance",
+          "Progress OpenEdge",
+          "FoxPro",
+          "Access",
+          "Encodage"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-08",
+      "evidenceDigest": "sha256:abb31b7e9eaf867527da726e4b788292590ef7f20f19acf58dafa483073a74fc"
+    },
+    {
       "slug": "legacy-sales-grafana",
       "title": "Un ERP figé alimente un vrai tableau Grafana",
       "goal": "Donner à la direction un tableau de ventes à jour à partir des exports d'un ERP qu'on ne touche plus.",
