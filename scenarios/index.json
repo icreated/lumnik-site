@@ -21,6 +21,27 @@
       "evidenceDigest": "sha256:981df85c035ea063812782f3883ea735606a6b50701634a41562310dbf149729"
     },
     {
+      "slug": "ai-switched-off",
+      "title": "L'IA éteinte le temps d'un audit: éteint n'est pas absent",
+      "goal": "Éteindre l'IA du hub sans changer d'édition ni perdre une donnée, continuer à lire les sources, et savoir ce qu'il faudra refaire en la rallumant.",
+      "lede": "Une pharmacie hospitalière envoie chaque jour au hub ses ordres de dispensation. Le délégué à la protection des données demande que l'IA soit éteinte le temps d'un audit.\n- l'exploitant met LUMNIK_AI_ENABLED=false et redémarre le hub: rag et llm restent installés, dits INACTIVE;\n- ask, la recherche et le chat répondent la même phrase; le corpus est gardé, et le hub le dit;\n- la lecture des fichiers continue; un cycle de vie déclaré pendant l'audit n'est pas indexé, et l'apply le dit.",
+      "tags": {
+        "domain": [
+          "Pharmacie hospitalière",
+          "Conformité",
+          "IA",
+          "Exploitation"
+        ],
+        "kinds": [
+          "Connector",
+          "Workflow"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-08",
+      "evidenceDigest": "sha256:8844614cf57d6d22a5c1a93652d3511566228fb5c28d7d6233b40593d2dc6ba4"
+    },
+    {
       "slug": "app-inventory-urls",
       "title": "Un inventaire applicatif aux URLs tapées à la main",
       "goal": "Découper chaque URL en serveur, port et environnement, pour savoir ce qui tourne sur un serveur et ce qui est encore en recette.",
