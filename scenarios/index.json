@@ -772,6 +772,27 @@
       "evidenceDigest": "sha256:685bc56997af89e6bdb01b2338fd7620781a5b38fce39ef42ec83a57cec72adb"
     },
     {
+      "slug": "oracle-blob-drawings",
+      "title": "Oracle et BLOB: le plan refusé, la vue qui le pèse, le PDF perdu la nuit",
+      "goal": "Lire le registre des plans d'un PLM sur Oracle sans lire les plans eux-mêmes, et savoir le matin même qu'un plan diffusé a perdu son fichier.",
+      "lede": "Un bureau d'études garde ses plans dans un PLM sur Oracle: une ligne par révision, le PDF dans un BLOB.\n- le hub ne lit pas un BLOB: la table est refusée telle quelle, colonne nommée;\n- l'administrateur ajoute une vue sans le plan, sa taille en octets à la place;\n- cette nuit, la migration de l'archivage recopie deux révisions diffusées sans leur PDF: deux décisions.",
+      "tags": {
+        "domain": [
+          "Bureau d'études",
+          "PLM",
+          "Oracle",
+          "BLOB"
+        ],
+        "kinds": [
+          "Connector",
+          "Process"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-08",
+      "evidenceDigest": "sha256:07079647ba331839e427cb402e5d819fb414f476abcdf1c5b3f1385406044a38"
+    },
+    {
       "slug": "orders-where-they-sleep",
       "title": "Audit des durées de statut des commandes",
       "goal": "Savoir combien de temps chaque commande reste dans chaque statut, et lesquelles ne bougent plus.",
