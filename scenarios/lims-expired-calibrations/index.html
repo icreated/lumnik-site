@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Calibrations expirées: les résultats mesurés sur un instrument hors validité — lumnik</title>
-<meta name="description" content="Signaler chaque résultat de labo mesuré hors de la validité de calibration de son instrument (ISO 17025), depuis le registre et le LIMS tels qu&#x27;ils exportent. Un registre de métrologie et un LIMS, deux exports CSV: 6 instruments, 144 résultats. Une Entity joint le registre à chaque résultat; Un Process compare deux colonnes de la ligne jointe: measured_at après valid_until; Le registre change: les résultats déjà là sont jugés à nouveau.">
+<title>Des résultats mesurés sur un instrument hors calibration — lumnik</title>
+<meta name="description" content="Relier chaque résultat du LIMS au certificat de calibration de son instrument, et être prévenu quand il a été mesuré après la fin de validité, même quand le registre change après coup. Un registre de métrologie et un LIMS, deux exports CSV: 6 instruments, 144 résultats. Une Entity joint le registre à chaque résultat; Un Process compare deux colonnes de la ligne jointe: measured_at après valid_until; Le registre change: les résultats déjà là sont jugés à nouveau.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -18,12 +18,12 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/lims-expired-calibrations/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>Calibrations expirées: les résultats mesurés sur un instrument hors validité</h1>
-    <p class="goal"><strong>Objectif</strong> Signaler chaque résultat de labo mesuré hors de la validité de calibration de son instrument (ISO 17025), depuis le registre et le LIMS tels qu&#x27;ils exportent.</p>
+    <h1>Des résultats mesurés sur un instrument hors calibration</h1>
+    <p class="goal"><strong>Objectif</strong> Relier chaque résultat du LIMS au certificat de calibration de son instrument, et être prévenu quand il a été mesuré après la fin de validité, même quand le registre change après coup.</p>
     <p class="lede">Un registre de métrologie et un LIMS, deux exports CSV: 6 instruments, 144 résultats.</p><ul class="lede-list"><li>une Entity joint le registre à chaque résultat;</li><li>un Process compare deux colonnes de la ligne jointe: measured_at après valid_until;</li><li>le registre change: les résultats déjà là sont jugés à nouveau.</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Laboratoire</li><li class="tag">ISO 17025</li><li class="tag">Métrologie</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li><li class="tag kind">Process</li></ul>
   </section>
-  <div role="tablist" class="page-tabs" aria-label="Calibrations expirées: les résultats mesurés sur un instrument hors validité">
+  <div role="tablist" class="page-tabs" aria-label="Des résultats mesurés sur un instrument hors calibration">
     <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
     <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
   </div>

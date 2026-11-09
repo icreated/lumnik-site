@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Firebird (Delphi): refusé en JDBC, lu par son export — lumnik</title>
-<meta name="description" content="Lire la base Firebird d&#x27;une application Delphi, et être prévenu quand un article passe sous son seuil de réapprovisionnement. Une application de stock Delphi sur Firebird 5: 40 articles, une base WIN1252. Jdbc-generic n&#x27;a pas de dialecte Firebird: l&#x27;apply refuse, et dit ce qui est installé; L&#x27;export que la boutique planifie déjà, isql, est lu par csv-file; Une journée de ventes: trois articles sous leur seuil, trois décisions de réappro.">
+<title>Firebird: les articles d&#x27;une application Delphi sous leur seuil de stock — lumnik</title>
+<meta name="description" content="Lire les articles d&#x27;une application Delphi par l&#x27;export isql de sa base Firebird, et être prévenu quand un article passe sous son seuil de réapprovisionnement. Une application de stock Delphi sur Firebird 5: 40 articles, une base WIN1252. Jdbc-generic n&#x27;a pas de dialecte Firebird: l&#x27;apply refuse, et dit ce qui est installé; L&#x27;export que la boutique planifie déjà, isql, est lu par csv-file; Une journée de ventes: trois articles sous leur seuil, trois décisions de réappro.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -18,12 +18,12 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/firebird-delphi-stock/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>Firebird (Delphi): refusé en JDBC, lu par son export</h1>
-    <p class="goal"><strong>Objectif</strong> Lire la base Firebird d&#x27;une application Delphi, et être prévenu quand un article passe sous son seuil de réapprovisionnement.</p>
+    <h1>Firebird: les articles d&#x27;une application Delphi sous leur seuil de stock</h1>
+    <p class="goal"><strong>Objectif</strong> Lire les articles d&#x27;une application Delphi par l&#x27;export isql de sa base Firebird, et être prévenu quand un article passe sous son seuil de réapprovisionnement.</p>
     <p class="lede">Une application de stock Delphi sur Firebird 5: 40 articles, une base WIN1252.</p><ul class="lede-list"><li>jdbc-generic n&#x27;a pas de dialecte Firebird: l&#x27;apply refuse, et dit ce qui est installé;</li><li>l&#x27;export que la boutique planifie déjà, isql, est lu par csv-file;</li><li>une journée de ventes: trois articles sous leur seuil, trois décisions de réappro.</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Stock</li><li class="tag">Delphi</li><li class="tag">Firebird</li><li class="tag kind">Connector</li><li class="tag kind">Process</li></ul>
   </section>
-  <div role="tablist" class="page-tabs" aria-label="Firebird (Delphi): refusé en JDBC, lu par son export">
+  <div role="tablist" class="page-tabs" aria-label="Firebird: les articles d&#x27;une application Delphi sous leur seuil de stock">
     <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
     <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
   </div>
@@ -35,7 +35,7 @@
       <h2 id="refused-title">Firebird, lu en direct: refusé</h2>
       <p>Premier essai: jdbc-generic, comme pour PostgreSQL. L&#x27;apply refuse avant toute connexion.</p><ul class="prose-list"><li>aucun dialecte installé n&#x27;accepte jdbc:firebirdsql</li><li>schema est exigé, et Firebird n&#x27;a pas de schémas</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>Un refus honnête</strong><p>Le message nomme les dialectes que ce hub porte. Un fournisseur Firebird s&#x27;écrit quand un client en a besoin.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>Un refus qui dit pourquoi</strong><p>Le message nomme les dialectes que ce hub porte. Un fournisseur Firebird s&#x27;écrit quand un client en a besoin.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une base que le hub ne sait pas lire est refusée à l&#x27;apply, jamais lue à moitié.</p></div>
   </aside>
   <div class="views">
