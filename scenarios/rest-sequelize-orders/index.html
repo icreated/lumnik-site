@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sequelize: le service annonce 260 commandes pour 130 — lumnik</title>
-<meta name="description" content="Lire toutes les commandes d&#x27;un service Node par son API, sans croire un total faux. Un service Express et Sequelize, 130 commandes et leurs lignes, lues par offset et limit. Au calme: les 130, le count de chaque page vérifié; Avec les lignes, sans distinct: le count dit 260, le run refuse; Avec distinct: true: 130 sur 130; Une commande supprimée pendant la lecture: la liste est relue.">
+<meta name="description" content="Lire les commandes d&#x27;un service Node page par page en vérifiant le total annoncé, et refuser la lecture quand il annonce plus de commandes qu&#x27;il n&#x27;en rend. Un service Express et Sequelize, 130 commandes et leurs lignes, lues par offset et limit. Au calme: les 130, le count de chaque page vérifié; Avec les lignes, sans distinct: le count dit 260, le run refuse; Avec distinct: true: 130 sur 130; Une commande supprimée pendant la lecture: la liste est relue.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -19,7 +19,7 @@
 <main>
   <section class="hero">
     <h1>Sequelize: le service annonce 260 commandes pour 130</h1>
-    <p class="goal"><strong>Objectif</strong> Lire toutes les commandes d&#x27;un service Node par son API, sans croire un total faux.</p>
+    <p class="goal"><strong>Objectif</strong> Lire les commandes d&#x27;un service Node page par page en vérifiant le total annoncé, et refuser la lecture quand il annonce plus de commandes qu&#x27;il n&#x27;en rend.</p>
     <p class="lede">Un service Express et Sequelize, 130 commandes et leurs lignes, lues par offset et limit.</p><ul class="lede-list"><li>au calme: les 130, le count de chaque page vérifié;</li><li>avec les lignes, sans distinct: le count dit 260, le run refuse;</li><li>avec distinct: true: 130 sur 130;</li><li>une commande supprimée pendant la lecture: la liste est relue.</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Ventes</li><li class="tag">Sequelize</li><li class="tag kind">Connector</li></ul>
   </section>

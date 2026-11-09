@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Les listes d&#x27;un formulaire de sinistre viennent du CRM sans exposer son GraphQL — lumnik</title>
-<meta name="description" content="Alimenter les listes d&#x27;un formulaire depuis un CRM GraphQL sans que le navigateur dépende du schéma du CRM. Le type et le sous-type de sinistre vivent dans un CRM qui parle GraphQL. lumnik l&#x27;ingère page par page et en fait une entité canonique. Un petit BFF sert au formulaire du JSON REST stable. Passer d&#x27;Automobile à Habitation remplace la liste. Un type inconnu répond 404.">
+<title>GraphQL: un formulaire de sinistre qui dépend du schéma du CRM — lumnik</title>
+<meta name="description" content="Remplir la liste des types de sinistre, puis celle des sous-types du type choisi, depuis un CRM GraphQL, par un BFF REST qui ne sert que les codes actifs. Le type et le sous-type de sinistre vivent dans un CRM qui parle GraphQL. lumnik l&#x27;ingère page par page et en fait une entité canonique. Un petit BFF sert au formulaire du JSON REST stable. Passer d&#x27;Automobile à Habitation remplace la liste. Un type inconnu répond 404.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -18,12 +18,12 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/graphql-insurance-bff/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>Les listes d&#x27;un formulaire de sinistre viennent du CRM sans exposer son GraphQL</h1>
-    <p class="goal"><strong>Objectif</strong> Alimenter les listes d&#x27;un formulaire depuis un CRM GraphQL sans que le navigateur dépende du schéma du CRM.</p>
+    <h1>GraphQL: un formulaire de sinistre qui dépend du schéma du CRM</h1>
+    <p class="goal"><strong>Objectif</strong> Remplir la liste des types de sinistre, puis celle des sous-types du type choisi, depuis un CRM GraphQL, par un BFF REST qui ne sert que les codes actifs.</p>
     <p class="lede">Le type et le sous-type de sinistre vivent dans un CRM qui parle GraphQL. lumnik l&#x27;ingère page par page et en fait une entité canonique.</p><ul class="lede-list"><li>un petit BFF sert au formulaire du JSON REST stable</li><li>passer d&#x27;Automobile à Habitation remplace la liste</li><li>un type inconnu répond 404</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Assurance</li><li class="tag">Formulaires</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
   </section>
-  <div role="tablist" class="page-tabs" aria-label="Les listes d&#x27;un formulaire de sinistre viennent du CRM sans exposer son GraphQL">
+  <div role="tablist" class="page-tabs" aria-label="GraphQL: un formulaire de sinistre qui dépend du schéma du CRM">
     <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
     <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
   </div>
@@ -67,7 +67,7 @@ case-options  POST    200     3      ok</span></code></pre></div><div role="tabp
       <h2 id="ingest-title">Toutes les pages, une entité canonique</h2>
       <p>Le run parcourt les pages Relay. L&#x27;entité expose les options sous des noms stables.</p><ul class="prose-list"><li>9 options écrites</li><li>type, sous-type, ordre, disponibilité</li><li>OLD_STORM_CODE n&#x27;est pas actif</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>Code inactif</strong><p>OLD_STORM_CODE est ingéré tel quel: le miroir de la source reste honnête.</p></div></li><li><span class="n">2</span><div><strong>Contrat</strong><p>Le BFF lit l&#x27;entité, jamais le schéma du CRM.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>Code inactif</strong><p>OLD_STORM_CODE est ingéré comme dans le CRM: c&#x27;est le BFF qui l&#x27;écarte.</p></div></li><li><span class="n">2</span><div><strong>Contrat</strong><p>Le BFF lit l&#x27;entité, jamais le schéma du CRM.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le CRM entier est lu, page par page, sans perte.</p></div>
   </aside>
   <div class="views">

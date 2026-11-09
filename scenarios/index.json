@@ -3,8 +3,8 @@
   "scenarios": [
     {
       "slug": "aged-balance-print",
-      "title": "La balance âgée prisonnière d'un fichier d'impression",
-      "goal": "Transformer un fichier d'impression comptable paginé en créances par facture, en conservant le bon client malgré les changements de page et en écartant les en-têtes et les totaux.",
+      "title": "La balance âgée disponible seulement en fichier d'impression",
+      "goal": "Lire chaque facture de la balance âgée imprimée avec son client, même quand un saut de page les sépare, pour suivre les retards sans ressaisir l'état.",
       "lede": "La compta imprime sa balance âgée dans un fichier spool.\n- un en-tête par page;\n- un client, ses factures en dessous, un total;\n- les factures d'un client continuent parfois page suivante.\nLe recouvrement veut chaque facture avec son client.",
       "tags": {
         "domain": [
@@ -22,8 +22,8 @@
     },
     {
       "slug": "ai-switched-off",
-      "title": "L'IA éteinte le temps d'un audit: éteint n'est pas absent",
-      "goal": "Éteindre l'IA du hub sans changer d'édition ni perdre une donnée, continuer à lire les sources, et savoir ce qu'il faudra refaire en la rallumant.",
+      "title": "L'IA éteinte le temps d'un audit",
+      "goal": "Éteindre l'IA du hub pendant un audit sans changer d'édition ni perdre le corpus, continuer à lire les ordres de dispensation, et savoir ce qu'il faudra réappliquer en la rallumant.",
       "lede": "Une pharmacie hospitalière envoie chaque jour au hub ses ordres de dispensation. Le délégué à la protection des données demande que l'IA soit éteinte le temps d'un audit.\n- l'exploitant met LUMNIK_AI_ENABLED=false et redémarre le hub: rag et llm restent installés, dits INACTIVE;\n- ask, la recherche et le chat répondent la même phrase; le corpus est gardé, et le hub le dit;\n- la lecture des fichiers continue; un cycle de vie déclaré pendant l'audit n'est pas indexé, et l'apply le dit.",
       "tags": {
         "domain": [
@@ -62,7 +62,7 @@
     },
     {
       "slug": "as400-customer-credit",
-      "title": "AS/400: le client au-delà de son encours autorisé, lu en EBCDIC",
+      "title": "AS/400: les clients au-dessus de leur plafond dans un fichier EBCDIC",
       "goal": "Lire le fichier clients d'un IBM i dans son EBCDIC français, et être prévenu quand l'encours d'un client dépasse son plafond.",
       "lede": "Un fichier clients d'IBM i, CLIENTS, CCSID 297: 30 clients.\n- transféré en binaire: pas de délimiteur, des champs packés, chaque ligne en dead letter avec sa cause;\n- l'export de l'IBM i lui-même, CPYTOIMPF, lu avec encoding: IBM297;\n- le lendemain: deux clients au-delà de leur plafond, deux décisions.",
       "tags": {
@@ -102,7 +102,7 @@
     {
       "slug": "catalogue-ean-check",
       "title": "Le code-barres faux repéré à l'import",
-      "goal": "Repérer à l'import les codes-barres faux.",
+      "goal": "Vérifier à l'import la clé de contrôle de chaque code EAN-13 avec un script Kotlin, et marquer chaque produit: valide, clé fausse ou mal formé.",
       "lede": "Un export catalogue porte des codes EAN-13, dont certains faux. Aucun transformateur intégré ne calcule la clé de contrôle.\n- l'opérateur du hub dépose un script Kotlin\n- le manifeste le nomme, sans transporter de code\n- un brouillon qui ne compile pas est refusé à la validation\n- chaque code reçoit un verdict à l'import.",
       "tags": {
         "domain": [
@@ -119,7 +119,7 @@
     {
       "slug": "cfonb-bank-statement",
       "title": "Un relevé CFONB où le signe se cache dans le dernier chiffre",
-      "goal": "Lire le relevé bancaire CFONB 120 comme une table: chaque mouvement signé, rattaché à son relevé, avec son payeur et sa facture.",
+      "goal": "Lire chaque mouvement du relevé CFONB 120 avec son signe et son relevé, et ses compléments (payeur, facture) quand il en a, pour rapprocher le relevé ligne à ligne.",
       "lede": "Les banques envoient encore leurs relevés au format CFONB 120.\n- 120 caractères par enregistrement, sans séparateur;\n- 01 ouvre le relevé, 04 est un mouvement, 05 le complète, 07 clôt;\n- le dernier caractère du montant porte son dernier chiffre et son signe.\nLa trésorerie veut chaque mouvement signé, avec ses compléments.",
       "tags": {
         "domain": [
@@ -158,7 +158,7 @@
     },
     {
       "slug": "chromatograph-report",
-      "title": "Rapport HPLC: l'impureté hors limite, lue dans l'export de l'instrument",
+      "title": "HPLC: une impureté hors limite dans le rapport d'injection",
       "goal": "Lire les rapports d'injection qu'exporte un HPLC, unités collées et virgules décimales, et être prévenu quand une impureté dépasse sa spécification.",
       "lede": "Le logiciel d'acquisition d'un HPLC exporte un rapport par injection: UTF-16, un bloc d'en-tête, puis les pics.\n- csv-file le lit ligne par ligne et porte l'échantillon sur chaque pic;\n- regex-extract sépare chaque valeur de son unité: 0,21% devient 0.21 et %;\n- une impureté au-delà de 0,15 %: une décision.",
       "tags": {
@@ -179,8 +179,8 @@
     {
       "slug": "crm-contacts-reachable",
       "title": "Un export CRM aux accents cassés et aux emails faux",
-      "goal": "Reprendre les contacts du vieux CRM avec un nom réparé, un téléphone international et un email valide, et nommer ceux qu'on ne peut pas joindre.",
-      "lede": "L'équipe commerciale quitte un vieux CRM. Son export de contacts mélange:\n- majuscules et accents cassés (BÃ©nÃ©dicte);\n- deux colonnes de téléphone, dont une souvent vide;\n- des emails mal saisis.\nLe manifeste en fait une liste exploitable.",
+      "goal": "Reprendre les contacts d'un CRM legacy avec un nom réparé, un téléphone international et un email valide, et mettre de côté ceux dont l'email est illisible.",
+      "lede": "L'équipe commerciale quitte un CRM legacy. Son export de contacts mélange:\n- majuscules et accents cassés (BÃ©nÃ©dicte);\n- deux colonnes de téléphone, dont une souvent vide;\n- des emails mal saisis.\nLe manifeste en fait une liste exploitable.",
       "tags": {
         "domain": [
           "Ventes",
@@ -197,8 +197,8 @@
     },
     {
       "slug": "dates-across-sources",
-      "title": "Trois systèmes, une date de réception: le lot de 00:30 et le jour de l'usine",
-      "goal": "Fusionner en une entité la date d'arrivée d'un lot telle que le LIMS, l'ERP et le transporteur la donnent, et ne garder en litige que les vrais écarts.",
+      "title": "Une date de réception de lot écrite de trois façons",
+      "goal": "Comparer au jour de l'usine la date de réception d'un lot dans le LIMS, l'ERP et le rapport du transporteur, pour ne garder en litige que les fautes de saisie.",
       "lede": "Une usine reçoit ses lots de matière première. Trois systèmes disent quand: le LIMS scanne l'échantillon (un instant), l'ERP saisit la réception (une date), le transporteur écrit « Livré le » dans un CSV (du texte).\n- lus tels quels, le texte du transporteur met la colonne en texte: douze lots en litige;\n- typée, une date rencontre une heure au jour UTC: le lot de l'équipe de nuit est en litige;\n- avec zone: Europe/Paris, il reste un litige, la vraie faute de saisie.",
       "tags": {
         "domain": [
@@ -218,8 +218,8 @@
     },
     {
       "slug": "deal-in-the-pocket",
-      "title": "L'affaire à 240 000 € qui se confirme pendant le dîner",
-      "goal": "Prévenir le commercial sur son téléphone dès que le CRM passe une affaire à confirmer, avec la ligne, les pièces et le catalogue à portée de main, et qu'un clic sur Traiter fasse avancer le CRM et parte l'email client.",
+      "title": "Une affaire à 240 000 € à confirmer depuis son téléphone",
+      "goal": "Prévenir le commercial sur son téléphone quand le CRM passe l'affaire à confirmer, avec la ligne et les pièces sous la main; un clic sur Traiter fait avancer le CRM et envoie l'email client.",
       "lede": "Un technico-commercial dîne avec la directrice de Lumilait. Il doit répondre sans ouvrir quatre outils:\n- la ligne d'emballage: ERP et SAV ne disent pas la même chose;\n- les pièces du retrofit: en stock ou pas;\n- le catalogue: 360 pièces à chercher.\nPendant ce temps, le CRM passe l'affaire à confirmer.",
       "tags": {
         "domain": [
@@ -242,7 +242,7 @@
     {
       "slug": "delivery-date-two-warehouses",
       "title": "Une date de livraison que chaque entrepôt calcule autrement",
-      "goal": "Promettre au client la date que son entrepôt peut tenir: une seule règle de calcul, réglée par entrepôt (pays, délai, jours fermés).",
+      "goal": "Calculer pour chaque commande la date de livraison que chaque entrepôt peut tenir, avec une règle de jours ouvrés écrite une fois et réglée par entrepôt (pays, délai, jours fermés).",
       "lede": "La date promise = la date de commande plus N jours ouvrés. Mais chaque entrepôt compte à sa façon:\n- Lyon, en France: 3 jours, deux jours d'inventaire;\n- Liège, en Belgique: 5 jours, d'autres fériés.\nL'opérateur écrit la règle une fois; l'intégrateur la règle par entrepôt.",
       "tags": {
         "domain": [
@@ -260,8 +260,8 @@
     },
     {
       "slug": "devops-ai-event-memory",
-      "title": "k8s a oublié ses events et lumnik sait encore qui a crashé cette nuit",
-      "goal": "Demander quels déploiements ont crashé en boucle, après que Kubernetes a effacé leurs events, et recevoir la liste que kubectl donnait pendant l'incident.",
+      "title": "Kubernetes efface ses events au bout d'une heure",
+      "goal": "Demander quels déploiements ont eu un event BackOff après que Kubernetes a effacé ces events, et recevoir la liste que kubectl donnait pendant l'incident.",
       "lede": "Kubernetes garde ses events une heure. Un déploiement réparé à l'aube n'a plus d'histoire le matin:\n- un nouveau pod, Running, 0 redémarrage;\n- plus aucun event Warning.\nlumnik lit les events pendant qu'ils existent et les garde; Ask répond encore quand kubectl ne sait plus.",
       "tags": {
         "domain": [
@@ -280,7 +280,7 @@
     },
     {
       "slug": "devops-ai-pod-triage",
-      "title": "k9s dit Running mais le cluster brûle: quel pod regarder d'abord?",
+      "title": "Cinq pods en panne à trier pendant un incident",
       "goal": "Demander à son cluster Kubernetes quels pods traiter en premier, et recevoir la liste triée par la règle de l'astreinte, vérifiée contre kubectl.",
       "lede": "Un vrai cluster, cinq équipes, cinq pods cassés par Kubernetes lui-même:\n- l'API des pods: état, redémarrages, raison de la dernière mort;\n- metrics.k8s.io: ce que chaque pod consomme maintenant;\n- les events Warning.\nUne règle Kotlin de l'astreinte fixe la priorité; le modèle traduit la question, il ne décide rien.",
       "tags": {
@@ -339,8 +339,8 @@
     },
     {
       "slug": "domino-quality-complaints",
-      "title": "Lotus Notes: les réclamations qualité lues par le Domino Data Service",
-      "goal": "Lire une vue Notes sans toucher à la base, vérifier le compte de la vue, et être prévenu d'une réclamation critique laissée sans responsable.",
+      "title": "Lotus Notes: les réclamations critiques sans responsable",
+      "goal": "Lire les réclamations ouvertes d'une vue Lotus Notes par le Domino Data Service, et être prévenu quand une réclamation critique n'a pas de responsable.",
       "lede": "Le service qualité d'un fabricant de vannes suit ses réclamations clients dans une base Lotus Notes depuis vingt ans. Le Domino Data Service l'expose en JSON.\n- start et count, le compte de la vue dans Content-Range;\n- un champ multi-valeur: une chaîne avec un nom, une liste avec plusieurs;\n- deux réclamations critiques sans responsable, deux décisions.",
       "tags": {
         "domain": [
@@ -359,7 +359,7 @@
     },
     {
       "slug": "edi-flat-order-lines",
-      "title": "Les lignes de commande d'un fichier EDI à plat lues à leur place",
+      "title": "Des lignes de commande EDI à plat sans aucun séparateur",
       "goal": "Lire en colonnes les lignes de commande d'un fichier EDI à largeur fixe, sans outil de mapping.",
       "lede": "Un fabricant et son logisticien s'échangent des fichiers à plat. Aucun séparateur: chaque champ a sa place et sa largeur.\n- l'en-tête écarté et compté;\n- onze champs découpés à leur place;\n- les accents justes, même dans un fichier d'une ligne.",
       "tags": {
@@ -399,8 +399,8 @@
     },
     {
       "slug": "edifact-orders",
-      "title": "Un message EDIFACT ORDERS relu ligne de commande par ligne de commande",
-      "goal": "Lire une commande EDIFACT segment par segment, puis ligne par ligne, sans outil EDI.",
+      "title": "EDIFACT ORDERS: tout le message sur une seule ligne",
+      "goal": "Découper un message EDIFACT ORDERS en segments, puis lire chaque ligne de commande avec son numéro de commande, son EAN et sa quantité.",
       "lede": "L'acheteur envoie un message ORDERS sur une seule ligne. Les segments finissent par une apostrophe. Une apostrophe dans un libellé s'écrit ?'.\n- quatorze segments, dans l'ordre;\n- « Bâche d'hiver » entier;\n- deux lignes de commande, chacune avec sa commande et son EAN.",
       "tags": {
         "domain": [
@@ -419,7 +419,7 @@
     {
       "slug": "entity-resolution",
       "title": "Un client dans deux systèmes sans identifiant commun",
-      "goal": "Rapprocher les clients de l'ERP et les contacts du CRM, sans jamais fusionner au hasard.",
+      "goal": "Rapprocher par l'email les comptes de l'ERP et les contacts du CRM, signaler comme ambigu un contact dont l'email désigne deux comptes, et garder la décision de la personne qui tranche.",
       "lede": "Un ERP, un CRM, aucun identifiant commun. L'email rapproche les fiches. Une boîte partagée désigne deux clients.\n- le rapprochement par une règle écrite;\n- deux candidats: une ambiguïté, pas une fusion;\n- un humain tranche, et sa décision tient au rejeu.",
       "tags": {
         "domain": [
@@ -437,8 +437,8 @@
     },
     {
       "slug": "entity-resolution-drift",
-      "title": "Un client établi ne change pas de fiche en silence",
-      "goal": "Voir quand un contact du CRM se met à désigner un autre client, au lieu de le déplacer en silence.",
+      "title": "Un email changé dans le CRM qui désigne un autre client",
+      "goal": "Signaler comme ambigu un contact du CRM dont l'email a changé, au lieu de le rattacher à l'autre client, jusqu'à ce qu'une personne tranche.",
       "lede": "Hier, le contact CC-42 et le compte AC-700 désignaient Nova Pumps. Aujourd'hui, son email pointe vers Helios Valves.\n- le lien d'hier ne bouge pas tout seul;\n- le contact devient ambigu;\n- un humain tranche, et l'historique nomme l'auteur.",
       "tags": {
         "domain": [
@@ -456,8 +456,8 @@
     },
     {
       "slug": "excel-merged-cells",
-      "title": "Chaque ligne de l'export Excel retrouve sa région et son client",
-      "goal": "Lire un rapport Excel aux cellules fusionnées comme une table, une ligne par vente.",
+      "title": "Un rapport de ventes Excel aux cellules fusionnées",
+      "goal": "Donner à chaque ligne de vente la région et le client de sa cellule fusionnée, sans les sous-totaux, pour retrouver le total de chaque client.",
       "lede": "Les ventes envoient chaque mois un rapport Excel. Un groupe par client, la région et le client dans des cellules fusionnées, un sous-total sous chaque groupe. En CSV, une cellule fusionnée ne garde sa valeur que sur la première ligne.\n- les 15 sous-totaux écartés et comptés;\n- chaque ligne reçoit la région et le client de son groupe;\n- rien ne passe d'un fichier à l'autre.",
       "tags": {
         "domain": [
@@ -475,8 +475,8 @@
     },
     {
       "slug": "export-that-lies",
-      "title": "Une ligne illisible de l'export ne passe pas en silence",
-      "goal": "Ne jamais écrire ni retirer à moitié un catalogue dont une ligne est illisible.",
+      "title": "Un point-virgule dans un libellé casse une ligne du catalogue",
+      "goal": "Mettre de côté la ligne illisible avec ses valeurs, ne retirer aucun article tant qu'elle reste illisible, puis fermer la lettre morte quand l'export est corrigé.",
       "lede": "Un ERP exporte chaque nuit son catalogue d'articles. Un libellé contient le séparateur, sans guillemets.\n- la ligne mise de côté avec ses valeurs brutes;\n- rien retiré du catalogue tant qu'elle est illisible;\n- la lettre morte fermée par le run qui l'a vraiment relue.",
       "tags": {
         "domain": [
@@ -493,8 +493,8 @@
     },
     {
       "slug": "firebird-delphi-stock",
-      "title": "Firebird (Delphi): refusé en JDBC, lu par son export",
-      "goal": "Lire la base Firebird d'une application Delphi, et être prévenu quand un article passe sous son seuil de réapprovisionnement.",
+      "title": "Firebird: les articles d'une application Delphi sous leur seuil de stock",
+      "goal": "Lire les articles d'une application Delphi par l'export isql de sa base Firebird, et être prévenu quand un article passe sous son seuil de réapprovisionnement.",
       "lede": "Une application de stock Delphi sur Firebird 5: 40 articles, une base WIN1252.\n- jdbc-generic n'a pas de dialecte Firebird: l'apply refuse, et dit ce qui est installé;\n- l'export que la boutique planifie déjà, isql, est lu par csv-file;\n- une journée de ventes: trois articles sous leur seuil, trois décisions de réappro.",
       "tags": {
         "domain": [
@@ -533,8 +533,8 @@
     },
     {
       "slug": "graphql-insurance-bff",
-      "title": "Les listes d'un formulaire de sinistre viennent du CRM sans exposer son GraphQL",
-      "goal": "Alimenter les listes d'un formulaire depuis un CRM GraphQL sans que le navigateur dépende du schéma du CRM.",
+      "title": "GraphQL: un formulaire de sinistre qui dépend du schéma du CRM",
+      "goal": "Remplir la liste des types de sinistre, puis celle des sous-types du type choisi, depuis un CRM GraphQL, par un BFF REST qui ne sert que les codes actifs.",
       "lede": "Le type et le sous-type de sinistre vivent dans un CRM qui parle GraphQL. lumnik l'ingère page par page et en fait une entité canonique.\n- un petit BFF sert au formulaire du JSON REST stable\n- passer d'Automobile à Habitation remplace la liste\n- un type inconnu répond 404",
       "tags": {
         "domain": [
@@ -552,8 +552,8 @@
     },
     {
       "slug": "hl7-analyser-results",
-      "title": "HL7 v2: le résultat d'analyseur hors norme, signalé ou non",
-      "goal": "Lire les messages HL7 v2 que deux analyseurs déposent pour le LIMS, et être prévenu quand un résultat dépasse sa norme.",
+      "title": "HL7 v2: un résultat au-dessus de sa norme que l'analyseur ne signale pas",
+      "goal": "Lire les résultats HL7 v2 de deux analyseurs, et être prévenu quand une valeur dépasse la norme envoyée avec elle, même sans drapeau d'anomalie.",
       "lede": "Deux analyseurs de chimie, HL7 v2.5.1 ORU^R01: des segments terminés par un retour chariot seul.\n- csv-file lit un segment par ligne, MSH, PID, OBR, OBX;\n- l'échantillon descend sur chaque résultat;\n- un Process compare la valeur à la norme envoyée à côté, quel que soit le drapeau.",
       "tags": {
         "domain": [
@@ -572,8 +572,8 @@
     },
     {
       "slug": "hrms-qc-mass-accuracy",
-      "title": "Spectrométrie haute résolution: le QC dérive de 3,84 ppm, les échantillons suivants le savent",
-      "goal": "Lire l'export QC d'un criblage LC-HRMS sans perdre une décimale, et signaler chaque échantillon acquis après un QC hors de sa tolérance en masse.",
+      "title": "LC-HRMS: les échantillons acquis après un QC hors tolérance",
+      "goal": "Lire l'export QC d'un criblage LC-HRMS sans perdre une décimale, et signaler chaque échantillon acquis après un QC hors de sa tolérance en masse, pour savoir lesquels réinjecter.",
       "lede": "Un laboratoire d'environnement crible des micropolluants dans l'eau sur un Orbitrap. Les transitoires et les spectres restent sur l'instrument; lumnik lit ce que le logiciel de traitement exporte.\n- un bloc clé;valeur, un en-tête sur deux lignes, n.d. et < LOD dans la colonne d'intensité;\n- chaque m/z gardé avec ses cinq décimales;\n- la climatisation tombe en panne: le QC lit 3,84 ppm, les quatre échantillons suivants lèvent une décision.",
       "tags": {
         "domain": [
@@ -592,7 +592,7 @@
     },
     {
       "slug": "import-export",
-      "title": "Le catalogue part chez le partenaire dans son format à lui",
+      "title": "Un partenaire exige le catalogue dans son propre format",
       "goal": "Livrer le catalogue produits à un partenaire dans le format qu'il impose, sans écrire de code de conversion.",
       "lede": "Deux CSV d'un ERP, produits et catégories, sont joints dans le hub puis livrés sur S3 au format d'un partenaire.\n- en-têtes français, point-virgule, virgule décimale\n- statuts recodés, référence interne masquée\n- un reçu prouve les octets livrés",
       "tags": {
@@ -612,8 +612,8 @@
     },
     {
       "slug": "invoices-dead-letters",
-      "title": "Une facture au montant illisible attend sa correction à la source",
-      "goal": "Ne jamais écrire une facture sans montant, et suivre chaque ligne écartée jusqu'à sa correction.",
+      "title": "Une facture au montant mal saisi attend sa correction dans l'ERP",
+      "goal": "Mettre de côté chaque facture mal saisie avec la valeur lue, au lieu de l'écrire sans montant, et suivre sa lettre morte jusqu'à la correction dans l'ERP.",
       "lede": "Un export de factures fournisseurs porte deux montants mal saisis et une facture de test.\n- les trois mises de côté, telles qu'elles ont été lues;\n- la facture de test écartée;\n- les deux autres corrigées à la source, et leur lettre fermée par la bonne lecture.",
       "tags": {
         "domain": [
@@ -631,8 +631,8 @@
     },
     {
       "slug": "jdbc-merge-oracle-postgresql",
-      "title": "Une fiche produit réunit PostgreSQL et Oracle sans rien migrer",
-      "goal": "Montrer une fiche produit complète quand le produit vit dans PostgreSQL et sa catégorie dans Oracle, sans toucher aux deux bases.",
+      "title": "Le produit dans PostgreSQL et sa catégorie dans Oracle",
+      "goal": "Relier chaque produit PostgreSQL à sa catégorie Oracle, en lecture seule, sans perdre ni doubler un produit.",
       "lede": "Les produits vivent dans PostgreSQL, leurs catégories dans Oracle. Deux connecteurs jdbc les lisent sans rien y écrire, et une entité les joint.\n- 40 234 produits, 63 catégories\n- chaque produit porte sa catégorie quand elle existe\n- le produit sans catégorie reste, avec des champs vides",
       "tags": {
         "domain": [
@@ -650,7 +650,7 @@
     },
     {
       "slug": "kafka-after-hours-energy",
-      "title": "Lyon tire 18,7 kW la nuit et seule sa responsable est alertée",
+      "title": "Une usine fermée qui consomme encore la nuit",
       "goal": "Être alerté quand un site fermé consomme au-delà de son seuil de nuit, sans alerter les sites où cette charge est normale.",
       "lede": "Trois compteurs publient leur puissance sur Kafka à 23 h 15. Un registre CSV dit ce qu'est chaque site.\n- Lyon tire 18,7 kW pour un seuil de 10 kW: une décision, un email\n- le laboratoire tire 28,4 kW, sous son seuil de 40 kW: rien\n- Grafana suit les trois états",
       "tags": {
@@ -690,8 +690,8 @@
     },
     {
       "slug": "legacy-desktop-exports",
-      "title": "Progress, FoxPro, Access: trois dinosaures, un parc de machines",
-      "goal": "Lire les registres de machines de trois ateliers tels que leurs vieilles bases les exportent, sans retoucher un fichier, et les réunir en un seul parc.",
+      "title": "Un parc de machines réparti dans trois bases legacy",
+      "goal": "Réunir en un seul parc les exports OpenEdge, FoxPro et Access de trois ateliers, chacun lu dans son format et son encodage, et voir la seule machine où deux registres divergent.",
       "lede": "Un groupe industriel a trois ateliers, et chaque atelier tient son parc de machines dans sa propre base de bureau, installée il y a vingt ou trente ans.\n- Nord exporte depuis Progress OpenEdge, Est depuis FoxPro pour DOS, Sud depuis Access;\n- chaque format demande son geste: ? pour inconnu, -1 pour oui, une heure de minuit, une année sur deux chiffres;\n- l'export FoxPro, lu sans sa page de code, est deviné en windows-1252: le run le dit et s'arrête sur le É de « Électroérosion »;\n- réunis, les trois registres font 17 machines et un litige: la rectifieuse passée d'Est à Sud.",
       "tags": {
         "domain": [
@@ -712,8 +712,8 @@
     },
     {
       "slug": "legacy-sales-grafana",
-      "title": "Un ERP figé alimente un vrai tableau Grafana",
-      "goal": "Donner à la direction un tableau de ventes à jour à partir des exports d'un ERP qu'on ne touche plus.",
+      "title": "Les ventes d'un ERP legacy dans un tableau Grafana",
+      "goal": "Joindre les ventes et le catalogue exportés par l'ERP, pour que la direction suive dans Grafana le chiffre d'affaires par catégorie, à jour à chaque export.",
       "lede": "L'ERP exporte ses ventes et son catalogue en CSV. lumnik les joint, et Grafana lit l'entité par un compte PostgreSQL en lecture seule, borné à son tenant.\n- lundi: 10 450 €\n- mardi, l'export change: 14 200 €\n- la vente modifiée n'apparaît qu'une fois",
       "tags": {
         "domain": [
@@ -731,8 +731,8 @@
     },
     {
       "slug": "lims-expired-calibrations",
-      "title": "Calibrations expirées: les résultats mesurés sur un instrument hors validité",
-      "goal": "Signaler chaque résultat de labo mesuré hors de la validité de calibration de son instrument (ISO 17025), depuis le registre et le LIMS tels qu'ils exportent.",
+      "title": "Des résultats mesurés sur un instrument hors calibration",
+      "goal": "Relier chaque résultat du LIMS au certificat de calibration de son instrument, et être prévenu quand il a été mesuré après la fin de validité, même quand le registre change après coup.",
       "lede": "Un registre de métrologie et un LIMS, deux exports CSV: 6 instruments, 144 résultats.\n- une Entity joint le registre à chaque résultat;\n- un Process compare deux colonnes de la ligne jointe: measured_at après valid_until;\n- le registre change: les résultats déjà là sont jugés à nouveau.",
       "tags": {
         "domain": [
@@ -752,7 +752,7 @@
     },
     {
       "slug": "mail-relay-password-changed",
-      "title": "Le relais SMTP a changé de mot de passe: trois alertes de chambre froide ne partent pas, l'astreinte le sait",
+      "title": "Les alertes de chambre froide bloquées par un mot de passe SMTP changé",
       "goal": "Envoyer par mail les sorties de plage d'une chambre froide, savoir le jour même qu'un mail n'est pas parti et pourquoi, puis le renvoyer sans doublon.",
       "lede": "Une centrale pharmaceutique stocke ses médicaments entre 2 et 8 °C dans deux chambres froides. L'enregistreur exporte ses relevés une fois par jour; une sortie de plage part par mail au responsable qualité, par le relais SMTP de l'entreprise.\n- lundi, l'alerte de CF-2 part;\n- dans la nuit, l'informatique change le mot de passe du compte d'envoi, le hub garde l'ancien;\n- mardi, le compresseur de CF-1 s'arrête: trois mails abandonnés, l'astreinte prévenue par un webhook, la colonne ERROR dit quoi corriger.",
       "tags": {
@@ -772,8 +772,8 @@
     },
     {
       "slug": "marketplace-order-items",
-      "title": "Une ligne par article à préparer avec modèle couleur et taille",
-      "goal": "Sortir de l'export d'une marketplace une ligne par article, pour préparer le stock.",
+      "title": "Tous les articles d'une commande serrés dans une cellule",
+      "goal": "Découper l'export d'une marketplace en une ligne par article à préparer, avec modèle, couleur et taille, et refuser un export dont une colonne a changé de nom.",
       "lede": "L'export de la marketplace donne une ligne par commande. Les articles sont serrés dans une cellule, et chaque référence serre modèle, couleur et taille.\n- une ligne par article, même quand deux sont identiques;\n- la référence coupée en modèle, couleur et taille;\n- un fichier dont la colonne a changé de nom est refusé.",
       "tags": {
         "domain": [
@@ -792,7 +792,7 @@
     {
       "slug": "one-app-per-metier",
       "title": "Un technicien ne voit que l'app de la maintenance",
-      "goal": "Donner à chaque métier son app sur le même hub, sans qu'un technicien puisse lire les données des achats.",
+      "goal": "Donner à la maintenance et aux achats chacun son app sur le même hub, pour qu'un technicien lise ses ordres de travail sans ouvrir une facture fournisseur ni solder une décision des achats.",
       "lede": "La maintenance et les achats partagent un ERP où chacun voit tout. Sur le même hub, lumnik compose une app par métier.\n- le technicien ne tient que le rôle Keycloak scope:maintenance\n- il voit son app, ses ordres et ses décisions\n- chaque porte des achats lui répond par un refus",
       "tags": {
         "domain": [
@@ -814,7 +814,7 @@
     },
     {
       "slug": "oracle-blob-drawings",
-      "title": "Oracle et BLOB: le plan refusé, la vue qui le pèse, le PDF perdu la nuit",
+      "title": "Deux plans diffusés qui perdent leur PDF pendant la nuit",
       "goal": "Lire le registre des plans d'un PLM sur Oracle sans lire les plans eux-mêmes, et savoir le matin même qu'un plan diffusé a perdu son fichier.",
       "lede": "Un bureau d'études garde ses plans dans un PLM sur Oracle: une ligne par révision, le PDF dans un BLOB.\n- le hub ne lit pas un BLOB: la table est refusée telle quelle, colonne nommée;\n- l'administrateur ajoute une vue sans le plan, sa taille en octets à la place;\n- cette nuit, la migration de l'archivage recopie deux révisions diffusées sans leur PDF: deux décisions.",
       "tags": {
@@ -835,7 +835,7 @@
     },
     {
       "slug": "orders-where-they-sleep",
-      "title": "Audit des durées de statut des commandes",
+      "title": "L'ERP ne garde que le statut du jour des commandes",
       "goal": "Savoir combien de temps chaque commande reste dans chaque statut, et lesquelles ne bougent plus.",
       "lede": "L'ERP ne garde que le statut du jour: hier En cours, aujourd'hui Livrée. Rien sur l'attente entre les deux. L'ERP ne peut pas être modifié.\n- un Workflow suit chaque commande par sa clé\n- chaque changement de statut entre dans un journal, daté\n- une commande immobile trop longtemps alerte\n- le journal dit combien de temps chaque commande est restée dans chaque état.",
       "tags": {
@@ -854,8 +854,8 @@
     },
     {
       "slug": "progress-openedge-customers",
-      "title": "Progress OpenEdge: la commande de 1999 qui ne doit pas devenir 2099",
-      "goal": "Lire les fichiers EXPORT d'un ERP Progress, années sur deux chiffres comprises, et être prévenu quand un client dormant est réactivé.",
+      "title": "OpenEdge: la commande de 1999 qui ne doit pas devenir 2099",
+      "goal": "Lire l'export clients d'un ERP OpenEdge avec chaque année dans son siècle, et être prévenu quand un client dormant est réactivé, pour vérifier son crédit avant la première livraison.",
       "lede": "Un ERP Progress OpenEdge exporte sa table Customer avec l'EXPORT d'ABL: un fichier .d, 40 clients.\n- des espaces, des chaînes entre guillemets, ? pour l'inconnu, yes/no, ISO-8859-1;\n- MM/DD/YY: une année sur deux chiffres doit dire son siècle, sinon validate refuse;\n- la campagne de relance: deux clients sans commande depuis 1999 et 2003, deux décisions.",
       "tags": {
         "domain": [
@@ -874,8 +874,8 @@
     },
     {
       "slug": "purchasing-ask-abstains",
-      "title": "Ask refuse une marge sans coût et un meilleur fournisseur sans critère",
-      "goal": "Laisser un directeur achats interroger ses commandes avec ses mots, sans qu'on lui invente un chiffre que les données ne portent pas.",
+      "title": "Une marge demandée sur des commandes sans prix de revient",
+      "goal": "Laisser un directeur achats interroger un an de commandes fournisseurs, et recevoir chaque chiffre avec son SQL, ou un refus quand aucune colonne ne porte la réponse.",
       "lede": "Un directeur achats pose ses questions à un an de commandes fournisseurs. Trois questions reçoivent leur chiffre, avec le SQL qui l'a produit.\n- une marge sans prix de revient: refusée\n- un meilleur fournisseur sans critère: refusé\n- des retards sans date de livraison: refusés",
       "tags": {
         "domain": [
@@ -893,7 +893,7 @@
     },
     {
       "slug": "purchasing-follow-up",
-      "title": "Et SUP-004? Ask répond à la question de suite comme à la question entière",
+      "title": "Une question de suite comprise avec la précédente",
       "goal": "Laisser un acheteur enchaîner ses questions sans les retaper, en lui montrant chaque fois la question comprise.",
       "lede": "Un acheteur demande combien de commandes ont été annulées, puis «Et pour le fournisseur SUP-003?», puis «Et SUP-004?». Il ne retape pas la question.\n- Ask lit chaque suite avec la question d'avant\n- il répond à la question complète et l'affiche\n- une suite que les données ne portent pas est refusée",
       "tags": {
@@ -953,7 +953,7 @@
     },
     {
       "slug": "pwa-search",
-      "title": "Chercher dans 40 000 articles avec les facettes dans la PWA",
+      "title": "Une pompe à retrouver parmi 40 000 articles",
       "goal": "Trouver un article par ses mots ou le début de sa référence, et affiner par catégorie, dans la PWA.",
       "lede": "Deux exports CSV, une entité, un SearchIndex, une app réduite à la recherche.\n- «Pompes»: 7 407 articles, dont 6 761 actifs\n- «Pompe Badu»: 122 inactifs\n- le hub indexe les seules colonnes déclarées",
       "tags": {
@@ -974,8 +974,8 @@
     },
     {
       "slug": "quantity-script-one-in-500",
-      "title": "Une valeur imprévue sur 500 en lettre morte et les 499 autres écrites",
-      "goal": "Qu'une seule ligne imprévue n'arrête pas les 499 autres, et qu'elle reste visible.",
+      "title": "Une quantité «env. 4 kg» bloque un bon de réception de 500 lignes",
+      "goal": "Découper chaque quantité saisie en nombre et unité avec un script Kotlin, écrire les 499 lignes lisibles et mettre la ligne L0317 de côté avec sa valeur.",
       "lede": "Un bon de réception saisi à la main: 500 lignes, des quantités « 12,5 kg » ou « 3 pce ». Un script Kotlin de l'opérateur les lit. La ligne 317 dit « env. 4 kg ».\n- version 1: le run échoue et n'écrit rien;\n- version 2: la valeur déclarée illisible;\n- 499 lignes écrites, la 317 en lettre morte.",
       "tags": {
         "domain": [
@@ -993,8 +993,8 @@
     },
     {
       "slug": "rest-cursor-in-header",
-      "title": "Le transporteur attend son curseur dans un en-tête sinon le run échoue",
-      "goal": "Lire tous les événements de suivi d'un transporteur dont l'API attend le curseur de page dans un en-tête de requête.",
+      "title": "L'API du transporteur n'accepte le curseur de page que dans un en-tête",
+      "goal": "Lire tous les événements de suivi d'un transporteur pour connaître le dernier statut de chaque colis, quand son API attend le curseur de page dans un en-tête.",
       "lede": "L'API de suivi d'un transporteur pagine par curseur. Elle le lit dans l'en-tête X-Next-Cursor, et nulle part ailleurs:\n- envoyé en paramètre d'URL, le défaut, le curseur n'arrive pas: l'API renvoie la première page et dit qu'il y en a d'autres; le run échoue et dit pourquoi;\n- une ligne, cursor_binding: header, et les 1200 événements passent, 12 pages.",
       "tags": {
         "domain": [
@@ -1012,7 +1012,7 @@
     },
     {
       "slug": "rest-drupal-jsonapi",
-      "title": "Drupal: tout le site lu par JSON:API en une ligne",
+      "title": "Drupal: les articles paginés par JSON:API",
       "goal": "Lire tous les articles d'un site Drupal par son module JSON:API, sans écrire la pagination.",
       "lede": "Drupal 11 expose ses contenus par JSON:API, un module de son cœur. La page suivante est dans links.next, que Drupal écrit comme un objet {\"href\": …}. lumnik a un preset pour ce standard:\n- pagination: { kind: json-api }, et les 5 pages sont suivies;\n- 45 articles lus, 45 écrits dans le hub.",
       "tags": {
@@ -1031,8 +1031,8 @@
     },
     {
       "slug": "rest-fastapi-deliveries",
-      "title": "FastAPI: les 130 livraisons lues en une ligne",
-      "goal": "Lire toutes les livraisons d'un service FastAPI maison par son API, sans demander d'export à son équipe.",
+      "title": "FastAPI: les livraisons d'un service maison sans export",
+      "goal": "Lire toutes les livraisons d'un service FastAPI maison par son API, sans demander d'export à son équipe, et savoir pourquoi une page de 500 lignes est refusée.",
       "lede": "Un vrai service FastAPI avec fastapi-pagination 0.16.1 et 130 livraisons fictives.\n- au calme: les 130 en trois pages;\n- 500 par page: la bibliothèque refuse, rien n'est ingéré;\n- un size écrit dans le path: refusé dès lm apply (#1789).",
       "tags": {
         "domain": [
@@ -1050,7 +1050,7 @@
     {
       "slug": "rest-incremental-orders",
       "title": "Une commande modifiée pendant la lecture n'est pas perdue",
-      "goal": "Ne lire chaque nuit que ce qui a changé, sans perdre ce qui change pendant la lecture.",
+      "goal": "Ne lire chaque nuit que les commandes modifiées, sans perdre celles qui changent pendant la lecture.",
       "lede": "Une API de commandes sait répondre à « ce qui a changé depuis telle date ». lumnik la lit en entier une fois, puis chaque nuit seulement ce qui a bougé.\n- la marque reculée d'une marge;\n- une commande modifiée pendant un run arrive au run suivant;\n- chaque date rangée comme une date.",
       "tags": {
         "domain": [
@@ -1066,8 +1066,8 @@
     },
     {
       "slug": "rest-legacy-session-login",
-      "title": "Une vieille app derrière un login: lumnik se connecte comme un utilisateur",
-      "goal": "Lire les vétérinaires de Spring PetClinic, protégé par le login du serveur Tomcat, sans toucher à l'app.",
+      "title": "Une application legacy derrière le formulaire de login de Tomcat",
+      "goal": "Lire les vétérinaires de Spring PetClinic avec un compte utilisateur, à travers le formulaire de login de Tomcat, sans toucher à l'app et même après son redémarrage.",
       "lede": "Spring PetClinic d'avant Spring Boot, derrière le login du serveur (j_security_check). Pas de jeton d'API: un formulaire et un cookie de session.\n- sans auth, Tomcat rend sa page de login en 200: le hub la refuse, ce n'est pas du JSON;\n- auth: { kind: session }: le hub se connecte et garde la session, 6 vétérinaires;\n- l'app redémarre, la session est perdue: le hub se reconnecte seul, une fois.",
       "tags": {
         "domain": [
@@ -1084,8 +1084,8 @@
     },
     {
       "slug": "rest-legacy-spring-mvc",
-      "title": "Une vieille app Spring MVC rend toute la liste d'un coup et une ligne la lit",
-      "goal": "Lire les vétérinaires de Spring PetClinic, une app Spring MVC d'avant Spring Boot, sans toucher à son code.",
+      "title": "Une application Spring MVC legacy qui rend toute sa liste d'un coup",
+      "goal": "Lire en une requête les vétérinaires de Spring PetClinic, une application Spring MVC legacy, et savoir pourquoi l'adresse qui rend de l'XML est refusée.",
       "lede": "Spring PetClinic tel qu'il était avant Spring Boot: un WAR sur Tomcat. Son contrôleur rend toute la liste d'un coup, sans pages.\n- /vets.xml: le hub lit du JSON, il refuse l'XML par son nom au lieu de lire 0 ligne;\n- lm source rest probe sur /vets.json trouve la liste et propose kind: none;\n- pagination: { kind: none }: 6 vétérinaires en une requête.",
       "tags": {
         "domain": [
@@ -1102,7 +1102,7 @@
     },
     {
       "slug": "rest-link-header-tickets",
-      "title": "Un ticket fermé dans Gitea reste ouvert dans le hub si on ne lit que les ouverts",
+      "title": "Gitea: un ticket fermé reste ouvert si on ne lit que les ouverts",
       "goal": "Suivre les tickets ouverts d'une forge Gitea, paginée par l'en-tête Link, sans garder ouvert un ticket que le support a fermé.",
       "lede": "Le support suit ses tickets clients dans Gitea. Son API pagine comme GitHub: la page suivante est dans l'en-tête Link. lumnik suit l'en-tête, page après page:\n- lire state=open laisse ouverts, dans le hub, les tickets fermés depuis: ils sortent du filtre de l'API;\n- lire tous les états, par ce qui a changé depuis le dernier run, garde le hub juste: 57 ouverts, comme Gitea.",
       "tags": {
@@ -1121,8 +1121,8 @@
     },
     {
       "slug": "rest-micronaut-parts",
-      "title": "Micronaut: les pièces du magasin lues en trois requêtes",
-      "goal": "Lire toutes les pièces détachées d'un service Micronaut par son API, même quand le magasin y travaille.",
+      "title": "Micronaut: une pièce supprimée pendant la lecture décale les pages",
+      "goal": "Lire toutes les pièces détachées d'un service Micronaut par son API, sans en perdre une quand le magasin en supprime pendant la lecture.",
       "lede": "Un vrai Micronaut 4.7 et 130 pièces fictives, rendues par la Page du repository.\n- cinquante par page: les 130 en trois requêtes, le total vérifié;\n- une pièce supprimée pendant la lecture: le total bouge, la liste est relue, rien n'est perdu.",
       "tags": {
         "domain": [
@@ -1139,8 +1139,8 @@
     },
     {
       "slug": "rest-nestjs-tickets",
-      "title": "NestJS: le ticket supprimé pendant la lecture ne fait plus perdre son voisin",
-      "goal": "Lire tous les tickets d'un service NestJS par son API, même quand l'équipe support y travaille.",
+      "title": "NestJS: un ticket supprimé pendant la lecture décale les pages",
+      "goal": "Lire tous les tickets d'un service NestJS par son API, ou les seuls ouverts, sans en perdre un quand le support en supprime pendant la lecture.",
       "lede": "Un service NestJS sur nestjs-paginate et 130 tickets, dont 97 ouverts.\n- tout: les 130, en suivant le lien next;\n- les ouverts seuls: le filtre suit chaque lien, 97 lus;\n- un ticket supprimé pendant la lecture: le total bouge, la liste est relue.",
       "tags": {
         "domain": [
@@ -1157,8 +1157,8 @@
     },
     {
       "slug": "rest-netbox-inventory",
-      "title": "NetBox: tout l'inventaire réseau lu avec un jeton en lecture",
-      "goal": "Lire chaque nuit tous les équipements d'un NetBox, la référence de l'équipe réseau, avec un jeton en lecture seule.",
+      "title": "NetBox: l'inventaire réseau lu avec un jeton en lecture seule",
+      "goal": "Lire chaque nuit tous les équipements d'un NetBox, la référence de l'équipe réseau, avec un jeton en lecture seule, pour compter les équipements hors ligne par site.",
       "lede": "NetBox est bâti sur Django REST Framework: count, next et results dans chaque réponse, et un jeton présenté par le mot Token, pas Bearer. lumnik nomme les deux:\n- pagination: { kind: drf-limit-offset }: 120 équipements en 3 requêtes;\n- auth: { kind: bearer, scheme: Token }: le mot que NetBox attend;\n- la nuit suivante, les 6 switchs passés hors ligne sont dans le hub.",
       "tags": {
         "domain": [
@@ -1176,8 +1176,8 @@
     },
     {
       "slug": "rest-paperless-drf",
-      "title": "Paperless-ngx: la liste qui bouge pendant la lecture est relue",
-      "goal": "Lire tous les correspondants d'une archive Paperless-ngx par son API, même quand quelqu'un y travaille.",
+      "title": "Paperless-ngx: des correspondants ajoutés et supprimés pendant la lecture",
+      "goal": "Lire tous les correspondants d'une archive Paperless-ngx par son API, sans en perdre un quand la liste change pendant la lecture, et être prévenu quand elle change sans arrêt.",
       "lede": "Un vrai Paperless-ngx 2.13 et 100 correspondants, lus dix par page.\n- au calme: les 100, le count de chaque page vérifié;\n- un correspondant supprimé pendant la lecture: les pages se décalent, la liste est relue;\n- de nouveaux correspondants sans arrêt: le run refuse de se dire complet.",
       "tags": {
         "domain": [
@@ -1194,8 +1194,8 @@
     },
     {
       "slug": "rest-partner-loses-rows",
-      "title": "L'API du partenaire perd une page et le run ne ment pas",
-      "goal": "Qu'un run ne se dise jamais complet quand la source a servi moins de lignes qu'elle n'en annonce.",
+      "title": "L'API du partenaire perd une page sans signaler d'erreur",
+      "goal": "Comparer chaque nuit les fiches partenaires lues au total annoncé par l'API, et refuser une lecture incomplète.",
       "lede": "Un partenaire publie 2 400 lignes et leur nombre. Une nuit, une page de 100 disparaît, le nombre reste juste.\n- lu et déclaré comparés à chaque run;\n- la nuit en défaut finit Failed, avec les deux chiffres;\n- la nuit suivante repasse, sans geste sur la table.",
       "tags": {
         "domain": [
@@ -1212,8 +1212,8 @@
     },
     {
       "slug": "rest-prestashop",
-      "title": "PrestaShop: le catalogue XML lu en une ligne",
-      "goal": "Lire tous les produits d'une boutique PrestaShop 8 par son Webservice, en XML, tel qu'il répond.",
+      "title": "PrestaShop: le catalogue servi en XML par le Webservice",
+      "goal": "Lire tous les produits d'une boutique PrestaShop 8, avec leur référence, leur nom et leur prix, depuis son Webservice XML qui pagine par limit=offset,nombre.",
       "lede": "Un vrai PrestaShop 8.2.8 et son catalogue de démo. Son Webservice répond en XML.\n- sans le dire, le hub refuse l'XML et dit quoi ajouter;\n- response_format: xml: le hub lit l'XML; PrestaShop ignore offset=, la page répétée est refusée;\n- pagination: { kind: prestashop }: les 19 produits, leur nom lu dans l'XML.",
       "tags": {
         "domain": [
@@ -1231,7 +1231,7 @@
     {
       "slug": "rest-sequelize-orders",
       "title": "Sequelize: le service annonce 260 commandes pour 130",
-      "goal": "Lire toutes les commandes d'un service Node par son API, sans croire un total faux.",
+      "goal": "Lire les commandes d'un service Node page par page en vérifiant le total annoncé, et refuser la lecture quand il annonce plus de commandes qu'il n'en rend.",
       "lede": "Un service Express et Sequelize, 130 commandes et leurs lignes, lues par offset et limit.\n- au calme: les 130, le count de chaque page vérifié;\n- avec les lignes, sans distinct: le count dit 260, le run refuse;\n- avec distinct: true: 130 sur 130;\n- une commande supprimée pendant la lecture: la liste est relue.",
       "tags": {
         "domain": [
@@ -1248,7 +1248,7 @@
     },
     {
       "slug": "rest-spring-behind-proxy",
-      "title": "Une appli Spring derrière un proxy garde chaque produit sous son SKU",
+      "title": "Spring Data REST: des liens qui pointent vers l'hôte interne",
       "goal": "Lire tout le stock d'une application Spring Data REST maison, page par page, et garder chaque produit sous son SKU, quel que soit l'hôte par lequel on l'atteint.",
       "lede": "Un ancien prestataire a laissé une application de stock en Spring Data REST, derrière nginx. lumnik la lit avec le preset spring-hateoas:\n- ses liens pointent vers son nom interne: le run refuse de les suivre et le dit;\n- une propriété côté application, et les 63 pages passent;\n- chaque produit est rangé sous son SKU, lu dans son lien: la nuit suivante, aucune copie.",
       "tags": {
@@ -1267,7 +1267,7 @@
     },
     {
       "slug": "rest-spring-page",
-      "title": "Spring change le JSON de ses pages et une ligne suit",
+      "title": "Spring Boot: le JSON des pages change de forme",
       "goal": "Lire tout le catalogue d'une app Spring Boot, page après page, avant et après que l'équipe change la sérialisation de ses Page.",
       "lede": "Un contrôleur Spring renvoie le Page du repository. lumnik le lit avec un preset:\n- pagination: { kind: spring-page }: 130 articles en 3 requêtes;\n- l'équipe suit l'avertissement de Spring et passe en VIA_DTO: le total passe sous page, le même manifeste lit tout, avec une page vide de trop;\n- une ligne, spring-paged-model: de nouveau 3 requêtes.",
       "tags": {
@@ -1285,8 +1285,8 @@
     },
     {
       "slug": "rest-spring-slice",
-      "title": "Spring Slice: un article supprimé pendant la lecture n'est sur aucune page",
-      "goal": "Lire tous les articles d'un catalogue Spring Boot par son API, et savoir quand un article peut manquer.",
+      "title": "Spring Slice: un article supprimé pendant la lecture en fait sauter un autre",
+      "goal": "Lire tous les articles d'une API Spring Boot qui rend une Slice, savoir qu'une suppression pendant la lecture en fait perdre un sans signal, et qu'une Page relit la liste.",
       "lede": "Un contrôleur Spring Boot qui rend la Slice du repository, et 130 articles.\n- au calme: les 130, arrêt sur $.last;\n- 5000 par page demandés: Spring en sert 2000, la lecture reste complète;\n- un article supprimé pendant la lecture: la Slice n'a pas de total, un article est perdu sans signal;\n- la même suppression sur la Page: le total bouge, la liste est relue.",
       "tags": {
         "domain": [
@@ -1303,8 +1303,8 @@
     },
     {
       "slug": "rest-stripe-customers",
-      "title": "Stripe: tous les clients lus sans écrire la pagination",
-      "goal": "Lire tous les clients d'un compte Stripe, page après page, sans écrire la pagination.",
+      "title": "Stripe: les clients paginés par curseur",
+      "goal": "Lire tous les clients d'un compte Stripe page par page avec starting_after, et garder une ligne par client sous son id Stripe, même quand de nouveaux arrivent.",
       "lede": "Stripe pagine par curseur: chaque page dit has_more, la suivante se demande avec starting_after, l'id du dernier client lu. lumnik a un preset du même nom:\n- pagination: { kind: stripe }: 25 clients en 3 requêtes;\n- le lendemain, 5 nouveaux clients: 30 lignes, une par client.",
       "tags": {
         "domain": [
@@ -1322,8 +1322,8 @@
     },
     {
       "slug": "rest-wordpress-total-header",
-      "title": "WordPress annonce 46 articles et en sert 31: le run échoue",
-      "goal": "Lire tous les articles d'un site WordPress, et refuser une lecture partielle quand un plugin en cache sans changer le compte.",
+      "title": "WordPress annonce 46 articles et en sert 31",
+      "goal": "Lire tous les articles d'un site WordPress, et faire échouer le run quand un plugin en masque sans changer le compte X-WP-Total.",
       "lede": "L'API REST de WordPress pagine par l'en-tête Link et publie son compte dans X-WP-Total. lumnik suit l'un et vérifie l'autre:\n- 46 articles annoncés, 46 lus: le run passe;\n- un plugin « réservé aux membres » cache 15 articles, le compte reste 46: le run échoue et donne les deux chiffres;\n- lu en tant que membre, avec un mot de passe d'application, les 46 articles reviennent.",
       "tags": {
         "domain": [
@@ -1341,8 +1341,8 @@
     },
     {
       "slug": "saas-oauth2-orders",
-      "title": "Le SaaS derrière OAuth2 lu sans perdre une page",
-      "goal": "Lire un SaaS protégé par OAuth2 sans perdre de page, et dire pourquoi quand l'accès est refusé.",
+      "title": "OAuth2: un jeton de 30 secondes pour une lecture de 40",
+      "goal": "Lire les 200 commandes d'un SaaS protégé par OAuth2 sans perdre de page quand le jeton expire ou que les clés tournent, et voir invalid_client quand le secret est révoqué.",
       "lede": "Une partie des commandes arrive par un SaaS récent. Il donne un identifiant client et un secret, et veut un jeton de courte durée.\n- un jeton renouvelé avant qu'il expire;\n- une rotation de clés absorbée en plein run;\n- un secret révoqué nommé, jamais montré.",
       "tags": {
         "domain": [
@@ -1359,8 +1359,8 @@
     },
     {
       "slug": "sap-idoc-orders",
-      "title": "Chaque ligne d'un IDoc SAP ORDERS05 retrouve sa commande client",
-      "goal": "Lire les IDocs de commande d'un client SAP, une ligne par ligne de commande, sans middleware.",
+      "title": "SAP ORDERS05: un IDoc où l'article ne porte pas sa commande",
+      "goal": "Lire chaque ligne de commande d'un IDoc SAP avec son article, sa quantité et son numéro de commande, sans reprendre celui de l'IDoc précédent.",
       "lede": "Le SAP d'un client écrit ses commandes en IDocs ORDERS05, dans un fichier à plat. La commande est en tête de l'IDoc, l'article plus bas.\n- seize enregistrements découpés à leur position;\n- chaque ligne avec sa commande, sa quantité et son unité;\n- un IDoc sans commande ne prend pas celle du précédent.",
       "tags": {
         "domain": [
@@ -1380,7 +1380,7 @@
     {
       "slug": "sap-odata-v2-sales-orders",
       "title": "SAP OData v2: la commande de 48 000 EUR restée non traitée",
-      "goal": "Lire les commandes SAP par le Gateway OData v2, puis être prévenu quand une grosse commande reste non traitée.",
+      "goal": "Lire les commandes SAP par le Gateway OData v2, puis être prévenu quand une commande de 10 000 EUR ou plus reste non traitée.",
       "lede": "L'API Sales Order de SAP, API_SALES_ORDER_SRV, servie comme un Gateway: 130 commandes d'octobre.\n- odata-v2: trois pages $skiptoken, le total __count vérifié;\n- from_odata_date: les 130 dates /Date()/ deviennent des dates;\n- 48 000 EUR en statut A: une décision, puis une alerte de dormance.",
       "tags": {
         "domain": [
@@ -1400,8 +1400,8 @@
     },
     {
       "slug": "senaite-culture-plates",
-      "title": "SENAITE: la boîte de Fleming qui attend sa vérification",
-      "goal": "Être prévenu quand un résultat du LIMS SENAITE dépasse sa limite, puis quand il reste sans vérification.",
+      "title": "SENAITE: une boîte de culture hors limite qui attend sa vérification",
+      "goal": "Être prévenu quand une boîte de culture dépasse 100 colonies dans le LIMS SENAITE, puis quand son résultat reste sans vérification.",
       "lede": "Un vrai SENAITE 2.6, cinq équipes de recherche, 120 boîtes de culture lues par son API JSON.\n- body-link: les 120 analyses en cinq pages, le total vérifié;\n- 2400 colonies sur la boîte de Fleming: une décision, clé analysisrequest-24;\n- non vérifiée: la boîte devient dormante, une seconde alerte.",
       "tags": {
         "domain": [
@@ -1421,8 +1421,8 @@
     },
     {
       "slug": "sftp-carrier-drop",
-      "title": "Le dépôt SFTP du transporteur lu chaque nuit sans rien croire sur parole",
-      "goal": "Lire chaque nuit le fichier du transporteur, le ranger, et refuser un serveur dont la clé a changé.",
+      "title": "Un fichier transporteur déposé chaque nuit sous le même nom",
+      "goal": "Lire chaque nuit le fichier du transporteur, l'archiver sous un nom horodaté, et refuser un serveur dont la clé a changé.",
       "lede": "Un transporteur dépose chaque nuit livraisons.csv sur son SFTP, toujours sous le même nom.\n- chaque nuit lue, puis archivée sous son nom et son heure;\n- un fichier non archivé dit sur le run;\n- une clé de serveur changée refusée jusqu'à confirmation.",
       "tags": {
         "domain": [
@@ -1439,7 +1439,7 @@
     },
     {
       "slug": "shipping-rule-changed",
-      "title": "Chaque commande dit quelle version de la règle l'a calculée",
+      "title": "Deux commandes au même montant n'ont pas les mêmes frais de port",
       "goal": "Savoir, des mois plus tard, quelle règle de port a calculé chaque commande.",
       "lede": "Le port est calculé par un script Kotlin que fournit l'opérateur du hub. En décembre, il est offert dès 150,00. Au 1er janvier, dès 200,00. L'opérateur remplace le script.\n- deux commandes de 172,50: port offert en décembre, payé en janvier;\n- chaque run nomme la version de la règle par son empreinte;\n- chaque commande nomme son run: on remonte de la commande à la règle avec lm.",
       "tags": {
@@ -1458,8 +1458,8 @@
     },
     {
       "slug": "siebel-soap-desk",
-      "title": "Le guichet SOAP du CRM lu service par service sans rien lire deux fois",
-      "goal": "Lire les services SOAP d'un vieux CRM, chacun comme il se lit, sans le marteler.",
+      "title": "SOAP: un CRM legacy dont un service pagine et l'autre non",
+      "goal": "Lire chaque nuit deux services SOAP d'un CRM legacy, l'un en un appel, l'autre page par page, et voir sur le run le Fault d'un mot de passe refusé.",
       "lede": "Un CRM des années 2000 expose ses données par des services SOAP sur mesure. Le mot de passe voyage dans l'enveloppe.\n- un service lu en un appel, un autre page par page;\n- le Fault du CRM sur le run, sans nouvel essai;\n- la nuit suivante mise à jour sur les clés.",
       "tags": {
         "domain": [
@@ -1477,7 +1477,7 @@
     {
       "slug": "siem-bank-account-change",
       "title": "Un RIB changé que le SIEM ne voit pas",
-      "goal": "Que le SIEM voie un changement d'IBAN fournisseur, sans que l'IBAN apparaisse dans l'inbox.",
+      "goal": "Alerter le SIEM d'un changement d'IBAN fournisseur, sans que l'IBAN apparaisse dans l'inbox.",
       "lede": "L'ERP exporte ses fournisseurs en CSV. Il n'émet aucun événement. Un changement de RIB passe inaperçu jusqu'au prochain paiement.\n- lumnik relit l'export chaque minute\n- une décision signée part au SIEM par webhook\n- le SIEM alerte sur le compte qui change\n- l'inbox ne montre jamais le compte.",
       "tags": {
         "domain": [
@@ -1495,8 +1495,8 @@
     },
     {
       "slug": "struts-displaytag-export",
-      "title": "Struts 1 sans API: l'export CSV de l'écran, lu tel qu'il sort",
-      "goal": "Lire une application Struts 1 qui n'a pour toute sortie que l'export CSV de son écran, et être prévenu d'un retour client qui attend une pièce depuis plus de 30 jours.",
+      "title": "Struts 1 sans API: les retours SAV qui attendent une pièce",
+      "goal": "Lire les retours clients par l'export CSV de l'écran, seule sortie de l'application, et être prévenu quand un retour attend une pièce depuis plus de 30 jours.",
       "lede": "Un fabricant de pompes gère ses retours clients dans un intranet Struts 1 écrit en 2007: Tomcat, JSP, DisplayTag. Aucune API; l'écran a un lien d'export CSV, et une tâche planifiée le récupère chaque nuit.\n- pas d'en-tête, ISO-8859-1, un guillemet échappé par une barre oblique inverse;\n- des montants groupés par une espace insécable: « 2 310,00 »;\n- le lendemain, les retours clos sortent de la table, sept retours en attente de pièce lèvent une décision.",
       "tags": {
         "domain": [
@@ -1516,8 +1516,8 @@
     },
     {
       "slug": "supplier-master-edi",
-      "title": "Le fichier fournisseurs part à l'EDI en ASCII avec un identifiant stable",
-      "goal": "Envoyer à l'EDI des fournisseurs au format qu'il impose, avec un identifiant qui ne change pas.",
+      "title": "Des fournisseurs sans identifiant valable pour l'EDI",
+      "goal": "Mettre les noms des fournisseurs actifs au format de l'EDI, vider les identifiants N/A ou 0, et dériver du code un identifiant laissé vide dans l'export, le même chaque nuit.",
       "lede": "La plateforme EDI des achats impose des noms en ASCII, en majuscules, de 35 caractères au plus, et un identifiant par fournisseur. L'export de l'ERP a des accents, de longues raisons sociales, des inactifs, et des identifiants N/A, 0 ou vides.\n- les noms mis au format de l'EDI;\n- N/A et 0 vidés et comptés, un identifiant manquant dérivé du code;\n- le lendemain, les mêmes identifiants.",
       "tags": {
         "domain": [
@@ -1535,8 +1535,8 @@
     },
     {
       "slug": "two-systems-one-member",
-      "title": "Deux systèmes et un adhérent chacun fait foi pour ses champs",
-      "goal": "Montrer chaque champ d'un adhérent depuis le système qui fait foi pour lui, sans cacher un désaccord.",
+      "title": "Le portail a la bonne adresse et la gestion la bonne formule",
+      "goal": "Prendre l'adresse d'un adhérent dans le portail et sa formule dans la gestion, et garder la liste des désaccords jusqu'à ce que la source les règle.",
       "lede": "Une mutuelle tient ses adhérents dans sa gestion des contrats et dans son portail. Avec un seul ordre de sources, l'un des deux a toujours tort.\n- l'adresse vient du portail, la formule de la gestion;\n- chaque désaccord reste listé;\n- il sort de la liste quand la source le règle.",
       "tags": {
         "domain": [
@@ -1554,8 +1554,8 @@
     },
     {
       "slug": "two-tenants-one-hub",
-      "title": "Deux clients écrivent dans la même table et chacun ne lit que ses lignes",
-      "goal": "Héberger deux clients sur un même hub sans qu'aucun ne puisse lire, compter ou ouvrir les données de l'autre.",
+      "title": "Deux clients dans la même table",
+      "goal": "Charger les commandes de deux clients dans la même table, pour que chacun ne lise et ne compte que les siennes.",
       "lede": "Deux intégrateurs de deux clients appliquent les mêmes fichiers sur le même hub: même connecteur, même entité, même table. Chacun charge ses commandes, sous les mêmes numéros.\n- chacun relit 240 ou 60 lignes, jamais celles de l'autre\n- la même question donne le même SQL et deux réponses\n- la lecture de l'autre répond 404",
       "tags": {
         "domain": [
@@ -1573,8 +1573,8 @@
     },
     {
       "slug": "wcf-soap-orders",
-      "title": "SOAP WCF et WS-Security: le mot de passe a tourné, le Fault le dit",
-      "goal": "Lire un service WCF protégé par un UsernameToken, survivre à la rotation de son mot de passe, et être prévenu d'une commande confirmée après sa date promise.",
+      "title": "WCF: les commandes confirmées après la date promise",
+      "goal": "Lire les commandes ouvertes d'un service WCF protégé par WS-Security, être prévenu de chaque commande confirmée après la date promise, et savoir quand son mot de passe a tourné.",
       "lede": "Un distributeur expose ses commandes ouvertes par un service WCF: HTTPS sous la CA de l'entreprise, un UsernameToken dans l'enveloppe.\n- la CA et le mot de passe vivent dans lm secret, jamais dans le manifeste;\n- le mot de passe tourne: en HTTP/2 le Fault se perd, en HTTP/1.1 il nomme la cause;\n- trois commandes confirmées après leur date promise, trois décisions.",
       "tags": {
         "domain": [
@@ -1594,8 +1594,8 @@
     },
     {
       "slug": "windev-hfsql-export",
-      "title": "WinDev: l'export des clients avec de vraies dates et une vraie case Actif",
-      "goal": "Lire le fichier clients qu'une application WinDev exporte, et en faire des colonnes qu'on peut interroger.",
+      "title": "WinDev: l'export clients où chaque colonne arrive en texte",
+      "goal": "Typer les dates, l'encours autorisé et la case Actif d'un export clients WinDev, pour trouver les clients actifs sans achat depuis octobre.",
       "lede": "Une application WinDev exporte ses clients avec HExportCSV. Le fichier est reconstitué d'après la documentation de PC SOFT.\n- lu tel quel: six clients, mais tout en texte, dates 20190312, Actif 0 ou 1;\n- trois transformers: les dates en date, l'encours en nombre, Actif en vrai booléen;\n- une question en SQL: les clients actifs sans achat depuis octobre.",
       "tags": {
         "domain": [
@@ -1612,8 +1612,8 @@
     },
     {
       "slug": "zombie-cmms",
-      "title": "La GMAO est éteinte et le hub rend toujours les mêmes octets",
-      "goal": "Éteindre une GMAO remplacée sans perdre ses trente ans d'ordres de travail ni les lectures de conformité.",
+      "title": "Une GMAO remplacée qui reste allumée pour quelques audits par an",
+      "goal": "Lire et archiver les trente ans d'ordres de travail d'une GMAO remplacée, puis l'éteindre et répondre encore aux audits qui citent un ordre.",
       "lede": "Une GMAO remplacée reste allumée pour quelques lectures de conformité par an. lumnik la lit une dernière fois, archive ce qu'il a lu, puis on éteint la machine.\n- 3 600 ordres lus par le planning habituel\n- une archive S3 sous une seule empreinte\n- après l'extinction: la même ligne, les mêmes octets",
       "tags": {
         "domain": [

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NetBox: tout l&#x27;inventaire réseau lu avec un jeton en lecture — lumnik</title>
-<meta name="description" content="Lire chaque nuit tous les équipements d&#x27;un NetBox, la référence de l&#x27;équipe réseau, avec un jeton en lecture seule. NetBox est bâti sur Django REST Framework: count, next et results dans chaque réponse, et un jeton présenté par le mot Token, pas Bearer. lumnik nomme les deux: Pagination: { kind: drf-limit-offset }: 120 équipements en 3 requêtes; Auth: { kind: bearer, scheme: Token }: le mot que NetBox attend; La nuit suivante, les 6 switchs passés hors ligne sont dans le hub.">
+<title>NetBox: l&#x27;inventaire réseau lu avec un jeton en lecture seule — lumnik</title>
+<meta name="description" content="Lire chaque nuit tous les équipements d&#x27;un NetBox, la référence de l&#x27;équipe réseau, avec un jeton en lecture seule, pour compter les équipements hors ligne par site. NetBox est bâti sur Django REST Framework: count, next et results dans chaque réponse, et un jeton présenté par le mot Token, pas Bearer. lumnik nomme les deux: Pagination: { kind: drf-limit-offset }: 120 équipements en 3 requêtes; Auth: { kind: bearer, scheme: Token }: le mot que NetBox attend; La nuit suivante, les 6 switchs passés hors ligne sont dans le hub.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -18,12 +18,12 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/rest-netbox-inventory/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>NetBox: tout l&#x27;inventaire réseau lu avec un jeton en lecture</h1>
-    <p class="goal"><strong>Objectif</strong> Lire chaque nuit tous les équipements d&#x27;un NetBox, la référence de l&#x27;équipe réseau, avec un jeton en lecture seule.</p>
+    <h1>NetBox: l&#x27;inventaire réseau lu avec un jeton en lecture seule</h1>
+    <p class="goal"><strong>Objectif</strong> Lire chaque nuit tous les équipements d&#x27;un NetBox, la référence de l&#x27;équipe réseau, avec un jeton en lecture seule, pour compter les équipements hors ligne par site.</p>
     <p class="lede">NetBox est bâti sur Django REST Framework: count, next et results dans chaque réponse, et un jeton présenté par le mot Token, pas Bearer. lumnik nomme les deux:</p><ul class="lede-list"><li>pagination: { kind: drf-limit-offset }: 120 équipements en 3 requêtes;</li><li>auth: { kind: bearer, scheme: Token }: le mot que NetBox attend;</li><li>la nuit suivante, les 6 switchs passés hors ligne sont dans le hub.</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Réseau</li><li class="tag">Inventaire</li><li class="tag">NetBox</li><li class="tag kind">Connector</li></ul>
   </section>
-  <div role="tablist" class="page-tabs" aria-label="NetBox: tout l&#x27;inventaire réseau lu avec un jeton en lecture">
+  <div role="tablist" class="page-tabs" aria-label="NetBox: l&#x27;inventaire réseau lu avec un jeton en lecture seule">
     <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
     <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
   </div>

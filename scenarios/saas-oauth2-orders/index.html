@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Le SaaS derrière OAuth2 lu sans perdre une page — lumnik</title>
-<meta name="description" content="Lire un SaaS protégé par OAuth2 sans perdre de page, et dire pourquoi quand l&#x27;accès est refusé. Une partie des commandes arrive par un SaaS récent. Il donne un identifiant client et un secret, et veut un jeton de courte durée. Un jeton renouvelé avant qu&#x27;il expire; Une rotation de clés absorbée en plein run; Un secret révoqué nommé, jamais montré.">
+<title>OAuth2: un jeton de 30 secondes pour une lecture de 40 — lumnik</title>
+<meta name="description" content="Lire les 200 commandes d&#x27;un SaaS protégé par OAuth2 sans perdre de page quand le jeton expire ou que les clés tournent, et voir invalid_client quand le secret est révoqué. Une partie des commandes arrive par un SaaS récent. Il donne un identifiant client et un secret, et veut un jeton de courte durée. Un jeton renouvelé avant qu&#x27;il expire; Une rotation de clés absorbée en plein run; Un secret révoqué nommé, jamais montré.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -18,12 +18,12 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/saas-oauth2-orders/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>Le SaaS derrière OAuth2 lu sans perdre une page</h1>
-    <p class="goal"><strong>Objectif</strong> Lire un SaaS protégé par OAuth2 sans perdre de page, et dire pourquoi quand l&#x27;accès est refusé.</p>
+    <h1>OAuth2: un jeton de 30 secondes pour une lecture de 40</h1>
+    <p class="goal"><strong>Objectif</strong> Lire les 200 commandes d&#x27;un SaaS protégé par OAuth2 sans perdre de page quand le jeton expire ou que les clés tournent, et voir invalid_client quand le secret est révoqué.</p>
     <p class="lede">Une partie des commandes arrive par un SaaS récent. Il donne un identifiant client et un secret, et veut un jeton de courte durée.</p><ul class="lede-list"><li>un jeton renouvelé avant qu&#x27;il expire;</li><li>une rotation de clés absorbée en plein run;</li><li>un secret révoqué nommé, jamais montré.</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Commerce</li><li class="tag">Sécurité</li><li class="tag kind">Connector</li></ul>
   </section>
-  <div role="tablist" class="page-tabs" aria-label="Le SaaS derrière OAuth2 lu sans perdre une page">
+  <div role="tablist" class="page-tabs" aria-label="OAuth2: un jeton de 30 secondes pour une lecture de 40">
     <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
     <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
   </div>

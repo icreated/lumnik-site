@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Stripe: tous les clients lus sans écrire la pagination — lumnik</title>
-<meta name="description" content="Lire tous les clients d&#x27;un compte Stripe, page après page, sans écrire la pagination. Stripe pagine par curseur: chaque page dit has_more, la suivante se demande avec starting_after, l&#x27;id du dernier client lu. lumnik a un preset du même nom: Pagination: { kind: stripe }: 25 clients en 3 requêtes; Le lendemain, 5 nouveaux clients: 30 lignes, une par client.">
+<title>Stripe: les clients paginés par curseur — lumnik</title>
+<meta name="description" content="Lire tous les clients d&#x27;un compte Stripe page par page avec starting_after, et garder une ligne par client sous son id Stripe, même quand de nouveaux arrivent. Stripe pagine par curseur: chaque page dit has_more, la suivante se demande avec starting_after, l&#x27;id du dernier client lu. lumnik a un preset du même nom: Pagination: { kind: stripe }: 25 clients en 3 requêtes; Le lendemain, 5 nouveaux clients: 30 lignes, une par client.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -18,12 +18,12 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/rest-stripe-customers/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>Stripe: tous les clients lus sans écrire la pagination</h1>
-    <p class="goal"><strong>Objectif</strong> Lire tous les clients d&#x27;un compte Stripe, page après page, sans écrire la pagination.</p>
+    <h1>Stripe: les clients paginés par curseur</h1>
+    <p class="goal"><strong>Objectif</strong> Lire tous les clients d&#x27;un compte Stripe page par page avec starting_after, et garder une ligne par client sous son id Stripe, même quand de nouveaux arrivent.</p>
     <p class="lede">Stripe pagine par curseur: chaque page dit has_more, la suivante se demande avec starting_after, l&#x27;id du dernier client lu. lumnik a un preset du même nom:</p><ul class="lede-list"><li>pagination: { kind: stripe }: 25 clients en 3 requêtes;</li><li>le lendemain, 5 nouveaux clients: 30 lignes, une par client.</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Facturation</li><li class="tag">Paiement</li><li class="tag">Stripe</li><li class="tag kind">Connector</li></ul>
   </section>
-  <div role="tablist" class="page-tabs" aria-label="Stripe: tous les clients lus sans écrire la pagination">
+  <div role="tablist" class="page-tabs" aria-label="Stripe: les clients paginés par curseur">
     <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
     <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
   </div>

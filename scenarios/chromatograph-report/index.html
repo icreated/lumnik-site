@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rapport HPLC: l&#x27;impureté hors limite, lue dans l&#x27;export de l&#x27;instrument — lumnik</title>
+<title>HPLC: une impureté hors limite dans le rapport d&#x27;injection — lumnik</title>
 <meta name="description" content="Lire les rapports d&#x27;injection qu&#x27;exporte un HPLC, unités collées et virgules décimales, et être prévenu quand une impureté dépasse sa spécification. Le logiciel d&#x27;acquisition d&#x27;un HPLC exporte un rapport par injection: UTF-16, un bloc d&#x27;en-tête, puis les pics. Csv-file le lit ligne par ligne et porte l&#x27;échantillon sur chaque pic; Regex-extract sépare chaque valeur de son unité: 0,21% devient 0.21 et %; Une impureté au-delà de 0,15 %: une décision.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
@@ -18,12 +18,12 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/chromatograph-report/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>Rapport HPLC: l&#x27;impureté hors limite, lue dans l&#x27;export de l&#x27;instrument</h1>
+    <h1>HPLC: une impureté hors limite dans le rapport d&#x27;injection</h1>
     <p class="goal"><strong>Objectif</strong> Lire les rapports d&#x27;injection qu&#x27;exporte un HPLC, unités collées et virgules décimales, et être prévenu quand une impureté dépasse sa spécification.</p>
     <p class="lede">Le logiciel d&#x27;acquisition d&#x27;un HPLC exporte un rapport par injection: UTF-16, un bloc d&#x27;en-tête, puis les pics.</p><ul class="lede-list"><li>csv-file le lit ligne par ligne et porte l&#x27;échantillon sur chaque pic;</li><li>regex-extract sépare chaque valeur de son unité: 0,21% devient 0.21 et %;</li><li>une impureté au-delà de 0,15 %: une décision.</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Laboratoire</li><li class="tag">HPLC</li><li class="tag">Pharmacie</li><li class="tag kind">Connector</li><li class="tag kind">Process</li></ul>
   </section>
-  <div role="tablist" class="page-tabs" aria-label="Rapport HPLC: l&#x27;impureté hors limite, lue dans l&#x27;export de l&#x27;instrument">
+  <div role="tablist" class="page-tabs" aria-label="HPLC: une impureté hors limite dans le rapport d&#x27;injection">
     <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
     <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
   </div>

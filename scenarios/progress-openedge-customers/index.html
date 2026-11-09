@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Progress OpenEdge: la commande de 1999 qui ne doit pas devenir 2099 — lumnik</title>
-<meta name="description" content="Lire les fichiers EXPORT d&#x27;un ERP Progress, années sur deux chiffres comprises, et être prévenu quand un client dormant est réactivé. Un ERP Progress OpenEdge exporte sa table Customer avec l&#x27;EXPORT d&#x27;ABL: un fichier .d, 40 clients. Des espaces, des chaînes entre guillemets, ? pour l&#x27;inconnu, yes/no, ISO-8859-1; MM/DD/YY: une année sur deux chiffres doit dire son siècle, sinon validate refuse; La campagne de relance: deux clients sans commande depuis 1999 et 2003, deux décisions.">
+<title>OpenEdge: la commande de 1999 qui ne doit pas devenir 2099 — lumnik</title>
+<meta name="description" content="Lire l&#x27;export clients d&#x27;un ERP OpenEdge avec chaque année dans son siècle, et être prévenu quand un client dormant est réactivé, pour vérifier son crédit avant la première livraison. Un ERP Progress OpenEdge exporte sa table Customer avec l&#x27;EXPORT d&#x27;ABL: un fichier .d, 40 clients. Des espaces, des chaînes entre guillemets, ? pour l&#x27;inconnu, yes/no, ISO-8859-1; MM/DD/YY: une année sur deux chiffres doit dire son siècle, sinon validate refuse; La campagne de relance: deux clients sans commande depuis 1999 et 2003, deux décisions.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <link rel="stylesheet" href="../assets/scenario.css">
@@ -18,12 +18,12 @@
 <span class="meta"><a href="../">Tous les scénarios</a> · <a class="lang" href="https://lumnik.io/scenarios/progress-openedge-customers/" hreflang="en" lang="en">English</a></span></header>
 <main>
   <section class="hero">
-    <h1>Progress OpenEdge: la commande de 1999 qui ne doit pas devenir 2099</h1>
-    <p class="goal"><strong>Objectif</strong> Lire les fichiers EXPORT d&#x27;un ERP Progress, années sur deux chiffres comprises, et être prévenu quand un client dormant est réactivé.</p>
+    <h1>OpenEdge: la commande de 1999 qui ne doit pas devenir 2099</h1>
+    <p class="goal"><strong>Objectif</strong> Lire l&#x27;export clients d&#x27;un ERP OpenEdge avec chaque année dans son siècle, et être prévenu quand un client dormant est réactivé, pour vérifier son crédit avant la première livraison.</p>
     <p class="lede">Un ERP Progress OpenEdge exporte sa table Customer avec l&#x27;EXPORT d&#x27;ABL: un fichier .d, 40 clients.</p><ul class="lede-list"><li>des espaces, des chaînes entre guillemets, ? pour l&#x27;inconnu, yes/no, ISO-8859-1;</li><li>MM/DD/YY: une année sur deux chiffres doit dire son siècle, sinon validate refuse;</li><li>la campagne de relance: deux clients sans commande depuis 1999 et 2003, deux décisions.</li></ul>
     <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Ventes</li><li class="tag">Progress</li><li class="tag">OpenEdge</li><li class="tag kind">Connector</li><li class="tag kind">Process</li></ul>
   </section>
-  <div role="tablist" class="page-tabs" aria-label="Progress OpenEdge: la commande de 1999 qui ne doit pas devenir 2099">
+  <div role="tablist" class="page-tabs" aria-label="OpenEdge: la commande de 1999 qui ne doit pas devenir 2099">
     <button type="button" role="tab" id="walkthrough-tab" aria-controls="walkthrough" aria-selected="true" tabindex="0">Scénario</button>
     <button type="button" role="tab" id="brief-tab" aria-controls="brief" aria-selected="false" tabindex="-1">Essentiel</button>
   </div>
@@ -35,7 +35,7 @@
       <h2 id="lab-title">La table Customer, telle qu&#x27;ABL l&#x27;exporte</h2>
       <p>FOR EACH Customer: EXPORT Customer. Un client par ligne.</p><ul class="prose-list"><li>un espace entre les champs, des chaînes entre guillemets, un guillemet intérieur doublé</li><li>? pour la valeur inconnue</li><li>dates MM/DD/YY, logiques yes/no, ISO-8859-1</li></ul>
     </div>
-    <ol class="points"><li><span class="n">1</span><div><strong>-yy 1950</strong><p>Progress lit 99 comme 1999 et 26 comme 2026: sa fenêtre de siècle par défaut commence en 1950.</p></div></li></ol>
+    <ol class="points"><li><span class="n">1</span><div><strong>-yy 1950</strong><p>OpenEdge lit 99 comme 1999 et 26 comme 2026: sa fenêtre de siècle par défaut commence en 1950.</p></div></li></ol>
     <div class="proves"><h3>Ce que prouve cette étape</h3><p>L&#x27;export de l&#x27;ERP lui-même est la source, tel qu&#x27;il sort.</p></div>
   </aside>
   <div class="views">
@@ -73,10 +73,10 @@ Fix errors above before running &#x27;lm apply -f manifests/09-customers-draft.y
   <aside class="explain">
     <div class="explain-intro">
       <h2 id="read-title">40 clients, chaque année dans son siècle</h2>
-      <p>csv-file lit le fichier .d comme un fichier délimité.</p><ul class="prose-list"><li>delimiter: un espace, les guillemets gardés comme guillemets</li><li>null_values: [&quot;?&quot;]</li><li>century-from: 1950, la fenêtre de Progress elle-même</li></ul>
+      <p>csv-file lit le fichier .d comme un fichier délimité.</p><ul class="prose-list"><li>delimiter: un espace, les guillemets gardés comme guillemets</li><li>null_values: [&quot;?&quot;]</li><li>century-from: 1950, la fenêtre d&#x27;OpenEdge elle-même</li></ul>
     </div>
     <ol class="points"><li><span class="n">1</span><div><strong>Guillemets et accents</strong><p>Atelier &quot;&quot;Le Piston&quot;&quot; devient Atelier &quot;Le Piston&quot;; Mâcon, Hébert, Séverin sont intacts.</p></div></li></ol>
-    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un export Progress se lit sans une ligne de 4GL.</p></div>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un export OpenEdge se lit sans une ligne de 4GL.</p></div>
   </aside>
   <div class="views">
     <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-manifest-tab" data-view="manifest" aria-controls="read-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button></div>
@@ -133,8 +133,8 @@ e1abff2f  scenario-progress-a  default   Completed  40  40   0        0         
 </section>
   <section class="limits"><h2>Limites</h2><ul><li>La date de la règle est écrite dans le manifeste: « un an » n&#x27;est pas calculé depuis aujourd&#x27;hui.</li><li>L&#x27;export de chaque jour est gardé: la table tient une ligne par client et par export.</li><li>Un champ tableau (EXTENT) s&#x27;exporte en plusieurs champs: chacun demande son nom de colonne.</li><li>Clients, dates et soldes synthétiques.</li></ul></section>
   </div>
-  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Ventes · Progress</p><h2>Les clients vivent dans un ERP Progress.</h2><p class="brief-lead">Son export écrit les années sur deux chiffres.</p><p class="brief-note">03/14/99</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>98 devenait 2098.</h2><ul class="brief-list tone-cyan"><li>En silence, sans erreur de cellule.</li><li>Une commande de 1999 n&#x27;avait jamais « plus d&#x27;un an ».</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>L&#x27;ERP reste tel quel.</h2><ul class="brief-list tone-green"><li>Son EXPORT, tel qu&#x27;ABL l&#x27;écrit.</li><li>Aucune conversion, aucun code 4GL.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>formats: [&quot;MM/dd/yy&quot;]
-century-from: 1950</code></pre><h2>La fenêtre que Progress utilise lui-même.</h2><ul class="brief-list tone-green"><li>Sans elle, validate refuse.</li><li>Avec elle, 99 vaut 1999.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui a été corrigé</p><h2>Une année sur deux chiffres dit son siècle (#1857).</h2><ul class="brief-list tone-green"><li>Deux clients réactivés: deux décisions.</li><li>Avant, ils lisaient 2099 et 2003.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
+  <article role="tabpanel" class="page-panel brief" id="brief" aria-labelledby="brief-tab"><section class="brief-slide"><p class="brief-kicker">Ventes · OpenEdge</p><h2>Les clients vivent dans un ERP OpenEdge.</h2><p class="brief-lead">Son export écrit les années sur deux chiffres.</p><p class="brief-note">03/14/99</p></section><section class="brief-slide"><p class="brief-kicker">Le problème</p><h2>98 devenait 2098.</h2><ul class="brief-list tone-cyan"><li>En silence, sans erreur de cellule.</li><li>Une commande de 1999 n&#x27;avait jamais « plus d&#x27;un an ».</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui n&#x27;est pas modifié</p><h2>L&#x27;ERP reste tel quel.</h2><ul class="brief-list tone-green"><li>Son EXPORT, tel qu&#x27;ABL l&#x27;écrit.</li><li>Aucune conversion, aucun code 4GL.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qu&#x27;il a fallu écrire</p><pre class="brief-code"><code>formats: [&quot;MM/dd/yy&quot;]
+century-from: 1950</code></pre><h2>La fenêtre qu&#x27;OpenEdge utilise lui-même.</h2><ul class="brief-list tone-green"><li>Sans elle, validate refuse.</li><li>Avec elle, 99 vaut 1999.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Ce qui a été corrigé</p><h2>Une année sur deux chiffres dit son siècle (#1857).</h2><ul class="brief-list tone-green"><li>Deux clients réactivés: deux décisions.</li><li>Avant, ils lisaient 2099 et 2003.</li></ul></section><section class="brief-slide"><p class="brief-kicker">Essayer</p><h2>Le scénario se rejoue en local.</h2><p>Chaque étape est publiée avec sa sortie.</p></section></article>
   <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
 </main>
 <script src="../assets/scenario.js" defer></script>
