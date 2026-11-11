@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Un hotfix non approuvé en prod k8s arrête le pipeline — lumnik</title>
+<title>Bloquer un hotfix Kubernetes non approuvé — lumnik</title>
+<meta property="og:title" content="Un hotfix non approuvé en prod k8s arrête le pipeline">
 <meta name="description" content="Bloquer une mise en production quand un pod exécute une version que le comité n&#x27;a pas approuvée, par un code de sortie qu&#x27;une CI comprend. Le catalogue des versions approuvées est un CSV. Ce qui tourne vraiment est dans le cluster. lumnik lit l&#x27;image de chaque pod par l&#x27;API Kubernetes et la joint au catalogue: La version approuvée passe; Un hotfix poussé avec kubectl set image fait renvoyer le code 1 à la porte: la CI arrête le pipeline; Après le rollback, la même commande repasse.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
