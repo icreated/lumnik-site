@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Un RIB changé que le SIEM ne voit pas — lumnik</title>
+<meta property="og:title" content="Un RIB changé que le SIEM ne voit pas">
 <meta name="description" content="Alerter le SIEM d&#x27;un changement d&#x27;IBAN fournisseur, sans que l&#x27;IBAN apparaisse dans l&#x27;inbox. L&#x27;ERP exporte ses fournisseurs en CSV. Il n&#x27;émet aucun événement. Un changement de RIB passe inaperçu jusqu&#x27;au prochain paiement. Lumnik relit l&#x27;export chaque minute. Une décision signée part au SIEM par webhook. Le SIEM alerte sur le compte qui change. L&#x27;inbox ne montre jamais le compte.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
