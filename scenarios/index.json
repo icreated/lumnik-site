@@ -117,6 +117,27 @@
       "evidenceDigest": "sha256:6f73d03fb6625de25984e6b2924f6e7c03f5f5cf21edca050c953442f42b7717"
     },
     {
+      "slug": "cfa-billed-after-rupture",
+      "title": "Apprentissage: une échéance OPCO facturée après la rupture du contrat",
+      "goal": "Joindre chaque ligne de facture OPCO au registre des contrats du CFA, et être prévenu quand la période facturée dépasse la rupture du contrat, même quand la rupture est saisie après la facture.",
+      "lede": "Le CFA d'une école de commerce, deux exports CSV: 36 contrats d'apprentissage, 40 lignes de facture OPCO.\n- une Entity joint le contrat à chaque ligne de facture;\n- un Process compare deux colonnes de la ligne jointe: period_end après rupture_on;\n- deux ruptures arrivent en retard dans le registre: les factures déjà envoyées sont jugées à nouveau.",
+      "tags": {
+        "domain": [
+          "Éducation",
+          "Apprentissage",
+          "Facturation OPCO"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-11",
+      "evidenceDigest": "sha256:b78ed82daad422cc84d2ca1de2a41e068bbdfa0e786caa2c619bb96a62671e29"
+    },
+    {
       "slug": "cfonb-bank-statement",
       "title": "Un relevé CFONB où le signe se cache dans le dernier chiffre",
       "goal": "Lire chaque mouvement du relevé CFONB 120 avec son signe et son relevé, et ses compléments (payeur, facture) quand il en a, pour rapprocher le relevé ligne à ligne.",
