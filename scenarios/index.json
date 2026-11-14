@@ -81,6 +81,27 @@
       "evidenceDigest": "sha256:5d9093d9f2460cf74d79fac7d5a4cd6855f0d60064442a76127643f822a811f7"
     },
     {
+      "slug": "broken-coordinates",
+      "title": "Un export de sites aux coordonnées GPS cassées",
+      "goal": "Lire les coordonnées GPS d'un export legacy en décimal ou en degrés-minutes-secondes, échanger une paire inversée, et vider avec sa raison chaque point inutilisable.",
+      "lede": "Le dispatch reprend les sites de livraison d'un ERP legacy. Les points GPS y ont été saisis par plusieurs outils:\n- une virgule décimale ici, des degrés-minutes-secondes là;\n- une paire inversée, un 0;0 laissé par un géocodeur;\n- des mètres à la place des degrés.\nLe manifeste en fait un point par site, ou dit pourquoi il n'y en a pas.",
+      "tags": {
+        "domain": [
+          "Logistique",
+          "Géographie"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "View",
+          "App"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-13",
+      "evidenceDigest": "sha256:c885aefa7a7cc13a6fc79736a13d320a8dab2a844943404cb882ccb042a45eb5"
+    },
+    {
       "slug": "business-log-orders",
       "title": "Les commandes en erreur cachées dans les logs",
       "goal": "Relier chaque erreur du log applicatif à sa commande, son client et son statut actuel, pour savoir quels clients rappeler.",
@@ -215,6 +236,26 @@
       "edition": "open",
       "replayedAt": "2026-10-23",
       "evidenceDigest": "sha256:ad98251130ee5f08373937d5fdfd0a3d030450d15289a5ae0816d3602945c732"
+    },
+    {
+      "slug": "customers-near-the-depot",
+      "title": "Les clients à moins de 20 km du dépôt mesurés depuis l'export legacy",
+      "goal": "Demander quels clients sont à moins de 20 km d'un dépôt et recevoir la liste mesurée depuis les coordonnées de l'ERP, avec son SQL, ou un doute quand le centre est introuvable, jamais un chiffre inventé.",
+      "lede": "Le service commercial veut savoir quels clients un dépôt peut livrer dans la journée. L'ERP legacy exporte un point GPS par client, avec une virgule décimale.\n- la distance est mesurée par le hub, pas écrite par le modèle\n- le SQL est montré avec la réponse\n- une ville sans dépôt ni client ne reçoit pas de coordonnées inventées",
+      "tags": {
+        "domain": [
+          "Commercial",
+          "Géographie",
+          "IA"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-13",
+      "evidenceDigest": "sha256:3e2bd57cdc6c5e496b88fd05c28726aaa49256ba79ea2af23a49bf4ef3218f61"
     },
     {
       "slug": "dates-across-sources",
@@ -832,6 +873,26 @@
       "edition": "open",
       "replayedAt": "2026-11-03",
       "evidenceDigest": "sha256:685bc56997af89e6bdb01b2338fd7620781a5b38fce39ef42ec83a57cec72adb"
+    },
+    {
+      "slug": "one-customer-typed-twice",
+      "title": "Le même client saisi deux fois retrouvé par son point GPS dans l'export legacy",
+      "goal": "Trouver les comptes clients ouverts deux fois pour le même magasin, que l'ERP ne voit pas parce que l'adresse est tapée autrement, avec le SQL de la réponse.",
+      "lede": "L'ERP legacy compare des adresses tapées: «12 rue Garibaldi» et «12, r. Garibaldi – Bât B» font deux clients, deux encours, deux relances. Chaque compte porte aussi un point GPS.\n- par l'adresse: aucune paire\n- par le lieu: 3 paires à moins de 50 m\n- une personne tranche: même lieu ne veut pas dire même client",
+      "tags": {
+        "domain": [
+          "Commercial",
+          "Géographie",
+          "IA"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-14",
+      "evidenceDigest": "sha256:389e716adb7fd2b4490f63286ad4c42e539dd228e6f18d649c64e932f1067b55"
     },
     {
       "slug": "oracle-blob-drawings",

@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Les clients à moins de 20 km du dépôt mesurés depuis l&#x27;export legacy — lumnik</title>
+<meta name="description" content="Demander quels clients sont à moins de 20 km d&#x27;un dépôt et recevoir la liste mesurée depuis les coordonnées de l&#x27;ERP, avec son SQL, ou un doute quand le centre est introuvable, jamais un chiffre inventé. Le service commercial veut savoir quels clients un dépôt peut livrer dans la journée. L&#x27;ERP legacy exporte un point GPS par client, avec une virgule décimale. La distance est mesurée par le hub, pas écrite par le modèle. Le SQL est montré avec la réponse. Une ville sans dépôt ni client ne reçoit pas de coordonnées inventées.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/customers-near-the-depot/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/customers-near-the-depot/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Les clients à moins de 20 km du dépôt mesurés depuis l&#x27;export legacy</h1>
+    <p class="goal"><strong>Objectif</strong> Demander quels clients sont à moins de 20 km d&#x27;un dépôt et recevoir la liste mesurée depuis les coordonnées de l&#x27;ERP, avec son SQL, ou un doute quand le centre est introuvable, jamais un chiffre inventé.</p>
+    <p class="lede">Le service commercial veut savoir quels clients un dépôt peut livrer dans la journée. L&#x27;ERP legacy exporte un point GPS par client, avec une virgule décimale.</p><ul class="lede-list"><li>la distance est mesurée par le hub, pas écrite par le modèle</li><li>le SQL est montré avec la réponse</li><li>une ville sans dépôt ni client ne reçoit pas de coordonnées inventées</li></ul>
+    <ul class="tags"><li class="tag edition edition-pro"><a href="https://docs.lumnik.io/editions/">lumnik Pro</a></li><li class="tag">Commercial</li><li class="tag">Géographie</li><li class="tag">IA</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-load" data-step="load" aria-current="step"><span class="num">1 · Charger</span><span class="sub">17 clients, 3 dépôts</span></a><a href="#step-points" data-step="points"><span class="num">2 · Déclarer</span><span class="sub">un point par entité</span></a><a href="#step-measure" data-step="measure"><span class="num">3 · Mesurer</span><span class="sub">8 puis 7 clients</span></a><a href="#step-doubt" data-step="doubt"><span class="num">4 · Douter</span><span class="sub">Clermont-Ferrand</span></a></nav>
+  <section class="step" id="step-load" aria-labelledby="load-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="load-title">L&#x27;export clients et les dépôts, coordonnées lues à l&#x27;entrée</h2>
+      <p>Deux fichiers CSV, un connecteur chacun. Les coordonnées arrivent avec une virgule décimale.</p><ul class="prose-list"><li>parse-coordinates: lit la latitude et la longitude ensemble, en nombres</li><li>within: sud, ouest, nord, est. Le rectangle de la France métropolitaine</li><li>reason: la colonne qui dit pourquoi un point est vidé</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>17 = 17</strong><p>Chaque client est écrit, avec ou sans point.</p></div></li><li><span class="n">2</span><div><strong>C-017</strong><p>0;0, laissé par un géocodeur: hors du rectangle, vidé et compté.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Les coordonnées deviennent des nombres à l&#x27;entrée; un point inutilisable est vidé avec sa raison.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Charger"><button type="button" role="tab" id="load-source-tab" data-view="source" aria-controls="load-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="load-manifest-tab" data-view="manifest" aria-controls="load-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="load-commands-tab" data-view="commands" aria-controls="load-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="load-result-tab" data-view="result" aria-controls="load-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="load-source" aria-labelledby="load-source-tab" tabindex="0"><figure class="source"><figcaption>customers.csv</figcaption><pre class="code">code_client;raison_sociale;ville;latitude;longitude
+C-001;Boulangerie des Pentes;Lyon;45,7485;4,8270
+C-002;Garage du Tonkin;Villeurbanne;45,7719;4,8902
+C-003;Pharmacie du Parc;Bron;45,7385;4,9131
+C-004;Menuiserie Berliet;Saint-Priest;45,6965;4,9445
+C-005;Fleuriste de la Saulaie;Oullins;45,7140;4,8075
+C-006;Cave du Rhône;Chasse-sur-Rhône;45,5797;4,7993
+C-007;Quincaillerie du Gier;Givors;45,5906;4,7689
+C-008;Épicerie Beaujolaise;Villefranche-sur-Saône;45,9898;4,7186
+C-009;Imprimerie de l&#x27;Est;Meyzieu;45,7667;5,0036
+C-010;Pneus Nord-Isère;Bourgoin-Jallieu;45,5862;5,2736
+C-011;Café des Alpes;Grenoble;45,1885;5,7245
+C-012;Laiterie du Voironnais;Voiron;45,3640;5,5890
+C-013;Coutellerie Jacquard;Saint-Étienne;45,4397;4,3872
+C-014;Fromagerie du Lac;Annecy;45,8992;6,1294
+C-015;Atelier de l&#x27;Ondaine;Firminy;45,3880;4,2880
+C-016;Brasserie du Gier;Rive-de-Gier;45,5290;4,6180
+C-017;Pressing du Grand Large;Décines-Charpieu;0;0</pre></figure><figure class="source"><figcaption>depots.csv</figcaption><pre class="code">code_depot;depot;ville;latitude;longitude
+D-LYO;Lyon;Lyon;45,7090;4,8400
+D-GRE;Grenoble;Fontaine;45,2070;5,6720
+D-STE;Saint-Étienne;Saint-Étienne;45,4520;4,3570</pre></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="load-manifest" aria-labelledby="load-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/10-customers.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-customers-d</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [sales-d]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/customers-near-the-depot/d/customers.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line hl">      - parse-coordinates:</span><span class="line">          <span class="key">lat</span>: latitude</span><span class="line">          <span class="key">lon</span>: longitude</span><span class="line hl">          <span class="key">within</span>: [41.0, -5.5, 51.5, 10.0]   <span class="comment"># south, west, north, east: mainland France</span></span><span class="line hl">          <span class="key">reason</span>: coord_issue                 <span class="comment"># why a pair was emptied</span></span></code></pre><div class="file"><span class="filename">manifests/11-depots.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-depots-d</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [sales-d]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: local</span><span class="line">    <span class="key">path</span>: /tmp/lumnik-scenario/customers-near-the-depot/d/depots.csv</span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line hl">      - parse-coordinates:</span><span class="line">          <span class="key">lat</span>: latitude</span><span class="line">          <span class="key">lon</span>: longitude</span><span class="line hl">          <span class="key">within</span>: [41.0, -5.5, 51.5, 10.0]</span><span class="line hl">          <span class="key">reason</span>: coord_issue</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="load-commands" aria-labelledby="load-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-customers.yaml</span>
+<span class="out">Applied connector &quot;scenario-customers-d&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f 11-depots.yaml</span>
+<span class="out">Applied connector &quot;scenario-depots-d&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-customers-d</span>
+<span class="out">run scheduled: f30395a2-8396-4814-b020-05cee801005a</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get f30395a2-8396-4814-b020-05cee801005a</span>
+<span class="out">ID        CONNECTOR             ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+f30395a2  scenario-customers-d  default   Completed  17  17   0        0             2026-11-13 23:24  2026-11-13 23:24  yes</span>
+<span class="note">⚠ 1 cell(s) not delivered as declared (a hook, or a promoted value of the wrong type) — the rows were still written</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-depots-d</span>
+<span class="out">run scheduled: ed68ed86-f3d2-444d-9900-d7f7710bd790</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get ed68ed86-f3d2-444d-9900-d7f7710bd790</span>
+<span class="out">ID        CONNECTOR          ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+ed68ed86  scenario-depots-d  default   Completed  3   3    0        0             2026-11-13 23:24  2026-11-13 23:24  no</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="load-result" aria-labelledby="load-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-customers-d</dt><dd>Completed · IN 17 · OUT 17 · cell_errors 1</dd><dt>scenario-depots-d</dt><dd>Completed · IN 3 · OUT 3 · cell_errors 0</dd></dl><p class="sources">preuves: replay.log, customers.txt, customers.json, distances.txt, run-scenario-customers-d.txt, run-scenario-customers-d.json, run-scenario-depots-d.txt, run-scenario-depots-d.json, 01-depot.txt, 01-depot.json, 02-pair.txt, 02-pair.json, 03-list.txt, 03-list.json, 04-count.txt, 04-count.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-points" aria-labelledby="points-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="points-title">Chaque entité dit où est son point</h2>
+      <p>Le client et le dépôt déclarent leur point GPS.</p><ul class="prose-list"><li>points: un nom, la colonne de latitude, la colonne de longitude</li><li>seule une entité qui déclare un point peut être mesurée</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>16 points sur 17</strong><p>Aucune distance ne comptera C-017.</p></div></li><li><span class="n">2</span><div><strong>Le dépôt aussi</strong><p>Son point sert de centre à la mesure.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le hub sait quelles colonnes forment un point, et lesquelles n&#x27;en ont pas.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="points-manifest-tab" data-view="manifest" aria-controls="points-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="points-commands-tab" data-view="commands" aria-controls="points-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="points-result-tab" data-view="result" aria-controls="points-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="points-manifest" aria-labelledby="points-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/20-customer.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: customer_d</span><span class="line"><span class="key">label</span>: Client</span><span class="line"><span class="key">description</span>: <span class="str">&quot;A customer of the ERP with the GPS point of its shop; coord_issue says why a point was set aside.&quot;</span></span><span class="line"><span class="key">match</span>: [customer_no]</span><span class="line"><span class="key">scopes</span>: [sales-d]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">customer_no</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Code client&quot;</span></span><span class="line">  <span class="key">name</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Raison sociale&quot;</span></span><span class="line">  <span class="key">city</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Ville&quot;</span></span><span class="line">  <span class="key">latitude</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Latitude&quot;</span></span><span class="line">  <span class="key">longitude</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Longitude&quot;</span></span><span class="line">  <span class="key">coord_issue</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Coordonnées: remarque&quot;</span></span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_customers_d</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">code_client</span>: customer_no</span><span class="line">      <span class="key">raison_sociale</span>: name</span><span class="line">      <span class="key">ville</span>: city</span><span class="line">      <span class="key">latitude</span>: latitude</span><span class="line">      <span class="key">longitude</span>: longitude</span><span class="line">      <span class="key">coord_issue</span>: coord_issue</span><span class="line hl"><span class="key">points</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">name</span>: shop          <span class="comment"># the chat may measure a distance from this point</span></span><span class="line hl">    <span class="key">lat</span>: latitude</span><span class="line hl">    <span class="key">lon</span>: longitude</span></code></pre><div class="file"><span class="filename">manifests/21-depot.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: depot_d</span><span class="line"><span class="key">label</span>: Dépôt</span><span class="line"><span class="key">description</span>: <span class="str">&quot;A depot the deliveries leave from, named after the city it serves, with its GPS point.&quot;</span></span><span class="line"><span class="key">match</span>: [depot_code]</span><span class="line"><span class="key">scopes</span>: [sales-d]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">depot_code</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Code dépôt&quot;</span></span><span class="line">  <span class="key">depot</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Dépôt (la ville qu&#x27;il dessert)&quot;</span></span><span class="line">  <span class="key">city</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Commune&quot;</span></span><span class="line">  <span class="key">latitude</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Latitude&quot;</span></span><span class="line">  <span class="key">longitude</span>:</span><span class="line">    <span class="key">label</span>: <span class="str">&quot;Longitude&quot;</span></span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_depots_d</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">code_depot</span>: depot_code</span><span class="line">      <span class="key">depot</span>: depot</span><span class="line">      <span class="key">ville</span>: city</span><span class="line">      <span class="key">latitude</span>: latitude</span><span class="line">      <span class="key">longitude</span>: longitude</span><span class="line hl"><span class="key">points</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">name</span>: yard</span><span class="line hl">    <span class="key">lat</span>: latitude</span><span class="line hl">    <span class="key">lon</span>: longitude</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="points-commands" aria-labelledby="points-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-customer.yaml</span>
+<span class="out">Applied entity &quot;customer_d&quot; → connector.&quot;v_customer_d&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f 21-depot.yaml</span>
+<span class="out">Applied entity &quot;depot_d&quot; → connector.&quot;v_depot_d&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get customer_d</span>
+<span class="out">CUSTOMER_NO  NAME                     CITY                    LATITUDE  LONGITUDE  COORD_ISSUE                _CONFLICTS
+C-001        Boulangerie des Pentes   Lyon                    45.7485   4.827                                 {}
+C-002        Garage du Tonkin         Villeurbanne            45.7719   4.8902                                {}
+C-003        Pharmacie du Parc        Bron                    45.7385   4.9131                                {}
+C-004        Menuiserie Berliet       Saint-Priest            45.6965   4.9445                                {}
+C-005        Fleuriste de la Saulaie  Oullins                 45.714    4.8075                                {}
+C-006        Cave du Rhône            Chasse-sur-Rhône        45.5797   4.7993                                {}
+C-007        Quincaillerie du Gier    Givors                  45.5906   4.7689                                {}
+C-008        Épicerie Beaujolaise     Villefranche-sur-Saône  45.9898   4.7186                                {}
+C-009        Imprimerie de l&#x27;Est      Meyzieu                 45.7667   5.0036                                {}
+C-010        Pneus Nord-Isère         Bourgoin-Jallieu        45.5862   5.2736                                {}
+C-011        Café des Alpes           Grenoble                45.1885   5.7245                                {}
+C-012        Laiterie du Voironnais   Voiron                  45.364    5.589                                 {}
+C-013        Coutellerie Jacquard     Saint-Étienne           45.4397   4.3872                                {}
+C-014        Fromagerie du Lac        Annecy                  45.8992   6.1294                                {}
+C-015        Atelier de l&#x27;Ondaine     Firminy                 45.388    4.288                                 {}
+C-016        Brasserie du Gier        Rive-de-Gier            45.529    4.618                                 {}
+C-017        Pressing du Grand Large  Décines-Charpieu                             outside the declared area  {}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="points-result" aria-labelledby="points-result-tab" tabindex="0" hidden><dl class="facts"><dt>points</dt><dd>16 / 17</dd><dt>C-017</dt><dd>outside the declared area</dd></dl><p class="sources">preuves: replay.log, customers.txt, customers.json, distances.txt, run-scenario-customers-d.txt, run-scenario-customers-d.json, run-scenario-depots-d.txt, run-scenario-depots-d.json, 01-depot.txt, 01-depot.json, 02-pair.txt, 02-pair.json, 03-list.txt, 03-list.json, 04-count.txt, 04-count.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-measure" aria-labelledby="measure-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="measure-title">À moins de 20 km du dépôt de Lyon, puis d&#x27;une paire tapée</h2>
+      <p>La réponse montre son SQL: le dépôt est trouvé par sa commune, Lyon, et connector.distance_m mesure depuis son point.</p><ul class="prose-list"><li>depuis le dépôt de Lyon: 8 clients</li><li>depuis 45.764, 4.8357, le centre de Lyon: 7 clients, Chasse-sur-Rhône en sort</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Chasse-sur-Rhône</strong><p>Dans les 20 km du dépôt, pas dans ceux du centre de Lyon.</p></div></li><li><span class="n">2</span><div><strong>Calculé à part</strong><p>data/distances.py, lancé par le rejeu, donne les mêmes listes.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une distance donnée par le chat se vérifie: même liste qu&#x27;un calcul indépendant.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Mesurer"><button type="button" role="tab" id="measure-commands-tab" data-view="commands" aria-controls="measure-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="measure-result-tab" data-view="result" aria-controls="measure-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="measure-commands" aria-labelledby="measure-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm ask --scope sales-d --lang fr &quot;Quels clients sont à moins de 20 km du dépôt de Lyon ?&quot;</span>
+<span class="out">Il y a 8 clients à moins de 20 km du dépôt de Lyon. Les clients sont : Boulangerie des Pentes, Garage du Tonkin, Pharmacie du Parc, Menuiserie Berliet, Fleuriste de la Saulaie, Cave du Rhône, Quincaillerie du Gier et Imprimerie de l&#x27;Est.
+  data as of: 2026-11-13T22:24:09.728826Z (last completed run)
+
+  CUSTOMER_NO  NAME                     CITY              LATITUDE  LONGITUDE  COORD_ISSUE
+  C-001        Boulangerie des Pentes   Lyon              45.7485   4.827
+  C-002        Garage du Tonkin         Villeurbanne      45.7719   4.8902
+  C-003        Pharmacie du Parc        Bron              45.7385   4.9131
+  C-004        Menuiserie Berliet       Saint-Priest      45.6965   4.9445
+  C-005        Fleuriste de la Saulaie  Oullins           45.714    4.8075
+  C-006        Cave du Rhône            Chasse-sur-Rhône  45.5797   4.7993
+  C-007        Quincaillerie du Gier    Givors            45.5906   4.7689
+  C-009        Imprimerie de l&#x27;Est      Meyzieu           45.7667   5.0036
+  8 rows returned
+
+  SQL: SELECT c.&quot;customer_no&quot;, c.&quot;name&quot;, c.&quot;city&quot;, c.&quot;latitude&quot;, c.&quot;longitude&quot;, c.&quot;coord_issue&quot;
+FROM &quot;connector&quot;.&quot;v_customer_d&quot; c
+JOIN &quot;connector&quot;.&quot;v_depot_d&quot; d ON d.&quot;city&quot; = &#x27;Lyon&#x27;
+WHERE connector.distance_m(c.&quot;latitude&quot;, c.&quot;longitude&quot;, d.&quot;latitude&quot;, d.&quot;longitude&quot;) &lt;= 20000
+LIMIT 500</span>
+
+<span class="cmd"><span class="prompt">$</span> lm ask --scope sales-d --lang fr &quot;Quels clients sont à moins de 20 km de 45.764, 4.8357 ?&quot;</span>
+<span class="out">Il y a 7 clients à moins de 20 km de la coordonnée 45.764, 4.8357. Les clients sont :
+
+1. Boulangerie des Pentes (C-001)
+2. Garage du Tonkin (C-002)
+3. Pharmacie du Parc (C-003)
+4. Menuiserie Berliet (C-004)
+5. Fleuriste de la Saulaie (C-005)
+6. Quincaillerie du Gier (C-007)
+7. Imprimerie de l&#x27;Est (C-009)
+
+Le nombre total de clients est 7.
+  data as of: 2026-11-13T22:24:09.728826Z (last completed run)
+
+  CUSTOMER_NO  NAME                     CITY          LATITUDE  LONGITUDE  COORD_ISSUE
+  C-001        Boulangerie des Pentes   Lyon          45.7485   4.827
+  C-002        Garage du Tonkin         Villeurbanne  45.7719   4.8902
+  C-003        Pharmacie du Parc        Bron          45.7385   4.9131
+  C-004        Menuiserie Berliet       Saint-Priest  45.6965   4.9445
+  C-005        Fleuriste de la Saulaie  Oullins       45.714    4.8075
+  C-007        Quincaillerie du Gier    Givors        45.5906   4.7689
+  C-009        Imprimerie de l&#x27;Est      Meyzieu       45.7667   5.0036
+  7 rows returned
+
+  SQL: SELECT c.&quot;customer_no&quot;, c.&quot;name&quot;, c.&quot;city&quot;, c.&quot;latitude&quot;, c.&quot;longitude&quot;, c.&quot;coord_issue&quot;
+FROM &quot;connector&quot;.&quot;v_customer_d&quot; c
+WHERE connector.distance_m(c.&quot;latitude&quot;, c.&quot;longitude&quot;, 45.764, 4.8357) &lt;= 20000
+LIMIT 500</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="measure-result" aria-labelledby="measure-result-tab" tabindex="0" hidden><dl class="facts"><dt>Quels clients sont à moins de 20 km du dépôt de Lyon ?</dt><dd>8 · C-001 C-002 C-003 C-004 C-005 C-006 C-007 C-009</dd><dt>SQL · 01-depot</dt><dd>SELECT c.&quot;customer_no&quot;, c.&quot;name&quot;, c.&quot;city&quot;, c.&quot;latitude&quot;, c.&quot;longitude&quot;, c.&quot;coord_issue&quot; FROM &quot;connector&quot;.&quot;v_customer_d&quot; c JOIN &quot;connector&quot;.&quot;v_depot_d&quot; d ON d.&quot;city&quot; = &#x27;Lyon&#x27; WHERE connector.distance_m(c.&quot;latitude&quot;, c.&quot;longitude&quot;, d.&quot;latitude&quot;, d.&quot;longitude&quot;) &lt;= 20000 LIMIT 500</dd><dt>Quels clients sont à moins de 20 km de 45.764, 4.8357 ?</dt><dd>7 · C-001 C-002 C-003 C-004 C-005 C-007 C-009</dd></dl><p class="sources">preuves: replay.log, customers.txt, customers.json, distances.txt, run-scenario-customers-d.txt, run-scenario-customers-d.json, run-scenario-depots-d.txt, run-scenario-depots-d.json, 01-depot.txt, 01-depot.json, 02-pair.txt, 02-pair.json, 03-list.txt, 03-list.json, 04-count.txt, 04-count.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-doubt" aria-labelledby="doubt-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="doubt-title">Clermont-Ferrand sans dépôt: aucun chiffre affirmé</h2>
+      <p>Aucun dépôt ni client n&#x27;est à Clermont-Ferrand. Les deux requêtes cherchent un dépôt qui n&#x27;existe pas: la liste par sa commune, le comptage par son nom.</p><ul class="prose-list"><li>la liste: aucune ligne, et la réponse dit que la requête a pu manquer la question</li><li>le comptage: 0, avec le même doute, jamais «0 client»</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Aucune ligne</strong><p>Ni liste, ni «aucun client».</p></div></li><li><span class="n">2</span><div><strong>0 avec son doute</strong><p>abstained: true, dans le JSON comme dans la phrase.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un centre introuvable ne donne ni distance inventée, ni «0» affirmé.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Douter"><button type="button" role="tab" id="doubt-commands-tab" data-view="commands" aria-controls="doubt-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="doubt-result-tab" data-view="result" aria-controls="doubt-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="doubt-commands" aria-labelledby="doubt-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm ask --scope sales-d --lang fr &quot;Quels clients sont à moins de 50 km de Clermont-Ferrand ?&quot;</span>
+<span class="out">La requête n&#x27;a renvoyé aucune ligne. Il peut n&#x27;y en avoir réellement aucune, ou la requête n&#x27;a pas saisi votre question — vérifiez le SQL avant d&#x27;affirmer qu&#x27;il n&#x27;y en a pas.
+  data as of: 2026-11-13T22:24:09.728826Z (last completed run)
+
+  no rows returned
+
+  SQL: SELECT c.&quot;customer_no&quot;, c.&quot;name&quot;, c.&quot;city&quot;, c.&quot;latitude&quot;, c.&quot;longitude&quot;, c.&quot;coord_issue&quot;
+FROM &quot;connector&quot;.&quot;v_customer_d&quot; c
+JOIN &quot;connector&quot;.&quot;v_depot_d&quot; d ON d.&quot;city&quot; = &#x27;Clermont-Ferrand&#x27;
+WHERE connector.distance_m(c.&quot;latitude&quot;, c.&quot;longitude&quot;, d.&quot;latitude&quot;, d.&quot;longitude&quot;) &lt;= 50000
+LIMIT 500</span>
+
+<span class="cmd"><span class="prompt">$</span> lm ask --scope sales-d --lang fr &quot;Combien de clients sont à moins de 50 km de Clermont-Ferrand ?&quot;</span>
+<span class="out">La requête a renvoyé 0 ou aucune valeur. C&#x27;est peut-être la vraie réponse, ou la requête n&#x27;a pas saisi votre question — vérifiez le SQL avant de vous y fier.
+  data as of: 2026-11-13T22:24:09.728826Z (last completed run)
+
+  COUNT
+  0
+  1 row returned
+
+  SQL: SELECT COUNT(*) 
+FROM &quot;connector&quot;.&quot;v_customer_d&quot; 
+WHERE connector.distance_m(&quot;latitude&quot;, &quot;longitude&quot;, (SELECT &quot;latitude&quot; FROM &quot;connector&quot;.&quot;v_depot_d&quot; WHERE &quot;depot&quot; = &#x27;Clermont-Ferrand&#x27;), (SELECT &quot;longitude&quot; FROM &quot;connector&quot;.&quot;v_depot_d&quot; WHERE &quot;depot&quot; = &#x27;Clermont-Ferrand&#x27;)) &lt;= 50000
+LIMIT 500</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="doubt-result" aria-labelledby="doubt-result-tab" tabindex="0" hidden><dl class="facts"><dt>Quels clients sont à moins de 50 km de Clermont-Ferrand ?</dt><dd>La requête n&#x27;a renvoyé aucune ligne. Il peut n&#x27;y en avoir réellement aucune, ou la requête n&#x27;a pas saisi votre question — vérifiez le SQL avant d&#x27;affirmer qu&#x27;il n&#x27;y en a pas.</dd><dt>Combien de clients sont à moins de 50 km de Clermont-Ferrand ?</dt><dd>La requête a renvoyé 0 ou aucune valeur. C&#x27;est peut-être la vraie réponse, ou la requête n&#x27;a pas saisi votre question — vérifiez le SQL avant de vous y fier.</dd><dt>SQL · 04-count</dt><dd>SELECT COUNT(*) FROM &quot;connector&quot;.&quot;v_customer_d&quot; WHERE connector.distance_m(&quot;latitude&quot;, &quot;longitude&quot;, (SELECT &quot;latitude&quot; FROM &quot;connector&quot;.&quot;v_depot_d&quot; WHERE &quot;depot&quot; = &#x27;Clermont-Ferrand&#x27;), (SELECT &quot;longitude&quot; FROM &quot;connector&quot;.&quot;v_depot_d&quot; WHERE &quot;depot&quot; = &#x27;Clermont-Ferrand&#x27;)) &lt;= 50000 LIMIT 500</dd></dl><p class="sources">preuves: replay.log, customers.txt, customers.json, distances.txt, run-scenario-customers-d.txt, run-scenario-customers-d.json, run-scenario-depots-d.txt, run-scenario-depots-d.json, 01-depot.txt, 01-depot.json, 02-pair.txt, 02-pair.json, 03-list.txt, 03-list.json, 04-count.txt, 04-count.json · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Le modèle choisit la colonne. En préparant le scénario, un dépôt nommé «Lyon» mais installé à Vénissieux a été cherché par sa commune: aucune ligne, et la réponse l&#x27;a dit, sans chiffre. Ici, le dépôt est à Lyon.</li><li>Pour Clermont-Ferrand, le SQL du 7B varie avec le périmètre. Lors d&#x27;un autre rejeu, il a mesuré depuis une table brute du connecteur, qui ne déclare aucun point: les deux requêtes ont été refusées avant de tourner. Aucun chiffre dans les deux cas.</li><li>«Pour chaque client, quel est le dépôt le plus proche?» n&#x27;est pas traduit juste par ce modèle (qwen2.5-coder:7b): il relie client et dépôt par la ville.</li><li>La distance est à vol d&#x27;oiseau, sur une sphère: pas d&#x27;itinéraire.</li><li>Clients et dépôts synthétiques.</li></ul></section>
+  <section class="try"><p>Ce scénario demande lumnik Pro.</p><a class="try-button" href="../../offre.html">Voir l&#x27;offre →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
