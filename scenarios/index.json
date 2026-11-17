@@ -278,6 +278,27 @@
       "evidenceDigest": "sha256:3e2bd57cdc6c5e496b88fd05c28726aaa49256ba79ea2af23a49bf4ef3218f61"
     },
     {
+      "slug": "customers-on-the-map",
+      "title": "Les clients d'un export legacy, sur une carte",
+      "goal": "Montrer sur un téléphone les clients d'un export legacy sur une carte, compter ceux qui n'ont pas de position, et ne jamais servir leurs coordonnées.",
+      "lede": "Un commercial prépare sa tournée sur son téléphone. L'ERP legacy exporte un point GPS par client, avec une virgule décimale:\n- une liste de 17 adresses ne dit pas lesquelles sont proches;\n- une carte le dit, et un geste ouvre la fiche du client;\n- un client au point cassé ne disparaît pas de la carte en silence.",
+      "tags": {
+        "domain": [
+          "Commerce",
+          "Géographie"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "View",
+          "App"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-17",
+      "evidenceDigest": "sha256:e4cf497e569528e6bc4dd2f71e06501bfa623f77a8ce97b91771af8b7e8dabc0"
+    },
+    {
       "slug": "dates-across-sources",
       "title": "Une date de réception de lot écrite de trois façons",
       "goal": "Comparer au jour de l'usine la date de réception d'un lot dans le LIMS, l'ERP et le rapport du transporteur, pour ne garder en litige que les fautes de saisie.",
