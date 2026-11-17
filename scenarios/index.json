@@ -238,6 +238,26 @@
       "evidenceDigest": "sha256:ad98251130ee5f08373937d5fdfd0a3d030450d15289a5ae0816d3602945c732"
     },
     {
+      "slug": "customer-closed-at-insee",
+      "title": "Le client facturé après la fermeture de son établissement retrouvé par le lieu dans l'export legacy",
+      "goal": "Proposer à chaque client de l'ERP le SIRET de son établissement, et repérer ceux que l'INSEE dit fermés, en croisant l'export clients avec les fichiers publics de l'INSEE par le point GPS.",
+      "lede": "Avec la facture électronique, le SIREN du client devient une mention obligatoire. L'export legacy n'a pas de SIRET fiable; l'INSEE publie chaque établissement avec son état et son point GPS. Aucune clé commune: le lien est le lieu.\n- 5 clients reçoivent un SIRET actif à moins de 30 m\n- 3 établissements fermés à moins de 30 m d'un client, chacun à lire par une personne\n- un client est encore facturé après la fermeture, sans établissement actif à côté",
+      "tags": {
+        "domain": [
+          "Facturation",
+          "Géographie",
+          "IA"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-14",
+      "evidenceDigest": "sha256:7bf98381406254119d5347c729a14c2e3f007bc16fd74f07829a593d5ba55aea"
+    },
+    {
       "slug": "customers-near-the-depot",
       "title": "Les clients à moins de 20 km du dépôt mesurés depuis l'export legacy",
       "goal": "Demander quels clients sont à moins de 20 km d'un dépôt et recevoir la liste mesurée depuis les coordonnées de l'ERP, avec son SQL, ou un doute quand le centre est introuvable, jamais un chiffre inventé.",
