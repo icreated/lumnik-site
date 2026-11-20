@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La pression du filtre monte pompe en marche: lumnik dit où aller et quoi vérifier — lumnik</title>
+<meta name="description" content="Recevoir une visite à faire, avec le client, le dernier lavage et le modèle de filtre, quand la pression d&#x27;un filtre de piscine dépasse la limite de ce filtre pendant la filtration. Un pisciniste suit son parc de piscines dans MyIndygo. Un filtre se colmate: sa pression monte, mais seulement quand la filtration tourne. Le client, le contrat, le dernier lavage et le filtre installé sont dans trois autres outils. Quatre sources, quatre connecteurs REST. Une fiche par module de filtration. Une décision, pour la seule piscine au-dessus de la limite de son filtre, pompe en marche.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/pool-filter-pressure/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/pool-filter-pressure/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>La pression du filtre monte pompe en marche: lumnik dit où aller et quoi vérifier</h1>
+    <p class="goal"><strong>Objectif</strong> Recevoir une visite à faire, avec le client, le dernier lavage et le modèle de filtre, quand la pression d&#x27;un filtre de piscine dépasse la limite de ce filtre pendant la filtration.</p>
+    <p class="lede">Un pisciniste suit son parc de piscines dans MyIndygo. Un filtre se colmate: sa pression monte, mais seulement quand la filtration tourne. Le client, le contrat, le dernier lavage et le filtre installé sont dans trois autres outils.</p><ul class="lede-list"><li>quatre sources, quatre connecteurs REST</li><li>une fiche par module de filtration</li><li>une décision, pour la seule piscine au-dessus de la limite de son filtre, pompe en marche</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Piscine</li><li class="tag">Maintenance</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li><li class="tag kind">Process</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-sources" data-step="sources" aria-current="step"><span class="num">1 · Brancher</span><span class="sub">MyIndygo + CRM + GMAO + ERP</span></a><a href="#step-fuse" data-step="fuse"><span class="num">2 · Rassembler</span><span class="sub">Entité + Process</span></a><a href="#step-polls" data-step="polls"><span class="num">3 · Relever</span><span class="sub">Trois relevés</span></a><a href="#step-decide" data-step="decide"><span class="num">4 · Décider</span><span class="sub">Une visite</span></a></nav>
+  <section class="step" id="step-sources" aria-labelledby="sources-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="sources-title">La télémétrie et le métier, chacun dans son outil</h2>
+      <p>Un service au format MyIndygo donne la dernière mesure de chaque module. Le CRM, la GMAO et l&#x27;ERP donnent chacun une partie du contexte de la piscine.</p><ul class="prose-list"><li>method: POST, comme le demande MyIndygo</li><li>response_path: les seuls modules de filtration, sans les passerelles</li><li>la pression: l&#x27;entrée de type 8, lue par un filtre JSONPath</li><li>l&#x27;état de la filtration: la sortie d&#x27;index 0</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Forme déduite</strong><p>Le JSON suit l&#x27;intégration Home Assistant publique, pas un contrat publié.</p></div></li><li><span class="n">2</span><div><strong>Aucun compte</strong><p>Aucun appel au vrai MyIndygo.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une valeur rangée dans une liste devient une colonne typée.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Brancher"><button type="button" role="tab" id="sources-source-tab" data-view="source" aria-controls="sources-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="sources-manifest-tab" data-view="manifest" aria-controls="sources-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="sources-commands-tab" data-view="commands" aria-controls="sources-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="sources-result-tab" data-view="result" aria-controls="sources-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="sources-source" aria-labelledby="sources-source-tab" tabindex="0"><figure class="source"><figcaption>myindygo-poll-1.json</figcaption><pre class="code">{
+ &quot;modules&quot;: [
+  {
+   &quot;id&quot;: &quot;LRPC-0A1F01&quot;,
+   &quot;serialNumber&quot;: &quot;LRPC-0A1F01&quot;,
+   &quot;type&quot;: &quot;lr-pc-vs2&quot;,
+   &quot;name&quot;: &quot;Filtration&quot;,
+   &quot;pool&quot;: &quot;POOL-101&quot;,
+   &quot;poolName&quot;: &quot;Pool Martin&quot;,
+   &quot;inputs&quot;: [
+    {
+     &quot;type&quot;: 6,
+     &quot;lastValue&quot;: {
+      &quot;value&quot;: 7.2,
+      &quot;date&quot;: &quot;2026-11-17T10:00:00Z&quot;
+     }
+    },
+    {
+     &quot;type&quot;: 8,
+     &quot;lastComputedMeasure&quot;: {</pre><p class="source-more">… 107 lignes de plus</p></figure><figure class="source"><figcaption>erp.json</figcaption><pre class="code">{
+ &quot;installed&quot;: [
+  {
+   &quot;pool&quot;: &quot;POOL-101&quot;,
+   &quot;filter_model&quot;: &quot;F-600&quot;,
+   &quot;alert_pressure_bar&quot;: 1.5,
+   &quot;warranty_until&quot;: &quot;2027-06-30&quot;,
+   &quot;spare_parts&quot;: &quot;pressure gauge MG-63, lid O-ring J-600&quot;,
+   &quot;check&quot;: &quot;backwash, then check the pressure gauge&quot;
+  },
+  {
+   &quot;pool&quot;: &quot;POOL-102&quot;,
+   &quot;filter_model&quot;: &quot;F-500&quot;,
+   &quot;alert_pressure_bar&quot;: 1.4,
+   &quot;warranty_until&quot;: &quot;2026-03-31&quot;,
+   &quot;spare_parts&quot;: &quot;pressure gauge MG-63&quot;,
+   &quot;check&quot;: &quot;backwash, then check the pressure gauge&quot;
+  },
+  {
+   &quot;pool&quot;: &quot;POOL-103&quot;,</pre><p class="source-more">… 8 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="sources-manifest" aria-labelledby="sources-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/10-myindygo.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-pool-myindygo-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [pool-service]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:18095</span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: modules</span><span class="line">      <span class="key">path</span>: /api/getUserWithHisModules</span><span class="line hl">      <span class="key">method</span>: POST</span><span class="line">      <span class="key">pagination</span>:</span><span class="line">        <span class="key">kind</span>: none</span><span class="line hl">        <span class="key">response_path</span>: <span class="str">&quot;$.modules[?(@.type == &#x27;lr-pc-vs2&#x27;)]&quot;</span>   <span class="comment"># the filtration modules; the gateways stay out</span></span><span class="line">      <span class="key">incremental</span>: { mode: full }</span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: connector.scenario_pool_module_a</span><span class="line">        <span class="key">unique_key</span>: $.serialNumber</span><span class="line hl">        <span class="key">promote</span>:</span><span class="line">          - { name: module, path: $.serialNumber, type: text }</span><span class="line">          - { name: pool_id, path: $.pool, type: text }</span><span class="line">          - { name: pool_name, path: $.poolName, type: text }</span><span class="line">          - { name: pressure_bar, path: <span class="str">&quot;$.inputs[?(@.type == 8)].lastComputedMeasure.value&quot;</span>, type: decimal }</span><span class="line">          - { name: measured_at, path: <span class="str">&quot;$.inputs[?(@.type == 8)].lastComputedMeasure.date&quot;</span>, type: timestamptz }</span><span class="line">          - { name: filtration, path: <span class="str">&quot;$.outputs[?(@.index == 0)].value&quot;</span>, type: integer }</span></code></pre><div class="file"><span class="filename">manifests/20-crm.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-pool-crm-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [pool-service]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:18095</span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: customers</span><span class="line">      <span class="key">path</span>: /crm/customers</span><span class="line hl">      <span class="key">method</span>: GET</span><span class="line hl">      <span class="key">pagination</span>: { kind: none, response_path: $.customers }</span><span class="line">      <span class="key">incremental</span>: { mode: full }</span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: connector.scenario_pool_customer_a</span><span class="line">        <span class="key">unique_key</span>: $.pool</span><span class="line hl">        <span class="key">promote</span>:</span><span class="line">          - { name: pool_id, path: $.pool, type: text }</span><span class="line">          - { name: customer, path: $.customer, type: text }</span><span class="line">          - { name: town, path: $.town, type: text }</span><span class="line">          - { name: contract, path: $.contract, type: text }</span><span class="line">          - { name: technician, path: $.technician, type: text }</span></code></pre><div class="file"><span class="filename">manifests/21-maintenance.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-pool-gmao-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [pool-service]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:18095</span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: visits</span><span class="line">      <span class="key">path</span>: /gmao/visits</span><span class="line hl">      <span class="key">method</span>: GET</span><span class="line hl">      <span class="key">pagination</span>: { kind: none, response_path: $.visits }</span><span class="line">      <span class="key">incremental</span>: { mode: full }</span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: connector.scenario_pool_visit_a</span><span class="line">        <span class="key">unique_key</span>: $.pool</span><span class="line hl">        <span class="key">promote</span>:</span><span class="line">          - { name: pool_id, path: $.pool, type: text }</span><span class="line">          - { name: last_backwash, path: $.last_backwash, type: date }</span><span class="line">          - { name: last_visit, path: $.last_visit, type: date }</span><span class="line">          - { name: visit_note, path: $.visit_note, type: text }</span></code></pre><div class="file"><span class="filename">manifests/22-erp.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-pool-erp-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [pool-service]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:18095</span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: installed</span><span class="line">      <span class="key">path</span>: /erp/installed</span><span class="line hl">      <span class="key">method</span>: GET</span><span class="line hl">      <span class="key">pagination</span>: { kind: none, response_path: $.installed }</span><span class="line">      <span class="key">incremental</span>: { mode: full }</span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: connector.scenario_pool_equipment_a</span><span class="line">        <span class="key">unique_key</span>: $.pool</span><span class="line hl">        <span class="key">promote</span>:</span><span class="line">          - { name: pool_id, path: $.pool, type: text }</span><span class="line">          - { name: filter_model, path: $.filter_model, type: text }</span><span class="line">          - { name: alert_pressure_bar, path: $.alert_pressure_bar, type: decimal }</span><span class="line">          - { name: warranty_until, path: $.warranty_until, type: date }</span><span class="line">          - { name: spare_parts, path: $.spare_parts, type: text }</span><span class="line">          - { name: check, path: $.check, type: text }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="sources-commands" aria-labelledby="sources-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-myindygo.yaml</span>
+<span class="out">Applied connector &quot;scenario-pool-myindygo-d&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f 20-crm.yaml</span>
+<span class="out">Applied connector &quot;scenario-pool-crm-d&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f 21-maintenance.yaml</span>
+<span class="out">Applied connector &quot;scenario-pool-gmao-d&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f 22-erp.yaml</span>
+<span class="out">Applied connector &quot;scenario-pool-erp-d&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm source rest test scenario-pool-myindygo-d</span>
+<span class="out">ENDPOINT  METHOD  STATUS  ITEMS  VERDICT
+modules   POST    200     3      ok</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-pool-myindygo-d</span>
+<span class="out">run scheduled: b442b38f-21e4-4271-8c03-995407183368</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get b442b38f-21e4-4271-8c03-995407183368 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR                 ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+b442b38f  scenario-pool-myindygo-d  modules   Completed  3   3    0        0             2026-11-20 23:13  2026-11-20 23:13  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-pool-crm-d</span>
+<span class="out">run scheduled: 19e29ea6-074c-476d-b8bf-66d2868afc89</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 19e29ea6-074c-476d-b8bf-66d2868afc89 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR            ENDPOINT   STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+19e29ea6  scenario-pool-crm-d  customers  Completed  3   3    0        0             2026-11-20 23:13  2026-11-20 23:13  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-pool-gmao-d</span>
+<span class="out">run scheduled: f33e3540-1974-4d8d-acb4-9d4a3055ae02</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get f33e3540-1974-4d8d-acb4-9d4a3055ae02 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR             ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+f33e3540  scenario-pool-gmao-d  visits    Completed  3   3    0        0             2026-11-20 23:13  2026-11-20 23:13  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-pool-erp-d</span>
+<span class="out">run scheduled: 96e6ef8f-4684-4cb2-9430-dc4a666f1b2c</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 96e6ef8f-4684-4cb2-9430-dc4a666f1b2c --wait-evaluated</span>
+<span class="out">ID        CONNECTOR            ENDPOINT   STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+96e6ef8f  scenario-pool-erp-d  installed  Completed  3   3    0        0             2026-11-20 23:13  2026-11-20 23:13  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="sources-result" aria-labelledby="sources-result-tab" tabindex="0" hidden><dl class="facts"><dt>pre-flight modules</dt><dd>POST 200 · 3 items · ok</dd><dt>scenario-pool-myindygo-d</dt><dd>IN 3 · OUT 3</dd><dt>scenario-pool-crm-d</dt><dd>IN 3 · OUT 3</dd><dt>scenario-pool-gmao-d</dt><dd>IN 3 · OUT 3</dd><dt>scenario-pool-erp-d</dt><dd>IN 3 · OUT 3</dd></dl><p class="sources">preuves: replay.log, 03-decisions-after-poll-2.json, 03-decisions-after-poll-3.json, 03-decisions-after-poll-4.json, requests.log · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-fuse" aria-labelledby="fuse-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="fuse-title">Un module devient une piscine, un client et un filtre</h2>
+      <p>L&#x27;entité joint chaque module à sa piscine, par pool_id. Le Process lit la fiche fusionnée.</p><ul class="prose-list"><li>joins: le client et le technicien (CRM), le dernier lavage (GMAO), le filtre et sa limite (ERP)</li><li>filtration=1: une pression lue pompe arrêtée ne dit rien du filtre</li><li>pressure_bar&gt;{alert_pressure_bar}: la limite est celle du filtre installé, pas un seuil unique</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Deux conditions</strong><p>La pression et l&#x27;état de la filtration, ensemble.</p></div></li><li><span class="n">2</span><div><strong>Limite par filtre</strong><p>F-600: 1,5 bar. F-500: 1,4 bar.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La condition compare deux colonnes venues de deux outils.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Rassembler"><button type="button" role="tab" id="fuse-manifest-tab" data-view="manifest" aria-controls="fuse-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="fuse-commands-tab" data-view="commands" aria-controls="fuse-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="fuse-result-tab" data-view="result" aria-controls="fuse-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="fuse-manifest" aria-labelledby="fuse-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/30-pool-filter.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ScenarioPoolFilterA</span><span class="line"><span class="key">description</span>: <span class="str">&quot;A pool&#x27;s filtration module as MyIndygo last measured it, with its customer, its last maintenance and its installed filter.&quot;</span></span><span class="line"><span class="key">match</span>: [module]</span><span class="line"><span class="key">scopes</span>: [pool-service]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">module</span>: { label: <span class="str">&quot;Module&quot;</span> }</span><span class="line">  <span class="key">pool_id</span>: { label: <span class="str">&quot;Pool&quot;</span> }</span><span class="line">  <span class="key">pool_name</span>: { label: <span class="str">&quot;Pool name&quot;</span> }</span><span class="line">  <span class="key">measured_at</span>: { label: <span class="str">&quot;Measured at&quot;</span> }</span><span class="line">  <span class="key">pressure_bar</span>: { label: <span class="str">&quot;Filter pressure (bar)&quot;</span> }</span><span class="line">  <span class="key">filtration</span>: { label: <span class="str">&quot;Filtration running (1 = yes)&quot;</span> }</span><span class="line">  <span class="key">customer</span>: { label: <span class="str">&quot;Customer&quot;</span> }</span><span class="line">  <span class="key">town</span>: { label: <span class="str">&quot;Town&quot;</span> }</span><span class="line">  <span class="key">contract</span>: { label: <span class="str">&quot;Contract&quot;</span> }</span><span class="line">  <span class="key">technician</span>: { label: <span class="str">&quot;Technician&quot;</span> }</span><span class="line">  <span class="key">last_backwash</span>: { label: <span class="str">&quot;Last backwash&quot;</span> }</span><span class="line">  <span class="key">last_visit</span>: { label: <span class="str">&quot;Last visit&quot;</span> }</span><span class="line">  <span class="key">filter_model</span>: { label: <span class="str">&quot;Filter&quot;</span> }</span><span class="line">  <span class="key">alert_pressure_bar</span>: { label: <span class="str">&quot;Alert pressure (bar)&quot;</span> }</span><span class="line">  <span class="key">warranty_until</span>: { label: <span class="str">&quot;Warranty until&quot;</span> }</span><span class="line">  <span class="key">spare_parts</span>: { label: <span class="str">&quot;Spare parts&quot;</span> }</span><span class="line">  <span class="key">check</span>: { label: <span class="str">&quot;Check&quot;</span> }</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: scenario_pool_module_a</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">module</span>: module</span><span class="line">      <span class="key">pool_id</span>: pool_id</span><span class="line">      <span class="key">pool_name</span>: pool_name</span><span class="line">      <span class="key">measured_at</span>: measured_at</span><span class="line">      <span class="key">pressure_bar</span>: pressure_bar</span><span class="line">      <span class="key">filtration</span>: filtration</span><span class="line hl"><span class="key">joins</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: scenario_pool_customer_a</span><span class="line">    <span class="key">from</span>: pool_id</span><span class="line">    <span class="key">to</span>: pool_id</span><span class="line">    <span class="key">map</span>: { customer: customer, town: town, contract: contract, technician: technician }</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: scenario_pool_visit_a</span><span class="line">    <span class="key">from</span>: pool_id</span><span class="line">    <span class="key">to</span>: pool_id</span><span class="line">    <span class="key">map</span>: { last_backwash: last_backwash, last_visit: last_visit }</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: scenario_pool_equipment_a</span><span class="line">    <span class="key">from</span>: pool_id</span><span class="line">    <span class="key">to</span>: pool_id</span><span class="line">    <span class="key">map</span>: { filter_model: filter_model, alert_pressure_bar: alert_pressure_bar, warranty_until: warranty_until, spare_parts: spare_parts, check: check }</span></code></pre><div class="file"><span class="filename">manifests/40-filter-visit.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Process</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-pool-filter-visit-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: pool-service</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">event</span>: data.row.changed</span><span class="line">    <span class="key">table</span>: connector.v_scenariopoolfiltera</span><span class="line hl">  <span class="key">when</span>:</span><span class="line">    - filtration=1                          <span class="comment"># a pressure read with the pump stopped says nothing about the filter</span></span><span class="line">    - <span class="str">&quot;pressure_bar&gt;{alert_pressure_bar}&quot;</span>   <span class="comment"># the limit is the installed filter&#x27;s, from the ERP</span></span><span class="line hl">  <span class="key">emit</span>:</span><span class="line">    <span class="key">type</span>: decision.pool-filter-visit-a</span><span class="line">    <span class="key">key</span>: pool_id</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;{pool_name} ({customer}, {town}): filter pressure {pressure_bar} bar while filtration runs, above {alert_pressure_bar} bar for its {filter_model}. Last backwash {last_backwash}. Visit for {technician}: {check}.&quot;</span></span><span class="line">    <span class="key">fields</span>: [module, measured_at, spare_parts, warranty_until]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="fuse-commands" aria-labelledby="fuse-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm entity apply -f 30-pool-filter.yaml</span>
+<span class="out">Applied entity &quot;ScenarioPoolFilterD&quot; → connector.&quot;v_scenariopoolfilterd&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm process apply -f 40-filter-visit.yaml</span>
+<span class="out">Applied process &quot;scenario-pool-filter-visit-d&quot; → table connector.v_scenariopoolfilterd, emits decision.pool-filter-visit-d</span>
+<span class="note">warning: managed index on connector.scenario_pool_module_d is pending; Entity Process reads may be slower until it is ready</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="fuse-result" aria-labelledby="fuse-result-tab" tabindex="0" hidden><dl class="facts"><dt>ScenarioPoolFilterD</dt><dd>v_scenariopoolfilterd</dd><dt>scenario-pool-filter-visit-d</dt><dd>connector.v_scenariopoolfilterd</dd></dl><p class="sources">preuves: replay.log, 03-decisions-after-poll-2.json, 03-decisions-after-poll-3.json, 03-decisions-after-poll-4.json, requests.log · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-polls" aria-labelledby="polls-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="polls-title">Martin monte, Leroy reste haut pompe arrêtée</h2>
+      <p>Trois nouveaux relevés MyIndygo arrivent, un par run. lm run get --wait-evaluated attend que le Process ait lu chaque run.</p><ul class="prose-list"><li>Pool Martin: 1,1 puis 1,3 puis 1,6 bar, filtration en marche</li><li>Pool Dubois: reste vers 0,8 bar</li><li>Pool Leroy: 1,7 bar, filtration arrêtée</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Relevé 3</strong><p>Leroy dépasse sa limite, pompe arrêtée: aucune décision.</p></div></li><li><span class="n">2</span><div><strong>Relevé 4</strong><p>Martin dépasse 1,5 bar, pompe en marche: une décision.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une lecture haute sans filtration ne déclenche rien.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Relever"><button type="button" role="tab" id="polls-source-tab" data-view="source" aria-controls="polls-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="polls-commands-tab" data-view="commands" aria-controls="polls-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="polls-result-tab" data-view="result" aria-controls="polls-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="polls-source" aria-labelledby="polls-source-tab" tabindex="0"><figure class="source"><figcaption>myindygo-poll-4.json</figcaption><pre class="code">{
+ &quot;modules&quot;: [
+  {
+   &quot;id&quot;: &quot;LRPC-0A1F01&quot;,
+   &quot;serialNumber&quot;: &quot;LRPC-0A1F01&quot;,
+   &quot;type&quot;: &quot;lr-pc-vs2&quot;,
+   &quot;name&quot;: &quot;Filtration&quot;,
+   &quot;pool&quot;: &quot;POOL-101&quot;,
+   &quot;poolName&quot;: &quot;Pool Martin&quot;,
+   &quot;inputs&quot;: [
+    {
+     &quot;type&quot;: 6,
+     &quot;lastValue&quot;: {
+      &quot;value&quot;: 7.2,
+      &quot;date&quot;: &quot;2026-11-20T10:00:00Z&quot;
+     }
+    },
+    {
+     &quot;type&quot;: 8,
+     &quot;lastComputedMeasure&quot;: {</pre><p class="source-more">… 107 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-commands" id="polls-commands" aria-labelledby="polls-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm connector run scenario-pool-myindygo-d</span>
+<span class="out">run scheduled: 767b7164-cab5-4968-9c74-fc2f4c0a5992</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 767b7164-cab5-4968-9c74-fc2f4c0a5992 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR                 ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+767b7164  scenario-pool-myindygo-d  modules   Completed  3   3    0        0             2026-11-20 23:13  2026-11-20 23:13  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-pool-myindygo-d</span>
+<span class="out">run scheduled: f48ddc9c-ff94-44eb-9e26-818d6d515325</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get f48ddc9c-ff94-44eb-9e26-818d6d515325 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR                 ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+f48ddc9c  scenario-pool-myindygo-d  modules   Completed  3   3    0        0             2026-11-20 23:13  2026-11-20 23:13  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-pool-myindygo-d</span>
+<span class="out">run scheduled: f651a2aa-baae-4159-86bb-d12b8241dafc</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get f651a2aa-baae-4159-86bb-d12b8241dafc --wait-evaluated</span>
+<span class="out">ID        CONNECTOR                 ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+f651a2aa  scenario-pool-myindygo-d  modules   Completed  3   3    0        0             2026-11-20 23:13  2026-11-20 23:13  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="polls-result" aria-labelledby="polls-result-tab" tabindex="0" hidden><dl class="facts"><dt>poll 2</dt><dd>IN 3 · OUT 3 · 0 decision(s)</dd><dt>poll 3</dt><dd>IN 3 · OUT 3 · 0 decision(s)</dd><dt>poll 4</dt><dd>IN 3 · OUT 3 · 1 decision(s) · Pool Martin</dd></dl><p class="sources">preuves: replay.log, 03-decisions-after-poll-2.json, 03-decisions-after-poll-3.json, 03-decisions-after-poll-4.json, requests.log · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-decide" aria-labelledby="decide-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="decide-title">Une visite pour Pool Martin, et la fiche derrière</h2>
+      <p>L&#x27;inbox reçoit une seule décision. Elle dit où aller et quoi vérifier.</p><ul class="prose-list"><li>la piscine, le client et la ville</li><li>le dernier lavage: 2026-10-04</li><li>le filtre F-600, le technicien et le contrôle à faire</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Clé</strong><p>La décision porte le numéro de piscine, POOL-101.</p></div></li><li><span class="n">2</span><div><strong>Fiche</strong><p>Pièces et garantie voyagent dans les champs de la décision.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Seule la piscine au-dessus de la limite de son filtre, pompe en marche, déclenche une visite.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Décider"><button type="button" role="tab" id="decide-commands-tab" data-view="commands" aria-controls="decide-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="decide-result-tab" data-view="result" aria-controls="decide-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="decide-commands" aria-labelledby="decide-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm inbox --process scenario-pool-filter-visit-d</span>
+<span class="out">ID     WHEN      PROCESS                       MESSAGE                                                                                                                                                                                                                   ENTITY_KEY
+31141  just now  scenario-pool-filter-visit-d  Pool Martin (M. et Mme Martin, Aix-en-Provence): filter pressure 1.6 bar while filtration runs, above 1.5 bar for its F-600. Last backwash 2026-10-04. Visit for Lucas Bernard: backwash, then check the pressure gauge.  POOL-101</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get ScenarioPoolFilterD -o json</span>
+<span class="out">[
+  {
+    &quot;module&quot;: &quot;LRPC-0A1F01&quot;,
+    &quot;pool_id&quot;: &quot;POOL-101&quot;,
+    &quot;pool_name&quot;: &quot;Pool Martin&quot;,
+    &quot;measured_at&quot;: &quot;2026-11-20T10:00:00Z&quot;,
+    &quot;pressure_bar&quot;: &quot;1.6&quot;,
+    &quot;filtration&quot;: &quot;1&quot;,
+    &quot;customer&quot;: &quot;M. et Mme Martin&quot;,
+    &quot;town&quot;: &quot;Aix-en-Provence&quot;,
+    &quot;contract&quot;: &quot;Sérénité annual&quot;,
+    &quot;technician&quot;: &quot;Lucas Bernard&quot;,
+    &quot;last_backwash&quot;: &quot;2026-10-04&quot;,
+    &quot;last_visit&quot;: &quot;2026-10-04&quot;,
+    &quot;filter_model&quot;: &quot;F-600&quot;,
+    &quot;alert_pressure_bar&quot;: &quot;1.5&quot;,
+    &quot;warranty_until&quot;: &quot;2027-06-30&quot;,
+    &quot;spare_parts&quot;: &quot;pressure gauge MG-63, lid O-ring J-600&quot;,
+    &quot;check&quot;: &quot;backwash, then check the pressure gauge&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;module&quot;: &quot;LRPC-0A1F02&quot;,
+    &quot;pool_id&quot;: &quot;POOL-102&quot;,
+    &quot;pool_name&quot;: &quot;Pool Dubois&quot;,
+    &quot;measured_at&quot;: &quot;2026-11-20T10:00:00Z&quot;,
+    &quot;pressure_bar&quot;: &quot;0.8&quot;,
+    &quot;filtration&quot;: &quot;1&quot;,
+    &quot;customer&quot;: &quot;Famille Dubois&quot;,
+    &quot;town&quot;: &quot;Pertuis&quot;,
+    &quot;contract&quot;: &quot;Sérénité annual&quot;,
+    &quot;technician&quot;: &quot;Lucas Bernard&quot;,
+    &quot;last_backwash&quot;: &quot;2026-11-10&quot;,
+    &quot;last_visit&quot;: &quot;2026-11-10&quot;,
+    &quot;filter_model&quot;: &quot;F-500&quot;,
+    &quot;alert_pressure_bar&quot;: &quot;1.4&quot;,
+    &quot;warranty_until&quot;: &quot;2026-03-31&quot;,
+    &quot;spare_parts&quot;: &quot;pressure gauge MG-63&quot;,
+    &quot;check&quot;: &quot;backwash, then check the pressure gauge&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;module&quot;: &quot;LRPC-0A1F03&quot;,
+    &quot;pool_id&quot;: &quot;POOL-103&quot;,
+    &quot;pool_name&quot;: &quot;Pool Leroy&quot;,
+    &quot;measured_at&quot;: &quot;2026-11-20T22:00:00Z&quot;,
+    &quot;pressure_bar&quot;: &quot;1.7&quot;,
+    &quot;filtration&quot;: &quot;0&quot;,
+    &quot;customer&quot;: &quot;Camping Leroy&quot;,
+    &quot;town&quot;: &quot;Manosque&quot;,
+    &quot;contract&quot;: &quot;On call&quot;,
+    &quot;technician&quot;: &quot;Inès Moreau&quot;,
+    &quot;last_backwash&quot;: &quot;2026-11-02&quot;,
+    &quot;last_visit&quot;: &quot;2026-11-02&quot;,
+    &quot;filter_model&quot;: &quot;F-750&quot;,
+    &quot;alert_pressure_bar&quot;: &quot;1.5&quot;,
+    &quot;warranty_until&quot;: &quot;2028-04-30&quot;,
+    &quot;spare_parts&quot;: &quot;pressure gauge MG-63, valve V-6&quot;,
+    &quot;check&quot;: &quot;backwash, then check the pressure gauge&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  }
+]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="decide-result" aria-labelledby="decide-result-tab" tabindex="0" hidden><dl class="facts"><dt>decisions</dt><dd>1 · scenario-pool-filter-visit-d · key POOL-101</dd><dt>message</dt><dd>Pool Martin (M. et Mme Martin, Aix-en-Provence): filter pressure 1.6 bar while filtration runs, above 1.5 bar for its F-600. Last backwash 2026-10-04. Visit for Lucas Bernard: backwash, then check the pressure gauge.</dd><dt>Pool Martin</dt><dd>1.6 bar · filtration running · F-600 limit 1.5 bar · last backwash 2026-10-04</dd><dt>Pool Dubois</dt><dd>0.8 bar · filtration running · F-500 limit 1.4 bar · last backwash 2026-11-10</dd><dt>Pool Leroy</dt><dd>1.7 bar · filtration stopped · F-750 limit 1.5 bar · last backwash 2026-11-02</dd></dl><p class="sources">preuves: replay.log, 03-decisions-after-poll-2.json, 03-decisions-after-poll-3.json, 03-decisions-after-poll-4.json, requests.log · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>La forme de l&#x27;API est déduite de l&#x27;intégration Home Assistant FunFR/ha-indygo-pool, sans lien avec MyIndygo: elle peut changer. Le vrai service demande une connexion OAuth2 que ce service de test n&#x27;exige pas.</li><li>lumnik garde la dernière mesure de chaque module et la compare à la limite du filtre. Il ne compare pas les relevés entre eux: la montée se lit dans le tableau des relevés.</li><li>Le message donne la date du dernier lavage, pas le nombre de jours écoulés.</li><li>La décision propose un contrôle. Elle ne dit pas que le filtre est colmaté: le manomètre lui-même peut être en cause.</li><li>lumnik ne remplace ni les alertes ni l&#x27;historique de MyIndygo, et ne pilote ni la pompe ni un programme.</li><li>Piscines, clients, dates et valeurs synthétiques.</li></ul></section>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
