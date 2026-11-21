@@ -932,6 +932,27 @@
       "evidenceDigest": "sha256:ae510178af68b582e75a073f55bf789b31bbf7108476f9bc3d6fa12d25e3442a"
     },
     {
+      "slug": "odoo-quotation-expired",
+      "title": "Un devis Odoo envoyé expiré et resté sans réponse",
+      "goal": "Être alerté du devis Odoo envoyé au client, passé sa date de validité et toujours sans réponse, sans toucher à Odoo.",
+      "lede": "Odoo donne à chaque devis une date de validité. Le client ne répond pas, la date passe, le devis reste «Devis envoyé». Odoo l'affiche expiré quand on l'ouvre, sans le signaler à personne.\n- quatre devis dans un vrai Odoo 18\n- un Workflow déclare les états d'Odoo et l'échéance validity_date\n- une décision: le seul devis envoyé et expiré",
+      "tags": {
+        "domain": [
+          "ERP",
+          "Odoo",
+          "Ventes"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "Workflow"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:731183e2f61f940cd858628771f8eb413b242823faea61442de37d22d64c2ac8"
+    },
+    {
       "slug": "one-app-per-metier",
       "title": "Un technicien ne voit que l'app de la maintenance",
       "goal": "Donner à la maintenance et aux achats chacun son app sur le même hub, pour qu'un technicien lise ses ordres de travail sans ouvrir une facture fournisseur ni solder une décision des achats.",
