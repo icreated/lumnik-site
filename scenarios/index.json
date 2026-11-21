@@ -933,6 +933,25 @@
       "evidenceDigest": "sha256:69ef587c0021ffa045f4e926ee84334d73dd1ec689ec4ea45b27d1b1ad66f639"
     },
     {
+      "slug": "odata-v4-next-link",
+      "title": "OData v4 paginé par le serveur: lumnik suit @odata.nextLink",
+      "goal": "Lire les 120 clients d'un service OData v4 paginé par le serveur, comme Business Central, en pages de 20 demandées par Prefer, sans en perdre un.",
+      "lede": "Business Central pagine ses réponses OData côté serveur, et un client demande des pages plus petites avec Prefer: odata.maxpagesize. La page suivante n'est pas un paramètre calculé: c'est @odata.nextLink, une URL que le serveur renvoie.\n- un vrai service ASP.NET Core OData v4\n- le preset odata-v4, le total $count comme témoin\n- six pages de 20, 120 clients",
+      "tags": {
+        "domain": [
+          "ERP",
+          "API",
+          "Microsoft"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:9e67fa1c13405fe9f0d73e7e4a01d677da91d08113b29accf52136d57a2aa1e1"
+    },
+    {
       "slug": "odoo-json2-partners",
       "title": "Odoo 19 et son API JSON-2: la page se lit dans le corps",
       "goal": "Lire les 250 contacts d'un vrai Odoo 19 par son API JSON-2, page par page, sans base de données ouverte.",
