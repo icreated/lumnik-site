@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Un permis bientôt accordé par le silence de la mairie — lumnik</title>
+<meta name="description" content="Être prévenu sept jours avant qu&#x27;une demande d&#x27;urbanisme non tranchée devienne une décision tacite, selon son type et son délai légal. Une mairie instruit les demandes d&#x27;urbanisme. Sans décision notifiée dans le délai, le silence vaut non-opposition ou permis tacite. Une mairie qui perd un dossier de vue a décidé sans le vouloir: l&#x27;alerte ne vaut que si elle arrive avant. Le délai en mois, calculé à l&#x27;entrée par le script de l&#x27;opérateur. L&#x27;alerte sept jours avant l&#x27;échéance. L&#x27;exception ABF écrite une fois.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/urbanism-tacit-permit/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/urbanism-tacit-permit/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Un permis bientôt accordé par le silence de la mairie</h1>
+    <p class="goal"><strong>Objectif</strong> Être prévenu sept jours avant qu&#x27;une demande d&#x27;urbanisme non tranchée devienne une décision tacite, selon son type et son délai légal.</p>
+    <p class="lede">Une mairie instruit les demandes d&#x27;urbanisme. Sans décision notifiée dans le délai, le silence vaut non-opposition ou permis tacite. Une mairie qui perd un dossier de vue a décidé sans le vouloir: l&#x27;alerte ne vaut que si elle arrive avant.</p><ul class="lede-list"><li>le délai en mois, calculé à l&#x27;entrée par le script de l&#x27;opérateur</li><li>l&#x27;alerte sept jours avant l&#x27;échéance</li><li>l&#x27;exception ABF écrite une fois</li></ul>
+    <ul class="tags"><li class="tag edition edition-pro"><a href="https://docs.lumnik.io/editions/">lumnik Pro</a></li><li class="tag">Collectivités</li><li class="tag">Urbanisme</li><li class="tag">Administration</li><li class="tag kind">Connector</li><li class="tag kind">Workflow</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-declare" data-step="declare" aria-current="step"><span class="num">1 · Déclarer</span><span class="sub">Script + Workflow</span></a><a href="#step-decide" data-step="decide"><span class="num">2 · Prévenir</span><span class="sub">Avant l&#x27;échéance</span></a></nav>
+  <section class="step" id="step-declare" aria-labelledby="declare-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="declare-title">Le délai légal calculé à l&#x27;entrée</h2>
+      <p>Le registre des demandes arrive par SFTP. Le script de l&#x27;opérateur calcule l&#x27;échéance et l&#x27;alerte.</p><ul class="prose-list"><li>DP: 1 mois, PCMI et PD: 2 mois, PC et PA: 3 mois (R*423-23)</li><li>warn_on: sept jours avant l&#x27;échéance</li><li>avis ABF: le silence vaut rejet (R*424-3), pas d&#x27;alerte</li><li>due.column: warn_on, en état EN_INSTRUCTION</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Des mois, pas des jours</strong><p>Le script ajoute des mois, comme le code les compte.</p></div></li><li><span class="n">2</span><div><strong>L&#x27;exception</strong><p>tacit_issue dit pourquoi un dossier n&#x27;a pas d&#x27;alerte.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un délai légal en mois se déclare une fois.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="declare-source-tab" data-view="source" aria-controls="declare-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="declare-manifest-tab" data-view="manifest" aria-controls="declare-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="declare-commands-tab" data-view="commands" aria-controls="declare-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="declare-result-tab" data-view="result" aria-controls="declare-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="declare-source" aria-labelledby="declare-source-tab" tabindex="0"><figure class="source"><figcaption>registre-urbanisme.csv</figcaption><pre class="code">dossier_no;type;objet;complete_on;abf;status
+DP-2026-041;DP;Pose d&#x27;une clôture, 12 rue des Lilas;2026-10-25;non;EN_INSTRUCTION
+PCMI-2026-017;PCMI;Maison individuelle, lotissement Les Prés;2026-11-01;non;EN_INSTRUCTION
+PC-2026-008;PC;Hangar agricole, chemin du Moulin;2026-08-25;non;EN_INSTRUCTION
+DP-2026-039;DP;Ravalement de façade, place de l&#x27;Église;2026-10-23;non;ACCORDE
+PCMI-2026-015;PCMI;Extension, abords de la chapelle;2026-09-24;oui;EN_INSTRUCTION</pre></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="declare-manifest" aria-labelledby="declare-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/tacit-deadline.kts</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line">// Operator-provided: when a town hall&#x27;s silence on a planning application becomes a tacit decision, and when to warn.</span><span class="line">// Code de l&#x27;urbanisme R*423-23: 1 month for a prior declaration (DP), 2 for a house (PCMI) or a demolition (PD),</span><span class="line">// 3 for any other building permit (PC) or a development permit (PA), from the day the file is complete.</span><span class="line">// R*424-1: silence then counts as non-opposition or a tacit permit. R*424-3: with the ABF&#x27;s opinion, silence is a</span><span class="line">// refusal — no tacit decision, so no warning. The warning falls 7 days before the deadline.</span><span class="line">@Suppress(<span class="str">&quot;UNCHECKED_CAST&quot;</span>)</span><span class="line">val cells = bindings[<span class="str">&quot;cells&quot;</span>] as MutableMap&lt;String, Any?&gt;</span><span class="line">val months = when ((cells[<span class="str">&quot;type&quot;</span>] as String?)?.trim()) {</span><span class="line">    <span class="str">&quot;DP&quot;</span> -&gt; 1L</span><span class="line">    <span class="str">&quot;PCMI&quot;</span>, <span class="str">&quot;PD&quot;</span> -&gt; 2L</span><span class="line">    <span class="str">&quot;PC&quot;</span>, <span class="str">&quot;PA&quot;</span> -&gt; 3L</span><span class="line">    else -&gt; null</span><span class="line">}</span><span class="line">val complete = (cells[<span class="str">&quot;complete_on&quot;</span>] as String?)?.trim()</span><span class="line">val abf = (cells[<span class="str">&quot;abf&quot;</span>] as String?)?.trim() == <span class="str">&quot;oui&quot;</span></span><span class="line hl">val deadline = if (months == null || complete.isNullOrEmpty()) null else java.time.LocalDate.parse(complete).plusMonths(months)</span><span class="line">cells[<span class="str">&quot;deadline_on&quot;</span>] = deadline?.toString()</span><span class="line hl">cells[<span class="str">&quot;warn_on&quot;</span>] = if (deadline == null || abf) null else deadline.minusDays(7).toString()</span><span class="line">cells[<span class="str">&quot;tacit_issue&quot;</span>] = when {</span><span class="line">    months == null -&gt; <span class="str">&quot;unknown type&quot;</span></span><span class="line">    complete.isNullOrEmpty() -&gt; <span class="str">&quot;file not complete&quot;</span></span><span class="line">    abf -&gt; <span class="str">&quot;ABF opinion: silence is a refusal (R*424-3)&quot;</span></span><span class="line">    else -&gt; null</span><span class="line">}</span></code></pre><div class="file"><span class="filename">manifests/10-register.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-urbanisme-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [urbanisme-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: sftp</span><span class="line">    <span class="key">host</span>: host.docker.internal</span><span class="line">    <span class="key">port</span>: 2229</span><span class="line">    <span class="key">user</span>: mairie</span><span class="line">    <span class="key">path</span>: /exports/registre-urbanisme.csv</span><span class="line">    <span class="key">password_env</span>: SCENARIO_URBANISME_A_SFTP</span><span class="line">    <span class="comment"># The fingerprint the town hall&#x27;s export server presents, read out of band (ssh-keyscan | ssh-keygen -lf -).</span></span><span class="line">    <span class="key">host_key_fingerprint</span>: <span class="str">&quot;SHA256:FINGERPRINT_READ_AT_REPLAY&quot;</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">    <span class="key">encoding</span>: UTF-8</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line hl">      <span class="dash">-</span> <span class="key">kotlin</span>:</span><span class="line">          <span class="key">script</span>: hooks:tacit-deadline-a.kts      <span class="comment"># the operator&#x27;s script: R*423-23 periods, R*424-3 exception</span></span><span class="line">      - parse-date: { column: complete_on, formats: [<span class="str">&quot;yyyy-MM-dd&quot;</span>] }</span><span class="line">      - parse-date: { column: deadline_on, formats: [<span class="str">&quot;yyyy-MM-dd&quot;</span>] }</span><span class="line">      - parse-date: { column: warn_on, formats: [<span class="str">&quot;yyyy-MM-dd&quot;</span>] }</span></code></pre><div class="file"><span class="filename">manifests/20-instruction.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Workflow</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-urbanisme-tacit-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: urbanisme-a</span><span class="line">  <span class="key">provenance</span>: declared</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">table</span>: connector.t_scenario_urbanisme_a</span><span class="line">    <span class="key">column</span>: status</span><span class="line">    <span class="key">key</span>: dossier_no</span><span class="line hl">  <span class="key">due</span>:</span><span class="line">    <span class="key">column</span>: warn_on               <span class="comment"># seven days before silence becomes a tacit decision</span></span><span class="line">    <span class="key">states</span>: [EN_INSTRUCTION]</span><span class="line">    <span class="key">zone</span>: Europe/Paris</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;{doc_key} ({type}, {objet}): without a decision notified by {deadline_on}, silence becomes a tacit decision&quot;</span></span><span class="line">    <span class="key">fields</span>: [complete_on, tacit_issue]</span><span class="line">  <span class="key">states</span>:</span><span class="line">    - { code: EN_INSTRUCTION, label: <span class="str">&quot;Under instruction&quot;</span>, initial: true }</span><span class="line">    - { code: ACCORDE, label: <span class="str">&quot;Granted&quot;</span>, terminal: true }</span><span class="line">    - { code: REFUSE, label: <span class="str">&quot;Refused&quot;</span>, terminal: true }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="declare-commands" aria-labelledby="declare-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm hook scripts</span>
+<span class="out">NAME                  SIZE  SHA256
+cfonb-amount-b.kts    784   3f94b73a8a923324f6750648e230e3d91026299ed636627a4562b14552d493ba
+cfonb-amount-c.kts    784   3f94b73a8a923324f6750648e230e3d91026299ed636627a4562b14552d493ba
+coordinates-c.kts     5076  cc87f4a8e8ccbb38f3306d4dce5a013dab984c36a8cd72afd72e8bd142504542
+ean-check-b.kts       477   58c3d6b83a0df5c9ae779aada8604f6bd850db7c52ca258b5bc6dc45fd8ea23c
+ean-check-c.kts       477   58c3d6b83a0df5c9ae779aada8604f6bd850db7c52ca258b5bc6dc45fd8ea23c
+ean-check-d.kts       477   58c3d6b83a0df5c9ae779aada8604f6bd850db7c52ca258b5bc6dc45fd8ea23c
+ean-draft-b.kts       476   c8692d84859f810de8903ded14a03a1ec4db93e1282aa88b4fb9f5e42b6586ea
+ean-draft-c.kts       476   c8692d84859f810de8903ded14a03a1ec4db93e1282aa88b4fb9f5e42b6586ea
+ean-draft-d.kts       526   90a58aae66c5feec5e52017e90d86b9ee93e46ce7d97dc0c1eb4b5faefb636a7
+promised-date-b.kts   1407  44ceece5d17c40d337374d02f942aef41b092b6708ff7dbc48efc8b43aef1ac9
+shipping-fee-c.kts    333   c1c59e5c7b81302d5a284c9c722ca8cacaca0fe859c8ae1c393cd1d54a1ad9ad
+shipping-fee-p.kts    333   c1c59e5c7b81302d5a284c9c722ca8cacaca0fe859c8ae1c393cd1d54a1ad9ad
+tacit-deadline-a.kts  1337  a8a09729abec39c1ea34b898c52e4342b26884a0dc6880d65f1f2f6b541b687c</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f 10-register.yaml</span>
+<span class="out">Applied connector &quot;scenario-urbanisme-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-urbanisme-a</span>
+<span class="out">run scheduled: 7a28fdc2-8832-4750-a023-3e9b8ddc9789</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 7a28fdc2-8832-4750-a023-3e9b8ddc9789 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR             ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+7a28fdc2  scenario-urbanisme-a  default   Completed  5   5    0        0             2026-11-21 23:14  2026-11-21 23:14  yes</span>
+<span class="note">• script hooks:tacit-deadline-a.kts  sha256 a8a09729abec39c1ea34b898c52e4342b26884a0dc6880d65f1f2f6b541b687c</span>
+
+<span class="cmd"><span class="prompt">$</span> lm workflow apply -f 20-instruction.yaml -o json</span>
+<span class="out">{
+  &quot;name&quot;: &quot;scenario-urbanisme-tacit-a&quot;,
+  &quot;scope&quot;: &quot;urbanisme-a&quot;,
+  &quot;table&quot;: &quot;connector.t_scenario_urbanisme_a&quot;,
+  &quot;column&quot;: &quot;status&quot;,
+  &quot;dataTruth&quot;: {
+    &quot;undeclared&quot;: [],
+    &quot;unobserved&quot;: [
+      &quot;REFUSE&quot;
+    ],
+    &quot;nullOrBlank&quot;: 0,
+    &quot;tableMissing&quot;: false,
+    &quot;keyColumnMissing&quot;: false,
+    &quot;keyNullOrBlank&quot;: 0,
+    &quot;checkUnavailable&quot;: false,
+    &quot;unavailableReason&quot;: null,
+    &quot;dueProblem&quot;: null,
+    &quot;invalidOrderValues&quot;: null,
+    &quot;keysWithSeveralRows&quot;: null,
+    &quot;columnsUnverified&quot;: []
+  }
+}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="declare-result" aria-labelledby="declare-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>IN 5 · OUT 5 · cell errors 0</dd><dt>DP-2026-041</dt><dd>tacit on 2026-11-25</dd><dt>PCMI-2026-017</dt><dd>tacit on 2027-01-01</dd><dt>PC-2026-008</dt><dd>tacit on 2026-11-25</dd><dt>DP-2026-039</dt><dd>tacit on 2026-11-23</dd><dt>PCMI-2026-015</dt><dd>tacit on 2026-11-24</dd></dl><p class="sources">preuves: replay.log, 00-check-deadlines.txt, 01-hook-scripts.txt, 02-run.json, 03-workflow-apply.json, 04-decisions.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-decide" aria-labelledby="decide-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="decide-title">Deux dossiers à trancher avant le silence</h2>
+      <p>Au balayage suivant, chaque dossier en instruction à moins de sept jours de son échéance donne une décision.</p><ul class="prose-list"><li>DP-2026-041, une clôture: 1 mois</li><li>PC-2026-008, un hangar: 3 mois</li><li>la maison individuelle, loin de son échéance: rien</li><li>le dossier accordé, et celui avec avis ABF: rien</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Vérifié à part</strong><p>data/check_deadlines.py calcule les mêmes alertes, avec son propre code.</p></div></li><li><span class="n">2</span><div><strong>L&#x27;échéance dans la phrase</strong><p>La décision cite le jour où le silence deviendra une décision.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>L&#x27;alerte arrive avant l&#x27;échéance, pour les seuls dossiers concernés.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Prévenir"><button type="button" role="tab" id="decide-commands-tab" data-view="commands" aria-controls="decide-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="decide-result-tab" data-view="result" aria-controls="decide-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="decide-commands" aria-labelledby="decide-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm inbox --process workflow:scenario-urbanisme-tacit-a</span>
+<span class="out">ID     WHEN      PROCESS                              MESSAGE                                                                                                                              ENTITY_KEY
+31747  just now  workflow:scenario-urbanisme-tacit-a  PC-2026-008 (PC, Hangar agricole, chemin du Moulin): without a decision notified by 2026-11-25, silence becomes a tacit decision     PC-2026-008
+31746  just now  workflow:scenario-urbanisme-tacit-a  DP-2026-041 (DP, Pose d&#x27;une clôture, 12 rue des Lilas): without a decision notified by 2026-11-25, silence becomes a tacit decision  DP-2026-041</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="decide-result" aria-labelledby="decide-result-tab" tabindex="0" hidden><dl class="facts"><dt>decision</dt><dd>DP-2026-041 (DP, Pose d&#x27;une clôture, 12 rue des Lilas): without a decision notified by 2026-11-25, silence becomes a tacit decision</dd><dt>decision</dt><dd>PC-2026-008 (PC, Hangar agricole, chemin du Moulin): without a decision notified by 2026-11-25, silence becomes a tacit decision</dd><dt>check_deadlines.py</dt><dd>DP-2026-041 PC-2026-008</dd></dl><p class="sources">preuves: replay.log, 00-check-deadlines.txt, 01-hook-scripts.txt, 02-run.json, 03-workflow-apply.json, 04-decisions.json · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Les délais majorés (commission, monument, autre autorisation) ne sont pas lus: le script prend les délais de droit commun.</li><li>Une demande de pièces qui relance le délai n&#x27;est pas lue: le registre donne le jour du dossier complet.</li><li>Les centaines d&#x27;autres démarches «silence vaut accord» ne sont pas couvertes: ce scénario prend l&#x27;urbanisme.</li><li>Aucune décision n&#x27;est prise: lumnik prévient l&#x27;équipe, le maire décide et notifie.</li><li>Cinq dossiers synthétiques, datés depuis le jour du rejeu.</li></ul></section>
+  <section class="try"><p>Ce scénario demande lumnik Pro.</p><a class="try-button" href="../../offre.html">Voir l&#x27;offre →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
