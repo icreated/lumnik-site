@@ -1891,6 +1891,26 @@
       "evidenceDigest": "sha256:a7606c4a38ca66439c86c2ac8750ba35c026ff5a2461acca4170b7f64cefa132"
     },
     {
+      "slug": "urbanism-tacit-permit",
+      "title": "Un permis bientôt accordé par le silence de la mairie",
+      "goal": "Être prévenu sept jours avant qu'une demande d'urbanisme non tranchée devienne une décision tacite, selon son type et son délai légal.",
+      "lede": "Une mairie instruit les demandes d'urbanisme. Sans décision notifiée dans le délai, le silence vaut non-opposition ou permis tacite. Une mairie qui perd un dossier de vue a décidé sans le vouloir: l'alerte ne vaut que si elle arrive avant.\n- le délai en mois, calculé à l'entrée par le script de l'opérateur\n- l'alerte sept jours avant l'échéance\n- l'exception ABF écrite une fois",
+      "tags": {
+        "domain": [
+          "Collectivités",
+          "Urbanisme",
+          "Administration"
+        ],
+        "kinds": [
+          "Connector",
+          "Workflow"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:8281a8f7264ed149f8d55e8d0fdd4097da13aa84af280bb05d4b5e40e4d92d5f"
+    },
+    {
       "slug": "wcf-soap-orders",
       "title": "WCF: les commandes confirmées après la date promise",
       "goal": "Lire les commandes ouvertes d'un service WCF protégé par WS-Security, être prévenu de chaque commande confirmée après la date promise, et savoir quand son mot de passe a tourné.",
