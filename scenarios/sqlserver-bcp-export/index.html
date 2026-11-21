@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SQL Server lu par son propre export: bcp — lumnik</title>
+<meta name="description" content="Lire les commandes d&#x27;une base SQL Server alors que lumnik n&#x27;a pas de dialecte pour elle: par l&#x27;export bcp, une ligne décalée mise de côté avec sa raison. Le monde .NET garde ses données dans SQL Server. jdbc-generic parle PostgreSQL et Oracle: demandé pour jdbc:sqlserver, il refuse avant toute connexion et dit ce qu&#x27;il a. Le chemin qui marche est l&#x27;outil d&#x27;export de SQL Server, bcp. Le refus, nommé, au validate. Bcp: pas d&#x27;en-tête, pas de guillemets. Un ; dans un nom décale la ligne: elle est mise de côté.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/sqlserver-bcp-export/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/sqlserver-bcp-export/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>SQL Server lu par son propre export: bcp</h1>
+    <p class="goal"><strong>Objectif</strong> Lire les commandes d&#x27;une base SQL Server alors que lumnik n&#x27;a pas de dialecte pour elle: par l&#x27;export bcp, une ligne décalée mise de côté avec sa raison.</p>
+    <p class="lede">Le monde .NET garde ses données dans SQL Server. jdbc-generic parle PostgreSQL et Oracle: demandé pour jdbc:sqlserver, il refuse avant toute connexion et dit ce qu&#x27;il a. Le chemin qui marche est l&#x27;outil d&#x27;export de SQL Server, bcp.</p><ul class="lede-list"><li>le refus, nommé, au validate</li><li>bcp: pas d&#x27;en-tête, pas de guillemets</li><li>un ; dans un nom décale la ligne: elle est mise de côté</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">ERP</li><li class="tag">Microsoft</li><li class="tag">Base de données</li><li class="tag kind">Connector</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-refused" data-step="refused" aria-current="step"><span class="num">1 · Essayer</span><span class="sub">jdbc:sqlserver</span></a><a href="#step-read" data-step="read"><span class="num">2 · Lire</span><span class="sub">bcp + SFTP</span></a></nav>
+  <section class="step" id="step-refused" aria-labelledby="refused-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="refused-title">jdbc-generic refuse SQL Server par son nom</h2>
+      <p>L&#x27;intégrateur essaie d&#x27;abord la lecture directe. Le manifeste est refusé au validate, sans connexion.</p><ul class="prose-list"><li>url: jdbc:sqlserver, aucun dialecte installé ne l&#x27;accepte</li><li>le message dit ceux du hub: oracle, postgres</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Avant toute connexion</strong><p>Rien n&#x27;est tenté contre la base.</p></div></li><li><span class="n">2</span><div><strong>Le geste</strong><p>Installer un provider, ou passer par un export.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un refus qui nomme la correction.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Essayer"><button type="button" role="tab" id="refused-manifest-tab" data-view="manifest" aria-controls="refused-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="refused-commands-tab" data-view="commands" aria-controls="refused-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="refused-result-tab" data-view="result" aria-controls="refused-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="refused-manifest" aria-labelledby="refused-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-jdbc-refused.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># What an integrator tries first: SQL Server through jdbc-generic. Refused at validate: no dialect provider for it.</span></span><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-mssql-orders-a</span><span class="line">  <span class="key">connector_type</span>: jdbc-generic</span><span class="line">  <span class="key">scopes</span>: [erp-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">connection</span>:</span><span class="line">    <span class="key">url</span>: jdbc:sqlserver://host.docker.internal:14333;databaseName=erp;encrypt=false</span><span class="line">    <span class="key">user</span>: lumnik_reader</span><span class="line">    <span class="key">password_env</span>: SCENARIO_MSSQL_A_DB</span><span class="line">  <span class="key">source</span>:</span><span class="line">    <span class="key">tables</span>:</span><span class="line">      <span class="dash">-</span> <span class="key">name</span>: Orders</span><span class="line">        <span class="key">schema</span>: dbo</span><span class="line">        <span class="key">mode</span>: full</span><span class="line">        <span class="key">pk_columns</span>: [OrderId]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="refused-commands" aria-labelledby="refused-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm validate -f 10-jdbc-refused.yaml</span>
+<span class="out">✗ 10-jdbc-refused.yaml — 1 error(s), 0 warning(s)
+
+  ERROR    spec.connection.url
+          no installed JDBC dialect accepts url scheme &#x27;jdbc:sqlserver&#x27; — install its provider, or set &#x27;dialect&#x27;. Available: oracle, postgres
+
+Fix errors above before running &#x27;lm apply -f 10-jdbc-refused.yaml&#x27;.</span>
+<span class="note">Error: validation failed: 1 error(s)</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="refused-result" aria-labelledby="refused-result-tab" tabindex="0" hidden><dl class="facts"><dt>jdbc-generic</dt><dd>no installed JDBC dialect accepts url scheme &#x27;jdbc:sqlserver&#x27; — install its provider, or set &#x27;dialect&#x27;. Available: oracle, postgres</dd></dl><p class="sources">preuves: replay.log, 01-sqlserver-orders.txt, 02-jdbc-refused.txt, 03-bcp.txt, 04-run.json, 05-dead-letter.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-read" aria-labelledby="read-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="read-title">L&#x27;export bcp lu, la ligne décalée écartée</h2>
+      <p>Le DBA planifie bcp queryout avec un login en lecture seule, vers un serveur SFTP.</p><ul class="prose-list"><li>has_header: false, bcp n&#x27;écrit pas d&#x27;en-tête</li><li>columns: les six colonnes déclarées</li><li>parse-date: le format que bcp écrit, 2026-10-02 08:15:00.0000000</li><li>SO-0004, Dupont; Fils: sept valeurs pour six colonnes, mise de côté telle que lue</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>6 lignes lues</strong><p>5 écrites, 1 mise de côté.</p></div></li><li><span class="n">2</span><div><strong>Raison</strong><p>Le fichier, le numéro de ligne et les valeurs lues.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une ligne décalée n&#x27;arrive jamais avec ses champs mélangés.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-source-tab" data-view="source" aria-controls="read-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="read-manifest-tab" data-view="manifest" aria-controls="read-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="read-source" aria-labelledby="read-source-tab" tabindex="0"><figure class="source"><figcaption>orders.csv</figcaption><pre class="code">1;SO-0001;Boulangerie Rémy;2026-10-02 08:15:00.0000000;184.50;Shipped
+2;SO-0002;Garage Lefèvre;2026-10-03 10:40:00.0000000;1290.00;Open
+3;SO-0003;Café de la Gare;2026-10-05 14:05:00.0000000;62.30;Shipped
+4;SO-0004;Dupont; Fils;2026-10-07 09:20:00.0000000;455.00;Open
+5;SO-0005;Imprimerie Saint-Éloi;2026-10-08 16:55:00.0000000;2310.75;Shipped
+6;SO-0006;Pharmacie du Port;2026-10-09 11:30:00.0000000;98.10;Open</pre></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="read-manifest" aria-labelledby="read-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/20-bcp-orders.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-mssql-bcp-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [erp-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: sftp</span><span class="line">    <span class="key">host</span>: host.docker.internal</span><span class="line">    <span class="key">port</span>: 2227</span><span class="line">    <span class="key">user</span>: erp</span><span class="line">    <span class="key">path</span>: /exports/orders.csv</span><span class="line">    <span class="key">password_env</span>: SCENARIO_MSSQL_A_SFTP</span><span class="line">    <span class="comment"># The fingerprint the export server presents, read out of band (ssh-keyscan | ssh-keygen -lf -).</span></span><span class="line">    <span class="key">host_key_fingerprint</span>: <span class="str">&quot;SHA256:FINGERPRINT_READ_AT_REPLAY&quot;</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line hl">    <span class="key">has_header</span>: false                  <span class="comment"># bcp writes no header row</span></span><span class="line hl">    <span class="key">columns</span>: [order_id, order_no, customer, ordered_at, amount, status]</span><span class="line hl">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span>                     <span class="comment"># bcp -t &quot;;&quot;: no quoting — a line with one ; too many is set aside by the parser</span></span><span class="line">    <span class="key">encoding</span>: UTF-8</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      - parse-number: { column: amount, decimal-separator: <span class="str">&quot;.&quot;</span> }</span><span class="line">      - parse-date: { column: ordered_at, formats: [<span class="str">&quot;yyyy-MM-dd HH:mm:ss.SSSSSSS&quot;</span>], zone: Europe/Paris }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 20-bcp-orders.yaml</span>
+<span class="out">Applied connector &quot;scenario-mssql-bcp-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-mssql-bcp-a</span>
+<span class="out">run scheduled: 50ed05fd-2da5-4951-b459-b0d5292841c5</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 50ed05fd-2da5-4951-b459-b0d5292841c5 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR             ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+50ed05fd  scenario-mssql-bcp-a  default   Completed  6   5    1        1             2026-11-21 22:09  2026-11-21 22:09  yes</span>
+<span class="note">⚠ 1 rows quarantined — see: lm dlq list --run 50ed05fd-2da5-4951-b459-b0d5292841c5</span>
+
+<span class="cmd"><span class="prompt">$</span> lm dlq get 3ed69aaf-5d3d-4711-acd1-5c20f70ce59a</span>
+<span class="out">ID:        3ed69aaf-5d3d-4711-acd1-5c20f70ce59a
+Connector: scenario-mssql-bcp-a (c66c17e9-d3b0-4472-a0f1-0eadd3c38f0f)
+Run:       50ed05fd-2da5-4951-b459-b0d5292841c5
+Reason:    MalformedSource
+Attempts:  1
+Message:   /exports/orders.csv:4 — Record has 7 values but only 6 columns are declared
+Detail:    {&quot;file&quot;:&quot;/exports/orders.csv&quot;,&quot;line&quot;:4,&quot;message&quot;:&quot;Record has 7 values but only 6 columns are declared&quot;}
+Payload:   {&quot;raw&quot;:[&quot;4&quot;,&quot;SO-0004&quot;,&quot;Dupont&quot;,&quot; Fils&quot;,&quot;2026-10-07 09:20:00.0000000&quot;,&quot;455.00&quot;,&quot;Open&quot;],&quot;file&quot;:&quot;/exports/orders.csv&quot;,&quot;line&quot;:4}
+Resolution: open</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>IN 6 · OUT 5 · SKIPPED 1</dd><dt>set aside</dt><dd>/exports/orders.csv:4 — Record has 7 values but only 6 columns are declared</dd><dt>as read</dt><dd>[&quot;4&quot;,&quot;SO-0004&quot;,&quot;Dupont&quot;,&quot; Fils&quot;,&quot;2026-10-07 09:20:00.0000000&quot;,&quot;455.00&quot;,&quot;Open&quot;]</dd></dl><p class="sources">preuves: replay.log, 01-sqlserver-orders.txt, 02-jdbc-refused.txt, 03-bcp.txt, 04-run.json, 05-dead-letter.txt · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Pas de dialecte SQL Server: un provider lirait la table directement, et en incrémental. Il n&#x27;existe pas.</li><li>Choisir un séparateur que les données ne contiennent pas: une tabulation ou un fichier de format bcp. Le scénario garde ; pour montrer le défaut.</li><li>Un export est une photo: chaque run lit ce que le dernier bcp a écrit.</li><li>Six commandes synthétiques.</li></ul></section>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>

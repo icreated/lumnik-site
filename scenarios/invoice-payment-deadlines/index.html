@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Une facture passée son échéance: 30 jours, 50 pour un hôpital, 30 jours fin de mois — lumnik</title>
+<meta name="description" content="Être alerté de chaque facture impayée passée son échéance, calculée à l&#x27;entrée selon le client: 30 jours pour un acheteur public, 50 pour un hôpital, 30 jours fin de mois pour un client privé. L&#x27;échéance n&#x27;est pas une date de la facture: elle se calcule depuis la réception, et la règle dépend du client. Un acheteur public paie sous 30 jours, un établissement public de santé sous 50. Un client privé, ici, à 30 jours fin de mois. Le script de l&#x27;opérateur calcule due_on à l&#x27;entrée. Un Workflow déclare l&#x27;échéance. Une décision par facture impayée en retard.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/invoice-payment-deadlines/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/invoice-payment-deadlines/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Une facture passée son échéance: 30 jours, 50 pour un hôpital, 30 jours fin de mois</h1>
+    <p class="goal"><strong>Objectif</strong> Être alerté de chaque facture impayée passée son échéance, calculée à l&#x27;entrée selon le client: 30 jours pour un acheteur public, 50 pour un hôpital, 30 jours fin de mois pour un client privé.</p>
+    <p class="lede">L&#x27;échéance n&#x27;est pas une date de la facture: elle se calcule depuis la réception, et la règle dépend du client. Un acheteur public paie sous 30 jours, un établissement public de santé sous 50. Un client privé, ici, à 30 jours fin de mois.</p><ul class="lede-list"><li>le script de l&#x27;opérateur calcule due_on à l&#x27;entrée</li><li>un Workflow déclare l&#x27;échéance</li><li>une décision par facture impayée en retard</li></ul>
+    <ul class="tags"><li class="tag edition edition-pro"><a href="https://docs.lumnik.io/editions/">lumnik Pro</a></li><li class="tag">Finance</li><li class="tag">Recouvrement</li><li class="tag">Commande publique</li><li class="tag kind">Connector</li><li class="tag kind">Workflow</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-declare" data-step="declare" aria-current="step"><span class="num">1 · Déclarer</span><span class="sub">Script + Workflow</span></a><a href="#step-decide" data-step="decide"><span class="num">2 · Décider</span><span class="sub">Les retards</span></a></nav>
+  <section class="step" id="step-declare" aria-labelledby="declare-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="declare-title">L&#x27;échéance calculée à l&#x27;entrée</h2>
+      <p>L&#x27;export du fournisseur arrive par SFTP. Le script de l&#x27;opérateur, dans le dossier de hooks du hub, calcule l&#x27;échéance.</p><ul class="prose-list"><li>etat, collectivite: réception + 30 jours (R2192-10)</li><li>hopital: réception + 50 jours (R2192-11)</li><li>prive: fin du mois de réception, puis 30 jours</li><li>due.column: due_on, en état A_PAYER</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Même jour, deux échéances</strong><p>F-101 et F-102, reçues le même jour: seule la commune est en retard.</p></div></li><li><span class="n">2</span><div><strong>Le script de l&#x27;opérateur</strong><p>Le manifeste le nomme, il ne le porte pas.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une règle de délai se déclare une fois, et vaut pour chaque facture.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="declare-source-tab" data-view="source" aria-controls="declare-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="declare-manifest-tab" data-view="manifest" aria-controls="declare-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="declare-commands-tab" data-view="commands" aria-controls="declare-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="declare-result-tab" data-view="result" aria-controls="declare-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="declare-source" aria-labelledby="declare-source-tab" tabindex="0"><figure class="source"><figcaption>factures.csv</figcaption><pre class="code">invoice_no;buyer;buyer_type;received_on;amount;status
+F-101;Mairie de Saint-Aubin;collectivite;2026-10-12;4 860,00;A_PAYER
+F-102;Centre hospitalier de Valmont;hopital;2026-10-12;12 340,50;A_PAYER
+F-103;Préfecture de région;etat;2026-10-07;2 150,00;PAYEE
+F-104;Communauté de communes du Val;collectivite;2026-11-11;780,00;A_PAYER
+F-105;Centre hospitalier de Valmont;hopital;2026-09-22;3 920,00;A_PAYER
+P-201;Garage Morel;prive;2026-09-12;1 380,00;A_PAYER
+P-202;Boulangerie Roux;prive;2026-11-16;245,90;A_PAYER</pre></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="declare-manifest" aria-labelledby="declare-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/payment-due.kts</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line">// Operator-provided: the payment deadline of an invoice, from the day the customer received it.</span><span class="line">// A public buyer: 30 days (Code de la commande publique R2192-10), 50 for a public health establishment (R2192-11).</span><span class="line">// A private customer, on this supplier&#x27;s terms: 30 days end of month — the end of the month of reception, then 30 days.</span><span class="line">// An unknown customer type gets no deadline, and due_issue says why.</span><span class="line">@Suppress(<span class="str">&quot;UNCHECKED_CAST&quot;</span>)</span><span class="line">val cells = bindings[<span class="str">&quot;cells&quot;</span>] as MutableMap&lt;String, Any?&gt;</span><span class="line">val type = (cells[<span class="str">&quot;buyer_type&quot;</span>] as String?)?.trim()</span><span class="line">val received = (cells[<span class="str">&quot;received_on&quot;</span>] as String?)?.trim()</span><span class="line">val due = if (received.isNullOrEmpty()) null else {</span><span class="line">    val day = java.time.LocalDate.parse(received)</span><span class="line">    when (type) {</span><span class="line hl">        <span class="str">&quot;etat&quot;</span>, <span class="str">&quot;collectivite&quot;</span> -&gt; day.plusDays(30)</span><span class="line hl">        <span class="str">&quot;hopital&quot;</span> -&gt; day.plusDays(50)</span><span class="line hl">        <span class="str">&quot;prive&quot;</span> -&gt; day.with(java.time.temporal.TemporalAdjusters.lastDayOfMonth()).plusDays(30)</span><span class="line">        else -&gt; null</span><span class="line">    }</span><span class="line">}</span><span class="line">cells[<span class="str">&quot;due_on&quot;</span>] = due?.toString()</span><span class="line">cells[<span class="str">&quot;due_issue&quot;</span>] = when {</span><span class="line">    received.isNullOrEmpty() -&gt; <span class="str">&quot;no received_on&quot;</span></span><span class="line">    due == null -&gt; <span class="str">&quot;unknown buyer_type&quot;</span></span><span class="line">    else -&gt; null</span><span class="line">}</span></code></pre><div class="file"><span class="filename">manifests/10-invoices.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-invoices-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [recouvrement-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: sftp</span><span class="line">    <span class="key">host</span>: host.docker.internal</span><span class="line">    <span class="key">port</span>: 2228</span><span class="line">    <span class="key">user</span>: compta</span><span class="line">    <span class="key">path</span>: /exports/factures.csv</span><span class="line">    <span class="key">password_env</span>: SCENARIO_INVOICES_A_SFTP</span><span class="line">    <span class="comment"># The fingerprint the export server presents, read out of band (ssh-keyscan | ssh-keygen -lf -).</span></span><span class="line">    <span class="key">host_key_fingerprint</span>: <span class="str">&quot;SHA256:FINGERPRINT_READ_AT_REPLAY&quot;</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">    <span class="key">encoding</span>: UTF-8</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line hl">      <span class="dash">-</span> <span class="key">kotlin</span>:</span><span class="line">          <span class="key">script</span>: hooks:payment-due-a.kts          <span class="comment"># the operator&#x27;s script: 30 or 50 days public, 30 days end of month private</span></span><span class="line">      - parse-date: { column: received_on, formats: [<span class="str">&quot;yyyy-MM-dd&quot;</span>] }</span><span class="line">      - parse-date: { column: due_on, formats: [<span class="str">&quot;yyyy-MM-dd&quot;</span>] }</span><span class="line">      - parse-number: { column: amount, decimal-separator: <span class="str">&quot;,&quot;</span> }</span></code></pre><div class="file"><span class="filename">manifests/20-payment-deadline.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Workflow</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-payment-deadline-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: recouvrement-a</span><span class="line">  <span class="key">provenance</span>: declared</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">table</span>: connector.t_scenario_invoices_a</span><span class="line">    <span class="key">column</span>: status</span><span class="line">    <span class="key">key</span>: invoice_no</span><span class="line hl">  <span class="key">due</span>:</span><span class="line">    <span class="key">column</span>: due_on                <span class="comment"># computed at the door from received_on and the customer type</span></span><span class="line">    <span class="key">states</span>: [A_PAYER]</span><span class="line">    <span class="key">zone</span>: Europe/Paris</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;{doc_key} — {buyer}, {amount} €: unpaid, its payment deadline passed on {due}&quot;</span></span><span class="line">    <span class="key">fields</span>: [buyer_type, received_on]</span><span class="line">  <span class="key">states</span>:</span><span class="line">    - { code: A_PAYER, label: <span class="str">&quot;Unpaid&quot;</span>, initial: true }</span><span class="line">    - { code: PAYEE, label: <span class="str">&quot;Paid&quot;</span>, terminal: true }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="declare-commands" aria-labelledby="declare-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm hook scripts</span>
+<span class="out">NAME                 SIZE  SHA256
+cfonb-amount-b.kts   784   3f94b73a8a923324f6750648e230e3d91026299ed636627a4562b14552d493ba
+cfonb-amount-c.kts   784   3f94b73a8a923324f6750648e230e3d91026299ed636627a4562b14552d493ba
+coordinates-c.kts    5076  cc87f4a8e8ccbb38f3306d4dce5a013dab984c36a8cd72afd72e8bd142504542
+ean-check-b.kts      477   58c3d6b83a0df5c9ae779aada8604f6bd850db7c52ca258b5bc6dc45fd8ea23c
+ean-check-c.kts      477   58c3d6b83a0df5c9ae779aada8604f6bd850db7c52ca258b5bc6dc45fd8ea23c
+ean-check-d.kts      477   58c3d6b83a0df5c9ae779aada8604f6bd850db7c52ca258b5bc6dc45fd8ea23c
+ean-draft-b.kts      476   c8692d84859f810de8903ded14a03a1ec4db93e1282aa88b4fb9f5e42b6586ea
+ean-draft-c.kts      476   c8692d84859f810de8903ded14a03a1ec4db93e1282aa88b4fb9f5e42b6586ea
+ean-draft-d.kts      526   90a58aae66c5feec5e52017e90d86b9ee93e46ce7d97dc0c1eb4b5faefb636a7
+payment-due-a.kts    1106  885d56162b45d32575f5097682e6fc73b0d4e66c03ebacfa52111f372db1b894
+promised-date-b.kts  1407  44ceece5d17c40d337374d02f942aef41b092b6708ff7dbc48efc8b43aef1ac9
+shipping-fee-c.kts   333   c1c59e5c7b81302d5a284c9c722ca8cacaca0fe859c8ae1c393cd1d54a1ad9ad
+shipping-fee-p.kts   333   c1c59e5c7b81302d5a284c9c722ca8cacaca0fe859c8ae1c393cd1d54a1ad9ad</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f 10-invoices.yaml</span>
+<span class="out">Applied connector &quot;scenario-invoices-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-invoices-a</span>
+<span class="out">run scheduled: 586ddb59-7705-408d-be63-2698a726d32b</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 586ddb59-7705-408d-be63-2698a726d32b --wait-evaluated</span>
+<span class="out">ID        CONNECTOR            ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+586ddb59  scenario-invoices-a  default   Completed  7   7    0        0             2026-11-21 22:29  2026-11-21 22:29  yes</span>
+<span class="note">• script hooks:payment-due-a.kts  sha256 885d56162b45d32575f5097682e6fc73b0d4e66c03ebacfa52111f372db1b894</span>
+
+<span class="cmd"><span class="prompt">$</span> lm workflow apply -f 20-payment-deadline.yaml -o json</span>
+<span class="out">{
+  &quot;name&quot;: &quot;scenario-payment-deadline-a&quot;,
+  &quot;scope&quot;: &quot;recouvrement-a&quot;,
+  &quot;table&quot;: &quot;connector.t_scenario_invoices_a&quot;,
+  &quot;column&quot;: &quot;status&quot;,
+  &quot;dataTruth&quot;: {
+    &quot;undeclared&quot;: [],
+    &quot;unobserved&quot;: [],
+    &quot;nullOrBlank&quot;: 0,
+    &quot;tableMissing&quot;: false,
+    &quot;keyColumnMissing&quot;: false,
+    &quot;keyNullOrBlank&quot;: 0,
+    &quot;checkUnavailable&quot;: false,
+    &quot;unavailableReason&quot;: null,
+    &quot;dueProblem&quot;: null,
+    &quot;invalidOrderValues&quot;: null,
+    &quot;keysWithSeveralRows&quot;: null,
+    &quot;columnsUnverified&quot;: []
+  }
+}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="declare-result" aria-labelledby="declare-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>IN 7 · OUT 7 · cell errors 0</dd><dt>F-101</dt><dd>due 2026-11-11</dd><dt>F-102</dt><dd>due 2026-12-01</dd><dt>F-103</dt><dd>due 2026-11-06</dd><dt>F-104</dt><dd>due 2026-12-11</dd><dt>F-105</dt><dd>due 2026-11-11</dd><dt>P-201</dt><dd>due 2026-10-30</dd><dt>P-202</dt><dd>due 2026-12-30</dd></dl><p class="sources">preuves: replay.log, 00-check-deadlines.txt, 01-hook-scripts.txt, 02-run.json, 03-workflow-apply.json, 04-decisions.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-decide" aria-labelledby="decide-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="decide-title">Trois factures en retard, et pas une de plus</h2>
+      <p>Au balayage suivant, chaque facture impayée passée son échéance donne une décision.</p><ul class="prose-list"><li>F-101, la commune: 30 jours dépassés</li><li>F-105, l&#x27;hôpital: 50 jours dépassés</li><li>P-201, le client privé: 30 jours fin de mois dépassés</li><li>F-102, l&#x27;hôpital reçu le même jour que F-101: pas encore</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Vérifié à part</strong><p>data/check_deadlines.py calcule les mêmes retards, avec son propre code.</p></div></li><li><span class="n">2</span><div><strong>Une fois</strong><p>Une échéance alerte une seule fois.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Seules les factures impayées passées leur échéance déclenchent une décision.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Décider"><button type="button" role="tab" id="decide-commands-tab" data-view="commands" aria-controls="decide-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="decide-result-tab" data-view="result" aria-controls="decide-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="decide-commands" aria-labelledby="decide-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm inbox --process workflow:scenario-payment-deadline-a</span>
+<span class="out">ID     WHEN      PROCESS                               MESSAGE                                                                                           ENTITY_KEY
+31723  just now  workflow:scenario-payment-deadline-a  P-201 — Garage Morel, 1380 €: unpaid, its payment deadline passed on 2026-10-30                   P-201
+31722  just now  workflow:scenario-payment-deadline-a  F-105 — Centre hospitalier de Valmont, 3920 €: unpaid, its payment deadline passed on 2026-11-11  F-105
+31721  just now  workflow:scenario-payment-deadline-a  F-101 — Mairie de Saint-Aubin, 4860 €: unpaid, its payment deadline passed on 2026-11-11          F-101</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="decide-result" aria-labelledby="decide-result-tab" tabindex="0" hidden><dl class="facts"><dt>decision</dt><dd>F-101 — Mairie de Saint-Aubin, 4860 €: unpaid, its payment deadline passed on 2026-11-11</dd><dt>decision</dt><dd>F-105 — Centre hospitalier de Valmont, 3920 €: unpaid, its payment deadline passed on 2026-11-11</dd><dt>decision</dt><dd>P-201 — Garage Morel, 1380 €: unpaid, its payment deadline passed on 2026-10-30</dd><dt>check_deadlines.py</dt><dd>F-101 F-105 P-201</dd></dl><p class="sources">preuves: replay.log, 00-check-deadlines.txt, 01-hook-scripts.txt, 02-run.json, 03-workflow-apply.json, 04-decisions.json · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Aucun transformer n&#x27;ajoute de jours: l&#x27;échéance demande le script de l&#x27;opérateur, installé dans le dossier de hooks du hub.</li><li>«30 jours fin de mois» se lit de deux façons: ici, fin de mois puis 30 jours. Le contrat dit laquelle.</li><li>Les intérêts moratoires ne sont pas calculés, et rien n&#x27;est envoyé au client.</li><li>Le contrôle tourne toutes les 15 minutes.</li><li>Une suspension du délai par l&#x27;acheteur public n&#x27;est pas lue.</li><li>Sept factures synthétiques, datées depuis le jour du rejeu.</li></ul></section>
+  <section class="try"><p>Ce scénario demande lumnik Pro.</p><a class="try-button" href="../../offre.html">Voir l&#x27;offre →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>

@@ -754,6 +754,26 @@
       "evidenceDigest": "sha256:400faba3dd0f1e5917b581ab68329cb495867651a8e3e0564af130e8f8eae0e5"
     },
     {
+      "slug": "invoice-payment-deadlines",
+      "title": "Une facture passée son échéance: 30 jours, 50 pour un hôpital, 30 jours fin de mois",
+      "goal": "Être alerté de chaque facture impayée passée son échéance, calculée à l'entrée selon le client: 30 jours pour un acheteur public, 50 pour un hôpital, 30 jours fin de mois pour un client privé.",
+      "lede": "L'échéance n'est pas une date de la facture: elle se calcule depuis la réception, et la règle dépend du client. Un acheteur public paie sous 30 jours, un établissement public de santé sous 50. Un client privé, ici, à 30 jours fin de mois.\n- le script de l'opérateur calcule due_on à l'entrée\n- un Workflow déclare l'échéance\n- une décision par facture impayée en retard",
+      "tags": {
+        "domain": [
+          "Finance",
+          "Recouvrement",
+          "Commande publique"
+        ],
+        "kinds": [
+          "Connector",
+          "Workflow"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:028043a7e92088c05cbf53d18bba8037cfc99368328f59791142f95b5d4e2de0"
+    },
+    {
       "slug": "invoices-dead-letters",
       "title": "Une facture au montant mal saisi attend sa correction dans l'ERP",
       "goal": "Mettre de côté chaque facture mal saisie avec la valeur lue, au lieu de l'écrire sans montant, et suivre sa lettre morte jusqu'à la correction dans l'ERP.",
@@ -1772,6 +1792,25 @@
       "edition": "open",
       "replayedAt": "2026-10-22",
       "evidenceDigest": "sha256:2b3ff54db7df095b8ff9531a6a89d679651c8827fe8bfc48c27c989ddd11501c"
+    },
+    {
+      "slug": "sqlserver-bcp-export",
+      "title": "SQL Server lu par son propre export: bcp",
+      "goal": "Lire les commandes d'une base SQL Server alors que lumnik n'a pas de dialecte pour elle: par l'export bcp, une ligne décalée mise de côté avec sa raison.",
+      "lede": "Le monde .NET garde ses données dans SQL Server. jdbc-generic parle PostgreSQL et Oracle: demandé pour jdbc:sqlserver, il refuse avant toute connexion et dit ce qu'il a. Le chemin qui marche est l'outil d'export de SQL Server, bcp.\n- le refus, nommé, au validate\n- bcp: pas d'en-tête, pas de guillemets\n- un ; dans un nom décale la ligne: elle est mise de côté",
+      "tags": {
+        "domain": [
+          "ERP",
+          "Microsoft",
+          "Base de données"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:e710f9511d13fa0b1195f95cd4cceb6254340f9072fe6d4a8715656130f0ebbd"
     },
     {
       "slug": "struts-displaytag-export",
