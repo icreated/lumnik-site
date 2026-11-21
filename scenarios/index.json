@@ -913,10 +913,29 @@
       "evidenceDigest": "sha256:69ef587c0021ffa045f4e926ee84334d73dd1ec689ec4ea45b27d1b1ad66f639"
     },
     {
+      "slug": "odoo-json2-partners",
+      "title": "Odoo 19 et son API JSON-2: la page se lit dans le corps",
+      "goal": "Lire les 250 contacts d'un vrai Odoo 19 par son API JSON-2, page par page, sans base de données ouverte.",
+      "lede": "Odoo 19 remplace XML-RPC et JSON-RPC, retirés en Odoo 22, par POST /json/2/<modèle>/<méthode>. Chaque intégration existante doit migrer, et Odoo Online n'ouvre pas sa base: l'API est sa seule porte. JSON-2 lit offset et limit dans le corps JSON seulement.\n- body: le domaine, les champs et l'ordre qu'Odoo attend\n- param_binding: body écrit offset et limit dans le corps\n- trois requêtes, 250 contacts, aucun en double",
+      "tags": {
+        "domain": [
+          "ERP",
+          "Odoo",
+          "API"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:84fedacbeeef72925e31375968eb7f54080b5080879d8c69ee2e1b4678a2a6ab"
+    },
+    {
       "slug": "odoo-product-name-json",
       "title": "Odoo lu dans son PostgreSQL: le nom du produit est un JSON",
-      "goal": "Lire les produits d'un vrai Odoo 18 directement dans sa base, voir ce qui arrive vraiment, et obtenir le nom français de chaque produit.",
-      "lede": "Depuis Odoo 16, un champ traduit est un JSON par ligne, une clé par langue. Chaque rapport écrit sur l'ancienne colonne texte a cassé. Un intégrateur qui lit la base d'Odoo le rencontre dès product_template.name.\n- lu tel quel: le nom arrive en texte JSON\n- le nom français demandé: Ask s'abstient\n- une vue du DBA, dans un schéma à part: quatre noms français",
+      "goal": "Lire les produits d'un vrai Odoo 18 directement dans sa base et obtenir le nom français de chaque produit, sans rien écrire dans Odoo.",
+      "lede": "Depuis Odoo 16, un champ traduit est un JSON par ligne, une clé par langue. Chaque rapport écrit sur l'ancienne colonne texte a cassé. Un intégrateur qui lit la base d'Odoo le rencontre dès product_template.name.\n- le nom arrive en texte JSON, toutes les langues gardées\n- promote lit la clé fr_FR dans une colonne à part, avec repli sur en_US\n- la question en langage naturel donne les quatre noms français",
       "tags": {
         "domain": [
           "ERP",
@@ -929,7 +948,7 @@
       },
       "edition": "pro",
       "replayedAt": "2026-11-21",
-      "evidenceDigest": "sha256:ae510178af68b582e75a073f55bf789b31bbf7108476f9bc3d6fa12d25e3442a"
+      "evidenceDigest": "sha256:03b861eb9502a08f2cce60a4699587f69185694e79fed2c8a79a4493b7e8fad6"
     },
     {
       "slug": "odoo-quotation-expired",
