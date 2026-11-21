@@ -1602,6 +1602,25 @@
       "evidenceDigest": "sha256:8f092ded88b6a56f611309587aa93bf603b20a90241c7328e4d82864b50e61c3"
     },
     {
+      "slug": "school-absences-half-days",
+      "title": "Quatre demi-journées non justifiées dans le mois: l'établissement doit agir",
+      "goal": "Savoir, dès l'export mensuel, quels élèves atteignent quatre demi-journées d'absence non justifiées, et lesquels dépassent dix, sans ouvrir le rapport du logiciel.",
+      "lede": "Dès quatre demi-journées non justifiées dans le mois, le chef d'établissement convoque la famille. Au-delà de dix, le Dasen est informé. Le logiciel de vie scolaire compte, mais le compte reste dans un rapport.\n- l'export mensuel arrive par SFTP\n- deux Process, un par seuil\n- une décision par élève et par seuil franchi",
+      "tags": {
+        "domain": [
+          "Éducation",
+          "Administration"
+        ],
+        "kinds": [
+          "Connector",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:a348d2d7c7c4436525e5454b10af9e22de820f7afd75116da56e38f758acb213"
+    },
+    {
       "slug": "senaite-culture-plates",
       "title": "SENAITE: une boîte de culture hors limite qui attend sa vérification",
       "goal": "Être prévenu quand une boîte de culture dépasse 100 colonies dans le LIMS SENAITE, puis quand son résultat reste sans vérification.",
