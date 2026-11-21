@@ -540,6 +540,26 @@
       "evidenceDigest": "sha256:70336c22436e96e4fbc85464a773bb62e4830def557b57dcf444e84337e773c4"
     },
     {
+      "slug": "einvoice-not-taken-in-charge",
+      "title": "Une facture électronique mise à disposition jamais prise en charge",
+      "goal": "Savoir quelle facture électronique est arrivée chez l'acheteur depuis une semaine sans être prise en charge, à partir des statuts de cycle de vie de la plateforme agréée.",
+      "lede": "Depuis le 1er septembre 2026, chaque entreprise reçoit ses factures par une plateforme agréée. Chaque facture porte des statuts de cycle de vie: Déposée, Mise à disposition, Prise en charge, Encaissée… Une facture arrivée chez l'acheteur (203) et jamais prise en charge (204) ne sera pas payée à temps.\n- les codes de statut déclarés une fois, en Workflow\n- un code inconnu signalé à l'application\n- la facture restée en 203 depuis une semaine: une décision",
+      "tags": {
+        "domain": [
+          "Facturation électronique",
+          "Finance",
+          "Fiscalité"
+        ],
+        "kinds": [
+          "Connector",
+          "Workflow"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:9017e5dc4cc4e08be5d0a1010205865e7cca1bfd3ed8122bef6e7e788502ec8c"
+    },
+    {
       "slug": "entity-resolution",
       "title": "Un client dans deux systèmes sans identifiant commun",
       "goal": "Rapprocher par l'email les comptes de l'ERP et les contacts du CRM, signaler comme ambigu un contact dont l'email désigne deux comptes, et garder la décision de la personne qui tranche.",

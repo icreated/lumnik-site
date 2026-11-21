@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Une facture électronique mise à disposition jamais prise en charge — lumnik</title>
+<meta name="description" content="Savoir quelle facture électronique est arrivée chez l&#x27;acheteur depuis une semaine sans être prise en charge, à partir des statuts de cycle de vie de la plateforme agréée. Depuis le 1er septembre 2026, chaque entreprise reçoit ses factures par une plateforme agréée. Chaque facture porte des statuts de cycle de vie: Déposée, Mise à disposition, Prise en charge, Encaissée… Une facture arrivée chez l&#x27;acheteur (203) et jamais prise en charge (204) ne sera pas payée à temps. Les codes de statut déclarés une fois, en Workflow. Un code inconnu signalé à l&#x27;application. La facture restée en 203 depuis une semaine: une décision.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/einvoice-not-taken-in-charge/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/einvoice-not-taken-in-charge/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Une facture électronique mise à disposition jamais prise en charge</h1>
+    <p class="goal"><strong>Objectif</strong> Savoir quelle facture électronique est arrivée chez l&#x27;acheteur depuis une semaine sans être prise en charge, à partir des statuts de cycle de vie de la plateforme agréée.</p>
+    <p class="lede">Depuis le 1er septembre 2026, chaque entreprise reçoit ses factures par une plateforme agréée. Chaque facture porte des statuts de cycle de vie: Déposée, Mise à disposition, Prise en charge, Encaissée… Une facture arrivée chez l&#x27;acheteur (203) et jamais prise en charge (204) ne sera pas payée à temps.</p><ul class="lede-list"><li>les codes de statut déclarés une fois, en Workflow</li><li>un code inconnu signalé à l&#x27;application</li><li>la facture restée en 203 depuis une semaine: une décision</li></ul>
+    <ul class="tags"><li class="tag edition edition-pro"><a href="https://docs.lumnik.io/editions/">lumnik Pro</a></li><li class="tag">Facturation électronique</li><li class="tag">Finance</li><li class="tag">Fiscalité</li><li class="tag kind">Connector</li><li class="tag kind">Workflow</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-declare" data-step="declare" aria-current="step"><span class="num">1 · Déclarer</span><span class="sub">Codes + Workflow</span></a><a href="#step-decide" data-step="decide"><span class="num">2 · Relancer</span><span class="sub">La facture oubliée</span></a></nav>
+  <section class="step" id="step-declare" aria-labelledby="declare-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="declare-title">Les codes de cycle de vie déclarés une fois</h2>
+      <p>L&#x27;export de la plateforme arrive par SFTP: chaque facture et son dernier statut. Le Workflow déclare les codes.</p><ul class="prose-list"><li>states: de 200 Déposée à 228 Non affacturée, et 501 Irrecevable</li><li>terminal: Refusée, Encaissée, Rejetée, Annulée, Irrecevable</li><li>kotlin: follow_up_on, sept jours après le dernier statut</li><li>due.states: 203, mise à disposition</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Code inconnu</strong><p>La plateforme envoie 299: l&#x27;application le signale comme non déclaré.</p></div></li><li><span class="n">2</span><div><strong>Source</strong><p>Annexe A de XP Z12-014, FNFE-MPE, V1.2.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un cycle de vie normé se déclare une fois, et un écart se voit.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="declare-source-tab" data-view="source" aria-controls="declare-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="declare-manifest-tab" data-view="manifest" aria-controls="declare-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="declare-commands-tab" data-view="commands" aria-controls="declare-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="declare-result-tab" data-view="result" aria-controls="declare-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="declare-source" aria-labelledby="declare-source-tab" tabindex="0"><figure class="source"><figcaption>cycle-de-vie.csv</figcaption><pre class="code">invoice_no;buyer;amount;status_code;status_label;status_at
+INV-2026-301;Atelier Morel SAS;4 860,00;203;Mise à disposition;2026-11-09 09:30:00
+INV-2026-302;Boulangerie Roux;245,90;203;Mise à disposition;2026-11-18 09:30:00
+INV-2026-303;Garage Lefèvre;1 290,00;204;Prise en charge;2026-11-06 09:30:00
+INV-2026-304;Imprimerie Saint-Éloi;2 310,75;212;Encaissée;2026-11-01 09:30:00
+INV-2026-305;Pharmacie du Port;98,10;207;En litige;2026-11-12 09:30:00
+INV-2026-306;Café de la Gare;62,30;299;Statut inconnu;2026-11-19 09:30:00</pre></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="declare-manifest" aria-labelledby="declare-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/follow-up.kts</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line">// Operator-provided: the day an invoice&#x27;s last lifecycle status calls for a follow-up — seven days after it was set.</span><span class="line">// The Workflow&#x27;s due date reads it in state 203 (made available) only: an invoice the buyer never took in charge.</span><span class="line">@Suppress(<span class="str">&quot;UNCHECKED_CAST&quot;</span>)</span><span class="line">val cells = bindings[<span class="str">&quot;cells&quot;</span>] as MutableMap&lt;String, Any?&gt;</span><span class="line">val at = (cells[<span class="str">&quot;status_at&quot;</span>] as String?)?.trim()</span><span class="line">cells[<span class="str">&quot;follow_up_on&quot;</span>] = if (at.isNullOrEmpty()) null else java.time.LocalDate.parse(at.substring(0, 10)).plusDays(7).toString()</span></code></pre><div class="file"><span class="filename">manifests/10-lifecycle-export.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-einvoice-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [facturation-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: sftp</span><span class="line">    <span class="key">host</span>: host.docker.internal</span><span class="line">    <span class="key">port</span>: 2231</span><span class="line">    <span class="key">user</span>: pa</span><span class="line">    <span class="key">path</span>: /exports/cycle-de-vie.csv</span><span class="line">    <span class="key">password_env</span>: SCENARIO_EINVOICE_A_SFTP</span><span class="line">    <span class="comment"># The fingerprint the platform&#x27;s export server presents, read out of band (ssh-keyscan | ssh-keygen -lf -).</span></span><span class="line">    <span class="key">host_key_fingerprint</span>: <span class="str">&quot;SHA256:FINGERPRINT_READ_AT_REPLAY&quot;</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">    <span class="key">encoding</span>: UTF-8</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      <span class="dash">-</span> <span class="key">kotlin</span>:</span><span class="line">          <span class="key">script</span>: hooks:follow-up-a.kts           <span class="comment"># the operator&#x27;s script: seven days after the last status</span></span><span class="line">      - parse-date: { column: status_at, formats: [<span class="str">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>], zone: Europe/Paris }</span><span class="line">      - parse-date: { column: follow_up_on, formats: [<span class="str">&quot;yyyy-MM-dd&quot;</span>] }</span><span class="line">      - parse-number: { column: amount, decimal-separator: <span class="str">&quot;,&quot;</span> }</span></code></pre><div class="file"><span class="filename">manifests/20-einvoice-lifecycle.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="comment"># The e-invoice lifecycle, XP Z12-012&#x27;s status codes as the FNFE-MPE annex to XP Z12-014 (V1.2) names them.</span></span><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Workflow</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-einvoice-lifecycle-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: facturation-a</span><span class="line">  <span class="key">provenance</span>: declared</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">table</span>: connector.t_scenario_einvoice_a</span><span class="line">    <span class="key">column</span>: status_code</span><span class="line">    <span class="key">key</span>: invoice_no</span><span class="line hl">  <span class="key">due</span>:</span><span class="line">    <span class="key">column</span>: follow_up_on          <span class="comment"># seven days after the last status</span></span><span class="line hl">    <span class="key">states</span>: [<span class="str">&quot;203&quot;</span>]               <span class="comment"># made available to the buyer, never taken in charge</span></span><span class="line">    <span class="key">zone</span>: Europe/Paris</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;{doc_key} for {buyer}, {amount} €: made available on {status_at}, never taken in charge — follow it up&quot;</span></span><span class="line hl">  <span class="key">states</span>:</span><span class="line">    - { code: <span class="str">&quot;200&quot;</span>, label: <span class="str">&quot;Déposée&quot;</span>, initial: true }</span><span class="line">    - { code: <span class="str">&quot;201&quot;</span>, label: <span class="str">&quot;Émise&quot;</span> }</span><span class="line">    - { code: <span class="str">&quot;202&quot;</span>, label: <span class="str">&quot;Reçue&quot;</span> }</span><span class="line">    - { code: <span class="str">&quot;203&quot;</span>, label: <span class="str">&quot;Mise à disposition&quot;</span> }</span><span class="line">    - { code: <span class="str">&quot;204&quot;</span>, label: <span class="str">&quot;Prise en charge&quot;</span> }</span><span class="line">    - { code: <span class="str">&quot;205&quot;</span>, label: <span class="str">&quot;Approuvée&quot;</span> }</span><span class="line">    - { code: <span class="str">&quot;206&quot;</span>, label: <span class="str">&quot;Approuvée partiellement&quot;</span> }</span><span class="line">    - { code: <span class="str">&quot;207&quot;</span>, label: <span class="str">&quot;En litige&quot;</span> }</span><span class="line">    - { code: <span class="str">&quot;208&quot;</span>, label: <span class="str">&quot;Suspendue&quot;</span> }</span><span class="line">    - { code: <span class="str">&quot;209&quot;</span>, label: <span class="str">&quot;Complétée&quot;</span> }</span><span class="line hl">    - { code: <span class="str">&quot;210&quot;</span>, label: <span class="str">&quot;Refusée&quot;</span>, terminal: true }</span><span class="line">    - { code: <span class="str">&quot;211&quot;</span>, label: <span class="str">&quot;Paiement transmis&quot;</span> }</span><span class="line hl">    - { code: <span class="str">&quot;212&quot;</span>, label: <span class="str">&quot;Encaissée&quot;</span>, terminal: true }</span><span class="line hl">    - { code: <span class="str">&quot;213&quot;</span>, label: <span class="str">&quot;Rejetée&quot;</span>, terminal: true }</span><span class="line">    - { code: <span class="str">&quot;214&quot;</span>, label: <span class="str">&quot;Visée&quot;</span> }</span><span class="line hl">    - { code: <span class="str">&quot;220&quot;</span>, label: <span class="str">&quot;Annulée&quot;</span>, terminal: true }</span><span class="line">    - { code: <span class="str">&quot;221&quot;</span>, label: <span class="str">&quot;Erreur de routage&quot;</span> }</span><span class="line">    - { code: <span class="str">&quot;224&quot;</span>, label: <span class="str">&quot;Demande de paiement direct&quot;</span> }</span><span class="line">    - { code: <span class="str">&quot;225&quot;</span>, label: <span class="str">&quot;Affacturée&quot;</span> }</span><span class="line">    - { code: <span class="str">&quot;226&quot;</span>, label: <span class="str">&quot;Affacturée confidentiel&quot;</span> }</span><span class="line">    - { code: <span class="str">&quot;227&quot;</span>, label: <span class="str">&quot;Changement de compte à payer&quot;</span> }</span><span class="line">    - { code: <span class="str">&quot;228&quot;</span>, label: <span class="str">&quot;Non affacturée&quot;</span> }</span><span class="line hl">    - { code: <span class="str">&quot;501&quot;</span>, label: <span class="str">&quot;Irrecevable&quot;</span>, terminal: true }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="declare-commands" aria-labelledby="declare-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm hook scripts</span>
+<span class="out">NAME                 SIZE  SHA256
+cfonb-amount-b.kts   784   3f94b73a8a923324f6750648e230e3d91026299ed636627a4562b14552d493ba
+cfonb-amount-c.kts   784   3f94b73a8a923324f6750648e230e3d91026299ed636627a4562b14552d493ba
+coordinates-c.kts    5076  cc87f4a8e8ccbb38f3306d4dce5a013dab984c36a8cd72afd72e8bd142504542
+ean-check-b.kts      477   58c3d6b83a0df5c9ae779aada8604f6bd850db7c52ca258b5bc6dc45fd8ea23c
+ean-check-c.kts      477   58c3d6b83a0df5c9ae779aada8604f6bd850db7c52ca258b5bc6dc45fd8ea23c
+ean-check-d.kts      477   58c3d6b83a0df5c9ae779aada8604f6bd850db7c52ca258b5bc6dc45fd8ea23c
+ean-draft-b.kts      476   c8692d84859f810de8903ded14a03a1ec4db93e1282aa88b4fb9f5e42b6586ea
+ean-draft-c.kts      476   c8692d84859f810de8903ded14a03a1ec4db93e1282aa88b4fb9f5e42b6586ea
+ean-draft-d.kts      526   90a58aae66c5feec5e52017e90d86b9ee93e46ce7d97dc0c1eb4b5faefb636a7
+follow-up-a.kts      498   f5947f51c956b84be88e4ef1d2b10265c9bced0415d4f2bef50ed4393c72e0af
+promised-date-b.kts  1407  44ceece5d17c40d337374d02f942aef41b092b6708ff7dbc48efc8b43aef1ac9
+shipping-fee-c.kts   333   c1c59e5c7b81302d5a284c9c722ca8cacaca0fe859c8ae1c393cd1d54a1ad9ad
+shipping-fee-p.kts   333   c1c59e5c7b81302d5a284c9c722ca8cacaca0fe859c8ae1c393cd1d54a1ad9ad</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f 10-lifecycle-export.yaml</span>
+<span class="out">Applied connector &quot;scenario-einvoice-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-einvoice-a</span>
+<span class="out">run scheduled: 04d93713-c2a6-43d5-952a-36e7fd34b22b</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 04d93713-c2a6-43d5-952a-36e7fd34b22b --wait-evaluated</span>
+<span class="out">ID        CONNECTOR            ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+04d93713  scenario-einvoice-a  default   Completed  6   6    0        0             2026-11-21 23:58  2026-11-21 23:58  yes</span>
+<span class="note">• script hooks:follow-up-a.kts  sha256 f5947f51c956b84be88e4ef1d2b10265c9bced0415d4f2bef50ed4393c72e0af</span>
+
+<span class="cmd"><span class="prompt">$</span> lm workflow apply -f 20-einvoice-lifecycle.yaml -o json</span>
+<span class="out">{
+  &quot;name&quot;: &quot;scenario-einvoice-lifecycle-a&quot;,
+  &quot;scope&quot;: &quot;facturation-a&quot;,
+  &quot;table&quot;: &quot;connector.t_scenario_einvoice_a&quot;,
+  &quot;column&quot;: &quot;status_code&quot;,
+  &quot;dataTruth&quot;: {
+    &quot;undeclared&quot;: [
+      {
+        &quot;value&quot;: &quot;299&quot;,
+        &quot;rows&quot;: 1
+      }
+    ],
+    &quot;unobserved&quot;: [
+      &quot;200&quot;,
+      &quot;201&quot;,
+      &quot;202&quot;,
+      &quot;205&quot;,
+      &quot;206&quot;,
+      &quot;208&quot;,
+      &quot;209&quot;,
+      &quot;210&quot;,
+      &quot;211&quot;,
+      &quot;213&quot;,
+      &quot;214&quot;,
+      &quot;220&quot;,
+      &quot;221&quot;,
+      &quot;224&quot;,
+      &quot;225&quot;,
+      &quot;226&quot;,
+      &quot;227&quot;,
+      &quot;228&quot;,
+      &quot;501&quot;
+    ],
+    &quot;nullOrBlank&quot;: 0,
+    &quot;tableMissing&quot;: false,
+    &quot;keyColumnMissing&quot;: false,
+    &quot;keyNullOrBlank&quot;: 0,
+    &quot;checkUnavailable&quot;: false,
+    &quot;unavailableReason&quot;: null,
+    &quot;dueProblem&quot;: null,
+    &quot;invalidOrderValues&quot;: null,
+    &quot;keysWithSeveralRows&quot;: null,
+    &quot;columnsUnverified&quot;: []
+  }
+}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="declare-result" aria-labelledby="declare-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>IN 6 · OUT 6 · cell errors 0</dd><dt>undeclared at apply</dt><dd>299</dd><dt>due date</dt><dd>readable</dd></dl><p class="sources">preuves: replay.log, 00-check-lifecycle.txt, 01-hook-scripts.txt, 02-run.json, 03-workflow-apply.json, 04-decisions.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-decide" aria-labelledby="decide-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="decide-title">INV-2026-301: mise à disposition, jamais prise en charge</h2>
+      <p>Au balayage suivant, la facture restée en 203 depuis plus de sept jours donne une décision.</p><ul class="prose-list"><li>INV-2026-301: en 203 depuis 12 jours</li><li>INV-2026-302: en 203 depuis 3 jours, rien</li><li>prise en charge, encaissée, en litige: rien</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Vérifié à part</strong><p>data/check_lifecycle.py calcule la même relance, depuis le fichier seul.</p></div></li><li><span class="n">2</span><div><strong>Une fois</strong><p>Une échéance alerte une seule fois.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Seule la facture oubliée chez l&#x27;acheteur déclenche une relance.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Relancer"><button type="button" role="tab" id="decide-commands-tab" data-view="commands" aria-controls="decide-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="decide-result-tab" data-view="result" aria-controls="decide-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="decide-commands" aria-labelledby="decide-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm inbox --process workflow:scenario-einvoice-lifecycle-a</span>
+<span class="out">ID     WHEN      PROCESS                                 MESSAGE                                                                                                                   ENTITY_KEY
+31787  just now  workflow:scenario-einvoice-lifecycle-a  INV-2026-301 for Atelier Morel SAS, 4860 €: made available on 2026-11-09T08:30:00Z, never taken in charge — follow it up  INV-2026-301</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="decide-result" aria-labelledby="decide-result-tab" tabindex="0" hidden><dl class="facts"><dt>decision</dt><dd>INV-2026-301 for Atelier Morel SAS, 4860 €: made available on 2026-11-09T08:30:00Z, never taken in charge — follow it up</dd><dt>check_lifecycle.py</dt><dd>INV-2026-301</dd></dl><p class="sources">preuves: replay.log, 00-check-lifecycle.txt, 01-hook-scripts.txt, 02-run.json, 03-workflow-apply.json, 04-decisions.json · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Les numéros 200 à 212 viennent de XP Z12-012, vendue par l&#x27;AFNOR et non lue ici: ils sont repris de la liste fournie, qui concorde avec l&#x27;annexe partout où celle-ci donne un numéro.</li><li>Un export de derniers statuts, pas l&#x27;API XP Z12-013 de la plateforme: l&#x27;historique des statuts n&#x27;est pas lu.</li><li>La facture elle-même (Factur-X, UBL, CII) n&#x27;est pas lue: lumnik lit le XML sur une réponse REST seulement.</li><li>Sept jours est le choix du fournisseur, pas un délai légal.</li><li>Six factures synthétiques, datées depuis le jour du rejeu.</li></ul></section>
+  <section class="try"><p>Ce scénario demande lumnik Pro.</p><a class="try-button" href="../../offre.html">Voir l&#x27;offre →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
