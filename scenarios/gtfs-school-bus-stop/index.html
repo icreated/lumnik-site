@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GTFS: un arrêt de bus scolaire qu&#x27;aucune course ne dessert — lumnik</title>
+<meta name="description" content="Lire le flux GTFS d&#x27;une ligne scolaire tel qu&#x27;il est publié et trouver l&#x27;arrêt qu&#x27;aucune course ne dessert, avec la requête qui le prouve. Les autorités de transport publient leurs horaires en GTFS: des fichiers CSV, dont stops.txt et stop_times.txt. Deux défauts passent un coup d&#x27;œil: un arrêt provisoire resté dans le fichier, et un horaire qui cite un arrêt absent. Deux fichiers, deux connecteurs, par SFTP. L&#x27;arrêt non desservi trouvé en langage naturel, avec son SQL. L&#x27;horaire orphelin trouvé aussi, par un NOT EXISTS.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/gtfs-school-bus-stop/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/gtfs-school-bus-stop/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>GTFS: un arrêt de bus scolaire qu&#x27;aucune course ne dessert</h1>
+    <p class="goal"><strong>Objectif</strong> Lire le flux GTFS d&#x27;une ligne scolaire tel qu&#x27;il est publié et trouver l&#x27;arrêt qu&#x27;aucune course ne dessert, avec la requête qui le prouve.</p>
+    <p class="lede">Les autorités de transport publient leurs horaires en GTFS: des fichiers CSV, dont stops.txt et stop_times.txt. Deux défauts passent un coup d&#x27;œil: un arrêt provisoire resté dans le fichier, et un horaire qui cite un arrêt absent.</p><ul class="lede-list"><li>deux fichiers, deux connecteurs, par SFTP</li><li>l&#x27;arrêt non desservi trouvé en langage naturel, avec son SQL</li><li>l&#x27;horaire orphelin trouvé aussi, par un NOT EXISTS</li></ul>
+    <ul class="tags"><li class="tag edition edition-pro"><a href="https://docs.lumnik.io/editions/">lumnik Pro</a></li><li class="tag">Transport</li><li class="tag">Éducation</li><li class="tag">IA</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-load" data-step="load" aria-current="step"><span class="num">1 · Lire</span><span class="sub">stops + stop_times</span></a><a href="#step-ask" data-step="ask"><span class="num">2 · Demander</span><span class="sub">Deux défauts</span></a></nav>
+  <section class="step" id="step-load" aria-labelledby="load-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="load-title">Le flux GTFS lu tel qu&#x27;il est publié</h2>
+      <p>Le réseau dépose son flux sur un serveur SFTP. Un connecteur par fichier.</p><ul class="prose-list"><li>delimiter: la virgule de GTFS, en UTF-8</li><li>une heure après minuit (24:10:00) reste du texte et arrive</li><li>l&#x27;entité arret: un arrêt par stop_id</li><li>l&#x27;entité horaire: un passage par course et par rang</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>6 arrêts</strong><p>stops.txt, lu entier.</p></div></li><li><span class="n">2</span><div><strong>12 horaires</strong><p>stop_times.txt, trois courses.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un format public se lit sans conversion.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="load-source-tab" data-view="source" aria-controls="load-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="load-manifest-tab" data-view="manifest" aria-controls="load-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="load-commands-tab" data-view="commands" aria-controls="load-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="load-result-tab" data-view="result" aria-controls="load-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="load-source" aria-labelledby="load-source-tab" tabindex="0"><figure class="source"><figcaption>stops.txt</figcaption><pre class="code">stop_id,stop_name,stop_lat,stop_lon,location_type
+S-GARE,Gare routière,45.75810,4.82540,0
+S-MAIRIE,Mairie,45.76120,4.83010,0
+S-ECOLE,École Jules Ferry,45.76480,4.83660,0
+S-COLLEGE,Collège Victor Hugo,45.76830,4.84210,0
+S-LYCEE-P,Lycée Jean Moulin (arrêt provisoire),45.77190,4.84850,0
+S-LYCEE,Lycée Jean Moulin,45.77240,4.84920,0</pre></figure><figure class="source"><figcaption>stop_times.txt</figcaption><pre class="code">trip_id,arrival_time,departure_time,stop_id,stop_sequence
+S1-MATIN,07:05:00,07:05:00,S-GARE,1
+S1-MATIN,07:11:00,07:11:00,S-MAIRIE,2
+S1-MATIN,07:18:00,07:18:00,S-ECOLE,3
+S1-MATIN,07:25:00,07:25:00,S-COLLEGE,4
+S1-MATIN,07:32:00,07:32:00,S-LYCEE,5
+S1-SOIR,17:40:00,17:40:00,S-LYCEE,1
+S1-SOIR,17:47:00,17:47:00,S-COLLEGE,2
+S1-SOIR,17:54:00,17:54:00,S-ECOLE,3
+S1-SOIR,18:01:00,18:01:00,S-MAIRIE,4
+S1-SOIR,18:08:00,18:08:00,S-GARE-NORD,5
+S1-NUIT,23:50:00,23:50:00,S-GARE,1
+S1-NUIT,24:10:00,24:10:00,S-LYCEE,2</pre></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="load-manifest" aria-labelledby="load-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/10-stops.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-gtfs-stops-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [transport-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: sftp</span><span class="line">    <span class="key">host</span>: host.docker.internal</span><span class="line">    <span class="key">port</span>: 2226</span><span class="line">    <span class="key">user</span>: gtfs</span><span class="line">    <span class="key">path</span>: /feed/stops.txt</span><span class="line">    <span class="key">password_env</span>: SCENARIO_GTFS_A_SFTP</span><span class="line">    <span class="comment"># The fingerprint the network&#x27;s server presents, read out of band (ssh-keyscan | ssh-keygen -lf -).</span></span><span class="line">    <span class="key">host_key_fingerprint</span>: <span class="str">&quot;SHA256:FINGERPRINT_READ_AT_REPLAY&quot;</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line hl">    <span class="key">delimiter</span>: <span class="str">&quot;,&quot;</span>            <span class="comment"># GTFS: comma-delimited, UTF-8</span></span><span class="line">    <span class="key">encoding</span>: UTF-8</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre><div class="file"><span class="filename">manifests/11-stop-times.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-gtfs-times-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [transport-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: sftp</span><span class="line">    <span class="key">host</span>: host.docker.internal</span><span class="line">    <span class="key">port</span>: 2226</span><span class="line">    <span class="key">user</span>: gtfs</span><span class="line">    <span class="key">path</span>: /feed/stop_times.txt</span><span class="line">    <span class="key">password_env</span>: SCENARIO_GTFS_A_SFTP</span><span class="line">    <span class="comment"># The fingerprint the network&#x27;s server presents, read out of band (ssh-keyscan | ssh-keygen -lf -).</span></span><span class="line">    <span class="key">host_key_fingerprint</span>: <span class="str">&quot;SHA256:FINGERPRINT_READ_AT_REPLAY&quot;</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line hl">    <span class="key">delimiter</span>: <span class="str">&quot;,&quot;</span>            <span class="comment"># GTFS: comma-delimited, UTF-8</span></span><span class="line">    <span class="key">encoding</span>: UTF-8</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre><div class="file"><span class="filename">manifests/20-arret.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: arret_a</span><span class="line"><span class="key">label</span>: Arrêt</span><span class="line"><span class="key">description</span>: <span class="str">&quot;A stop of the school bus network (GTFS stops.txt): its id, name and position.&quot;</span></span><span class="line hl"><span class="key">match</span>: [stop_id]</span><span class="line"><span class="key">scopes</span>: [transport-a]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">stop_id</span>: { label: <span class="str">&quot;Identifiant d&#x27;arrêt&quot;</span> }</span><span class="line">  <span class="key">stop_name</span>: { label: <span class="str">&quot;Nom de l&#x27;arrêt&quot;</span> }</span><span class="line">  <span class="key">stop_lat</span>: { label: <span class="str">&quot;Latitude&quot;</span> }</span><span class="line">  <span class="key">stop_lon</span>: { label: <span class="str">&quot;Longitude&quot;</span> }</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_gtfs_stops_a</span><span class="line">    <span class="key">map</span>: { stop_id: stop_id, stop_name: stop_name, stop_lat: stop_lat, stop_lon: stop_lon }</span></code></pre><div class="file"><span class="filename">manifests/21-horaire.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: horaire_a</span><span class="line"><span class="key">label</span>: Horaire de passage</span><span class="line"><span class="key">description</span>: <span class="str">&quot;A stop time of a school bus trip (GTFS stop_times.txt): the trip, its order, the time and the stop it names by stop_id.&quot;</span></span><span class="line hl"><span class="key">match</span>: [trip_id, stop_sequence]</span><span class="line"><span class="key">scopes</span>: [transport-a]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">trip_id</span>: { label: <span class="str">&quot;Course&quot;</span> }</span><span class="line">  <span class="key">stop_sequence</span>: { label: <span class="str">&quot;Rang dans la course&quot;</span> }</span><span class="line">  <span class="key">arrival_time</span>: { label: <span class="str">&quot;Heure d&#x27;arrivée&quot;</span> }</span><span class="line">  <span class="key">stop_id</span>: { label: <span class="str">&quot;Identifiant d&#x27;arrêt&quot;</span> }</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_gtfs_times_a</span><span class="line">    <span class="key">map</span>: { trip_id: trip_id, stop_sequence: stop_sequence, arrival_time: arrival_time, stop_id: stop_id }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="load-commands" aria-labelledby="load-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-stops.yaml</span>
+<span class="out">Applied connector &quot;scenario-gtfs-stops-c&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f 11-stop-times.yaml</span>
+<span class="out">Applied connector &quot;scenario-gtfs-times-c&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-gtfs-stops-c</span>
+<span class="out">run scheduled: 4c0e693d-bcd1-4047-9d4a-c8f29a1bbbc6</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 4c0e693d-bcd1-4047-9d4a-c8f29a1bbbc6 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR              ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+4c0e693d  scenario-gtfs-stops-c  default   Completed  6   6    0        0             2026-11-21 21:01  2026-11-21 21:01  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-gtfs-times-c</span>
+<span class="out">run scheduled: ffeb3cda-32a5-4a6d-a57d-8e4872b08052</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get ffeb3cda-32a5-4a6d-a57d-8e4872b08052 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR              ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+ffeb3cda  scenario-gtfs-times-c  default   Completed  12  12   0        0             2026-11-21 21:01  2026-11-21 21:01  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-arret.yaml</span>
+<span class="out">Applied entity &quot;arret_c&quot; → connector.&quot;v_arret_c&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f 21-horaire.yaml</span>
+<span class="out">Applied entity &quot;horaire_c&quot; → connector.&quot;v_horaire_c&quot;</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="load-result" aria-labelledby="load-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-gtfs-stops-c</dt><dd>IN 6 · OUT 6</dd><dt>scenario-gtfs-times-c</dt><dd>IN 12 · OUT 12</dd></dl><p class="sources">preuves: replay.log, check_gtfs.txt, 01-unserved.json, 02-unknown.json, 03-evening-trip.json, run-scenario-gtfs-stops-c.txt, run-scenario-gtfs-times-c.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-ask" aria-labelledby="ask-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="ask-title">Un arrêt sans course, une course vers un arrêt absent</h2>
+      <p>Trois questions en langage naturel.</p><ul class="prose-list"><li>quels arrêts ne sont desservis par aucun horaire: S-LYCEE-P, par un NOT IN</li><li>quels horaires citent un arrêt qui n&#x27;existe pas: S1-SOIR rang 5, S-GARE-NORD, par un NOT EXISTS</li><li>la course S1-SOIR listée: le même rang 5</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Vérifiable</strong><p>data/check_gtfs.py calcule les mêmes défauts, depuis les fichiers seuls.</p></div></li><li><span class="n">2</span><div><strong>Colonnes déclarées</strong><p>La réponse ne montre que les colonnes de la fiche.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>L&#x27;arrêt non desservi se trouve par une question, et sa requête se relit.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Demander"><button type="button" role="tab" id="ask-commands-tab" data-view="commands" aria-controls="ask-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="ask-result-tab" data-view="result" aria-controls="ask-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="ask-commands" aria-labelledby="ask-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm ask --scope transport-c --lang fr &quot;Quels arrêts ne sont desservis par aucun horaire ?&quot;</span>
+<span class="out">Les arrêts ne desservis par aucun horaire sont :
+
+- Arrêt ID : S-LYCEE-P
+- Nom de l&#x27;arrêt : Lycée Jean Moulin (arrêt provisoire)
+- Latitude : 45.77190
+- Longitude : 4.84850
+  data as of: 2026-11-21T20:01:44.239554Z (last completed run)
+
+  STOP_ID    STOP_NAME                             STOP_LAT  STOP_LON
+  S-LYCEE-P  Lycée Jean Moulin (arrêt provisoire)  45.77190  4.84850
+  1 row returned
+
+  SQL: SELECT stop_id, stop_name, stop_lat, stop_lon
+FROM (SELECT &quot;stop_id&quot;, &quot;stop_name&quot;, &quot;stop_lat&quot;, &quot;stop_lon&quot; FROM connector.&quot;v_arret_c&quot;) AS &quot;v_arret_c&quot;
+WHERE stop_id NOT IN (
+    SELECT stop_id
+    FROM (SELECT &quot;trip_id&quot;, &quot;stop_sequence&quot;, &quot;arrival_time&quot;, &quot;stop_id&quot; FROM connector.&quot;v_horaire_c&quot;) AS &quot;v_horaire_c&quot;
+)
+LIMIT 500</span>
+
+<span class="cmd"><span class="prompt">$</span> lm ask --scope transport-c --lang fr &quot;Quels horaires citent un arrêt qui n&#x27;existe pas ?&quot;</span>
+<span class="out">Les horaires suivants citent un arrêt qui n&#x27;existe pas :
+
+- **trip_id**: S1-SOIR
+- **stop_sequence**: 5
+- **arrival_time**: 18:08:00
+- **stop_id**: S-GARE-NORD
+  data as of: 2026-11-21T20:01:44.239554Z (last completed run)
+
+  TRIP_ID  STOP_SEQUENCE  ARRIVAL_TIME  STOP_ID
+  S1-SOIR  5              18:08:00      S-GARE-NORD
+  1 row returned
+
+  SQL: SELECT h.*
+FROM (SELECT &quot;trip_id&quot;, &quot;stop_sequence&quot;, &quot;arrival_time&quot;, &quot;stop_id&quot; FROM connector.&quot;v_horaire_c&quot;) AS &quot;h&quot;
+WHERE h.&quot;stop_id&quot; IS NOT NULL
+AND NOT EXISTS (
+    SELECT 1
+    FROM (SELECT &quot;stop_id&quot;, &quot;stop_name&quot;, &quot;stop_lat&quot;, &quot;stop_lon&quot; FROM connector.&quot;v_arret_c&quot;) AS &quot;a&quot;
+    WHERE a.&quot;stop_id&quot; = h.&quot;stop_id&quot;
+)
+LIMIT 500</span>
+
+<span class="cmd"><span class="prompt">$</span> lm ask --scope transport-c --lang fr &quot;Liste les horaires de la course S1-SOIR avec leur identifiant d&#x27;arrêt&quot;</span>
+<span class="out">Il y a 5 horaires pour la course S1-SOIR. Voici les détails :
+
+1. Arrivée à S-LYCEE à 17:40:00
+2. Arrivée à S-COLLEGE à 17:47:00
+3. Arrivée à S-ECOLE à 17:54:00
+4. Arrivée à S-MAIRIE à 18:01:00
+5. Arrivée à S-GARE-NORD à 18:08:00
+  data as of: 2026-11-21T20:01:44.239554Z (last completed run)
+
+  TRIP_ID  STOP_ID      ARRIVAL_TIME
+  S1-SOIR  S-LYCEE      17:40:00
+  S1-SOIR  S-COLLEGE    17:47:00
+  S1-SOIR  S-ECOLE      17:54:00
+  S1-SOIR  S-MAIRIE     18:01:00
+  S1-SOIR  S-GARE-NORD  18:08:00
+  5 rows returned
+
+  SQL: SELECT 
+    h.&quot;trip_id&quot;, 
+    h.&quot;stop_id&quot;, 
+    h.&quot;arrival_time&quot;
+FROM 
+    (SELECT &quot;trip_id&quot;, &quot;stop_sequence&quot;, &quot;arrival_time&quot;, &quot;stop_id&quot; FROM connector.&quot;v_horaire_c&quot;) AS &quot;h&quot;
+WHERE 
+    h.&quot;trip_id&quot; = &#x27;S1-SOIR&#x27;
+LIMIT 500</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="ask-result" aria-labelledby="ask-result-tab" tabindex="0" hidden><dl class="facts"><dt>unserved</dt><dd>S-LYCEE-P · Lycée Jean Moulin (arrêt provisoire)</dd><dt>orphan</dt><dd>S1-SOIR rank 5 · S-GARE-NORD</dd><dt>orphan, sentence</dt><dd>Les horaires suivants citent un arrêt qui n&#x27;existe pas :</dd><dt>S1-SOIR</dt><dd>17:40:00 · S-LYCEE</dd><dt>S1-SOIR</dt><dd>17:47:00 · S-COLLEGE</dd><dt>S1-SOIR</dt><dd>17:54:00 · S-ECOLE</dd><dt>S1-SOIR</dt><dd>18:01:00 · S-MAIRIE</dd><dt>S1-SOIR</dt><dd>18:08:00 · S-GARE-NORD</dd></dl><p class="sources">preuves: replay.log, check_gtfs.txt, 01-unserved.json, 02-unknown.json, 03-evening-trip.json, run-scenario-gtfs-stops-c.txt, run-scenario-gtfs-times-c.txt · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Avant icreated/lumnik#2127, SELECT * remontait aussi les colonnes internes de la vue, et la phrase sur l&#x27;orphelin était retenue.</li><li>Avant icreated/lumnik#2125, la question de l&#x27;orphelin s&#x27;abstenait sur cinq formulations.</li><li>Deux fichiers seulement: trips, routes et calendar ne sont pas lus. Ce n&#x27;est pas un validateur GTFS.</li><li>Ligne scolaire fictive, données synthétiques.</li></ul></section>
+  <section class="try"><p>Ce scénario demande lumnik Pro.</p><a class="try-button" href="../../offre.html">Voir l&#x27;offre →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
