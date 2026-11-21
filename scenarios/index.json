@@ -674,6 +674,26 @@
       "evidenceDigest": "sha256:81638f79c0711724f257732f97137d1f82ac49f579adc0b3e542755e2ce3593c"
     },
     {
+      "slug": "gtfs-school-bus-stop",
+      "title": "GTFS: un arrêt de bus scolaire qu'aucune course ne dessert",
+      "goal": "Lire le flux GTFS d'une ligne scolaire tel qu'il est publié et trouver l'arrêt qu'aucune course ne dessert, avec la requête qui le prouve.",
+      "lede": "Les autorités de transport publient leurs horaires en GTFS: des fichiers CSV, dont stops.txt et stop_times.txt. Deux défauts passent un coup d'œil: un arrêt provisoire resté dans le fichier, et un horaire qui cite un arrêt absent.\n- deux fichiers, deux connecteurs, par SFTP\n- l'arrêt non desservi trouvé en langage naturel, avec son SQL\n- l'horaire orphelin: Ask s'abstient, la course le montre",
+      "tags": {
+        "domain": [
+          "Transport",
+          "Éducation",
+          "IA"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:e5f579537b18662476c21d7120e97a4dfca5715ff5a6538c3478754ab02118a1"
+    },
+    {
       "slug": "hl7-analyser-results",
       "title": "HL7 v2: un résultat au-dessus de sa norme que l'analyseur ne signale pas",
       "goal": "Lire les résultats HL7 v2 de deux analyseurs, et être prévenu quand une valeur dépasse la norme envoyée avec elle, même sans drapeau d'anomalie.",
