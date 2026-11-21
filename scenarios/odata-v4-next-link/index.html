@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OData v4 paginé par le serveur: lumnik suit @odata.nextLink — lumnik</title>
+<meta name="description" content="Lire les 120 clients d&#x27;un service OData v4 paginé par le serveur, comme Business Central, en pages de 20 demandées par Prefer, sans en perdre un. Business Central pagine ses réponses OData côté serveur, et un client demande des pages plus petites avec Prefer: odata.maxpagesize. La page suivante n&#x27;est pas un paramètre calculé: c&#x27;est @odata.nextLink, une URL que le serveur renvoie. Un vrai service ASP.NET Core OData v4. Le preset odata-v4, le total $count comme témoin. Six pages de 20, 120 clients.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/odata-v4-next-link/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/odata-v4-next-link/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>OData v4 paginé par le serveur: lumnik suit @odata.nextLink</h1>
+    <p class="goal"><strong>Objectif</strong> Lire les 120 clients d&#x27;un service OData v4 paginé par le serveur, comme Business Central, en pages de 20 demandées par Prefer, sans en perdre un.</p>
+    <p class="lede">Business Central pagine ses réponses OData côté serveur, et un client demande des pages plus petites avec Prefer: odata.maxpagesize. La page suivante n&#x27;est pas un paramètre calculé: c&#x27;est @odata.nextLink, une URL que le serveur renvoie.</p><ul class="lede-list"><li>un vrai service ASP.NET Core OData v4</li><li>le preset odata-v4, le total $count comme témoin</li><li>six pages de 20, 120 clients</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">ERP</li><li class="tag">API</li><li class="tag">Microsoft</li><li class="tag kind">Connector</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-read" data-step="read" aria-current="step"><span class="num">1 · Lire</span><span class="sub">odata-v4 + Prefer</span></a></nav>
+  <section class="step" id="step-read" aria-labelledby="read-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="read-title">Six pages de 20, 120 clients</h2>
+      <p>Le service ASP.NET Core OData pagine à 50. Le connecteur demande 20 par page et suit les liens du serveur.</p><ul class="prose-list"><li>kind: odata-v4, où sont les lignes, le lien suivant et le total</li><li>$count=true: le total que le run vérifie</li><li>Prefer: odata.maxpagesize=20, déclaré une fois, envoyé à chaque page</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Compté chez le serveur</strong><p>Son journal montre six GET, de $skip 0 à 100.</p></div></li><li><span class="n">2</span><div><strong>Compté chez lumnik</strong><p>Le run dit IN 120, OUT 120.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le serveur décide des pages, lumnik suit le lien qu&#x27;il rend.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-source-tab" data-view="source" aria-controls="read-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="read-manifest-tab" data-view="manifest" aria-controls="read-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="read-source" aria-labelledby="read-source-tab" tabindex="0"><figure class="source"><figcaption>server-requests.txt</figcaption><pre class="code">GET /odata/Customers?$count=true prefer=odata.maxpagesize=20 -&gt; 200
+GET /odata/Customers?$count=true&amp;$skip=20 prefer=odata.maxpagesize=20 -&gt; 200
+GET /odata/Customers?$count=true&amp;$skip=40 prefer=odata.maxpagesize=20 -&gt; 200
+GET /odata/Customers?$count=true&amp;$skip=60 prefer=odata.maxpagesize=20 -&gt; 200
+GET /odata/Customers?$count=true&amp;$skip=80 prefer=odata.maxpagesize=20 -&gt; 200
+GET /odata/Customers?$count=true&amp;$skip=100 prefer=odata.maxpagesize=20 -&gt; 200</pre></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="read-manifest" aria-labelledby="read-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/10-customers.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-odata-customers-a</span><span class="line">  <span class="key">connector_type</span>: rest-generic</span><span class="line">  <span class="key">scopes</span>: [finance-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">base_url</span>: http://host.docker.internal:18073</span><span class="line">  <span class="key">headers</span>:</span><span class="line">    <span class="comment"># Business Central pages at 20,000 by default; a client asks for smaller pages, as Microsoft documents.</span></span><span class="line hl">    - { name: Prefer, value: odata.maxpagesize=20 }</span><span class="line">  <span class="key">endpoints</span>:</span><span class="line">    <span class="dash">-</span> <span class="key">id</span>: customers</span><span class="line">      <span class="key">method</span>: GET</span><span class="line hl">      <span class="key">path</span>: /odata/Customers?$count=true    <span class="comment"># $count: the total the run checks itself against</span></span><span class="line hl">      <span class="key">pagination</span>: { kind: odata-v4 }        <span class="comment"># @odata.nextLink, value, @odata.count</span></span><span class="line">      <span class="key">target</span>:</span><span class="line">        <span class="key">kind</span>: hybrid</span><span class="line">        <span class="key">table</span>: connector.scenario_odata_customers_a</span><span class="line">        <span class="key">unique_key</span>: $.Id</span><span class="line">        <span class="key">promote</span>:</span><span class="line">          - { name: customer_no, path: $.No, type: text }</span><span class="line">          - { name: name, path: $.Name, type: text }</span><span class="line">          - { name: city, path: $.City, type: text }</span><span class="line">          - { name: balance, path: $.Balance, type: decimal }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-customers.yaml</span>
+<span class="out">Applied connector &quot;scenario-odata-customers-a&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm source rest test scenario-odata-customers-a</span>
+<span class="out">ENDPOINT   METHOD  STATUS  ITEMS  VERDICT
+customers  GET     200     20     ok</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-odata-customers-a</span>
+<span class="out">run scheduled: cc998932-2d44-40d5-a18f-72c3ea626254</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get cc998932-2d44-40d5-a18f-72c3ea626254 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR                   ENDPOINT   STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+cc998932  scenario-odata-customers-a  customers  Completed  120  120  0        0             2026-11-21 21:22  2026-11-21 21:22  yes</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>without Prefer</dt><dd>50 items · @odata.count 120 · nextLink …$count=true&amp;$skip=50</dd><dt>the server&#x27;s log</dt><dd>6 × GET /odata/Customers, Prefer: odata.maxpagesize=20</dd><dt>run</dt><dd>IN 120 · OUT 120 · DEAD-LETTERS 0</dd></dl><p class="sources">preuves: replay.log, 01-first-page.json, 02-preflight.txt, 03-run.json, 04-server-requests.txt · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Ce n&#x27;est pas Business Central: c&#x27;est le framework OData publié par Microsoft, qui pagine de la même façon. L&#x27;authentification OAuth2 de Business Central n&#x27;est pas montrée ici.</li><li>Un serveur peut ignorer Prefer: la taille de page est alors la sienne, et le run suit toujours le lien.</li><li>120 clients synthétiques.</li></ul></section>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
