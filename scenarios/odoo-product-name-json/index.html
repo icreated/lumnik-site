@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Odoo lu dans son PostgreSQL: le nom du produit est un JSON — lumnik</title>
+<meta name="description" content="Lire les produits d&#x27;un vrai Odoo 18 directement dans sa base et obtenir le nom français de chaque produit, sans rien écrire dans Odoo. Depuis Odoo 16, un champ traduit est un JSON par ligne, une clé par langue. Chaque rapport écrit sur l&#x27;ancienne colonne texte a cassé. Un intégrateur qui lit la base d&#x27;Odoo le rencontre dès product_template.name. Le nom arrive en texte JSON, toutes les langues gardées. Promote lit la clé fr_FR dans une colonne à part, avec repli sur en_US. La question en langage naturel donne les quatre noms français.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/odoo-product-name-json/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/odoo-product-name-json/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Odoo lu dans son PostgreSQL: le nom du produit est un JSON</h1>
+    <p class="goal"><strong>Objectif</strong> Lire les produits d&#x27;un vrai Odoo 18 directement dans sa base et obtenir le nom français de chaque produit, sans rien écrire dans Odoo.</p>
+    <p class="lede">Depuis Odoo 16, un champ traduit est un JSON par ligne, une clé par langue. Chaque rapport écrit sur l&#x27;ancienne colonne texte a cassé. Un intégrateur qui lit la base d&#x27;Odoo le rencontre dès product_template.name.</p><ul class="lede-list"><li>le nom arrive en texte JSON, toutes les langues gardées</li><li>promote lit la clé fr_FR dans une colonne à part, avec repli sur en_US</li><li>la question en langage naturel donne les quatre noms français</li></ul>
+    <ul class="tags"><li class="tag edition edition-pro"><a href="https://docs.lumnik.io/editions/">lumnik Pro</a></li><li class="tag">ERP</li><li class="tag">Odoo</li><li class="tag">IA</li><li class="tag kind">Connector</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-table" data-step="table" aria-current="step"><span class="num">1 · Lire</span><span class="sub">product_template</span></a><a href="#step-french" data-step="french"><span class="num">2 · Demander</span><span class="sub">Quatre noms</span></a></nav>
+  <section class="step" id="step-table" aria-labelledby="table-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="table-title">Le nom arrive en JSON, sa clé française en colonne</h2>
+      <p>Un vrai Odoo 18 tourne en Docker. Les produits sont créés par son API XML-RPC. Le connecteur lit product_template avec un login en lecture seule.</p><ul class="prose-list"><li>rename: id est une colonne du hub, il arrive sous product_tmpl_id</li><li>name: une colonne jsonb arrive en TEXT, le JSON tel quel</li><li>promote: la clé $.fr_FR devient la colonne name_fr</li><li>fallback: $.en_US pour un produit jamais traduit, la règle d&#x27;Odoo</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Odoo intact</strong><p>Rien n&#x27;est écrit dans la base d&#x27;Odoo.</p></div></li><li><span class="n">2</span><div><strong>Toutes les langues</strong><p>La colonne name garde le JSON entier.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La langue se déclare à l&#x27;entrée, dans le manifeste.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="table-manifest-tab" data-view="manifest" aria-controls="table-manifest" aria-selected="true" tabindex="0">Manifestes</button><button type="button" role="tab" id="table-commands-tab" data-view="commands" aria-controls="table-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="table-result-tab" data-view="result" aria-controls="table-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-manifest" id="table-manifest" aria-labelledby="table-manifest-tab" tabindex="0"><div class="file"><span class="filename">manifests/10-product-template.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-odoo-products-a</span><span class="line">  <span class="key">connector_type</span>: jdbc-generic</span><span class="line">  <span class="key">scopes</span>: [odoo-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">connection</span>:</span><span class="line">    <span class="key">url</span>: jdbc:postgresql://host.docker.internal:55433/scen</span><span class="line">    <span class="key">user</span>: lumnik_reader</span><span class="line">    <span class="key">password_env</span>: SCENARIO_ODOO_A_DB</span><span class="line">  <span class="key">source</span>:</span><span class="line">    <span class="key">tables</span>:</span><span class="line">      <span class="dash">-</span> <span class="key">name</span>: product_template</span><span class="line">        <span class="key">schema</span>: public</span><span class="line">        <span class="key">mode</span>: full</span><span class="line">        <span class="key">pk_columns</span>: [id]</span><span class="line hl">        <span class="key">rename</span>: { id: product_tmpl_id }   <span class="comment"># id is one of the hub&#x27;s own columns</span></span><span class="line">        <span class="key">target</span>: odoo_product_template_a   <span class="comment"># connector.t_odoo_product_template_a, its own hub table</span></span><span class="line hl">        <span class="key">promote</span>:</span><span class="line">          <span class="dash">-</span> <span class="key">name</span>: name_fr                 <span class="comment"># the French name, in a column of its own</span></span><span class="line">            <span class="key">column</span>: name                  <span class="comment"># Odoo 16+: {&quot;en_US&quot;: …, &quot;fr_FR&quot;: …}</span></span><span class="line">            <span class="key">path</span>: $.fr_FR</span><span class="line hl">            <span class="key">fallback</span>: $.en_US             <span class="comment"># never translated: the English name, as Odoo shows it</span></span><span class="line">            <span class="key">type</span>: text</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="table-commands" aria-labelledby="table-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-product-template.yaml</span>
+<span class="out">Applied connector &quot;scenario-odoo-products-c&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-odoo-products-c</span>
+<span class="out">run scheduled: 7cfa1a31-4bde-4e91-854b-4012158d3ab3</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 7cfa1a31-4bde-4e91-854b-4012158d3ab3 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR                 ENDPOINT          STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+7cfa1a31  scenario-odoo-products-c  product_template  Completed  4   4    0        0             2026-11-21 18:37  2026-11-21 18:37  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm ask --scope odoo-c --lang fr &quot;Liste les produits avec leur référence et leur nom&quot;</span>
+<span class="out">Il y a 4 produits listés. Voici les détails :
+
+1. Référence : CHAIR-01, Nom : {&quot;en_US&quot;: &quot;Office chair&quot;, &quot;fr_FR&quot;: &quot;Chaise de bureau&quot;}
+2. Référence : DESK-02, Nom : {&quot;en_US&quot;: &quot;Standing desk&quot;, &quot;fr_FR&quot;: &quot;Bureau assis-debout&quot;}
+3. Référence : LAMP-03, Nom : {&quot;en_US&quot;: &quot;Desk lamp&quot;, &quot;fr_FR&quot;: &quot;Lampe de bureau&quot;}
+4. Référence : CABLE-04, Nom : {&quot;en_US&quot;: &quot;USB-C cable&quot;}
+  data as of: 2026-11-21T17:37:26.245886Z (last completed run)
+
+  DEFAULT_CODE  NAME
+  CHAIR-01      {&quot;en_US&quot;: &quot;Office chair&quot;, &quot;fr_FR&quot;: &quot;Chaise de bureau&quot;}
+  DESK-02       {&quot;en_US&quot;: &quot;Standing desk&quot;, &quot;fr_FR&quot;: &quot;Bureau assis-debout&quot;}
+  LAMP-03       {&quot;en_US&quot;: &quot;Desk lamp&quot;, &quot;fr_FR&quot;: &quot;Lampe de bureau&quot;}
+  CABLE-04      {&quot;en_US&quot;: &quot;USB-C cable&quot;}
+  4 rows returned
+
+  SQL: SELECT &quot;default_code&quot;, &quot;name&quot; FROM (SELECT &quot;product_tmpl_id&quot;, &quot;sequence&quot;, &quot;categ_id&quot;, &quot;uom_id&quot;, &quot;uom_po_id&quot;, &quot;company_id&quot;, &quot;color&quot;, &quot;create_uid&quot;, &quot;write_uid&quot;, &quot;type&quot;, &quot;service_tracking&quot;, &quot;default_code&quot;, &quot;name&quot;, &quot;description&quot;, &quot;description_purchase&quot;, &quot;description_sale&quot;, &quot;product_properties&quot;, &quot;list_price&quot;, &quot;volume&quot;, &quot;weight&quot;, &quot;sale_ok&quot;, &quot;purchase_ok&quot;, &quot;active&quot;, &quot;can_image_1024_be_zoomed&quot;, &quot;has_configurable_attributes&quot;, &quot;is_favorite&quot;, &quot;create_date&quot;, &quot;write_date&quot;, &quot;property_account_income_id&quot;, &quot;property_account_expense_id&quot;, &quot;service_type&quot;, &quot;sale_line_warn&quot;, &quot;expense_policy&quot;, &quot;invoice_policy&quot;, &quot;sale_line_warn_msg&quot;, &quot;name_fr&quot; FROM connector.&quot;t_odoo_product_template_c&quot;) AS &quot;t_odoo_product_template_c&quot;
+LIMIT 500</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="table-result" aria-labelledby="table-result-tab" tabindex="0" hidden><dl class="facts"><dt>scenario-odoo-products-c</dt><dd>product_template · IN 4 · OUT 4</dd><dt>CHAIR-01</dt><dd>{&quot;en_US&quot;: &quot;Office chair&quot;, &quot;fr_FR&quot;: &quot;Chaise de bureau&quot;}</dd><dt>DESK-02</dt><dd>{&quot;en_US&quot;: &quot;Standing desk&quot;, &quot;fr_FR&quot;: &quot;Bureau assis-debout&quot;}</dd><dt>LAMP-03</dt><dd>{&quot;en_US&quot;: &quot;Desk lamp&quot;, &quot;fr_FR&quot;: &quot;Lampe de bureau&quot;}</dd><dt>CABLE-04</dt><dd>{&quot;en_US&quot;: &quot;USB-C cable&quot;}</dd></dl><p class="sources">preuves: replay.log, 01-odoo-product-template.txt, 02-names.json, 03-french.json, run-scenario-odoo-products-c.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-french" aria-labelledby="french-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="french-title">Le nom français de chaque produit</h2>
+      <p>La question est posée telle qu&#x27;un vendeur la tape. Ask lit la colonne name_fr.</p><ul class="prose-list"><li>Chaise de bureau, Bureau assis-debout, Lampe de bureau</li><li>CABLE-04, jamais traduit: USB-C cable, comme Odoo l&#x27;affiche</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Repli</strong><p>Un produit sans traduction garde son nom anglais.</p></div></li><li><span class="n">2</span><div><strong>SQL</strong><p>La réponse montre sa requête.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La question répond depuis la colonne déclarée.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Demander"><button type="button" role="tab" id="french-commands-tab" data-view="commands" aria-controls="french-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="french-result-tab" data-view="result" aria-controls="french-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="french-commands" aria-labelledby="french-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm ask --scope odoo-c --lang fr &quot;Quel est le nom français de chaque produit, avec sa référence ?&quot;</span>
+<span class="out">Il y a 4 produits. Voici leur nom français et leur référence :
+
+1. Chaise de bureau - CHAIR-01
+2. Bureau assis-debout - DESK-02
+3. Lampe de bureau - LAMP-03
+4. USB-C cable - CABLE-04
+  data as of: 2026-11-21T17:37:26.245886Z (last completed run)
+
+  NAME_FR              DEFAULT_CODE
+  Chaise de bureau     CHAIR-01
+  Bureau assis-debout  DESK-02
+  Lampe de bureau      LAMP-03
+  USB-C cable          CABLE-04
+  4 rows returned
+
+  SQL: SELECT &quot;name_fr&quot;, &quot;default_code&quot; FROM (SELECT &quot;product_tmpl_id&quot;, &quot;sequence&quot;, &quot;categ_id&quot;, &quot;uom_id&quot;, &quot;uom_po_id&quot;, &quot;company_id&quot;, &quot;color&quot;, &quot;create_uid&quot;, &quot;write_uid&quot;, &quot;type&quot;, &quot;service_tracking&quot;, &quot;default_code&quot;, &quot;name&quot;, &quot;description&quot;, &quot;description_purchase&quot;, &quot;description_sale&quot;, &quot;product_properties&quot;, &quot;list_price&quot;, &quot;volume&quot;, &quot;weight&quot;, &quot;sale_ok&quot;, &quot;purchase_ok&quot;, &quot;active&quot;, &quot;can_image_1024_be_zoomed&quot;, &quot;has_configurable_attributes&quot;, &quot;is_favorite&quot;, &quot;create_date&quot;, &quot;write_date&quot;, &quot;property_account_income_id&quot;, &quot;property_account_expense_id&quot;, &quot;service_type&quot;, &quot;sale_line_warn&quot;, &quot;expense_policy&quot;, &quot;invoice_policy&quot;, &quot;sale_line_warn_msg&quot;, &quot;name_fr&quot; FROM connector.&quot;t_odoo_product_template_c&quot;) AS &quot;t_odoo_product_template_c&quot;
+LIMIT 500</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="french-result" aria-labelledby="french-result-tab" tabindex="0" hidden><dl class="facts"><dt>CHAIR-01</dt><dd>Chaise de bureau</dd><dt>DESK-02</dt><dd>Bureau assis-debout</dd><dt>LAMP-03</dt><dd>Lampe de bureau</dd><dt>CABLE-04</dt><dd>USB-C cable</dd></dl><p class="sources">preuves: replay.log, 01-odoo-product-template.txt, 02-names.json, 03-french.json, run-scenario-odoo-products-c.txt · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>La langue est écrite dans le manifeste: le hub ne la choisit jamais d&#x27;après le lecteur.</li><li>Avant icreated/lumnik#2122, la question s&#x27;abstenait et le chemin était une vue dans la base d&#x27;Odoo, écrite par le DBA (data/view.sql).</li><li>Odoo Online n&#x27;ouvre pas sa base: il se lit par son API JSON-2 (odoo-json2-partners).</li><li>Quatre produits synthétiques.</li></ul></section>
+  <section class="try"><p>Ce scénario demande lumnik Pro.</p><a class="try-button" href="../../offre.html">Voir l&#x27;offre →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>

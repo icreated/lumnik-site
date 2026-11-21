@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le FEC remis au contrôleur fiscal: deux écritures ne sont pas équilibrées — lumnik</title>
+<meta name="description" content="Lire le FEC tel que le cabinet le remet, mettre de côté la ligne au montant illisible et savoir quelles écritures ne sont pas équilibrées, avec la requête qui le prouve. Toute entreprise qui tient sa comptabilité sur informatique remet son FEC au contrôleur fiscal: 18 champs dans un ordre fixé, un fichier par exercice. Un fichier absent ou non conforme coûte 5 000 €, une fois par contrôle. Virgule décimale et dates AAAAMMJJ déclarées dans le connecteur. Une ligne au débit illisible mise de côté, avec sa raison. Une question en langage naturel: deux écritures déséquilibrées, et le SQL.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/fec-entries/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/fec-entries/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Le FEC remis au contrôleur fiscal: deux écritures ne sont pas équilibrées</h1>
+    <p class="goal"><strong>Objectif</strong> Lire le FEC tel que le cabinet le remet, mettre de côté la ligne au montant illisible et savoir quelles écritures ne sont pas équilibrées, avec la requête qui le prouve.</p>
+    <p class="lede">Toute entreprise qui tient sa comptabilité sur informatique remet son FEC au contrôleur fiscal: 18 champs dans un ordre fixé, un fichier par exercice. Un fichier absent ou non conforme coûte 5 000 €, une fois par contrôle.</p><ul class="lede-list"><li>virgule décimale et dates AAAAMMJJ déclarées dans le connecteur</li><li>une ligne au débit illisible mise de côté, avec sa raison</li><li>une question en langage naturel: deux écritures déséquilibrées, et le SQL</li></ul>
+    <ul class="tags"><li class="tag edition edition-pro"><a href="https://docs.lumnik.io/editions/">lumnik Pro</a></li><li class="tag">Comptabilité</li><li class="tag">Fiscalité</li><li class="tag">IA</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-read" data-step="read" aria-current="step"><span class="num">1 · Lire</span><span class="sub">SFTP + csv-file</span></a><a href="#step-aside" data-step="aside"><span class="num">2 · Écarter</span><span class="sub">La lettre morte</span></a><a href="#step-ask" data-step="ask"><span class="num">3 · Demander</span><span class="sub">Deux écritures</span></a></nav>
+  <section class="step" id="step-read" aria-labelledby="read-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="read-title">Le FEC lu tel que le cabinet le remet</h2>
+      <p>Le fichier arrive sur le serveur SFTP du cabinet. Le connecteur le lit sans conversion préalable.</p><ul class="prose-list"><li>require-headers: les 18 champs de l&#x27;A47 A-1, sinon le run échoue</li><li>parse-number: la virgule décimale de Debit et Credit</li><li>parse-date: les dates AAAAMMJJ</li><li>on-error dlq: un montant illisible met la ligne de côté</li><li>l&#x27;entité donne aux colonnes les noms d&#x27;un lecteur: écriture, compte, débit, crédit</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>38 lignes lues</strong><p>37 écrites, 1 mise de côté.</p></div></li><li><span class="n">2</span><div><strong>Clé du serveur épinglée</strong><p>Le mot de passe est un secret lm, limité au scope.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Un format légal se déclare, il ne se convertit pas à la main.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-source-tab" data-view="source" aria-controls="read-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="read-manifest-tab" data-view="manifest" aria-controls="read-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="read-source" aria-labelledby="read-source-tab" tabindex="0"><figure class="source"><figcaption>999999999FEC20251231.txt</figcaption><pre class="code">JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|PieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise
+VE|Ventes|VE000001|20250115|411000|Clients|C001|Durand SAS|F2025-001|20250115|Facture Durand|1200,00|0,00|||20260115||
+VE|Ventes|VE000001|20250115|706000|Prestations de services|||F2025-001|20250115|Facture Durand|0,00|1000,00|||20260115||
+VE|Ventes|VE000001|20250115|445710|TVA collectée|||F2025-001|20250115|Facture Durand|0,00|200,00|||20260115||
+AC|Achats|AC000001|20250120|613200|Locations immobilières|||FA-7781|20250120|Loyer janvier|1500,00|0,00|||20260115||
+AC|Achats|AC000001|20250120|445660|TVA déductible|||FA-7781|20250120|Loyer janvier|300,00|0,00|||20260115||
+AC|Achats|AC000001|20250120|401000|Fournisseurs|F010|SCI des Tilleuls|FA-7781|20250120|Loyer janvier|0,00|1800,00|||20260115||
+BQ|Banque|BQ000001|20250205|512000|Banque|||REL-02|20250205|Règlement Durand|1200,00|0,00|||20260115||
+BQ|Banque|BQ000001|20250205|411000|Clients|C001|Durand SAS|REL-02|20250205|Règlement Durand|0,00|1200,00|||20260115||
+VE|Ventes|VE000002|20250310|411000|Clients|C002|Petit et fils|F2025-002|20250310|Facture Petit|3600,00|0,00|||20260115||
+VE|Ventes|VE000002|20250310|706000|Prestations de services|||F2025-002|20250310|Facture Petit|0,00|3000,00|||20260115||
+VE|Ventes|VE000002|20250310|445710|TVA collectée|||F2025-002|20250310|Facture Petit|0,00|600,00|||20260115||
+AC|Achats|AC000002|20250318|606400|Fournitures administratives|||FA-0412|20250318|Fournitures|250,00|0,00|||20260115||
+AC|Achats|AC000002|20250318|445660|TVA déductible|||FA-0412|20250318|Fournitures|50,00|0,00|||20260115||
+AC|Achats|AC000002|20250318|401000|Fournisseurs|F020|Bureau Plus|FA-0412|20250318|Fournitures|0,00|300,00|||20260115||
+BQ|Banque|BQ000002|20250402|401000|Fournisseurs|F010|SCI des Tilleuls|VIR-04|20250402|Règlement SCI|1800,00|0,00|||20260115||
+BQ|Banque|BQ000002|20250402|512000|Banque|||VIR-04|20250402|Règlement SCI|0,00|1800,00|||20260115||
+VE|Ventes|VE000003|20250512|411000|Clients|C003|Lambert SARL|F2025-003|20250512|Facture Lambert|960,00|0,00|||20260115||
+VE|Ventes|VE000003|20250512|706000|Prestations de services|||F2025-003|20250512|Facture Lambert|0,00|800,00|||20260115||
+VE|Ventes|VE000003|20250512|445710|TVA collectée|||F2025-003|20250512|Facture Lambert|0,00|160,00|||20260115||</pre><p class="source-more">… 19 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="read-manifest" aria-labelledby="read-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/10-fec.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-fec-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [compta-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: sftp</span><span class="line">    <span class="key">host</span>: host.docker.internal</span><span class="line">    <span class="key">port</span>: 2224</span><span class="line">    <span class="key">user</span>: compta</span><span class="line">    <span class="key">path</span>: /fec/*FEC*.txt</span><span class="line">    <span class="key">password_env</span>: SCENARIO_FEC_A_SFTP</span><span class="line">    <span class="comment"># The fingerprint the accountant&#x27;s server presents, read out of band (ssh-keyscan | ssh-keygen -lf -).</span></span><span class="line">    <span class="key">host_key_fingerprint</span>: <span class="str">&quot;SHA256:FINGERPRINT_READ_AT_REPLAY&quot;</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;|&quot;</span></span><span class="line">    <span class="key">encoding</span>: UTF-8</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line hl">    on-error:</span><span class="line">      <span class="key">fields</span>: { Debit: dlq, Credit: dlq }   <span class="comment"># an amount written but unreadable: the line is set aside</span></span><span class="line">      <span class="key">default</span>: soft</span><span class="line">    <span class="key">dataset</span>:</span><span class="line">      <span class="comment"># The 18 fields of art. A47 A-1 LPF: a file without one of them is not a FEC.</span></span><span class="line hl">      - require-headers:</span><span class="line">          <span class="key">columns</span>: [JournalCode, JournalLib, EcritureNum, EcritureDate, CompteNum, CompteLib, CompAuxNum, CompAuxLib,</span><span class="line">                    PieceRef, PieceDate, EcritureLib, Debit, Credit, EcritureLet, DateLet, ValidDate, Montantdevise, Idevise]</span><span class="line">    <span class="key">cell</span>:</span><span class="line hl">      - parse-number: { column: Debit, decimal-separator: <span class="str">&quot;,&quot;</span> }</span><span class="line hl">      - parse-number: { column: Credit, decimal-separator: <span class="str">&quot;,&quot;</span> }</span><span class="line">      - parse-date: { column: EcritureDate, formats: [<span class="str">&quot;yyyyMMdd&quot;</span>] }</span><span class="line">      - parse-date: { column: PieceDate, formats: [<span class="str">&quot;yyyyMMdd&quot;</span>] }</span><span class="line">      - parse-date: { column: ValidDate, formats: [<span class="str">&quot;yyyyMMdd&quot;</span>] }</span></code></pre><div class="file"><span class="filename">manifests/20-ecriture.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ecriture_a</span><span class="line"><span class="key">label</span>: Ligne d&#x27;écriture</span><span class="line"><span class="key">description</span>: <span class="str">&quot;One line of a FEC accounting entry: the entry it belongs to (EcritureNum), its account, its debit and its credit. An entry is balanced when the sum of its debits equals the sum of its credits.&quot;</span></span><span class="line"><span class="comment"># A FEC line has no identifier of its own; in this file an account appears once per entry.</span></span><span class="line"><span class="key">match</span>: [entry, account]</span><span class="line"><span class="key">scopes</span>: [compta-a]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">entry</span>: { label: <span class="str">&quot;Numéro d&#x27;écriture&quot;</span> }</span><span class="line">  <span class="key">journal</span>: { label: <span class="str">&quot;Journal&quot;</span> }</span><span class="line">  <span class="key">entry_date</span>: { label: <span class="str">&quot;Date d&#x27;écriture&quot;</span> }</span><span class="line">  <span class="key">account</span>: { label: <span class="str">&quot;Numéro de compte&quot;</span> }</span><span class="line">  <span class="key">account_label</span>: { label: <span class="str">&quot;Libellé du compte&quot;</span> }</span><span class="line">  <span class="key">piece</span>: { label: <span class="str">&quot;Pièce&quot;</span> }</span><span class="line">  <span class="key">label</span>: { label: <span class="str">&quot;Libellé de l&#x27;écriture&quot;</span> }</span><span class="line">  <span class="key">debit</span>: { label: <span class="str">&quot;Débit&quot;</span> }</span><span class="line">  <span class="key">credit</span>: { label: <span class="str">&quot;Crédit&quot;</span> }</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_fec_a</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">EcritureNum</span>: entry</span><span class="line">      <span class="key">JournalCode</span>: journal</span><span class="line">      <span class="key">EcritureDate</span>: entry_date</span><span class="line">      <span class="key">CompteNum</span>: account</span><span class="line">      <span class="key">CompteLib</span>: account_label</span><span class="line">      <span class="key">PieceRef</span>: piece</span><span class="line">      <span class="key">EcritureLib</span>: label</span><span class="line">      <span class="key">Debit</span>: debit</span><span class="line">      <span class="key">Credit</span>: credit</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-fec.yaml</span>
+<span class="out">Applied connector &quot;scenario-fec-c&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-fec-c</span>
+<span class="out">run scheduled: 7db19892-de30-489b-8497-64977c371b4d</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 7db19892-de30-489b-8497-64977c371b4d --wait-evaluated</span>
+<span class="out">ID        CONNECTOR       ENDPOINT  STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+7db19892  scenario-fec-c  default   Completed  38  37   1        1             2026-11-21 10:15  2026-11-21 10:15  yes</span>
+<span class="note">⚠ 1 rows quarantined — see: lm dlq list --run 7db19892-de30-489b-8497-64977c371b4d</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-ecriture.yaml</span>
+<span class="out">Applied entity &quot;ecriture_c&quot; → connector.&quot;v_ecriture_c&quot;</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>IN 38 · OUT 37 · SKIPPED 1</dd><dt>ecriture_c</dt><dd>v_ecriture_c</dd></dl><p class="sources">preuves: replay.log, check_fec.txt, 01-run.json, 02-dead-letter.txt, 03-unbalanced.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-aside" aria-labelledby="aside-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="aside-title">Un débit écrit 12O,00 n&#x27;est pas un zéro</h2>
+      <p>La ligne de AC000004 porte un O à la place d&#x27;un zéro. Elle ne passe pas pour 0: elle est mise de côté.</p><ul class="prose-list"><li>la raison: Debit illisible</li><li>la ligne telle qu&#x27;elle a été lue</li><li>lm dlq get la montre au comptable</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Compté</strong><p>Le run dit SKIPPED 1.</p></div></li><li><span class="n">2</span><div><strong>Retrouvé</strong><p>La ligne reste à corriger à la source.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une ligne illisible est écartée avec sa raison, jamais perdue en silence.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Écarter"><button type="button" role="tab" id="aside-commands-tab" data-view="commands" aria-controls="aside-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="aside-result-tab" data-view="result" aria-controls="aside-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="aside-commands" aria-labelledby="aside-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm dlq get d6f352db-6905-40cc-b7e2-a04436ce16da</span>
+<span class="out">ID:        d6f352db-6905-40cc-b7e2-a04436ce16da
+Connector: scenario-fec-c (7a61b304-e296-4b85-a9aa-fa0199f3619d)
+Run:       7db19892-de30-489b-8497-64977c371b4d
+Reason:    MappingFailed
+Attempts:  1
+Message:   Debit: parse-number could not read the value
+Detail:    {&quot;field&quot;:&quot;Debit&quot;,&quot;message&quot;:&quot;parse-number could not read the value&quot;}
+Payload:   {&quot;Debit&quot;:&quot;12O,00&quot;,&quot;Credit&quot;:&quot;0,00&quot;,&quot;DateLet&quot;:null,&quot;Idevise&quot;:null,&quot;PieceRef&quot;:&quot;FA-1188&quot;,&quot;CompteLib&quot;:&quot;Petit équipement&quot;,&quot;CompteNum&quot;:&quot;606300&quot;,&quot;PieceDate&quot;:&quot;20250714&quot;,&quot;ValidDate&quot;:&quot;20260115&quot;,&quot;CompAuxLib&quot;:null,&quot;CompAuxNum&quot;:null,&quot;JournalLib&quot;:&quot;Achats&quot;,&quot;EcritureLet&quot;:null,&quot;EcritureLib&quot;:&quot;Petit outillage&quot;,&quot;EcritureNum&quot;:&quot;AC000004&quot;,&quot;JournalCode&quot;:&quot;AC&quot;,&quot;EcritureDate&quot;:&quot;20250714&quot;,&quot;Montantdevise&quot;:null}
+Resolution: open</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="aside-result" aria-labelledby="aside-result-tab" tabindex="0" hidden><dl class="facts"><dt>reason</dt><dd>Debit: parse-number could not read the value</dd><dt>line</dt><dd>AC000004 · 606300 Petit équipement · Debit «12O,00»</dd></dl><p class="sources">preuves: replay.log, check_fec.txt, 01-run.json, 02-dead-letter.txt, 03-unbalanced.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-ask" aria-labelledby="ask-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="ask-title">Quelles écritures ne sont pas équilibrées?</h2>
+      <p>La question est posée telle qu&#x27;un comptable la tape. La réponse montre son SQL: un GROUP BY … HAVING.</p><ul class="prose-list"><li>AC000004: débit 24, crédit 144, sa ligne de 120 est mise de côté</li><li>VE000007: débit 1 440, crédit 1 404, TVA saisie 204,00 au lieu de 240,00</li><li>data/check_fec.py calcule les mêmes deux écritures, depuis le fichier seul</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Vérifiable</strong><p>Le SQL se relit et se rejoue.</p></div></li><li><span class="n">2</span><div><strong>Lien</strong><p>AC000004 déséquilibrée: la lettre morte dit pourquoi.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La réponse est vérifiable, et elle retrouve la ligne écartée.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Demander"><button type="button" role="tab" id="ask-commands-tab" data-view="commands" aria-controls="ask-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="ask-result-tab" data-view="result" aria-controls="ask-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="ask-commands" aria-labelledby="ask-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm ask --scope compta-c --lang fr &quot;Quelles écritures ne sont pas équilibrées ?&quot;</span>
+<span class="out">Il y a 2 écritures qui ne sont pas équilibrées. Les totaux sont les suivants :
+
+1. Écriture : AC000004
+   Débit : 24
+   Crédit : 144
+
+2. Écriture : VE000007
+   Débit : 1440
+   Crédit : 1404
+  data as of: 2026-11-21T09:15:56.448333Z (last completed run)
+
+  ENTRY     SUM   SUM_2
+  AC000004  24    144
+  VE000007  1440  1404
+  2 rows returned
+
+  SQL: SELECT &quot;entry&quot;, SUM(&quot;debit&quot;), SUM(&quot;credit&quot;) 
+FROM &quot;connector&quot;.&quot;v_ecriture_c&quot; 
+GROUP BY &quot;entry&quot; 
+HAVING SUM(&quot;debit&quot;) &lt;&gt; SUM(&quot;credit&quot;)
+LIMIT 500</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="ask-result" aria-labelledby="ask-result-tab" tabindex="0" hidden><dl class="facts"><dt>answer</dt><dd>Il y a 2 écritures qui ne sont pas équilibrées. Les totaux sont les suivants :</dd><dt>AC000004</dt><dd>debit 24 · credit 144</dd><dt>VE000007</dt><dd>debit 1440 · credit 1404</dd><dt>check_fec.py</dt><dd>AC000004 VE000007</dd></dl><p class="sources">preuves: replay.log, check_fec.txt, 01-run.json, 02-dead-letter.txt, 03-unbalanced.json · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Le contrôle débit = crédit porte sur plusieurs lignes: c&#x27;est une question, pas une décision dans l&#x27;inbox.</li><li>Les deux totaux reviennent sous les noms sum et sum_2: la phrase dit lequel est le débit.</li><li>Une ligne FEC n&#x27;a pas d&#x27;identifiant propre: l&#x27;entité la reconnaît par écriture et compte, ce qui tient dans ce fichier.</li><li>lumnik ne vérifie pas les autres règles de l&#x27;A47 A-1 (numérotation continue, date de validation, nom du fichier) et ne certifie pas un FEC.</li><li>Entreprise fictive, SIREN 999999999, données synthétiques.</li></ul></section>
+  <section class="try"><p>Ce scénario demande lumnik Pro.</p><a class="try-button" href="../../offre.html">Voir l&#x27;offre →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>

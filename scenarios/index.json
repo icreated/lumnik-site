@@ -595,6 +595,26 @@
       "evidenceDigest": "sha256:99d22064292dcb6ead4b52f4aad94bc309eba96a715569fa6118df21f934095f"
     },
     {
+      "slug": "fec-entries",
+      "title": "Le FEC remis au contrôleur fiscal: deux écritures ne sont pas équilibrées",
+      "goal": "Lire le FEC tel que le cabinet le remet, mettre de côté la ligne au montant illisible et savoir quelles écritures ne sont pas équilibrées, avec la requête qui le prouve.",
+      "lede": "Toute entreprise qui tient sa comptabilité sur informatique remet son FEC au contrôleur fiscal: 18 champs dans un ordre fixé, un fichier par exercice. Un fichier absent ou non conforme coûte 5 000 €, une fois par contrôle.\n- virgule décimale et dates AAAAMMJJ déclarées dans le connecteur\n- une ligne au débit illisible mise de côté, avec sa raison\n- une question en langage naturel: deux écritures déséquilibrées, et le SQL",
+      "tags": {
+        "domain": [
+          "Comptabilité",
+          "Fiscalité",
+          "IA"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:8e20692f3be62bed55750d613d090990980882765bf9f0497eb519a627ff825c"
+    },
+    {
       "slug": "firebird-delphi-stock",
       "title": "Firebird: les articles d'une application Delphi sous leur seuil de stock",
       "goal": "Lire les articles d'une application Delphi par l'export isql de sa base Firebird, et être prévenu quand un article passe sous son seuil de réapprovisionnement.",
@@ -891,6 +911,65 @@
       "edition": "open",
       "replayedAt": "2026-11-03",
       "evidenceDigest": "sha256:69ef587c0021ffa045f4e926ee84334d73dd1ec689ec4ea45b27d1b1ad66f639"
+    },
+    {
+      "slug": "odoo-json2-partners",
+      "title": "Odoo 19 et son API JSON-2: la page se lit dans le corps",
+      "goal": "Lire les 250 contacts d'un vrai Odoo 19 par son API JSON-2, page par page, sans base de données ouverte.",
+      "lede": "Odoo 19 remplace XML-RPC et JSON-RPC, retirés en Odoo 22, par POST /json/2/<modèle>/<méthode>. Chaque intégration existante doit migrer, et Odoo Online n'ouvre pas sa base: l'API est sa seule porte. JSON-2 lit offset et limit dans le corps JSON seulement.\n- body: le domaine, les champs et l'ordre qu'Odoo attend\n- param_binding: body écrit offset et limit dans le corps\n- trois requêtes, 250 contacts, aucun en double",
+      "tags": {
+        "domain": [
+          "ERP",
+          "Odoo",
+          "API"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:84fedacbeeef72925e31375968eb7f54080b5080879d8c69ee2e1b4678a2a6ab"
+    },
+    {
+      "slug": "odoo-product-name-json",
+      "title": "Odoo lu dans son PostgreSQL: le nom du produit est un JSON",
+      "goal": "Lire les produits d'un vrai Odoo 18 directement dans sa base et obtenir le nom français de chaque produit, sans rien écrire dans Odoo.",
+      "lede": "Depuis Odoo 16, un champ traduit est un JSON par ligne, une clé par langue. Chaque rapport écrit sur l'ancienne colonne texte a cassé. Un intégrateur qui lit la base d'Odoo le rencontre dès product_template.name.\n- le nom arrive en texte JSON, toutes les langues gardées\n- promote lit la clé fr_FR dans une colonne à part, avec repli sur en_US\n- la question en langage naturel donne les quatre noms français",
+      "tags": {
+        "domain": [
+          "ERP",
+          "Odoo",
+          "IA"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:03b861eb9502a08f2cce60a4699587f69185694e79fed2c8a79a4493b7e8fad6"
+    },
+    {
+      "slug": "odoo-quotation-expired",
+      "title": "Un devis Odoo envoyé expiré et resté sans réponse",
+      "goal": "Être alerté du devis Odoo envoyé au client, passé sa date de validité et toujours sans réponse, sans toucher à Odoo.",
+      "lede": "Odoo donne à chaque devis une date de validité. Le client ne répond pas, la date passe, le devis reste «Devis envoyé». Odoo l'affiche expiré quand on l'ouvre, sans le signaler à personne.\n- quatre devis dans un vrai Odoo 18\n- un Workflow déclare les états d'Odoo et l'échéance validity_date\n- une décision: le seul devis envoyé et expiré",
+      "tags": {
+        "domain": [
+          "ERP",
+          "Odoo",
+          "Ventes"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "Workflow"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:731183e2f61f940cd858628771f8eb413b242823faea61442de37d22d64c2ac8"
     },
     {
       "slug": "one-app-per-metier",
@@ -1540,6 +1619,25 @@
       "edition": "open",
       "replayedAt": "2026-11-05",
       "evidenceDigest": "sha256:8f092ded88b6a56f611309587aa93bf603b20a90241c7328e4d82864b50e61c3"
+    },
+    {
+      "slug": "school-absences-half-days",
+      "title": "Quatre demi-journées non justifiées dans le mois: l'établissement doit agir",
+      "goal": "Savoir, dès l'export mensuel, quels élèves atteignent quatre demi-journées d'absence non justifiées, et lesquels dépassent dix, sans ouvrir le rapport du logiciel.",
+      "lede": "Dès quatre demi-journées non justifiées dans le mois, le chef d'établissement convoque la famille. Au-delà de dix, le Dasen est informé. Le logiciel de vie scolaire compte, mais le compte reste dans un rapport.\n- l'export mensuel arrive par SFTP\n- deux Process, un par seuil\n- une décision par élève et par seuil franchi",
+      "tags": {
+        "domain": [
+          "Éducation",
+          "Administration"
+        ],
+        "kinds": [
+          "Connector",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:a348d2d7c7c4436525e5454b10af9e22de820f7afd75116da56e38f758acb213"
     },
     {
       "slug": "senaite-culture-plates",

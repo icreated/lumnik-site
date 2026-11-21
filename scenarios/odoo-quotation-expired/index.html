@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Un devis Odoo envoyé expiré et resté sans réponse — lumnik</title>
+<meta name="description" content="Être alerté du devis Odoo envoyé au client, passé sa date de validité et toujours sans réponse, sans toucher à Odoo. Odoo donne à chaque devis une date de validité. Le client ne répond pas, la date passe, le devis reste «Devis envoyé». Odoo l&#x27;affiche expiré quand on l&#x27;ouvre, sans le signaler à personne. Quatre devis dans un vrai Odoo 18. Un Workflow déclare les états d&#x27;Odoo et l&#x27;échéance validity_date. Une décision: le seul devis envoyé et expiré.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/odoo-quotation-expired/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/odoo-quotation-expired/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Un devis Odoo envoyé expiré et resté sans réponse</h1>
+    <p class="goal"><strong>Objectif</strong> Être alerté du devis Odoo envoyé au client, passé sa date de validité et toujours sans réponse, sans toucher à Odoo.</p>
+    <p class="lede">Odoo donne à chaque devis une date de validité. Le client ne répond pas, la date passe, le devis reste «Devis envoyé». Odoo l&#x27;affiche expiré quand on l&#x27;ouvre, sans le signaler à personne.</p><ul class="lede-list"><li>quatre devis dans un vrai Odoo 18</li><li>un Workflow déclare les états d&#x27;Odoo et l&#x27;échéance validity_date</li><li>une décision: le seul devis envoyé et expiré</li></ul>
+    <ul class="tags"><li class="tag edition edition-pro"><a href="https://docs.lumnik.io/editions/">lumnik Pro</a></li><li class="tag">ERP</li><li class="tag">Odoo</li><li class="tag">Ventes</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li><li class="tag kind">Workflow</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-declare" data-step="declare" aria-current="step"><span class="num">1 · Déclarer</span><span class="sub">Odoo + Workflow</span></a><a href="#step-decide" data-step="decide"><span class="num">2 · Décider</span><span class="sub">Un devis</span></a></nav>
+  <section class="step" id="step-declare" aria-labelledby="declare-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="declare-title">Les états d&#x27;Odoo et sa date de validité</h2>
+      <p>Un vrai Odoo 18 tourne en Docker. Quatre devis sont créés par son API. Le connecteur lit sale_order et res_partner avec un login en lecture seule.</p><ul class="prose-list"><li>rename: id est une colonne du hub</li><li>l&#x27;entité joint chaque devis à son client</li><li>states: draft, sent, sale, cancel, les codes d&#x27;Odoo</li><li>due.column: validity_date, la date d&#x27;Odoo elle-même</li><li>due.states: seul sent est en retard une fois la date passée</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Rien d&#x27;ajouté</strong><p>Aucun champ créé dans Odoo.</p></div></li><li><span class="n">2</span><div><strong>Rapport</strong><p>L&#x27;apply dit que l&#x27;échéance est lisible.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une échéance se déclare sur la date que la donnée porte déjà.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="declare-source-tab" data-view="source" aria-controls="declare-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="declare-manifest-tab" data-view="manifest" aria-controls="declare-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="declare-commands-tab" data-view="commands" aria-controls="declare-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="declare-result-tab" data-view="result" aria-controls="declare-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="declare-source" aria-labelledby="declare-source-tab" tabindex="0"><figure class="source"><figcaption>odoo-sale-order.txt</figcaption><pre class="code">  name  |     customer     | state | validity_date | amount_total 
+--------+------------------+-------+---------------+--------------
+ S00001 | Garage Morel     | sent  | 2026-11-15    |      1380.00
+ S00002 | Boulangerie Roux | sent  | 2026-12-11    |      1380.00
+ S00003 | Cabinet Fabre    | sale  | 2026-11-11    |      1380.00
+ S00004 | Atelier Blanc    | draft | 2026-11-18    |      1380.00
+(4 rows)</pre></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="declare-manifest" aria-labelledby="declare-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/10-odoo-sales.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-odoo-sales-a</span><span class="line">  <span class="key">connector_type</span>: jdbc-generic</span><span class="line">  <span class="key">scopes</span>: [sales-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">connection</span>:</span><span class="line">    <span class="key">url</span>: jdbc:postgresql://host.docker.internal:55434/scen</span><span class="line">    <span class="key">user</span>: lumnik_reader</span><span class="line">    <span class="key">password_env</span>: SCENARIO_ODOO_SALES_A_DB</span><span class="line">  <span class="key">source</span>:</span><span class="line">    <span class="key">tables</span>:</span><span class="line">      <span class="dash">-</span> <span class="key">name</span>: sale_order</span><span class="line">        <span class="key">schema</span>: public</span><span class="line">        <span class="key">mode</span>: full</span><span class="line">        <span class="key">pk_columns</span>: [id]</span><span class="line hl">        <span class="key">rename</span>: { id: order_id }          <span class="comment"># id is one of the hub&#x27;s own columns</span></span><span class="line">        <span class="key">target</span>: odoo_sale_order_a</span><span class="line">      <span class="dash">-</span> <span class="key">name</span>: res_partner</span><span class="line">        <span class="key">schema</span>: public</span><span class="line">        <span class="key">mode</span>: full</span><span class="line">        <span class="key">pk_columns</span>: [id]</span><span class="line hl">        <span class="key">rename</span>: { id: partner_id }</span><span class="line">        <span class="key">target</span>: odoo_res_partner_a</span></code></pre><div class="file"><span class="filename">manifests/20-quotation.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ScenarioOdooQuotationA</span><span class="line"><span class="key">description</span>: <span class="str">&quot;An Odoo quotation or sales order with its customer: its number, state, validity date and total.&quot;</span></span><span class="line"><span class="key">match</span>: [quote_ref]</span><span class="line"><span class="key">scopes</span>: [sales-a]</span><span class="line"><span class="key">columns</span>:</span><span class="line">  <span class="key">quote_ref</span>: { label: <span class="str">&quot;Quotation&quot;</span> }</span><span class="line">  <span class="key">state</span>: { label: <span class="str">&quot;State&quot;</span> }</span><span class="line">  <span class="key">validity_date</span>: { label: <span class="str">&quot;Valid until&quot;</span> }</span><span class="line">  <span class="key">amount_total</span>: { label: <span class="str">&quot;Total&quot;</span> }</span><span class="line">  <span class="key">write_date</span>: { label: <span class="str">&quot;Last change&quot;</span> }</span><span class="line">  <span class="key">customer</span>: { label: <span class="str">&quot;Customer&quot;</span> }</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_odoo_sale_order_a</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">name</span>: quote_ref</span><span class="line">      <span class="key">state</span>: state</span><span class="line">      <span class="key">validity_date</span>: validity_date</span><span class="line">      <span class="key">amount_total</span>: amount_total</span><span class="line">      <span class="key">write_date</span>: write_date</span><span class="line">      <span class="key">partner_id</span>: partner_id</span><span class="line hl"><span class="key">joins</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_odoo_res_partner_a</span><span class="line">    <span class="key">from</span>: partner_id</span><span class="line">    <span class="key">to</span>: partner_id</span><span class="line">    <span class="key">map</span>: { name: customer }</span></code></pre><div class="file"><span class="filename">manifests/30-quotation-lifecycle.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Workflow</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-odoo-quotation-a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: sales-a</span><span class="line">  <span class="key">provenance</span>: declared</span><span class="line">  <span class="key">on</span>:</span><span class="line">    <span class="key">table</span>: connector.v_scenarioodooquotationa</span><span class="line">    <span class="key">column</span>: state</span><span class="line">    <span class="key">key</span>: quote_ref</span><span class="line">    <span class="key">order</span>: write_date</span><span class="line hl">  <span class="key">due</span>:</span><span class="line">    <span class="key">column</span>: validity_date         <span class="comment"># Odoo&#x27;s own expiration date of a quotation</span></span><span class="line hl">    <span class="key">states</span>: [sent]                <span class="comment"># sent to the customer, neither signed nor cancelled</span></span><span class="line">    <span class="key">zone</span>: Europe/Paris</span><span class="line">    <span class="key">message</span>: <span class="str">&quot;{doc_key} for {customer}, {amount_total} €: sent, expired on {due}, still unanswered&quot;</span></span><span class="line hl">  <span class="key">states</span>:</span><span class="line">    - { code: draft, label: <span class="str">&quot;Quotation&quot;</span>, initial: true }</span><span class="line">    - { code: sent, label: <span class="str">&quot;Quotation sent&quot;</span> }</span><span class="line">    - { code: sale, label: <span class="str">&quot;Sales order&quot;</span>, terminal: true }</span><span class="line">    - { code: cancel, label: <span class="str">&quot;Cancelled&quot;</span>, terminal: true }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="declare-commands" aria-labelledby="declare-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-odoo-sales.yaml</span>
+<span class="out">Applied connector &quot;scenario-odoo-sales-a&quot; — 2 endpoints</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-odoo-sales-a</span>
+<span class="out">run scheduled: 8f74858f-a0b4-4eab-b60e-a15d21e254c8
+run scheduled: 742ae3cc-cc2c-454e-b256-3afbdc9a9da4</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 8f74858f-a0b4-4eab-b60e-a15d21e254c8 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR              ENDPOINT     STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+8f74858f  scenario-odoo-sales-a  res_partner  Completed  10  10   0        0             2026-11-21 10:44  2026-11-21 10:44  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 742ae3cc-cc2c-454e-b256-3afbdc9a9da4 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR              ENDPOINT    STATUS     IN  OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+742ae3cc  scenario-odoo-sales-a  sale_order  Completed  4   4    0        0             2026-11-21 10:44  2026-11-21 10:44  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-quotation.yaml</span>
+<span class="out">Applied entity &quot;ScenarioOdooQuotationA&quot; → connector.&quot;v_scenarioodooquotationa&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm workflow apply -f 30-quotation-lifecycle.yaml -o json</span>
+<span class="out">{
+  &quot;name&quot;: &quot;scenario-odoo-quotation-a&quot;,
+  &quot;scope&quot;: &quot;sales-a&quot;,
+  &quot;table&quot;: &quot;connector.v_scenarioodooquotationa&quot;,
+  &quot;column&quot;: &quot;state&quot;,
+  &quot;dataTruth&quot;: {
+    &quot;undeclared&quot;: [],
+    &quot;unobserved&quot;: [
+      &quot;cancel&quot;
+    ],
+    &quot;nullOrBlank&quot;: 0,
+    &quot;tableMissing&quot;: false,
+    &quot;keyColumnMissing&quot;: false,
+    &quot;keyNullOrBlank&quot;: 0,
+    &quot;checkUnavailable&quot;: false,
+    &quot;unavailableReason&quot;: null,
+    &quot;dueProblem&quot;: null,
+    &quot;invalidOrderValues&quot;: 0,
+    &quot;keysWithSeveralRows&quot;: null,
+    &quot;columnsUnverified&quot;: []
+  }
+}</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="declare-result" aria-labelledby="declare-result-tab" tabindex="0" hidden><dl class="facts"><dt>res_partner</dt><dd>IN 10 · OUT 10</dd><dt>sale_order</dt><dd>IN 4 · OUT 4</dd><dt>due date</dt><dd>readable</dd><dt>states never seen yet</dt><dd>cancel</dd></dl><p class="sources">preuves: replay.log, 01-odoo-sale-order.txt, 02-run.json, 03-workflow-apply.json, 04-decisions.json, 05-quotations.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-decide" aria-labelledby="decide-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="decide-title">Garage Morel: envoyé, expiré, sans réponse</h2>
+      <p>Au balayage suivant, l&#x27;inbox reçoit une seule décision.</p><ul class="prose-list"><li>S00001, Garage Morel: envoyé, expiré il y a six jours</li><li>Boulangerie Roux: encore valide 20 jours</li><li>Cabinet Fabre: expiré sur le papier, mais signé: une commande</li><li>Atelier Blanc: un brouillon, jamais envoyé</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Délai</strong><p>Le contrôle tourne avec le balayage, toutes les 15 minutes.</p></div></li><li><span class="n">2</span><div><strong>Une fois</strong><p>Une échéance alerte une seule fois.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Seul le devis envoyé et expiré déclenche une décision.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Décider"><button type="button" role="tab" id="decide-commands-tab" data-view="commands" aria-controls="decide-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="decide-result-tab" data-view="result" aria-controls="decide-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="decide-commands" aria-labelledby="decide-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm inbox --process workflow:scenario-odoo-quotation-a</span>
+<span class="out">ID     WHEN      PROCESS                             MESSAGE                                                                         ENTITY_KEY
+31323  just now  workflow:scenario-odoo-quotation-a  S00001 for Garage Morel, 1380 €: sent, expired on 2026-11-15, still unanswered  S00001</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity get ScenarioOdooQuotationA -o json</span>
+<span class="out">[
+  {
+    &quot;quote_ref&quot;: &quot;S00001&quot;,
+    &quot;state&quot;: &quot;sent&quot;,
+    &quot;validity_date&quot;: &quot;2026-11-15&quot;,
+    &quot;amount_total&quot;: &quot;1380&quot;,
+    &quot;write_date&quot;: &quot;2026-11-21T09:44:58.254473Z&quot;,
+    &quot;partner_id&quot;: &quot;7&quot;,
+    &quot;customer&quot;: &quot;Garage Morel&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;quote_ref&quot;: &quot;S00002&quot;,
+    &quot;state&quot;: &quot;sent&quot;,
+    &quot;validity_date&quot;: &quot;2026-12-11&quot;,
+    &quot;amount_total&quot;: &quot;1380&quot;,
+    &quot;write_date&quot;: &quot;2026-11-21T09:44:58.355391Z&quot;,
+    &quot;partner_id&quot;: &quot;8&quot;,
+    &quot;customer&quot;: &quot;Boulangerie Roux&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;quote_ref&quot;: &quot;S00003&quot;,
+    &quot;state&quot;: &quot;sale&quot;,
+    &quot;validity_date&quot;: &quot;2026-11-11&quot;,
+    &quot;amount_total&quot;: &quot;1380&quot;,
+    &quot;write_date&quot;: &quot;2026-11-21T09:44:58.447947Z&quot;,
+    &quot;partner_id&quot;: &quot;9&quot;,
+    &quot;customer&quot;: &quot;Cabinet Fabre&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  },
+  {
+    &quot;quote_ref&quot;: &quot;S00004&quot;,
+    &quot;state&quot;: &quot;draft&quot;,
+    &quot;validity_date&quot;: &quot;2026-11-18&quot;,
+    &quot;amount_total&quot;: &quot;1380&quot;,
+    &quot;write_date&quot;: &quot;2026-11-21T09:44:58.516883Z&quot;,
+    &quot;partner_id&quot;: &quot;10&quot;,
+    &quot;customer&quot;: &quot;Atelier Blanc&quot;,
+    &quot;_conflicts&quot;: &quot;{}&quot;
+  }
+]</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="decide-result" aria-labelledby="decide-result-tab" tabindex="0" hidden><dl class="facts"><dt>decision</dt><dd>S00001 for Garage Morel, 1380 €: sent, expired on 2026-11-15, still unanswered</dd><dt>S00001</dt><dd>Garage Morel · sent · valid until 2026-11-15</dd><dt>S00002</dt><dd>Boulangerie Roux · sent · valid until 2026-12-11</dd><dt>S00003</dt><dd>Cabinet Fabre · sale · valid until 2026-11-11</dd><dt>S00004</dt><dd>Atelier Blanc · draft · valid until 2026-11-18</dd></dl><p class="sources">preuves: replay.log, 01-odoo-sale-order.txt, 02-run.json, 03-workflow-apply.json, 04-decisions.json, 05-quotations.json · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Le contrôle tourne toutes les 15 minutes: la décision arrive dans ce délai.</li><li>L&#x27;état sent est écrit par le script de données: dans Odoo, «Envoyer par e-mail» le pose via son assistant mail, et aucun serveur mail ne tourne ici.</li><li>«Sans réponse depuis 15 jours» serait une dormance, comptée depuis la première observation par lumnik: un rejeu ne peut pas attendre 15 jours. La date de validité d&#x27;Odoo dit la même chose, et se rejoue.</li><li>Lecture seule: lumnik n&#x27;annule, ne prolonge ni ne renvoie aucun devis.</li><li>Quatre clients et un produit synthétiques.</li></ul></section>
+  <section class="try"><p>Ce scénario demande lumnik Pro.</p><a class="try-button" href="../../offre.html">Voir l&#x27;offre →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
