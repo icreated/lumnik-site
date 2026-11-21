@@ -595,6 +595,26 @@
       "evidenceDigest": "sha256:99d22064292dcb6ead4b52f4aad94bc309eba96a715569fa6118df21f934095f"
     },
     {
+      "slug": "fec-entries",
+      "title": "Le FEC remis au contrôleur fiscal: deux écritures ne sont pas équilibrées",
+      "goal": "Lire le FEC tel que le cabinet le remet, mettre de côté la ligne au montant illisible et savoir quelles écritures ne sont pas équilibrées, avec la requête qui le prouve.",
+      "lede": "Toute entreprise qui tient sa comptabilité sur informatique remet son FEC au contrôleur fiscal: 18 champs dans un ordre fixé, un fichier par exercice. Un fichier absent ou non conforme coûte 5 000 €, une fois par contrôle.\n- virgule décimale et dates AAAAMMJJ déclarées dans le connecteur\n- une ligne au débit illisible mise de côté, avec sa raison\n- une question en langage naturel: deux écritures déséquilibrées, et le SQL",
+      "tags": {
+        "domain": [
+          "Comptabilité",
+          "Fiscalité",
+          "IA"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:8e20692f3be62bed55750d613d090990980882765bf9f0497eb519a627ff825c"
+    },
+    {
       "slug": "firebird-delphi-stock",
       "title": "Firebird: les articles d'une application Delphi sous leur seuil de stock",
       "goal": "Lire les articles d'une application Delphi par l'export isql de sa base Firebird, et être prévenu quand un article passe sous son seuil de réapprovisionnement.",
