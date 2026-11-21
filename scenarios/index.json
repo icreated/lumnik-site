@@ -1774,6 +1774,25 @@
       "evidenceDigest": "sha256:2b3ff54db7df095b8ff9531a6a89d679651c8827fe8bfc48c27c989ddd11501c"
     },
     {
+      "slug": "sqlserver-bcp-export",
+      "title": "SQL Server lu par son propre export: bcp",
+      "goal": "Lire les commandes d'une base SQL Server alors que lumnik n'a pas de dialecte pour elle: par l'export bcp, une ligne décalée mise de côté avec sa raison.",
+      "lede": "Le monde .NET garde ses données dans SQL Server. jdbc-generic parle PostgreSQL et Oracle: demandé pour jdbc:sqlserver, il refuse avant toute connexion et dit ce qu'il a. Le chemin qui marche est l'outil d'export de SQL Server, bcp.\n- le refus, nommé, au validate\n- bcp: pas d'en-tête, pas de guillemets\n- un ; dans un nom décale la ligne: elle est mise de côté",
+      "tags": {
+        "domain": [
+          "ERP",
+          "Microsoft",
+          "Base de données"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:e710f9511d13fa0b1195f95cd4cceb6254340f9072fe6d4a8715656130f0ebbd"
+    },
+    {
       "slug": "struts-displaytag-export",
       "title": "Struts 1 sans API: les retours SAV qui attendent une pièce",
       "goal": "Lire les retours clients par l'export CSV de l'écran, seule sortie de l'application, et être prévenu quand un retour attend une pièce depuis plus de 30 jours.",
