@@ -343,6 +343,26 @@
       "evidenceDigest": "sha256:65ea9cbf324f2bd40f57749950607cf94d4e7c39e26e30b34a31c04f93da2e99"
     },
     {
+      "slug": "delivered-far-from-address",
+      "title": "Marqué livré à 2 km de l'adresse",
+      "goal": "Repérer chaque colis marqué livré loin de son adresse, ou sans position de scan, dès que le fichier du transporteur arrive.",
+      "lede": "«Colis marqué livré, jamais reçu» revient souvent devant le médiateur du e-commerce, et le vendeur doit une livraison conforme. Le fichier de preuve de livraison porte la position de l'adresse et celle du scan sur une même ligne. Aucun outil ne les compare: lumnik les compare.\n- la distance mesurée à l'entrée par le script de l'opérateur\n- au-delà de 200 m: une décision\n- sans position de scan: une autre",
+      "tags": {
+        "domain": [
+          "E-commerce",
+          "Transport",
+          "Géographie"
+        ],
+        "kinds": [
+          "Connector",
+          "Process"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:48225a9df096060c3df8d51c425f24fad8286194ed4e9705f7a409df4e85c4cc"
+    },
+    {
       "slug": "delivery-date-two-warehouses",
       "title": "Une date de livraison que chaque entrepôt calcule autrement",
       "goal": "Calculer pour chaque commande la date de livraison que chaque entrepôt peut tenir, avec une règle de jours ouvrés écrite une fois et réglée par entrepôt (pays, délai, jours fermés).",
