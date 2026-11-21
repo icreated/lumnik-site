@@ -913,6 +913,25 @@
       "evidenceDigest": "sha256:69ef587c0021ffa045f4e926ee84334d73dd1ec689ec4ea45b27d1b1ad66f639"
     },
     {
+      "slug": "odoo-product-name-json",
+      "title": "Odoo lu dans son PostgreSQL: le nom du produit est un JSON",
+      "goal": "Lire les produits d'un vrai Odoo 18 directement dans sa base, voir ce qui arrive vraiment, et obtenir le nom français de chaque produit.",
+      "lede": "Depuis Odoo 16, un champ traduit est un JSON par ligne, une clé par langue. Chaque rapport écrit sur l'ancienne colonne texte a cassé. Un intégrateur qui lit la base d'Odoo le rencontre dès product_template.name.\n- lu tel quel: le nom arrive en texte JSON\n- le nom français demandé: Ask s'abstient\n- une vue du DBA, dans un schéma à part: quatre noms français",
+      "tags": {
+        "domain": [
+          "ERP",
+          "Odoo",
+          "IA"
+        ],
+        "kinds": [
+          "Connector"
+        ]
+      },
+      "edition": "pro",
+      "replayedAt": "2026-11-21",
+      "evidenceDigest": "sha256:6ab2a968d81ee3859cf465a2674de0d8fec1be1637f99fb643ebe21e7b28058d"
+    },
+    {
       "slug": "one-app-per-metier",
       "title": "Un technicien ne voit que l'app de la maintenance",
       "goal": "Donner à la maintenance et aux achats chacun son app sur le même hub, pour qu'un technicien lise ses ordres de travail sans ouvrir une facture fournisseur ni solder une décision des achats.",
