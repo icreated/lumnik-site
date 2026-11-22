@@ -26,6 +26,7 @@ export function initCarousel(root, { intervalMs = 8000 } = {}) {
   let autoplayStopped = false;
 
   if (slides.length < 1) return () => {};
+  root.dataset.carouselReady = "true";
 
   const listen = (target, event, handler) => {
     if (!target) return;

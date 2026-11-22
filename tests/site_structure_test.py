@@ -442,6 +442,14 @@ class HomepageTest(unittest.TestCase):
         attributes = [before + after for before, after in figures]
         self.assertNotRegex(attributes[0], r'\bhidden\b')
         self.assertTrue(all(re.search(r'\bhidden\b', attrs) for attrs in attributes[1:]))
+        self.assertIn(' role="region"', self.hero().split('<div class="heros-carrousel" data-carousel', 1)[1].split(">", 1)[0])
+
+        styles = text_of("styles.css")
+        controls = between(styles, ".heros-carrousel-commandes {", "}")
+        ready_controls = between(styles,
+                                 ".heros-carrousel[data-carousel-ready] .heros-carrousel-commandes {", "}")
+        self.assertIn("display: none", controls)
+        self.assertIn("display: flex", ready_controls)
 
     def test_the_featured_scenarios_are_published_and_titled_as_served(self):
         cards = dict(re.findall(r'<a class="porte scenario" href="scenarios/([a-z0-9-]+)/">(.*?)</a>',

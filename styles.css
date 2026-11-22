@@ -1433,11 +1433,14 @@ header.heros::before {
   border-top: 1px solid rgba(143, 168, 189, 0.14);
 }
 .heros-carrousel-commandes {
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   gap: 18px;
   margin-top: 16px;
+}
+.heros-carrousel[data-carousel-ready] .heros-carrousel-commandes {
+  display: flex;
 }
 .heros-carrousel-fleche {
   width: 42px;

@@ -50,4 +50,5 @@ test("the runtime honors motion, timing, keyboard, state and pointer contracts",
   assert.match(source, /pointerup/);
   assert.match(source, /mouseenter/);
   assert.match(source, /focusin/);
+  assert.match(source, /root\.dataset\.carouselReady = "true"/);
 });
