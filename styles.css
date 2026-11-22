@@ -1316,7 +1316,7 @@ footer a:hover { color: var(--lumiere); }
    ========================================================================== */
 header.heros {
   position: relative;
-  padding: 72px 0 88px;
+  padding: 48px 0 72px;
   overflow: hidden;
 }
 /* une lueur discrète derrière la fiche, pas un halo de décor */
@@ -1338,7 +1338,8 @@ header.heros::before {
     "preuves"
     "ctas"
     "carrousel";
-  align-items: start;
+  justify-items: center;
+  text-align: center;
 }
 .heros .surtitre {
   grid-area: surtitre;
@@ -1352,7 +1353,7 @@ header.heros::before {
 .heros h1 {
   grid-area: titre;
   font-size: clamp(2.2rem, 4.4vw, 3.5rem);
-  max-width: 21ch;
+  max-width: 24ch;
   opacity: 1;
   animation: heros-entre 0.4s ease both;
 }
@@ -1371,6 +1372,7 @@ header.heros::before {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
   margin-top: 22px;
 }
@@ -1386,15 +1388,18 @@ header.heros::before {
   grid-area: ctas;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 14px;
-  margin-top: 30px;
+  margin-top: 26px;
 }
 
 /* --- trois regards sur la même brique, assez larges pour rester lisibles --- */
 .heros-carrousel {
   grid-area: carrousel;
-  margin-top: 52px;
+  margin-top: 32px;
   width: 100%;
+  max-width: 960px;
+  text-align: left;
 }
 .heros-carrousel-piste {
   position: relative;
@@ -1560,8 +1565,8 @@ header.heros::before {
 
 /* téléphone : l'ordre du document — titre, fiche, phrase, preuves, boutons */
 @media (max-width: 880px) {
-  header.heros { padding: 36px 0 64px; }
-  .heros-carrousel { margin-top: 36px; }
+  header.heros { padding: 32px 0 56px; }
+  .heros-carrousel { margin-top: 28px; }
   .heros-carrousel-slide figcaption { padding-inline: 14px; }
 }
 @media (max-width: 600px) {
