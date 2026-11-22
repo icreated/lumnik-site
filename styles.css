@@ -1330,15 +1330,14 @@ header.heros::before {
 }
 .heros-grille {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    "surtitre fiche"
-    "titre    fiche"
-    "sous     fiche"
-    "preuves  fiche"
-    "ctas     fiche";
-  grid-template-rows: auto auto auto auto 1fr;
-  column-gap: 56px;
+    "surtitre"
+    "titre"
+    "sous"
+    "preuves"
+    "ctas"
+    "carrousel";
   align-items: start;
 }
 .heros .surtitre {
@@ -1353,7 +1352,7 @@ header.heros::before {
 .heros h1 {
   grid-area: titre;
   font-size: clamp(2.2rem, 4.4vw, 3.5rem);
-  max-width: 16ch;
+  max-width: 21ch;
   opacity: 1;
   animation: heros-entre 0.4s ease both;
 }
@@ -1389,6 +1388,86 @@ header.heros::before {
   flex-wrap: wrap;
   gap: 14px;
   margin-top: 30px;
+}
+
+/* --- trois regards sur la même brique, assez larges pour rester lisibles --- */
+.heros-carrousel {
+  grid-area: carrousel;
+  margin-top: 52px;
+  width: 100%;
+}
+.heros-carrousel-piste {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(143, 168, 189, 0.18);
+  border-radius: calc(var(--radius) + 4px);
+  background: #130b21;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.32);
+}
+.heros-carrousel-slide {
+  margin: 0;
+}
+.heros-carrousel-slide[hidden] {
+  display: none;
+}
+.heros-carrousel-slide img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1672 / 941;
+  object-fit: contain;
+}
+.heros-carrousel-slide figcaption {
+  padding: 13px 18px 15px;
+  color: var(--brume);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  border-top: 1px solid rgba(143, 168, 189, 0.14);
+}
+.heros-carrousel-commandes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-top: 16px;
+}
+.heros-carrousel-fleche {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--givre);
+  border-radius: 50%;
+  color: var(--neige);
+  background: transparent;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+.heros-carrousel-fleche:hover,
+.heros-carrousel-fleche:focus-visible {
+  color: var(--nuit);
+  border-color: var(--lumiere);
+  background: var(--lumiere);
+}
+.heros-carrousel-points {
+  display: flex;
+  gap: 10px;
+}
+.heros-carrousel-points button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 1px solid var(--brume);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+.heros-carrousel-points button[aria-current="true"] {
+  border-color: var(--lumiere);
+  background: var(--lumiere);
+  box-shadow: 0 0 0 4px rgba(255, 210, 74, 0.12);
+}
+.heros-carrousel-points button:focus-visible {
+  outline: 2px solid var(--neige);
+  outline-offset: 4px;
 }
 
 /* --- la fiche : plusieurs systèmes sombres, une fiche claire, le désaccord gardé --- */
@@ -1471,19 +1550,25 @@ header.heros::before {
 /* téléphone : l'ordre du document — titre, fiche, phrase, preuves, boutons */
 @media (max-width: 880px) {
   header.heros { padding: 36px 0 64px; }
-  .heros-grille {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "surtitre" "titre" "fiche" "sous" "preuves" "ctas";
-    grid-template-rows: none;
-  }
-  .heros-fiche { margin-top: 22px; max-width: 560px; }
-  .heros-sources { display: none; }
+  .heros-carrousel { margin-top: 36px; }
+  .heros-carrousel-slide figcaption { padding-inline: 14px; }
 }
 @media (max-width: 600px) {
   .heros .surtitre { font-size: 0.72rem; margin-bottom: 12px; }
   .heros h1 { font-size: 2rem; }
   .fiche { padding: 14px 16px 4px; }
   .fiche dl > div { padding: 8px 0; grid-template-columns: 4.6em minmax(0, 1fr); }
+  .heros-carrousel-commandes { margin-top: 12px; }
+  .heros-carrousel-fleche { width: 38px; height: 38px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heros-carrousel,
+  .heros-carrousel * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
 /* ==========================================================================
