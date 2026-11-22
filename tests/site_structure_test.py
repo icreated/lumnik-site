@@ -414,16 +414,42 @@ class HomepageTest(unittest.TestCase):
         self.assertIn('href="scenarios/"', ctas)
         self.assertIn('href="essai.html"', ctas)
 
-    def test_the_hero_record_is_the_demo_desk_p1008(self):
-        """The record is the demo desk's P-1008 as lumnik fuses it (docs/entities.md): the ERP
-        and the CRM agree on the name, disagree on the city, and only the CRM has the email."""
-        record = between(self.hero(), "<!-- fiche:debut -->", "<!-- fiche:fin -->")
-        erp, crm = FICHE["sources"]["t_acme_desk_erp"], FICHE["sources"]["t_acme_desk_crm"]
-        for value in (erp["code"], erp["name"], erp["city"], erp["segment"], crm["town"], crm["email"]):
-            with self.subTest(value=value):
-                self.assertIn(value, record)
-        self.assertIn("fictives", record)
-        self.assertIn(DOCS + "entities/", record)
+    def test_homepage_hero_has_the_three_slide_accessible_carousel(self):
+        carousel = between(self.hero(), '<div class="heros-carrousel" data-carousel', '<!-- carrousel:fin -->')
+        figures = re.findall(r'<figure\b([^>]*)data-carousel-slide([^>]*)>(.*?)</figure>', carousel, re.S)
+        self.assertEqual(3, len(figures))
+
+        images = re.findall(r'<img\b[^>]*>', carousel)
+        self.assertEqual([
+            "images/fr/slide-01-entites-metier-v2.png",
+            "images/fr/slide-02-kinds-tuyauterie-v3.png",
+            "images/fr/slide-03-metier-plusieurs-sorties-v2.png",
+        ], [re.search(r'src="([^"]+)"', image).group(1) for image in images])
+        self.assertNotIn('loading="lazy"', images[0])
+        self.assertIn('fetchpriority="high"', images[0])
+        self.assertEqual(2, sum('loading="lazy"' in image for image in images))
+        self.assertTrue(all('width="1672"' in image and 'height="941"' in image for image in images))
+
+        self.assertEqual(1, len(re.findall(r'<button\b[^>]*data-carousel-prev', carousel)))
+        self.assertEqual(1, len(re.findall(r'<button\b[^>]*data-carousel-next', carousel)))
+        self.assertEqual(3, len(re.findall(r'<button\b[^>]*data-carousel-dot', carousel)))
+        self.assertRegex(carousel, r'<p\b[^>]*aria-live="polite"[^>]*data-carousel-status')
+
+    def test_carousel_first_slide_is_the_no_javascript_fallback(self):
+        carousel = between(self.hero(), '<div class="heros-carrousel" data-carousel', '<!-- carrousel:fin -->')
+        figures = re.findall(r'<figure\b([^>]*)data-carousel-slide([^>]*)>', carousel)
+        self.assertEqual(3, len(figures))
+        attributes = [before + after for before, after in figures]
+        self.assertNotRegex(attributes[0], r'\bhidden\b')
+        self.assertTrue(all(re.search(r'\bhidden\b', attrs) for attrs in attributes[1:]))
+        self.assertIn(' role="region"', self.hero().split('<div class="heros-carrousel" data-carousel', 1)[1].split(">", 1)[0])
+
+        styles = text_of("styles.css")
+        controls = between(styles, ".heros-carrousel-commandes {", "}")
+        ready_controls = between(styles,
+                                 ".heros-carrousel[data-carousel-ready] .heros-carrousel-commandes {", "}")
+        self.assertIn("display: none", controls)
+        self.assertIn("display: flex", ready_controls)
 
     def test_the_featured_scenarios_are_published_and_titled_as_served(self):
         cards = dict(re.findall(r'<a class="porte scenario" href="scenarios/([a-z0-9-]+)/">(.*?)</a>',

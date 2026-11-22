@@ -49,23 +49,6 @@
   <div class="wrap heros-grille">
     <p class="surtitre">La couche de lecture de vos logiciels</p>
     <h1>Vos logiciels restent en place.<br>Vos données <em>se remettent au travail</em>.</h1>
-    <!-- fiche:debut -->
-    <figure class="heros-fiche">
-      <div class="heros-sources" aria-hidden="true">
-        <div class="heros-source"><span class="heros-source-nom">ERP</span>Filtration Lyon 1008<br>Lyon · GOLD</div>
-        <div class="heros-source"><span class="heros-source-nom">CRM</span>Filtration Lyon 1008<br>Villeurbanne · contact@…</div>
-      </div>
-      <div class="fiche" role="group" aria-label="Une fiche client rassemblée depuis l'ERP et le CRM">
-        <div class="fiche-tete"><span class="fiche-nom">Filtration Lyon 1008</span><span class="fiche-code">P-1008</span></div>
-        <dl>
-          <div><dt>Ville</dt><dd>Lyon <span class="origine">ERP</span><span class="desaccord">Le CRM dit Villeurbanne</span></dd></div>
-          <div><dt>Segment</dt><dd>GOLD <span class="origine">ERP</span></dd></div>
-          <div><dt>Email</dt><dd>contact@filtration-lyon.example <span class="origine">CRM</span></dd></div>
-        </dl>
-      </div>
-      <figcaption>Données fictives, telles que lumnik les rassemble. L'ERP et le CRM ne sont pas d'accord sur la ville&nbsp;: la fiche garde les deux. <a href="https://docs.lumnik.io/entities/" rel="noopener">Voir la documentation</a>.</figcaption>
-    </figure>
-    <!-- fiche:fin -->
     <p class="sous">lumnik lit vos ERP, vos exports et vos API sans jamais y écrire. Il rassemble leurs données, répare les exports et sert le tout à vos équipes et à vos outils.</p>
     <ul class="heros-preuves">
       <li>Lecture seule</li>
@@ -76,6 +59,33 @@
       <a class="btn btn-lumiere" href="scenarios/">Voir les scénarios</a>
       <a class="btn btn-givre" href="essai.html">Essayer lumnik Open</a>
     </div>
+    <div class="heros-carrousel" data-carousel role="region" aria-roledescription="carrousel" aria-label="Comprendre lumnik en trois étapes">
+      <div class="heros-carrousel-piste" data-carousel-track>
+        <figure class="heros-carrousel-slide" data-carousel-slide>
+          <img src="images/fr/slide-01-entites-metier-v2.png" width="1672" height="941" fetchpriority="high" alt="Les logiciels existants, dont un ERP et un tableur legacy toujours actifs et Kafka, alimentent des entités du métier Maintenance dans lumnik.">
+          <figcaption>Les applications restent en place. lumnik réunit leurs informations en entités pour chaque métier.</figcaption>
+        </figure>
+        <figure class="heros-carrousel-slide" data-carousel-slide hidden>
+          <img src="images/fr/slide-02-kinds-tuyauterie-v3.png" width="1672" height="941" loading="lazy" alt="Des manifests YAML de style Kubernetes déclarent les connecteurs, les entités, une app métier, le chat IA et la recherche.">
+          <figcaption>Vous déclarez le métier en YAML. lumnik construit et relie la tuyauterie.</figcaption>
+        </figure>
+        <figure class="heros-carrousel-slide" data-carousel-slide hidden>
+          <img src="images/fr/slide-03-metier-plusieurs-sorties-v2.png" width="1672" height="941" loading="lazy" alt="Les entités lumnik alimentent une PWA avec décision métier, une API REST, des exports, Text-to-SQL et la recherche d’identités.">
+          <figcaption>Une même matière métier sert la PWA, les décisions et les interfaces de vos systèmes.</figcaption>
+        </figure>
+      </div>
+      <div class="heros-carrousel-commandes">
+        <button class="heros-carrousel-fleche" type="button" data-carousel-prev aria-label="Afficher le visuel précédent">←</button>
+        <div class="heros-carrousel-points" aria-label="Choisir un visuel">
+          <button type="button" data-carousel-dot data-carousel-index="0" aria-label="Afficher le visuel 1 sur 3" aria-current="true"></button>
+          <button type="button" data-carousel-dot data-carousel-index="1" aria-label="Afficher le visuel 2 sur 3"></button>
+          <button type="button" data-carousel-dot data-carousel-index="2" aria-label="Afficher le visuel 3 sur 3"></button>
+        </div>
+        <button class="heros-carrousel-fleche" type="button" data-carousel-next aria-label="Afficher le visuel suivant">→</button>
+      </div>
+      <p class="sr" aria-live="polite" aria-atomic="true" data-carousel-status>Visuel 1 sur 3. Les applications restent en place.</p>
+    </div>
+    <!-- carrousel:fin -->
   </div>
 </header>
 
@@ -240,5 +250,6 @@
 </footer>
 
 <script src="site.js"></script>
+<script type="module" src="carousel.mjs"></script>
 </body>
 </html>
