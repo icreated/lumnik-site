@@ -1316,7 +1316,7 @@ footer a:hover { color: var(--lumiere); }
    ========================================================================== */
 header.heros {
   position: relative;
-  padding: 48px 0 72px;
+  padding: 32px 0 72px;
   overflow: hidden;
 }
 /* une lueur discrète derrière la fiche, pas un halo de décor */
@@ -1335,9 +1335,9 @@ header.heros::before {
     "surtitre"
     "titre"
     "sous"
-    "preuves"
     "ctas"
-    "carrousel";
+    "carrousel"
+    "preuves";
   justify-items: center;
   text-align: center;
 }
@@ -1365,7 +1365,7 @@ header.heros::before {
   margin-top: 22px;
   font-size: 1.12rem;
   color: var(--brume);
-  max-width: 44ch;
+  max-width: 62ch;
 }
 .heros-preuves {
   grid-area: preuves;
@@ -1396,7 +1396,7 @@ header.heros::before {
 /* --- trois regards sur la même brique, assez larges pour rester lisibles --- */
 .heros-carrousel {
   grid-area: carrousel;
-  margin-top: 32px;
+  margin-top: 24px;
   width: 100%;
   max-width: 960px;
   text-align: left;
@@ -1437,53 +1437,78 @@ header.heros::before {
   line-height: 1.5;
   border-top: 1px solid rgba(143, 168, 189, 0.14);
 }
+/* comme Bootstrap : les flèches et les traits posés sur l'image, pas en dessous */
+.heros-carrousel { position: relative; }
 .heros-carrousel-commandes {
   display: none;
-  justify-content: center;
-  align-items: center;
-  gap: 18px;
-  margin-top: 16px;
+  position: absolute;
+  top: 1px; left: 1px; right: 1px;
+  aspect-ratio: 1672 / 941;
+  justify-content: space-between;
+  align-items: stretch;
+  pointer-events: none;
 }
 .heros-carrousel[data-carousel-ready] .heros-carrousel-commandes {
   display: flex;
 }
 .heros-carrousel-fleche {
-  width: 42px;
-  height: 42px;
-  border: 1px solid var(--givre);
-  border-radius: 50%;
-  color: var(--neige);
+  width: 12%;
+  border: 0;
+  color: #fff;
   background: transparent;
-  font-size: 1.1rem;
+  font-size: 0;
+  opacity: 0.7;
   cursor: pointer;
+  pointer-events: auto;
+  transition: opacity 0.15s ease;
 }
+/* le chevron dessiné : le glyphe ‹ › reste trop petit dans la police du site */
+.heros-carrousel-fleche::before {
+  content: "";
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border-top: 3px solid #fff;
+  border-left: 3px solid #fff;
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.9));
+  transform: rotate(-45deg);
+}
+[data-carousel-next]::before { transform: rotate(135deg); }
 .heros-carrousel-fleche:hover,
 .heros-carrousel-fleche:focus-visible {
-  color: var(--nuit);
-  border-color: var(--lumiere);
-  background: var(--lumiere);
+  opacity: 1;
+  outline: none;
 }
 .heros-carrousel-points {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
   display: flex;
-  gap: 10px;
+  gap: 6px;
+  pointer-events: auto;
 }
 .heros-carrousel-points button {
-  width: 9px;
-  height: 9px;
+  width: 30px;
+  height: 3px;
   padding: 0;
-  border: 1px solid var(--brume);
-  border-radius: 50%;
-  background: transparent;
+  border: 0;
+  border-block: 8px solid transparent;
+  box-sizing: content-box;
+  background: #fff;
+  background-clip: padding-box;
+  filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.9));
+  opacity: 0.6;
   cursor: pointer;
+  transition: opacity 0.15s ease;
 }
 .heros-carrousel-points button[aria-current="true"] {
-  border-color: var(--lumiere);
-  background: var(--lumiere);
-  box-shadow: 0 0 0 4px rgba(255, 210, 74, 0.12);
+  opacity: 1;
+  background-color: var(--lumiere);
 }
 .heros-carrousel-points button:focus-visible {
   outline: 2px solid var(--neige);
-  outline-offset: 4px;
+  outline-offset: 2px;
 }
 
 /* --- la fiche : plusieurs systèmes sombres, une fiche claire, le désaccord gardé --- */
@@ -1574,8 +1599,9 @@ header.heros::before {
   .heros h1 { font-size: 2rem; }
   .fiche { padding: 14px 16px 4px; }
   .fiche dl > div { padding: 8px 0; grid-template-columns: 4.6em minmax(0, 1fr); }
-  .heros-carrousel-commandes { margin-top: 12px; }
-  .heros-carrousel-fleche { width: 38px; height: 38px; }
+  .heros-carrousel-fleche::before { width: 14px; height: 14px; }
+  .heros-carrousel-points { bottom: 6px; }
+  .heros-carrousel-points button { width: 20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
