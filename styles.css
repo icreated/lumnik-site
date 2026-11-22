@@ -1406,9 +1406,17 @@ header.heros::before {
 }
 .heros-carrousel-slide {
   margin: 0;
+  touch-action: pan-y;
 }
 .heros-carrousel-slide[hidden] {
   display: none;
+}
+.heros-carrousel-slide:not([hidden]) {
+  animation: carrousel-apparition 0.28s ease-out both;
+}
+@keyframes carrousel-apparition {
+  from { opacity: 0.25; }
+  to { opacity: 1; }
 }
 .heros-carrousel-slide img {
   display: block;
