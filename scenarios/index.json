@@ -219,6 +219,27 @@
       "evidenceDigest": "sha256:18872fe713e49ae8f6f57150ad67f8f2f66a2df6e68080ddd00426700c52724f"
     },
     {
+      "slug": "complaints-vs-revenue-concentration",
+      "title": "Helpdesk et ERP legacy: trois des huit clients qui réclament le plus pèsent 0,41 % du chiffre d'affaires",
+      "goal": "Voir si les clients qui concentrent les réclamations sont ceux qui concentrent le chiffre d'affaires.",
+      "lede": "Un distributeur exporte ses tickets depuis le helpdesk et ses factures depuis l'ERP. Tout le monde pense que les réclamations suivent le chiffre d'affaires. Les deux n'ont jamais été posés côte à côte.\n- deux métriques, une par export, classées A, B, C par client\n- les deux cartes dans le même onglet Métriques\n- la comparaison faite par le lecteur, pas par lumnik",
+      "tags": {
+        "domain": [
+          "Service client",
+          "Helpdesk",
+          "ERP"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "Metric"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-27",
+      "evidenceDigest": "sha256:eb40f598dfa345f903fec458a10f6f567a653972c52e4ec99a38db16f35b4d16"
+    },
+    {
       "slug": "crm-contacts-reachable",
       "title": "Un export CRM aux accents cassés et aux emails faux",
       "goal": "Reprendre les contacts d'un CRM legacy avec un nom réparé, un téléphone international et un email valide, et mettre de côté ceux dont l'email est illisible.",
