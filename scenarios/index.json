@@ -1956,6 +1956,27 @@
       "evidenceDigest": "sha256:da72848c7a8284282d09de7dff01b18683d12ec376bf6ef77aa57f80a195948a"
     },
     {
+      "slug": "town-hall-request-durations",
+      "title": "Logiciel de suivi des demandes legacy: quatre types de demande font 83 % du temps de traitement d'une mairie",
+      "goal": "Savoir quels types de demande concentrent le temps de traitement, de l'ouverture à la clôture.",
+      "lede": "Une mairie exporte ses demandes, une ligne par demande, avec la date d'ouverture et la date de clôture. Tout le monde pense que le temps part dans l'état civil, la moitié des demandes. Personne n'a additionné les jours par type.\n- la durée calculée à l'entrée par le script de l'opérateur\n- un classement A, B, C des types par jours de traitement\n- « acte d'état civil », le type le plus fréquent: en B",
+      "tags": {
+        "domain": [
+          "Collectivités",
+          "Relation usagers",
+          "Demandes"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "Metric"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-27",
+      "evidenceDigest": "sha256:193e87b7b1f0d84cd5c667c6f0ad9487d677270cbd03a6d9132852ecbe9d67f3"
+    },
+    {
       "slug": "two-systems-one-member",
       "title": "Le portail a la bonne adresse et la gestion la bonne formule",
       "goal": "Prendre l'adresse d'un adhérent dans le portail et sa formule dans la gestion, et garder la liste des désaccords jusqu'à ce que la source les règle.",
