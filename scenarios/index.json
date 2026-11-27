@@ -892,6 +892,27 @@
       "evidenceDigest": "sha256:011475bb49e03bdfe8a987e15f9e9e98503d0adb249c38a7c2dfca69b03616f6"
     },
     {
+      "slug": "lab-instruments-quartile",
+      "title": "Trois LIMS legacy: le quart des instruments qui fait la moitié des lots non conformes",
+      "goal": "Savoir, dans chaque site, quels instruments appartiennent au quartile supérieur du nombre de lots non conformes, et les revoir en premier.",
+      "lede": "Trois sites exportent chaque mois leur relevé qualité depuis leur LIMS. Tout le monde pense que les instruments à revoir sont les plus anciens. Six mois de relevés n'ont encore jamais été comparés, site par site.\n- un quartile par nombre d'instruments, calculé dans chaque site\n- les lots analysés à côté des lots non conformes\n- le plus ancien instrument de chaque site: en Q1",
+      "tags": {
+        "domain": [
+          "Laboratoires",
+          "LIMS",
+          "Qualité"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "Metric"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-27",
+      "evidenceDigest": "sha256:db7b77a6c87ae71d64f3b163a2036c14187fd02d53e5fb69bbaff8a28d058114"
+    },
+    {
       "slug": "legacy-desktop-exports",
       "title": "Un parc de machines réparti dans trois bases legacy",
       "goal": "Réunir en un seul parc les exports OpenEdge, FoxPro et Access de trois ateliers, chacun lu dans son format et son encodage, et voir la seule machine où deux registres divergent.",
