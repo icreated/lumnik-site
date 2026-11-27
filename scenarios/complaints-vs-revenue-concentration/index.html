@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Helpdesk et ERP legacy: trois des huit clients qui réclament le plus pèsent 0,41 % du chiffre d&#x27;affaires — lumnik</title>
+<meta name="description" content="Voir si les clients qui concentrent les réclamations sont ceux qui concentrent le chiffre d&#x27;affaires. Un distributeur exporte ses tickets depuis le helpdesk et ses factures depuis l&#x27;ERP. Tout le monde pense que les réclamations suivent le chiffre d&#x27;affaires. Les deux n&#x27;ont jamais été posés côte à côte. Deux métriques, une par export, classées A, B, C par client. Les deux cartes dans le même onglet Métriques. La comparaison faite par le lecteur, pas par lumnik.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/complaints-vs-revenue-concentration/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/complaints-vs-revenue-concentration/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Helpdesk et ERP legacy: trois des huit clients qui réclament le plus pèsent 0,41 % du chiffre d&#x27;affaires</h1>
+    <p class="goal"><strong>Objectif</strong> Voir si les clients qui concentrent les réclamations sont ceux qui concentrent le chiffre d&#x27;affaires.</p>
+    <p class="lede">Un distributeur exporte ses tickets depuis le helpdesk et ses factures depuis l&#x27;ERP. Tout le monde pense que les réclamations suivent le chiffre d&#x27;affaires. Les deux n&#x27;ont jamais été posés côte à côte.</p><ul class="lede-list"><li>deux métriques, une par export, classées A, B, C par client</li><li>les deux cartes dans le même onglet Métriques</li><li>la comparaison faite par le lecteur, pas par lumnik</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Service client</li><li class="tag">Helpdesk</li><li class="tag">ERP</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li><li class="tag kind">Metric</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-declare" data-step="declare" aria-current="step"><span class="num">1 · Déclarer</span><span class="sub">2 connecteurs + 2 Metric</span></a><a href="#step-read" data-step="read"><span class="num">2 · Lire</span><span class="sub">Les deux classes A</span></a><a href="#step-compare" data-step="compare"><span class="num">3 · Comparer</span><span class="sub">Le lecteur pose les deux A côte à côte</span></a></nav>
+  <section class="step" id="step-declare" aria-labelledby="declare-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="declare-title">Deux exports, deux classements</h2>
+      <p>Les deux fichiers arrivent par SFTP: une ligne par ticket, une ligne par facture. Chaque métrique classe les clients sur son propre export.</p><ul class="prose-list"><li>count: rows: le nombre de réclamations par client</li><li>sum: montant_ht: le chiffre d&#x27;affaires, le montant lu avec sa virgule à l&#x27;entrée</li><li>preset: abc: A, les clients des premiers 80 %; B, jusqu&#x27;à 95 %; C, le reste</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Un même scope</strong><p>Les deux métriques sont dans le même scope: l&#x27;onglet Métriques montre les deux cartes.</p></div></li><li><span class="n">2</span><div><strong>Chacun son classement</strong><p>Aucune métrique ne lit l&#x27;autre: chacune classe ses clients sur sa propre valeur.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Deux systèmes legacy se lisent côte à côte sans rien changer à leurs exports.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="declare-source-tab" data-view="source" aria-controls="declare-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="declare-manifest-tab" data-view="manifest" aria-controls="declare-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="declare-commands-tab" data-view="commands" aria-controls="declare-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="declare-result-tab" data-view="result" aria-controls="declare-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="declare-source" aria-labelledby="declare-source-tab" tabindex="0"><figure class="source"><figcaption>tickets.csv</figcaption><pre class="code">ticket;client;date;motif
+T-00001;CL-061;2026-01-01;délai
+T-00002;CL-053;2026-01-06;délai
+T-00003;CL-061;2026-01-08;SAV
+T-00004;CL-375;2026-01-08;SAV
+T-00005;CL-394;2026-01-08;délai
+T-00006;CL-296;2026-01-09;facturation
+T-00007;CL-286;2026-01-10;SAV
+T-00008;CL-053;2026-01-11;délai
+T-00009;CL-179;2026-01-11;facturation
+T-00010;CL-285;2026-01-11;facturation
+T-00011;CL-258;2026-01-12;délai
+T-00012;CL-053;2026-01-13;facturation
+T-00013;CL-061;2026-01-15;délai
+T-00014;CL-398;2026-01-16;qualité produit
+T-00015;CL-053;2026-01-18;SAV
+T-00016;CL-301;2026-01-18;qualité produit
+T-00017;CL-286;2026-01-19;livraison
+T-00018;CL-053;2026-01-20;délai
+T-00019;CL-301;2026-01-20;qualité produit</pre><p class="source-more">… 408 lignes de plus</p></figure><figure class="source"><figcaption>factures.csv</figcaption><pre class="code">facture;client;mois;montant_ht
+F26-00001;CL-061;2026-01;90150,00
+F26-00002;CL-061;2026-02;90150,00
+F26-00003;CL-061;2026-03;90150,00
+F26-00004;CL-061;2026-04;90150,00
+F26-00005;CL-061;2026-05;90150,00
+F26-00006;CL-061;2026-06;90150,00
+F26-00007;CL-061;2026-07;90150,00
+F26-00008;CL-061;2026-08;90150,00
+F26-00009;CL-061;2026-09;90150,00
+F26-00010;CL-061;2026-10;90150,00
+F26-00011;CL-164;2026-01;81150,74
+F26-00012;CL-164;2026-02;81150,73
+F26-00013;CL-164;2026-03;81150,73
+F26-00014;CL-164;2026-04;81150,73
+F26-00015;CL-164;2026-05;81150,73
+F26-00016;CL-164;2026-06;81150,73
+F26-00017;CL-164;2026-07;81150,73
+F26-00018;CL-164;2026-08;81150,73
+F26-00019;CL-164;2026-09;81150,73</pre><p class="source-more">… 581 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="declare-manifest" aria-labelledby="declare-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/10-helpdesk.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-sav-tickets-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [sav-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: sftp</span><span class="line">    <span class="key">host</span>: host.docker.internal</span><span class="line">    <span class="key">port</span>: 2235</span><span class="line">    <span class="key">user</span>: sav</span><span class="line">    <span class="key">path</span>: /exports/tickets.csv</span><span class="line">    <span class="key">password_env</span>: SCENARIO_SAV_A_SFTP</span><span class="line">    <span class="comment"># The fingerprint the export server presents, read out of band (ssh-keyscan | ssh-keygen -lf -).</span></span><span class="line">    <span class="key">host_key_fingerprint</span>: <span class="str">&quot;SHA256:FINGERPRINT_READ_AT_REPLAY&quot;</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">    <span class="key">encoding</span>: UTF-8</span><span class="line">  <span class="key">after_process</span>: none</span></code></pre><div class="file"><span class="filename">manifests/11-erp.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-sav-factures-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [sav-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: sftp</span><span class="line">    <span class="key">host</span>: host.docker.internal</span><span class="line">    <span class="key">port</span>: 2235</span><span class="line">    <span class="key">user</span>: sav</span><span class="line">    <span class="key">path</span>: /exports/factures.csv</span><span class="line">    <span class="key">password_env</span>: SCENARIO_SAV_A_SFTP</span><span class="line">    <span class="comment"># The fingerprint the export server presents, read out of band (ssh-keyscan | ssh-keygen -lf -).</span></span><span class="line">    <span class="key">host_key_fingerprint</span>: <span class="str">&quot;SHA256:FINGERPRINT_READ_AT_REPLAY&quot;</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">    <span class="key">encoding</span>: UTF-8</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      - parse-number: { column: montant_ht, decimal-separator: <span class="str">&quot;,&quot;</span> }   <span class="comment"># the ERP writes 90150,00</span></span></code></pre><div class="file"><span class="filename">manifests/20-ticket.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ScenarioSavTicketsA</span><span class="line"><span class="key">match</span>: [ticket]</span><span class="line"><span class="key">scopes</span>: [sav-a]</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_sav_tickets_a</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">ticket</span>: ticket</span><span class="line">      <span class="key">client</span>: client</span><span class="line">      <span class="key">date</span>: date</span><span class="line">      <span class="key">motif</span>: motif</span></code></pre><div class="file"><span class="filename">manifests/21-facture.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ScenarioSavFacturesA</span><span class="line"><span class="key">match</span>: [facture]</span><span class="line"><span class="key">scopes</span>: [sav-a]</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_sav_factures_a</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">facture</span>: facture</span><span class="line">      <span class="key">client</span>: client</span><span class="line">      <span class="key">mois</span>: mois</span><span class="line">      <span class="key">montant_ht</span>: montant_ht</span></code></pre><div class="file"><span class="filename">manifests/30-reclamations.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Metric</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario_sav_reclamations_a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: sav-a</span><span class="line">  <span class="key">title</span>: Réclamations par client</span><span class="line">  <span class="key">description</span>: Les clients classés A, B, C par nombre de réclamations, janvier à octobre 2026.</span><span class="line">  <span class="key">source</span>:</span><span class="line">    <span class="key">entity</span>: ScenarioSavTicketsA</span><span class="line">  <span class="key">by</span>: [client]</span><span class="line">  <span class="key">measures</span>:</span><span class="line hl">    <span class="key">reclamations</span>: { count: rows }</span><span class="line">  <span class="key">across</span>:</span><span class="line hl">    <span class="key">reclamations_abc</span>: { preset: abc, of: reclamations }</span></code></pre><div class="file"><span class="filename">manifests/31-ca.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Metric</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario_sav_ca_a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: sav-a</span><span class="line">  <span class="key">title</span>: Chiffre d&#x27;affaires par client</span><span class="line">  <span class="key">description</span>: Les clients classés A, B, C par chiffre d&#x27;affaires HT, janvier à octobre 2026.</span><span class="line">  <span class="key">source</span>:</span><span class="line">    <span class="key">entity</span>: ScenarioSavFacturesA</span><span class="line">  <span class="key">by</span>: [client]</span><span class="line">  <span class="key">measures</span>:</span><span class="line hl">    <span class="key">ca</span>: { sum: montant_ht, unit: EUR }</span><span class="line">  <span class="key">across</span>:</span><span class="line hl">    <span class="key">ca_abc</span>: { preset: abc, of: ca }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="declare-commands" aria-labelledby="declare-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-helpdesk.yaml</span>
+<span class="out">Applied connector &quot;scenario-sav-tickets-s1127&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm apply -f 11-erp.yaml</span>
+<span class="out">Applied connector &quot;scenario-sav-factures-s1127&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-sav-tickets-s1127</span>
+<span class="out">run scheduled: 6a48515f-e0c5-4dfd-9c60-4fcebeecc519</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 6a48515f-e0c5-4dfd-9c60-4fcebeecc519 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR                   ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+6a48515f  scenario-sav-tickets-s1127  default   Completed  427  427  0        0             2026-11-27 22:44  2026-11-27 22:44  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-sav-factures-s1127</span>
+<span class="out">run scheduled: 7f4bdfbb-9f44-41cb-a24b-edfde05d43dd</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 7f4bdfbb-9f44-41cb-a24b-edfde05d43dd --wait-evaluated</span>
+<span class="out">ID        CONNECTOR                    ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+7f4bdfbb  scenario-sav-factures-s1127  default   Completed  600  600  0        0             2026-11-27 22:44  2026-11-27 22:44  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-ticket.yaml</span>
+<span class="out">Applied entity &quot;ScenarioSavTicketsS1127&quot; → connector.&quot;v_scenariosavticketss1127&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f 21-facture.yaml</span>
+<span class="out">Applied entity &quot;ScenarioSavFacturesS1127&quot; → connector.&quot;v_scenariosavfacturess1127&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm metric apply -f 30-reclamations.yaml</span>
+<span class="out">Applied metric &quot;scenario_sav_reclamations_s1127&quot; (definition version 1)</span>
+
+<span class="cmd"><span class="prompt">$</span> lm metric apply -f 31-ca.yaml</span>
+<span class="out">Applied metric &quot;scenario_sav_ca_s1127&quot; (definition version 1)</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="declare-result" aria-labelledby="declare-result-tab" tabindex="0" hidden><dl class="facts"><dt>run tickets</dt><dd>IN 427 · OUT 427 · cell errors 0</dd><dt>run factures</dt><dd>IN 600 · OUT 600 · cell errors 0</dd></dl><p class="sources">preuves: replay.log, 00-check-classes.txt, 01-run-tickets.json, 01-run-factures.json, 04-reclamations.txt, 05-ca.txt, 06-compare.json · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-read" aria-labelledby="read-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="read-title">Deux concentrations</h2>
+      <p>Les réclamations sont concentrées, le chiffre d&#x27;affaires aussi, moins fortement.</p><ul class="prose-list"><li>réclamations: 8 clients sur 47 portent 82,20 % des 427 tickets</li><li>chiffre d&#x27;affaires: 16 clients sur 60 portent 80,97 %</li><li>rien ne dit encore que ce sont les mêmes clients</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Ce qui est observé</strong><p>Chaque carte montre ce qu&#x27;elle observe: 8 sur 47, 16 sur 60. Aucune règle des 20/80 n&#x27;est affirmée.</p></div></li><li><span class="n">2</span><div><strong>Vérifié à part</strong><p>data/check_classes.py classe les clients avec son propre code: les deux classes A sont les mêmes.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Chaque concentration se lit en une ligne, sur sa propre carte.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button><button type="button" role="tab" id="read-screenshots-tab" data-view="screenshots" aria-controls="read-screenshots" aria-selected="false" tabindex="-1">Captures</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm metric get scenario_sav_reclamations_s1127</span>
+<span class="out">Réclamations par client
+
+CLIENT  RECLAMATIONS  RECLAMATIONS_ABC  RECLAMATIONS_ABC_BEFORE  RECLAMATIONS_ABC_COUNT  RECLAMATIONS_ABC_COUNT_SHARE  RECLAMATIONS_ABC_SHARE  RECLAMATIONS_ABC_POPULATION  RECLAMATIONS_ABC_UNCLASSIFIED  _DISPUTED
+CL-002  2             B                 90.6323185011709602      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-006  3             B                 82.2014051522248244      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-013  1             C                 96.7213114754098361      14                      29.7872340425531915           3.2786885245901639      47                           0                              0
+CL-040  3             B                 82.2014051522248244      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-051  1             C                 96.7213114754098361      14                      29.7872340425531915           3.2786885245901639      47                           0                              0
+CL-053  48            A                 27.8688524590163934      8                       17.0212765957446809           82.2014051522248244     47                           0                              0
+CL-057  3             B                 82.2014051522248244      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-061  64            A                 0                        8                       17.0212765957446809           82.2014051522248244     47                           0                              0
+CL-073  3             B                 82.2014051522248244      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-108  3             B                 82.2014051522248244      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-115  2             B                 90.6323185011709602      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-123  3             B                 82.2014051522248244      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-129  1             C                 96.7213114754098361      14                      29.7872340425531915           3.2786885245901639      47                           0                              0
+CL-148  2             B                 90.6323185011709602      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-150  1             C                 96.7213114754098361      14                      29.7872340425531915           3.2786885245901639      47                           0                              0
+CL-159  2             B                 90.6323185011709602      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-164  3             B                 82.2014051522248244      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-175  1             C                 96.7213114754098361      14                      29.7872340425531915           3.2786885245901639      47                           0                              0
+CL-179  37            A                 58.7822014051522248      8                       17.0212765957446809           82.2014051522248244     47                           0                              0
+CL-183  3             B                 82.2014051522248244      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-187  2             B                 90.6323185011709602      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-189  3             B                 82.2014051522248244      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-193  2             B                 90.6323185011709602      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-204  2             B                 90.6323185011709602      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-216  2             B                 90.6323185011709602      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-237  1             C                 96.7213114754098361      14                      29.7872340425531915           3.2786885245901639      47                           0                              0
+CL-258  55            A                 14.9882903981264637      8                       17.0212765957446809           82.2014051522248244     47                           0                              0
+CL-263  1             C                 96.7213114754098361      14                      29.7872340425531915           3.2786885245901639      47                           0                              0
+CL-276  2             B                 90.6323185011709602      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-285  3             B                 82.2014051522248244      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-286  33            A                 67.4473067915690867      8                       17.0212765957446809           82.2014051522248244     47                           0                              0
+CL-294  1             C                 96.7213114754098361      14                      29.7872340425531915           3.2786885245901639      47                           0                              0
+CL-296  30            A                 75.1756440281030445      8                       17.0212765957446809           82.2014051522248244     47                           0                              0
+CL-301  40            A                 49.4145199063231850      8                       17.0212765957446809           82.2014051522248244     47                           0                              0
+CL-308  1             C                 96.7213114754098361      14                      29.7872340425531915           3.2786885245901639      47                           0                              0
+CL-315  1             C                 96.7213114754098361      14                      29.7872340425531915           3.2786885245901639      47                           0                              0
+CL-331  2             B                 90.6323185011709602      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-348  1             C                 96.7213114754098361      14                      29.7872340425531915           3.2786885245901639      47                           0                              0
+CL-351  2             B                 90.6323185011709602      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-361  1             C                 96.7213114754098361      14                      29.7872340425531915           3.2786885245901639      47                           0                              0
+CL-371  2             B                 90.6323185011709602      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-375  3             B                 82.2014051522248244      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-382  1             C                 96.7213114754098361      14                      29.7872340425531915           3.2786885245901639      47                           0                              0
+CL-385  3             B                 82.2014051522248244      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-394  1             C                 96.7213114754098361      14                      29.7872340425531915           3.2786885245901639      47                           0                              0
+CL-396  2             B                 90.6323185011709602      25                      53.1914893617021277           14.5199063231850117     47                           0                              0
+CL-398  44            A                 39.1100702576112412      8                       17.0212765957446809           82.2014051522248244     47                           0                              0
+
+  reclamations_abc_before: %
+  reclamations_abc_count_share: %
+  reclamations_abc_share: %
+  reclamations = count(rows), by client
+  reclamations_abc = pareto(reclamations, bounds [80, 95], labels [A, B, C]) over every group, prior mass, null and ≤ 0 unclassified
+  data as of: 2026-11-27T21:44:25.125304Z (last completed run)</span>
+
+<span class="cmd"><span class="prompt">$</span> lm metric get scenario_sav_ca_s1127</span>
+<span class="out">Chiffre d&#x27;affaires par client
+
+CLIENT  CA         CA_ABC  CA_ABC_BEFORE        CA_ABC_COUNT  CA_ABC_COUNT_SHARE   CA_ABC_SHARE         CA_ABC_POPULATION  CA_ABC_UNCLASSIFIED  _DISPUTED
+CL-002  90290.20   B       89.6732143176740310  14            23.3333333333333333  14.4110727205166680  60                 0                    0
+CL-006  44103.15   B       94.8913689433219572  14            23.3333333333333333  14.4110727205166680  60                 0                    0
+CL-013  4640.98    C       99.7711008416778124  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-040  13772.23   C       98.4703405373741119  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-042  73465.24   B       91.5630481416148248  14            23.3333333333333333  14.4110727205166680  60                 0                    0
+CL-046  10549.60   C       98.8870628522792941  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-051  54032.13   B       93.7596340178956151  14            23.3333333333333333  14.4110727205166680  60                 0                    0
+CL-053  532977.55  A       40.6433186296306371  16            26.6666666666666667  80.9656520897098390  60                 0                    0
+CL-057  66293.57   B       92.3715342757696597  14            23.3333333333333333  14.4110727205166680  60                 0                    0
+CL-061  901500     A       0                    16            26.6666666666666667  80.9656520897098390  60                 0                    0
+CL-073  7011.97    C       99.3814432724208895  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-108  29554.07   C       96.5715598556085128  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-115  479840.76  A       46.5087450406900063  16            26.6666666666666667  80.9656520897098390  60                 0                    0
+CL-123  100130.60  B       88.5712754727916879  14            23.3333333333333333  14.4110727205166680  60                 0                    0
+CL-129  24284.25   C       97.1915182920625593  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-148  59839.80   B       93.1010960675588506  14            23.3333333333333333  14.4110727205166680  60                 0                    0
+CL-150  8206.26    C       99.2077449436928967  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-159  4937.99    C       99.7167581832233483  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-161  32637.07   C       96.2123883813923973  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-164  811507.31  A       9.9210218321015986   16            26.6666666666666667  80.9656520897098390  60                 0                    0
+CL-175  11512.07   C       98.7603723389097080  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-179  22038.72   C       97.4587668493850366  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-183  20018.47   C       97.7013033133579419  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-187  3920.66    C       99.9158230735963707  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-189  4135.20    C       99.8703151318547106  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-193  18200.98   C       97.9216068939627904  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-204  26780.10   C       96.8968028658109076  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-216  315383.70  A       64.6789324413970440  16            26.6666666666666667  80.9656520897098390  60                 0                    0
+CL-226  111065.19  B       87.3490012911205707  14            23.3333333333333333  14.4110727205166680  60                 0                    0
+CL-231  48805.97   B       94.3542584675516903  14            23.3333333333333333  14.4110727205166680  60                 0                    0
+CL-235  7577.30    C       99.2980549654565152  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-237  3728.30    C       99.9589699992272608  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-252  168388.78  B       80.9656520897098390  14            23.3333333333333333  14.4110727205166680  60                 0                    0
+CL-258  730514.62  A       18.8516726800439612  16            26.6666666666666667  80.9656520897098390  60                 0                    0
+CL-263  657621.93  A       26.8909976869096330  16            26.6666666666666667  80.9656520897098390  60                 0                    0
+CL-276  8905.91    C       99.1097352625562001  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-281  255774.30  A       71.2752690888435935  16            26.6666666666666667  80.9656520897098390  60                 0                    0
+CL-285  350244.23  A       60.8244891220430632  16            26.6666666666666667  80.9656520897098390  60                 0                    0
+CL-286  9684.12    C       99.0031613679974739  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-294  284009.95  A       68.1497350738862076  16            26.6666666666666667  80.9656520897098390  60                 0                    0
+CL-296  5268.82    C       99.6587747353593288  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-301  123215.54  B       85.9930123145324533  14            23.3333333333333333  14.4110727205166680  60                 0                    0
+CL-308  432018.38  A       51.7894002330274699  16            26.6666666666666667  80.9656520897098390  60                 0                    0
+CL-315  81434.57   B       90.6668594041130989  14            23.3333333333333333  14.4110727205166680  60                 0                    0
+CL-319  388978.97  A       56.5437693731818400  16            26.6666666666666667  80.9656520897098390  60                 0                    0
+CL-327  15095.19   C       98.3042177314398671  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-331  6503.90    C       99.4586101137476132  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-332  592019.24  A       34.1281374814729044  16            26.6666666666666667  80.9656520897098390  60                 0                    0
+CL-348  36063.45   C       95.8155095408034851  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-351  39871.34   C       95.3767248102265070  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-361  6047.37    C       99.5301856366470093  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-364  4374.39    C       99.8221749003603935  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-367  5637.22    C       99.5967370396384638  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-371  12582.28   C       98.6219041474758586  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-375  230362.95  A       74.0900693266589056  16            26.6666666666666667  80.9656520897098390  60                 0                    0
+CL-382  16565.97   C       98.1219089682230727  30            50.0000000000000000  4.6232751897734930   60                 0                    0
+CL-385  151718.91  B       82.8187732906648618  14            23.3333333333333333  14.4110727205166680  60                 0                    0
+CL-394  186911.67  A       78.9086861898267892  16            26.6666666666666667  80.9656520897098390  60                 0                    0
+CL-396  136716.75  B       84.4884423072512817  14            23.3333333333333333  14.4110727205166680  60                 0                    0
+CL-398  207493.47  A       76.6252172537330365  16            26.6666666666666667  80.9656520897098390  60                 0                    0
+
+  ca: EUR
+  ca_abc_before: %
+  ca_abc_count_share: %
+  ca_abc_share: %
+  ca = sum(montant_ht), by client
+  ca_abc = pareto(ca, bounds [80, 95], labels [A, B, C]) over every group, prior mass, null and ≤ 0 unclassified
+  data as of: 2026-11-27T21:44:26.975443Z (last completed run)</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>complaints · A</dt><dd>8 customers · 82.20 %</dd><dt>revenue · A</dt><dd>16 customers · 80.97 %</dd><dt>check_classes.py</dt><dd>both classes A identical</dd></dl><p class="sources">preuves: replay.log, 00-check-classes.txt, 01-run-tickets.json, 01-run-factures.json, 04-reclamations.txt, 05-ca.txt, 06-compare.json · transform v1</p></div><div role="tabpanel" class="view-panel view-panel-screenshots" id="read-screenshots" aria-labelledby="read-screenshots-tab" tabindex="0" hidden><figure class="shot"><img src="evidence/screenshots/complaints-a-open.png" alt="Réclamations par client dans l&#x27;onglet Métriques: A ouvert, huit clients de CL-061 (64 réclamations) à CL-296 (30)" loading="lazy"><figcaption>Réclamations par client dans l&#x27;onglet Métriques: A ouvert, huit clients de CL-061 (64 réclamations) à CL-296 (30)</figcaption></figure><figure class="shot"><img src="evidence/screenshots/revenue-a-open.png" alt="Chiffre d&#x27;affaires par client: A ouvert, seize clients de CL-061 (901 500 EUR) à CL-394; CL-179, CL-286 et CL-296 n&#x27;y sont pas" loading="lazy"><figcaption>Chiffre d&#x27;affaires par client: A ouvert, seize clients de CL-061 (901 500 EUR) à CL-394; CL-179, CL-286 et CL-296 n&#x27;y sont pas</figcaption></figure></div>
+  </div>
+</section>
+<section class="step" id="step-compare" aria-labelledby="compare-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="compare-title">La moitié vient avec le volume, trois clients non</h2>
+      <p>Des huit clients qui réclament le plus:</p><ul class="prose-list"><li>4 sont en A du chiffre d&#x27;affaires: CL-061, CL-258, CL-053, CL-398</li><li>1 est en B: CL-301</li><li>3 sont en C: CL-179, CL-286, CL-296, 100 tickets sur 427 (23,42 %) pour 0,41 % du chiffre d&#x27;affaires</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Deux conversations</strong><p>Avec les grands comptes, les réclamations viennent avec le volume. Avec les trois petits, un quart du travail du helpdesk va à des comptes qui pèsent peu: la raison est à chercher.</p></div></li><li><span class="n">2</span><div><strong>Fait par le lecteur</strong><p>Le tableau est construit à partir des lignes des deux métriques. lumnik ne croise pas les classes.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La croyance est à moitié vraie: la décision dépend des deux moitiés.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Comparer"><button type="button" role="tab" id="compare-result-tab" data-view="result" aria-controls="compare-result" aria-selected="true" tabindex="0">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-result" id="compare-result" aria-labelledby="compare-result-tab" tabindex="0"><dl class="facts"><dt>CL-061</dt><dd>64 complaints · revenue A</dd><dt>CL-258</dt><dd>55 complaints · revenue A</dd><dt>CL-053</dt><dd>48 complaints · revenue A</dd><dt>CL-398</dt><dd>44 complaints · revenue A</dd><dt>CL-301</dt><dd>40 complaints · revenue B</dd><dt>CL-179</dt><dd>37 complaints · revenue C</dd><dt>CL-286</dt><dd>33 complaints · revenue C</dd><dt>CL-296</dt><dd>30 complaints · revenue C</dd><dt>check_classes.py</dt><dd>same comparison</dd></dl><p class="sources">preuves: replay.log, 00-check-classes.txt, 01-run-tickets.json, 01-run-factures.json, 04-reclamations.txt, 05-ca.txt, 06-compare.json · transform v1</p></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>lumnik ne croise pas les deux classes: la classe de réclamations et la classe de chiffre d&#x27;affaires d&#x27;un client sur une même ligne attendent `against`.</li><li>Pas de règle empirique: rien ne dit « 20 % font 80 % », chaque carte montre ce qu&#x27;elle observe.</li><li>Pas de taux: les réclamations sont comptées, pas rapportées aux commandes ni au chiffre d&#x27;affaires.</li><li>Un client sans ticket est absent de la métrique des réclamations: 47 clients d&#x27;un côté, 60 de l&#x27;autre.</li><li>Ni cause ni tendance: dix mois en un total.</li><li>Soixante codes clients synthétiques.</li></ul></section>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
