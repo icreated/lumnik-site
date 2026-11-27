@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logiciel de dons legacy: le quart des donateurs qui fait 76 % des dons d&#x27;une association — lumnik</title>
+<meta name="description" content="Savoir quels donateurs appartiennent au quart supérieur par montant donné dans l&#x27;année, et quelle part ils portent. Une association exporte les dons de l&#x27;année, une ligne par don. Tout le monde pense que ses ressources tiennent aux nombreux prélèvements mensuels. Personne n&#x27;a classé les donateurs par montant sur l&#x27;année. Un quartile par nombre de donateurs. Le nombre de dons à côté du montant. Des codes, aucun nom.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/association-donors-top-quartile/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/association-donors-top-quartile/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Logiciel de dons legacy: le quart des donateurs qui fait 76 % des dons d&#x27;une association</h1>
+    <p class="goal"><strong>Objectif</strong> Savoir quels donateurs appartiennent au quart supérieur par montant donné dans l&#x27;année, et quelle part ils portent.</p>
+    <p class="lede">Une association exporte les dons de l&#x27;année, une ligne par don. Tout le monde pense que ses ressources tiennent aux nombreux prélèvements mensuels. Personne n&#x27;a classé les donateurs par montant sur l&#x27;année.</p><ul class="lede-list"><li>un quartile par nombre de donateurs</li><li>le nombre de dons à côté du montant</li><li>des codes, aucun nom</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Associations</li><li class="tag">Dons</li><li class="tag">Trésorerie</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li><li class="tag kind">Metric</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-declare" data-step="declare" aria-current="step"><span class="num">1 · Déclarer</span><span class="sub">Entité + Metric</span></a><a href="#step-read" data-step="read"><span class="num">2 · Lire</span><span class="sub">Le quart supérieur</span></a></nav>
+  <section class="step" id="step-declare" aria-labelledby="declare-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="declare-title">Un quartile des donateurs</h2>
+      <p>L&#x27;export arrive par SFTP: une ligne par don, le montant écrit avec une virgule. La métrique additionne, par donateur, le montant et les dons.</p><ul class="prose-list"><li>quantile: le classement se fait par nombre de donateurs, pas par valeur</li><li>labels [Q4, Q3, Q2, Q1]: le premier label est la tête, Q4 le quart supérieur</li><li>by: [donateur]: un code, aucun nom n&#x27;atteint la métrique</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Par nombre</strong><p>Un donateur est en Q4 tant que moins de 25 % des donateurs ont donné plus.</p></div></li><li><span class="n">2</span><div><strong>Les deux mesures</strong><p>Le nombre de dons est déclaré à côté du montant: on lit sur la même ligne comment le montant a été donné.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le quart supérieur des donateurs se déclare en quelques lignes, sur l&#x27;export tel qu&#x27;il est.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="declare-source-tab" data-view="source" aria-controls="declare-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="declare-manifest-tab" data-view="manifest" aria-controls="declare-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="declare-commands-tab" data-view="commands" aria-controls="declare-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="declare-result-tab" data-view="result" aria-controls="declare-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="declare-source" aria-labelledby="declare-source-tab" tabindex="0"><figure class="source"><figcaption>dons.csv</figcaption><pre class="code">don;donateur;date;montant;mode
+G25-00001;DON-0558;2025-01-01;20,00;espèces
+G25-00002;DON-0002;2025-01-05;12,00;prélèvement
+G25-00003;DON-0110;2025-01-05;12,00;prélèvement
+G25-00004;DON-0115;2025-01-05;25,00;prélèvement
+G25-00005;DON-0126;2025-01-05;8,00;prélèvement
+G25-00006;DON-0178;2025-01-05;10,00;prélèvement
+G25-00007;DON-0202;2025-01-05;20,00;prélèvement
+G25-00008;DON-0270;2025-01-05;25,00;prélèvement
+G25-00009;DON-0274;2025-01-05;8,00;prélèvement
+G25-00010;DON-0339;2025-01-05;40,00;prélèvement
+G25-00011;DON-0401;2025-01-05;8,00;prélèvement
+G25-00012;DON-0407;2025-01-05;15,00;prélèvement
+G25-00013;DON-0454;2025-01-05;10,00;prélèvement
+G25-00014;DON-0487;2025-01-05;10,00;prélèvement
+G25-00015;DON-0500;2025-01-05;20,00;prélèvement
+G25-00016;DON-0710;2025-01-05;10,00;prélèvement
+G25-00017;DON-0776;2025-01-05;10,00;prélèvement
+G25-00018;DON-0796;2025-01-05;10,00;prélèvement
+G25-00019;DON-0812;2025-01-05;15,00;prélèvement</pre><p class="source-more">… 588 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="declare-manifest" aria-labelledby="declare-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/10-dons.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-asso-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [asso-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: sftp</span><span class="line">    <span class="key">host</span>: host.docker.internal</span><span class="line">    <span class="key">port</span>: 2237</span><span class="line">    <span class="key">user</span>: tresorier</span><span class="line">    <span class="key">path</span>: /exports/dons.csv</span><span class="line">    <span class="key">password_env</span>: SCENARIO_ASSO_A_SFTP</span><span class="line">    <span class="comment"># The fingerprint the export server presents, read out of band (ssh-keyscan | ssh-keygen -lf -).</span></span><span class="line">    <span class="key">host_key_fingerprint</span>: <span class="str">&quot;SHA256:FINGERPRINT_READ_AT_REPLAY&quot;</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">    <span class="key">encoding</span>: UTF-8</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      - parse-number: { column: montant, decimal-separator: <span class="str">&quot;,&quot;</span> }   <span class="comment"># the software writes 1200,50</span></span></code></pre><div class="file"><span class="filename">manifests/20-don.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ScenarioAssoDonsA</span><span class="line"><span class="key">match</span>: [don]</span><span class="line"><span class="key">scopes</span>: [asso-a]</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_asso_a</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">don</span>: don</span><span class="line">      <span class="key">donateur</span>: donateur</span><span class="line">      <span class="key">date</span>: date</span><span class="line">      <span class="key">montant</span>: montant</span><span class="line">      <span class="key">mode</span>: mode</span></code></pre><div class="file"><span class="filename">manifests/30-quartile.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Metric</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario_asso_donateurs_a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: asso-a</span><span class="line">  <span class="key">title</span>: Dons par donateur</span><span class="line">  <span class="key">description</span>: Le quartile de chaque donateur par montant donné en 2025, et le nombre de ses dons.</span><span class="line">  <span class="key">source</span>:</span><span class="line">    <span class="key">entity</span>: ScenarioAssoDonsA</span><span class="line hl">  <span class="key">by</span>: [donateur]                       <span class="comment"># a donor&#x27;s code: no name reaches the metric</span></span><span class="line">  <span class="key">measures</span>:</span><span class="line">    <span class="key">montant</span>: { sum: montant, unit: EUR }</span><span class="line">    <span class="key">dons</span>:    { count: rows }</span><span class="line">  <span class="key">across</span>:</span><span class="line hl">    <span class="key">quartile</span>: { quantile: montant, bounds: [25, 50, 75], labels: [Q4, Q3, Q2, Q1] }   <span class="comment"># by number of donors</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="declare-commands" aria-labelledby="declare-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-dons.yaml</span>
+<span class="out">Applied connector &quot;scenario-asso-d1128&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-asso-d1128</span>
+<span class="out">run scheduled: fac24477-191f-456b-96bf-edcc699e99b6</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get fac24477-191f-456b-96bf-edcc699e99b6 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR            ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+fac24477  scenario-asso-d1128  default   Completed  607  607  0        0             2026-11-27 23:08  2026-11-27 23:08  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-don.yaml</span>
+<span class="out">Applied entity &quot;ScenarioAssoDonsD1128&quot; → connector.&quot;v_scenarioassodonsd1128&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm metric apply -f 30-quartile.yaml</span>
+<span class="out">Applied metric &quot;scenario_asso_donateurs_d1128&quot; (definition version 1)</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="declare-result" aria-labelledby="declare-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>IN 607 · OUT 607 · cell errors 0</dd></dl><p class="sources">preuves: replay.log, 00-check-quartile.txt, 01-run.json, 05-top-quarter.json, 04-metric.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-read" aria-labelledby="read-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="read-title">Vingt donateurs, 76 % du montant, 50 dons</h2>
+      <p>Q4 contient 20 des 80 donateurs et porte 76,05 % des 43 372,52 EUR de l&#x27;année.</p><ul class="prose-list"><li>19 ont donné une à trois fois, par chèque ou virement, de 642,41 à 3 454,66 EUR</li><li>1 donne par prélèvement: DON-2285, 50 EUR par mois</li><li>ensemble: 50 dons, 8,24 % des dons de l&#x27;année</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Les prélèvements</strong><p>528 des 607 dons (86,99 %) sont des prélèvements: ils rendent l&#x27;année régulière, le quart supérieur en fait l&#x27;essentiel du montant.</p></div></li><li><span class="n">2</span><div><strong>Vérifié à part</strong><p>data/check_quartile.py classe les donateurs avec son propre code: la liste et la part sont les mêmes.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Remercier et garder ces vingt donateurs n&#x27;est pas le même travail que faire tourner les prélèvements.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button><button type="button" role="tab" id="read-screenshots-tab" data-view="screenshots" aria-controls="read-screenshots" aria-selected="false" tabindex="-1">Captures</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm metric get scenario_asso_donateurs_d1128</span>
+<span class="out">Dons par donateur
+
+DONATEUR  MONTANT  DONS  QUARTILE  QUARTILE_BEFORE      QUARTILE_COUNT  QUARTILE_COUNT_SHARE  QUARTILE_SHARE       QUARTILE_POPULATION  QUARTILE_UNCLASSIFIED  _DISPUTED
+DON-0002  144      12    Q2        63.7500000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-0110  144      12    Q2        63.7500000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-0115  300      12    Q3        31.2500000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-0117  1680.21  2     Q4        11.2500000000000000  20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-0126  96       12    Q1        82.5000000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+DON-0133  110      2     Q1        78.7500000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+DON-0178  120      12    Q2        68.7500000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-0202  240      12    Q3        35.0000000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-0270  300      12    Q3        31.2500000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-0274  96       12    Q1        82.5000000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+DON-0297  2833.39  3     Q4        3.7500000000000000   20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-0339  480      12    Q3        26.2500000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-0355  150      3     Q2        62.5000000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-0401  96       12    Q1        82.5000000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+DON-0407  180      12    Q3        46.2500000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-0454  120      12    Q2        68.7500000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-0476  160      3     Q2        60.0000000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-0487  120      12    Q2        68.7500000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-0500  240      12    Q3        35.0000000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-0558  170      4     Q2        57.5000000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-0710  120      12    Q2        68.7500000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-0722  40       1     Q1        96.2500000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+DON-0776  120      12    Q2        68.7500000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-0796  120      12    Q2        68.7500000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-0812  180      12    Q3        46.2500000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-0853  180      12    Q3        46.2500000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-0867  144      12    Q2        63.7500000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-0930  568.36   1     Q3        25.0000000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-0934  180      12    Q3        46.2500000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-0951  240      12    Q3        35.0000000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-0998  240      12    Q3        35.0000000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-1003  1145.40  2     Q4        15.0000000000000000  20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-1138  100      2     Q1        81.2500000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+DON-1279  1740.88  2     Q4        7.5000000000000000   20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-1328  160      3     Q2        60.0000000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-1357  3331.35  3     Q4        1.2500000000000000   20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-1411  3011.57  3     Q4        2.5000000000000000   20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-1452  360      12    Q3        27.5000000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-1508  70       2     Q1        88.7500000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+DON-1521  180      12    Q3        46.2500000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-1539  180      12    Q3        46.2500000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-1568  360      12    Q3        27.5000000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-1629  240      12    Q3        35.0000000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-1635  799.81   1     Q4        20.0000000000000000  20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-1642  60       12    Q1        90.0000000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+DON-1686  180      12    Q3        46.2500000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-1768  1695.44  2     Q4        10.0000000000000000  20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-1814  90       3     Q1        87.5000000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+DON-1830  930.99   1     Q4        18.7500000000000000  20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-1870  1821.35  3     Q4        6.2500000000000000   20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-1886  300      12    Q3        31.2500000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-1887  60       1     Q1        90.0000000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+DON-1957  96       12    Q1        82.5000000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+DON-2090  60       12    Q1        90.0000000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+DON-2129  60       12    Q1        90.0000000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+DON-2161  170      4     Q2        57.5000000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-2168  120      12    Q2        68.7500000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-2176  1702.35  3     Q4        8.7500000000000000   20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-2178  1191.97  2     Q4        13.7500000000000000  20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-2229  1075.50  2     Q4        16.2500000000000000  20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-2237  144      12    Q2        63.7500000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-2264  20       1     Q1        98.7500000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+DON-2269  360      12    Q3        27.5000000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-2285  600      12    Q4        23.7500000000000000  20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-2305  1289.53  1     Q4        12.5000000000000000  20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-2334  240      12    Q3        35.0000000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-2365  180      4     Q3        46.2500000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-2402  210      4     Q3        45.0000000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-2406  976.83   1     Q4        17.5000000000000000  20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-2440  120      12    Q2        68.7500000000000000  17              21.2500000000000000   5.4089547944182169   80                   0                      0
+DON-2457  642.41   1     Q4        22.5000000000000000  20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-2482  40       1     Q1        96.2500000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+DON-2506  756.13   1     Q4        21.2500000000000000  20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-2509  240      12    Q3        35.0000000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-2617  240      12    Q3        35.0000000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-2646  60       12    Q1        90.0000000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+DON-2683  3454.66  3     Q4        0                    20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-2828  2304.39  2     Q4        5.0000000000000000   20              25.0000000000000000   76.0485210451225799  80                   0                      0
+DON-2901  180      12    Q3        46.2500000000000000  26              32.5000000000000000   15.6282364962884333  80                   0                      0
+DON-2989  110      2     Q1        78.7500000000000000  17              21.2500000000000000   2.9142876641707699   80                   0                      0
+
+  montant: EUR
+  quartile_before: %
+  quartile_count_share: %
+  quartile_share: %
+  montant = sum(montant), by donateur
+  dons = count(rows), by donateur
+  quartile = quantile(montant, bounds [25, 50, 75], labels [Q4, Q3, Q2, Q1]) over every group, prior headcount, null unclassified
+  data as of: 2026-11-27T22:08:48.311306Z (last completed run)</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>Q4</dt><dd>20 donors · 76.05 % of the amount</dd><dt>Q4 gifts</dt><dd>50 of 607</dd><dt>DON-2683</dt><dd>3454.66 EUR · 3 gifts</dd><dt>DON-1357</dt><dd>3331.35 EUR · 3 gifts</dd><dt>DON-1411</dt><dd>3011.57 EUR · 3 gifts</dd><dt>DON-0297</dt><dd>2833.39 EUR · 3 gifts</dd><dt>DON-2828</dt><dd>2304.39 EUR · 2 gifts</dd><dt>DON-1870</dt><dd>1821.35 EUR · 3 gifts</dd><dt>DON-1279</dt><dd>1740.88 EUR · 2 gifts</dd><dt>DON-2176</dt><dd>1702.35 EUR · 3 gifts</dd><dt>DON-1768</dt><dd>1695.44 EUR · 2 gifts</dd><dt>DON-0117</dt><dd>1680.21 EUR · 2 gifts</dd><dt>DON-2305</dt><dd>1289.53 EUR · 1 gifts</dd><dt>DON-2178</dt><dd>1191.97 EUR · 2 gifts</dd><dt>DON-1003</dt><dd>1145.4 EUR · 2 gifts</dd><dt>DON-2229</dt><dd>1075.5 EUR · 2 gifts</dd><dt>DON-2406</dt><dd>976.83 EUR · 1 gifts</dd><dt>DON-1830</dt><dd>930.99 EUR · 1 gifts</dd><dt>DON-1635</dt><dd>799.81 EUR · 1 gifts</dd><dt>DON-2506</dt><dd>756.13 EUR · 1 gifts</dd><dt>DON-2457</dt><dd>642.41 EUR · 1 gifts</dd><dt>DON-2285</dt><dd>600 EUR · 12 gifts</dd><dt>check_quartile.py</dt><dd>same 20 donors, same share</dd></dl><p class="sources">preuves: replay.log, 00-check-quartile.txt, 01-run.json, 05-top-quarter.json, 04-metric.txt · transform v1</p></div><div role="tabpanel" class="view-panel view-panel-screenshots" id="read-screenshots" aria-labelledby="read-screenshots-tab" tabindex="0" hidden><figure class="shot"><img src="evidence/screenshots/q4-open.png" alt="Dons par donateur dans l&#x27;onglet Métriques: Q4 ouvert, vingt donateurs avec leur montant et leur nombre de dons, de DON-2683 (3 454,66 EUR, 3 dons) à DON-2285 (600 EUR, 12 dons)" loading="lazy"><figcaption>Dons par donateur dans l&#x27;onglet Métriques: Q4 ouvert, vingt donateurs avec leur montant et leur nombre de dons, de DON-2683 (3 454,66 EUR, 3 dons) à DON-2285 (600 EUR, 12 dons)</figcaption></figure></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Pas encore de mouvement: les donateurs entrés ou sortis de Q4 depuis l&#x27;an dernier attendent l&#x27;historique des métriques. Une année est un total.</li><li>Pas un score de fidélité: le classement se fait sur le montant seul, le nombre de dons est montré à côté, pas pondéré.</li><li>Les montants tels qu&#x27;enregistrés: lumnik ne les rapproche pas des reçus fiscaux.</li><li>Aucun nom: la métrique contient des codes, qui est derrière un code reste dans le logiciel de dons.</li><li>80 codes de donateurs et 607 dons synthétiques.</li></ul></section>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>

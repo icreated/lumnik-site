@@ -81,6 +81,27 @@
       "evidenceDigest": "sha256:5d9093d9f2460cf74d79fac7d5a4cd6855f0d60064442a76127643f822a811f7"
     },
     {
+      "slug": "association-donors-top-quartile",
+      "title": "Logiciel de dons legacy: le quart des donateurs qui fait 76 % des dons d'une association",
+      "goal": "Savoir quels donateurs appartiennent au quart supérieur par montant donné dans l'année, et quelle part ils portent.",
+      "lede": "Une association exporte les dons de l'année, une ligne par don. Tout le monde pense que ses ressources tiennent aux nombreux prélèvements mensuels. Personne n'a classé les donateurs par montant sur l'année.\n- un quartile par nombre de donateurs\n- le nombre de dons à côté du montant\n- des codes, aucun nom",
+      "tags": {
+        "domain": [
+          "Associations",
+          "Dons",
+          "Trésorerie"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "Metric"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-27",
+      "evidenceDigest": "sha256:78375b7f55c8ec4eb050cd93e0517501725697ebecd6b3b09b0e618172b37953"
+    },
+    {
       "slug": "broken-coordinates",
       "title": "Un export de sites aux coordonnées GPS cassées",
       "goal": "Lire les coordonnées GPS d'un export legacy en décimal ou en degrés-minutes-secondes, échanger une paire inversée, et vider avec sa raison chaque point inutilisable.",
