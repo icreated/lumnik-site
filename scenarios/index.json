@@ -910,7 +910,7 @@
       },
       "edition": "open",
       "replayedAt": "2026-11-27",
-      "evidenceDigest": "sha256:db7b77a6c87ae71d64f3b163a2036c14187fd02d53e5fb69bbaff8a28d058114"
+      "evidenceDigest": "sha256:26c755d59429711eada4823f2ddcbb4a3257906b77336a8d158754ffcc0326f8"
     },
     {
       "slug": "legacy-desktop-exports",
@@ -1739,6 +1739,27 @@
       "edition": "open",
       "replayedAt": "2026-11-05",
       "evidenceDigest": "sha256:8f092ded88b6a56f611309587aa93bf603b20a90241c7328e4d82864b50e61c3"
+    },
+    {
+      "slug": "school-absence-hours-by-motive",
+      "title": "Logiciel de vie scolaire legacy: trois motifs médicaux font 85 % des heures d'absence",
+      "goal": "Savoir quels motifs d'absence portent l'essentiel des heures de cours perdues au premier trimestre.",
+      "lede": "Un collège de 420 élèves exporte ses absences du trimestre, une ligne par absence. Tout le monde pense que les heures partent dans les absences non justifiées. Personne n'a additionné les heures par motif.\n- un classement A, B, C des motifs par heures perdues\n- le nombre d'absences à côté des heures\n- « non justifiée », le motif le plus fréquent: en B",
+      "tags": {
+        "domain": [
+          "Éducation",
+          "Vie scolaire",
+          "Absences"
+        ],
+        "kinds": [
+          "Connector",
+          "Entity",
+          "Metric"
+        ]
+      },
+      "edition": "open",
+      "replayedAt": "2026-11-27",
+      "evidenceDigest": "sha256:bfdf20c107dfcf7e50ede06fc14e39a05f56dc0f6c7d0f3a85a123daf218654f"
     },
     {
       "slug": "school-absences-half-days",
