@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trois LIMS legacy: le quart des instruments qui fait la moitié des lots non conformes — lumnik</title>
+<meta name="description" content="Savoir, dans chaque site, quels instruments appartiennent au quartile supérieur du nombre de lots non conformes, et les revoir en premier. Trois sites exportent chaque mois leur relevé qualité depuis leur LIMS. Tout le monde pense que les instruments à revoir sont les plus anciens. Six mois de relevés n&#x27;ont encore jamais été comparés, site par site. Un quartile par nombre d&#x27;instruments, calculé dans chaque site. Les lots analysés à côté des lots non conformes. Le plus ancien instrument de chaque site: en Q1.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/lab-instruments-quartile/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/lab-instruments-quartile/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Trois LIMS legacy: le quart des instruments qui fait la moitié des lots non conformes</h1>
+    <p class="goal"><strong>Objectif</strong> Savoir, dans chaque site, quels instruments appartiennent au quartile supérieur du nombre de lots non conformes, et les revoir en premier.</p>
+    <p class="lede">Trois sites exportent chaque mois leur relevé qualité depuis leur LIMS. Tout le monde pense que les instruments à revoir sont les plus anciens. Six mois de relevés n&#x27;ont encore jamais été comparés, site par site.</p><ul class="lede-list"><li>un quartile par nombre d&#x27;instruments, calculé dans chaque site</li><li>les lots analysés à côté des lots non conformes</li><li>le plus ancien instrument de chaque site: en Q1</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Laboratoires</li><li class="tag">LIMS</li><li class="tag">Qualité</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li><li class="tag kind">Metric</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-declare" data-step="declare" aria-current="step"><span class="num">1 · Déclarer</span><span class="sub">Entité + Metric</span></a><a href="#step-read" data-step="read"><span class="num">2 · Lire</span><span class="sub">Le quartile supérieur</span></a></nav>
+  <section class="step" id="step-declare" aria-labelledby="declare-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="declare-title">Un quartile dans chaque site</h2>
+      <p>Le relevé arrive par SFTP: une ligne par instrument et par mois. La métrique additionne, par instrument, les lots non conformes et les lots analysés.</p><ul class="prose-list"><li>within: [site]: un instrument est comparé aux instruments de son site</li><li>quantile: le classement se fait par nombre d&#x27;instruments, pas par valeur</li><li>labels [Q4, Q3, Q2, Q1]: le premier label est la tête, Q4 le quartile supérieur</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Par nombre</strong><p>Un instrument est en Q4 tant que moins de 25 % des instruments de son site font plus de lots non conformes.</p></div></li><li><span class="n">2</span><div><strong>Les deux mesures</strong><p>Les lots analysés sont déclarés à côté: le volume se lit sur la même ligne.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une comparaison entre pairs se déclare en quelques lignes, sur un export tel qu&#x27;il est.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="declare-source-tab" data-view="source" aria-controls="declare-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="declare-manifest-tab" data-view="manifest" aria-controls="declare-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="declare-commands-tab" data-view="commands" aria-controls="declare-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="declare-result-tab" data-view="result" aria-controls="declare-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="declare-source" aria-labelledby="declare-source-tab" tabindex="0"><figure class="source"><figcaption>releves-qc.csv</figcaption><pre class="code">releve;site;instrument;mise_en_service;mois;lots_analyses;lots_non_conformes
+LYO-HPLC-01-2026-05;Lyon;LYO-HPLC-01;2009;2026-05;100;2
+LYO-HPLC-01-2026-06;Lyon;LYO-HPLC-01;2009;2026-06;100;2
+LYO-HPLC-01-2026-07;Lyon;LYO-HPLC-01;2009;2026-07;100;2
+LYO-HPLC-01-2026-08;Lyon;LYO-HPLC-01;2009;2026-08;100;1
+LYO-HPLC-01-2026-09;Lyon;LYO-HPLC-01;2009;2026-09;100;1
+LYO-HPLC-01-2026-10;Lyon;LYO-HPLC-01;2009;2026-10;100;1
+LYO-HPLC-02-2026-05;Lyon;LYO-HPLC-02;2021;2026-05;400;8
+LYO-HPLC-02-2026-06;Lyon;LYO-HPLC-02;2021;2026-06;400;8
+LYO-HPLC-02-2026-07;Lyon;LYO-HPLC-02;2021;2026-07;400;8
+LYO-HPLC-02-2026-08;Lyon;LYO-HPLC-02;2021;2026-08;400;8
+LYO-HPLC-02-2026-09;Lyon;LYO-HPLC-02;2021;2026-09;400;8
+LYO-HPLC-02-2026-10;Lyon;LYO-HPLC-02;2021;2026-10;400;8
+LYO-GC-01-2026-05;Lyon;LYO-GC-01;2008;2026-05;84;1
+LYO-GC-01-2026-06;Lyon;LYO-GC-01;2008;2026-06;84;1
+LYO-GC-01-2026-07;Lyon;LYO-GC-01;2008;2026-07;83;1
+LYO-GC-01-2026-08;Lyon;LYO-GC-01;2008;2026-08;83;1
+LYO-GC-01-2026-09;Lyon;LYO-GC-01;2008;2026-09;83;1
+LYO-GC-01-2026-10;Lyon;LYO-GC-01;2008;2026-10;83;1
+LYO-GC-02-2026-05;Lyon;LYO-GC-02;2016;2026-05;150;7</pre><p class="source-more">… 113 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="declare-manifest" aria-labelledby="declare-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/10-lims.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-labo-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [labo-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: sftp</span><span class="line">    <span class="key">host</span>: host.docker.internal</span><span class="line">    <span class="key">port</span>: 2233</span><span class="line">    <span class="key">user</span>: qualite</span><span class="line">    <span class="key">path</span>: /exports/releves-qc.csv</span><span class="line">    <span class="key">password_env</span>: SCENARIO_LABO_A_SFTP</span><span class="line">    <span class="comment"># The fingerprint the export server presents, read out of band (ssh-keyscan | ssh-keygen -lf -).</span></span><span class="line">    <span class="key">host_key_fingerprint</span>: <span class="str">&quot;SHA256:FINGERPRINT_READ_AT_REPLAY&quot;</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">    <span class="key">encoding</span>: UTF-8</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      - parse-number: { column: lots_analyses, decimal-separator: <span class="str">&quot;.&quot;</span> }</span><span class="line">      - parse-number: { column: lots_non_conformes, decimal-separator: <span class="str">&quot;.&quot;</span> }</span></code></pre><div class="file"><span class="filename">manifests/20-releve.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ScenarioLaboRelevesA</span><span class="line"><span class="key">match</span>: [releve]</span><span class="line"><span class="key">scopes</span>: [labo-a]</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_labo_a</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">releve</span>: releve</span><span class="line">      <span class="key">site</span>: site</span><span class="line">      <span class="key">instrument</span>: instrument</span><span class="line">      <span class="key">mise_en_service</span>: mise_en_service</span><span class="line">      <span class="key">mois</span>: mois</span><span class="line">      <span class="key">lots_analyses</span>: lots_analyses</span><span class="line">      <span class="key">lots_non_conformes</span>: lots_non_conformes</span></code></pre><div class="file"><span class="filename">manifests/30-quartile.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Metric</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario_labo_quartile_a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: labo-a</span><span class="line">  <span class="key">title</span>: Lots non conformes par instrument</span><span class="line">  <span class="key">description</span>: Le quartile de chaque instrument, dans son site, par nombre de lots non conformes sur six mois.</span><span class="line">  <span class="key">source</span>:</span><span class="line">    <span class="key">entity</span>: ScenarioLaboRelevesA</span><span class="line">  <span class="key">by</span>: [site, instrument, mise_en_service]</span><span class="line">  <span class="key">measures</span>:</span><span class="line">    <span class="key">lots_nc</span>: { sum: lots_non_conformes, unit: lots }</span><span class="line">    <span class="key">lots</span>:    { sum: lots_analyses, unit: lots }</span><span class="line">  <span class="key">across</span>:</span><span class="line hl">    <span class="key">within</span>: [site]                     <span class="comment"># an instrument is compared with its own site&#x27;s, never across sites</span></span><span class="line hl">    <span class="key">nc_quartile</span>: { quantile: lots_nc, bounds: [25, 50, 75], labels: [Q4, Q3, Q2, Q1] }</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="declare-commands" aria-labelledby="declare-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-lims.yaml</span>
+<span class="out">Applied connector &quot;scenario-labo-r1127&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-labo-r1127</span>
+<span class="out">run scheduled: 21dca6ba-f449-47d9-8d16-c4e88c383ff2</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get 21dca6ba-f449-47d9-8d16-c4e88c383ff2 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR            ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+21dca6ba  scenario-labo-r1127  default   Completed  132  132  0        0             2026-11-27 19:55  2026-11-27 19:56  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-releve.yaml</span>
+<span class="out">Applied entity &quot;ScenarioLaboRelevesR1127&quot; → connector.&quot;v_scenariolaborelevesr1127&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm metric apply -f 30-quartile.yaml</span>
+<span class="out">Applied metric &quot;scenario_labo_quartile_r1127&quot; (definition version 1)</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="declare-result" aria-labelledby="declare-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>IN 132 · OUT 132 · cell errors 0</dd></dl><p class="sources">preuves: replay.log, 00-check-quartiles.txt, 01-run.json, 05-top-quarter.json, 04-metric.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-read" aria-labelledby="read-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="read-title">Deux instruments par site, aucun des plus anciens</h2>
+      <p>Dans chaque site, Q4 contient deux instruments et porte environ la moitié des lots non conformes.</p><ul class="prose-list"><li>Lyon: LYO-HPLC-02 (2021) et LYO-GC-02 (2016), 57,79 %</li><li>Nantes: NTE-HPLC-01 (2011) et NTE-GC-02 (2015), 48,18 %</li><li>Lille: LIL-ICP-01 (2019) et LIL-KF-01 (2012), 56,73 %</li><li>le plus ancien instrument de chaque site est en Q1</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Le volume sur la même ligne</strong><p>LYO-HPLC-02: 48 lots non conformes sur 2 400 analysés. LYO-GC-02: 41 sur 900. Le premier est là surtout parce qu&#x27;il travaille beaucoup.</p></div></li><li><span class="n">2</span><div><strong>Vérifié à part</strong><p>data/check_quartiles.py classe les instruments avec son propre code: la liste et les parts sont les mêmes.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>La liste à revoir ne dépend plus de l&#x27;âge des instruments.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button><button type="button" role="tab" id="read-screenshots-tab" data-view="screenshots" aria-controls="read-screenshots" aria-selected="false" tabindex="-1">Captures</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm metric get scenario_labo_quartile_r1127</span>
+<span class="out">Lots non conformes par instrument
+
+SITE    INSTRUMENT   MISE_EN_SERVICE  LOTS_NC  LOTS  NC_QUARTILE  NC_QUARTILE_BEFORE   NC_QUARTILE_COUNT  NC_QUARTILE_COUNT_SHARE  NC_QUARTILE_SHARE    NC_QUARTILE_POPULATION  NC_QUARTILE_UNCLASSIFIED  _DISPUTED
+Lille   LIL-GC-01    2006             4        300   Q1           83.3333333333333333  1                  16.6666666666666667      3.8461538461538462   6                       0                         0
+Lille   LIL-HPLC-01  2014             19       900   Q3           33.3333333333333333  1                  16.6666666666666667      18.2692307692307692  6                       0                         0
+Lille   LIL-ICP-01   2019             33       1500  Q4           0                    2                  33.3333333333333333      56.7307692307692308  6                       0                         0
+Lille   LIL-KF-01    2012             26       420   Q4           16.6666666666666667  2                  33.3333333333333333      56.7307692307692308  6                       0                         0
+Lille   LIL-MS-01    2021             13       520   Q2           50.0000000000000000  2                  33.3333333333333333      21.1538461538461538  6                       0                         0
+Lille   LIL-UV-01    2016             9        600   Q2           66.6666666666666667  2                  33.3333333333333333      21.1538461538461538  6                       0                         0
+Lyon    LYO-GC-01    2008             6        500   Q1           87.5000000000000000  2                  25.0000000000000000      9.0909090909090909   8                       0                         0
+Lyon    LYO-GC-02    2016             41       900   Q4           12.5000000000000000  2                  25.0000000000000000      57.7922077922077922  8                       0                         0
+Lyon    LYO-HPLC-01  2009             9        600   Q2           62.5000000000000000  2                  25.0000000000000000      12.9870129870129870  8                       0                         0
+Lyon    LYO-HPLC-02  2021             48       2400  Q4           0                    2                  25.0000000000000000      57.7922077922077922  8                       0                         0
+Lyon    LYO-ICP-01   2012             14       700   Q3           37.5000000000000000  2                  25.0000000000000000      20.1298701298701299  8                       0                         0
+Lyon    LYO-KF-01    2010             11       400   Q2           50.0000000000000000  2                  25.0000000000000000      12.9870129870129870  8                       0                         0
+Lyon    LYO-MS-01    2018             17       650   Q3           25.0000000000000000  2                  25.0000000000000000      20.1298701298701299  8                       0                         0
+Lyon    LYO-UV-01    2019             8        800   Q1           75.0000000000000000  2                  25.0000000000000000      9.0909090909090909   8                       0                         0
+Nantes  NTE-GC-01    2007             7        450   Q1           75.0000000000000000  2                  25.0000000000000000      8.7591240875912409   8                       0                         0
+Nantes  NTE-GC-02    2015             29       800   Q4           12.5000000000000000  2                  25.0000000000000000      48.1751824817518248  8                       0                         0
+Nantes  NTE-HPLC-01  2011             37       1100  Q4           0                    2                  25.0000000000000000      48.1751824817518248  8                       0                         0
+Nantes  NTE-HPLC-02  2020             12       1300  Q2           50.0000000000000000  2                  25.0000000000000000      16.0583941605839416  8                       0                         0
+Nantes  NTE-ICP-01   2013             10       600   Q2           62.5000000000000000  2                  25.0000000000000000      16.0583941605839416  8                       0                         0
+Nantes  NTE-KF-01    2018             5        350   Q1           87.5000000000000000  2                  25.0000000000000000      8.7591240875912409   8                       0                         0
+Nantes  NTE-MS-01    2017             22       700   Q3           25.0000000000000000  2                  25.0000000000000000      27.0072992700729927  8                       0                         0
+Nantes  NTE-UV-01    2022             15       950   Q3           37.5000000000000000  2                  25.0000000000000000      27.0072992700729927  8                       0                         0
+
+  lots_nc: lots
+  lots: lots
+  nc_quartile_before: %
+  nc_quartile_count_share: %
+  nc_quartile_share: %
+  lots_nc = sum(lots_non_conformes), by site, instrument, mise_en_service
+  lots = sum(lots_analyses), by site, instrument, mise_en_service
+  nc_quartile = quantile(lots_nc, bounds [25, 50, 75], labels [Q4, Q3, Q2, Q1]) within site, prior headcount, null unclassified
+  data as of: 2026-11-27T18:56:00.090898Z (last completed run)</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>Lille · Q4</dt><dd>LIL-ICP-01 (2019): 33 non-conforming lots / 1500 analysed</dd><dt>Lille · Q4</dt><dd>LIL-KF-01 (2012): 26 non-conforming lots / 420 analysed</dd><dt>Lyon · Q4</dt><dd>LYO-HPLC-02 (2021): 48 non-conforming lots / 2400 analysed</dd><dt>Lyon · Q4</dt><dd>LYO-GC-02 (2016): 41 non-conforming lots / 900 analysed</dd><dt>Nantes · Q4</dt><dd>NTE-HPLC-01 (2011): 37 non-conforming lots / 1100 analysed</dd><dt>Nantes · Q4</dt><dd>NTE-GC-02 (2015): 29 non-conforming lots / 800 analysed</dd><dt>Lille · Q4 share</dt><dd>56.73 %</dd><dt>Lyon · Q4 share</dt><dd>57.79 %</dd><dt>Nantes · Q4 share</dt><dd>48.18 %</dd><dt>check_quartiles.py</dt><dd>Lille LIL-ICP-01 · Lille LIL-KF-01 · Lyon LYO-GC-02 · Lyon LYO-HPLC-02 · Nantes NTE-GC-02 · Nantes NTE-HPLC-01</dd></dl><p class="sources">preuves: replay.log, 00-check-quartiles.txt, 01-run.json, 05-top-quarter.json, 04-metric.txt · transform v1</p></div><div role="tabpanel" class="view-panel view-panel-screenshots" id="read-screenshots" aria-labelledby="read-screenshots-tab" tabindex="0" hidden><figure class="shot"><img src="evidence/screenshots/lyon-q4-open.png" alt="Lyon dans l&#x27;onglet Métriques: Q4 ouvert sur LYO-HPLC-02 (48 lots non conformes sur 2 400) et LYO-GC-02 (41 sur 900)" loading="lazy"><figcaption>Lyon dans l&#x27;onglet Métriques: Q4 ouvert sur LYO-HPLC-02 (48 lots non conformes sur 2 400) et LYO-GC-02 (41 sur 900)</figcaption></figure></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Ce n&#x27;est pas un taux: le quartile compte les lots non conformes. Un instrument très utilisé peut être en Q4 pour son volume, la carte le montre sans le corriger.</li><li>Aucun site n&#x27;est comparé à un autre: chaque site reste sa propre population.</li><li>Pas de tendance: six mois en un total. Les instruments entrés ou sortis de Q4 attendent l&#x27;historique des métriques.</li><li>Pas de cause: lumnik classe ce que disent les relevés, le laboratoire cherche pourquoi.</li><li>Trois sites et 22 instruments synthétiques.</li></ul></section>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
