@@ -99,7 +99,7 @@
       },
       "edition": "open",
       "replayedAt": "2026-11-27",
-      "evidenceDigest": "sha256:78375b7f55c8ec4eb050cd93e0517501725697ebecd6b3b09b0e618172b37953"
+      "evidenceDigest": "sha256:226c703bf3745b124374140facec2f48524d55ed9662aefd4711b05bec3641bb"
     },
     {
       "slug": "broken-coordinates",
@@ -258,7 +258,7 @@
       },
       "edition": "open",
       "replayedAt": "2026-11-27",
-      "evidenceDigest": "sha256:eb40f598dfa345f903fec458a10f6f567a653972c52e4ec99a38db16f35b4d16"
+      "evidenceDigest": "sha256:dfa6c32629b140c9c8769bcac36b56b9365a826773b2d79f3f688edcf58395f5"
     },
     {
       "slug": "crm-contacts-reachable",
