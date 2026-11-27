@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logiciel de vie scolaire legacy: trois motifs médicaux font 85 % des heures d&#x27;absence — lumnik</title>
+<meta name="description" content="Savoir quels motifs d&#x27;absence portent l&#x27;essentiel des heures de cours perdues au premier trimestre. Un collège de 420 élèves exporte ses absences du trimestre, une ligne par absence. Tout le monde pense que les heures partent dans les absences non justifiées. Personne n&#x27;a additionné les heures par motif. Un classement A, B, C des motifs par heures perdues. Le nombre d&#x27;absences à côté des heures. « non justifiée », le motif le plus fréquent: en B.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Fraunces:opsz,wght@9..144,400..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../assets/scenario.css">
+<link rel="canonical" href="https://lumnik.fr/scenarios/school-absence-hours-by-motive/">
+<link rel="alternate" hreflang="fr" href="https://lumnik.fr/scenarios/school-absence-hours-by-motive/">
+</head>
+<body>
+<header class="top"><a class="brand" href="../../index.html">lumnik<span class="dot">.</span> <span class="crumb">/ scénarios</span></a>
+<span class="meta"><a href="../">Tous les scénarios</a></span></header>
+<main>
+  <section class="hero">
+    <h1>Logiciel de vie scolaire legacy: trois motifs médicaux font 85 % des heures d&#x27;absence</h1>
+    <p class="goal"><strong>Objectif</strong> Savoir quels motifs d&#x27;absence portent l&#x27;essentiel des heures de cours perdues au premier trimestre.</p>
+    <p class="lede">Un collège de 420 élèves exporte ses absences du trimestre, une ligne par absence. Tout le monde pense que les heures partent dans les absences non justifiées. Personne n&#x27;a additionné les heures par motif.</p><ul class="lede-list"><li>un classement A, B, C des motifs par heures perdues</li><li>le nombre d&#x27;absences à côté des heures</li><li>« non justifiée », le motif le plus fréquent: en B</li></ul>
+    <ul class="tags"><li class="tag edition edition-open"><a href="https://docs.lumnik.io/editions/">lumnik Open</a></li><li class="tag">Éducation</li><li class="tag">Vie scolaire</li><li class="tag">Absences</li><li class="tag kind">Connector</li><li class="tag kind">Entity</li><li class="tag kind">Metric</li></ul>
+  </section>
+  <nav class="steps-nav" aria-label="Étapes"><a href="#step-declare" data-step="declare" aria-current="step"><span class="num">1 · Déclarer</span><span class="sub">Entité + Metric</span></a><a href="#step-read" data-step="read"><span class="num">2 · Lire</span><span class="sub">La classe A</span></a></nav>
+  <section class="step" id="step-declare" aria-labelledby="declare-title">
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="declare-title">Les motifs classés par heures perdues</h2>
+      <p>L&#x27;export arrive par SFTP: une ligne par absence, avec le motif saisi au bureau et les heures de cours perdues. La métrique additionne, par motif, les heures et les absences.</p><ul class="prose-list"><li>by: [motif]: l&#x27;élève n&#x27;est pas une colonne de la métrique</li><li>preset: abc: A, les motifs des premiers 80 % des heures; B, jusqu&#x27;à 95 %; C, le reste</li><li>absences: count: rows: le nombre d&#x27;absences sur la même ligne</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Par heures</strong><p>Un motif est en A tant que les motifs avant lui portent moins de 80 % des heures.</p></div></li><li><span class="n">2</span><div><strong>Aucun enfant sur la carte</strong><p>La métrique groupe par motif seulement: elle ne montre jamais un élève.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Une question sur tout l&#x27;établissement se déclare en quelques lignes, sur un export tel qu&#x27;il est.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Déclarer"><button type="button" role="tab" id="declare-source-tab" data-view="source" aria-controls="declare-source" aria-selected="true" tabindex="0">Données</button><button type="button" role="tab" id="declare-manifest-tab" data-view="manifest" aria-controls="declare-manifest" aria-selected="false" tabindex="-1">Manifestes</button><button type="button" role="tab" id="declare-commands-tab" data-view="commands" aria-controls="declare-commands" aria-selected="false" tabindex="-1">Commandes</button><button type="button" role="tab" id="declare-result-tab" data-view="result" aria-controls="declare-result" aria-selected="false" tabindex="-1">Résultat</button></div>
+    <div role="tabpanel" class="view-panel view-panel-source" id="declare-source" aria-labelledby="declare-source-tab" tabindex="0"><figure class="source"><figcaption>absences-t1.csv</figcaption><pre class="code">absence;eleve_id;classe;date;motif;heures
+A-00001;E-2017;6e A;2026-09-01;non justifiée;1
+A-00002;E-2033;6e A;2026-09-01;maladie;3
+A-00003;E-2048;3e D;2026-09-01;malade;7
+A-00004;E-2066;6e B;2026-09-01;non justifiée;1
+A-00005;E-2089;4e A;2026-09-01;RDV médical;4
+A-00006;E-2105;4e A;2026-09-01;non justifiée;1
+A-00007;E-2113;6e A;2026-09-01;transport;1
+A-00008;E-2119;5e C;2026-09-01;malade;4
+A-00009;E-2123;4e C;2026-09-01;malade;3
+A-00010;E-2138;4e B;2026-09-01;malade;7
+A-00011;E-2160;3e D;2026-09-01;sport compétition;4
+A-00012;E-2174;3e B;2026-09-01;RDV médical;3
+A-00013;E-2193;6e A;2026-09-01;malade;7
+A-00014;E-2206;3e B;2026-09-01;non justifiée;1
+A-00015;E-2231;5e C;2026-09-01;malade;4
+A-00016;E-2231;5e C;2026-09-01;malade;7
+A-00017;E-2242;6e B;2026-09-01;RDV médical;2
+A-00018;E-2249;4e A;2026-09-01;maladie;4
+A-00019;E-2006;5e B;2026-09-02;non justifiée;1</pre><p class="source-more">… 801 lignes de plus</p></figure></div><div role="tabpanel" class="view-panel view-panel-manifest" id="declare-manifest" aria-labelledby="declare-manifest-tab" tabindex="0" hidden><div class="file"><span class="filename">manifests/10-viesco.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: connectors.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Connector</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario-college-a</span><span class="line">  <span class="key">connector_type</span>: csv-file</span><span class="line">  <span class="key">scopes</span>: [college-a]</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">transport</span>:</span><span class="line">    <span class="key">kind</span>: sftp</span><span class="line">    <span class="key">host</span>: host.docker.internal</span><span class="line">    <span class="key">port</span>: 2234</span><span class="line">    <span class="key">user</span>: viesco</span><span class="line">    <span class="key">path</span>: /exports/absences-t1.csv</span><span class="line">    <span class="key">password_env</span>: SCENARIO_COLLEGE_A_SFTP</span><span class="line">    <span class="comment"># The fingerprint the school&#x27;s server presents, read out of band (ssh-keyscan | ssh-keygen -lf -).</span></span><span class="line">    <span class="key">host_key_fingerprint</span>: <span class="str">&quot;SHA256:FINGERPRINT_READ_AT_REPLAY&quot;</span></span><span class="line">  <span class="key">parser</span>:</span><span class="line">    <span class="key">has_header</span>: true</span><span class="line">    <span class="key">delimiter</span>: <span class="str">&quot;;&quot;</span></span><span class="line">    <span class="key">encoding</span>: UTF-8</span><span class="line">  <span class="key">after_process</span>: none</span><span class="line">  <span class="key">mapping</span>:</span><span class="line">    <span class="key">cell</span>:</span><span class="line">      - parse-number: { column: heures, decimal-separator: <span class="str">&quot;.&quot;</span> }</span></code></pre><div class="file"><span class="filename">manifests/20-absence.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">kind</span>: Entity</span><span class="line"><span class="key">name</span>: ScenarioCollegeAbsencesA</span><span class="line"><span class="key">match</span>: [absence]</span><span class="line"><span class="key">scopes</span>: [college-a]</span><span class="line"><span class="key">sources</span>:</span><span class="line">  <span class="dash">-</span> <span class="key">table</span>: t_scenario_college_a</span><span class="line">    <span class="key">map</span>:</span><span class="line">      <span class="key">absence</span>: absence</span><span class="line">      <span class="key">eleve_id</span>: eleve_id</span><span class="line">      <span class="key">classe</span>: classe</span><span class="line">      <span class="key">date</span>: date</span><span class="line">      <span class="key">motif</span>: motif</span><span class="line">      <span class="key">heures</span>: heures</span></code></pre><div class="file"><span class="filename">manifests/30-motifs.yaml</span><button type="button" class="copy" data-copy>Copier</button></div><pre class="code yaml"><code><span class="line"><span class="key">apiVersion</span>: apps.lumnik.io/v1</span><span class="line"><span class="key">kind</span>: Metric</span><span class="line"><span class="key">metadata</span>:</span><span class="line">  <span class="key">name</span>: scenario_college_motifs_a</span><span class="line"><span class="key">spec</span>:</span><span class="line">  <span class="key">scope</span>: college-a</span><span class="line">  <span class="key">title</span>: Heures perdues par motif</span><span class="line">  <span class="key">description</span>: Les motifs d&#x27;absence du premier trimestre, classés A, B, C par heures de cours perdues.</span><span class="line">  <span class="key">source</span>:</span><span class="line">    <span class="key">entity</span>: ScenarioCollegeAbsencesA</span><span class="line hl">  <span class="key">by</span>: [motif]                          <span class="comment"># the motive as typed at the desk: no pupil reaches the metric</span></span><span class="line">  <span class="key">measures</span>:</span><span class="line">    <span class="key">heures</span>:   { sum: heures, unit: h }</span><span class="line hl">    <span class="key">absences</span>: { count: rows }</span><span class="line">  <span class="key">across</span>:</span><span class="line hl">    <span class="key">motif_abc</span>: { preset: abc, of: heures }   <span class="comment"># pareto by hours: A, the motives of the first 80 % of the hours</span></span></code></pre></div><div role="tabpanel" class="view-panel view-panel-commands" id="declare-commands" aria-labelledby="declare-commands-tab" tabindex="0" hidden><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm apply -f 10-viesco.yaml</span>
+<span class="out">Applied connector &quot;scenario-college-d1127&quot; — 1 endpoint</span>
+
+<span class="cmd"><span class="prompt">$</span> lm connector run scenario-college-d1127</span>
+<span class="out">run scheduled: d686442f-90ac-421e-9eac-66f25bf90934</span>
+
+<span class="cmd"><span class="prompt">$</span> lm run get d686442f-90ac-421e-9eac-66f25bf90934 --wait-evaluated</span>
+<span class="out">ID        CONNECTOR               ENDPOINT  STATUS     IN   OUT  SKIPPED  DEAD-LETTERS  STARTED           ENDED             EVALUATED
+d686442f  scenario-college-d1127  default   Completed  820  820  0        0             2026-11-27 21:24  2026-11-27 21:24  yes</span>
+
+<span class="cmd"><span class="prompt">$</span> lm entity apply -f 20-absence.yaml</span>
+<span class="out">Applied entity &quot;ScenarioCollegeAbsencesD1127&quot; → connector.&quot;v_scenariocollegeabsencesd1127&quot;</span>
+
+<span class="cmd"><span class="prompt">$</span> lm metric apply -f 30-motifs.yaml</span>
+<span class="out">Applied metric &quot;scenario_college_motifs_d1127&quot; (definition version 1)</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="declare-result" aria-labelledby="declare-result-tab" tabindex="0" hidden><dl class="facts"><dt>run</dt><dd>IN 820 · OUT 820 · cell errors 0</dd></dl><p class="sources">preuves: replay.log, 00-check-pareto.txt, 01-run.json, 05-class-a.json, 04-metric.txt · transform v1</p></div>
+  </div>
+</section>
+<section class="step" id="step-read" aria-labelledby="read-title" data-inactive>
+  <aside class="explain">
+    <div class="explain-intro">
+      <h2 id="read-title">Trois motifs médicaux, saisis de trois façons</h2>
+      <p>Trois motifs portent 85,15 % des heures du trimestre.</p><ul class="prose-list"><li>malade: 1 160 h</li><li>maladie: 905 h</li><li>RDV médical: 498 h</li><li>« non justifiée » est en B: 236 h, 7,84 % des heures</li></ul>
+    </div>
+    <ol class="points"><li><span class="n">1</span><div><strong>Le plus fréquent n&#x27;est pas le plus lourd</strong><p>« non justifiée »: 210 absences sur 820, d&#x27;une heure le plus souvent. C&#x27;est le motif que le bureau saisit le plus, et il pèse peu en heures.</p></div></li><li><span class="n">2</span><div><strong>Vérifié à part</strong><p>data/check_pareto.py classe les motifs avec son propre code: la classe A et sa part sont les mêmes.</p></div></li></ol>
+    <div class="proves"><h3>Ce que prouve cette étape</h3><p>Le plan d&#x27;action part de l&#x27;endroit où vont les heures: la santé avant l&#x27;absentéisme.</p></div>
+  </aside>
+  <div class="views">
+    <div role="tablist" class="view-tabs" aria-label="Lire"><button type="button" role="tab" id="read-commands-tab" data-view="commands" aria-controls="read-commands" aria-selected="true" tabindex="0">Commandes</button><button type="button" role="tab" id="read-result-tab" data-view="result" aria-controls="read-result" aria-selected="false" tabindex="-1">Résultat</button><button type="button" role="tab" id="read-screenshots-tab" data-view="screenshots" aria-controls="read-screenshots" aria-selected="false" tabindex="-1">Captures</button></div>
+    <div role="tabpanel" class="view-panel view-panel-commands" id="read-commands" aria-labelledby="read-commands-tab" tabindex="0"><pre class="code terminal"><code><span class="cmd"><span class="prompt">$</span> lm metric get scenario_college_motifs_d1127</span>
+<span class="out">Heures perdues par motif
+
+MOTIF              HEURES  ABSENCES  MOTIF_ABC  MOTIF_ABC_BEFORE     MOTIF_ABC_COUNT  MOTIF_ABC_COUNT_SHARE  MOTIF_ABC_SHARE      MOTIF_ABC_POPULATION  MOTIF_ABC_UNCLASSIFIED  _DISPUTED
+convocation        22      9         C          98.6378737541528239  3                37.5000000000000000    3.2890365448504983   8                     0                       0
+famille            112     19        B          92.9900332225913621  2                25.0000000000000000    11.5614617940199336  8                     0                       0
+malade             1160    199       A          0                    3                37.5000000000000000    85.1495016611295681  8                     0                       0
+maladie            905     155       A          38.5382059800664452  3                37.5000000000000000    85.1495016611295681  8                     0                       0
+non justifiée      236     210       B          85.1495016611295681  2                25.0000000000000000    11.5614617940199336  8                     0                       0
+RDV médical        498     178       A          68.6046511627906977  3                37.5000000000000000    85.1495016611295681  8                     0                       0
+sport compétition  19      6         C          99.3687707641196013  3                37.5000000000000000    3.2890365448504983   8                     0                       0
+transport          58      44        C          96.7109634551495017  3                37.5000000000000000    3.2890365448504983   8                     0                       0
+
+  heures: h
+  motif_abc_before: %
+  motif_abc_count_share: %
+  motif_abc_share: %
+  heures = sum(heures), by motif
+  absences = count(rows), by motif
+  motif_abc = pareto(heures, bounds [80, 95], labels [A, B, C]) over every group, prior mass, null and ≤ 0 unclassified
+  data as of: 2026-11-27T20:24:33.543169Z (last completed run)</span></code></pre></div><div role="tabpanel" class="view-panel view-panel-result" id="read-result" aria-labelledby="read-result-tab" tabindex="0" hidden><dl class="facts"><dt>A · malade</dt><dd>1160 h · 199 absences</dd><dt>A · maladie</dt><dd>905 h · 155 absences</dd><dt>A · RDV médical</dt><dd>498 h · 178 absences</dd><dt>share A</dt><dd>85.15 %</dd><dt>share B</dt><dd>11.56 %</dd><dt>share C</dt><dd>3.29 %</dd><dt>B · non justifiée</dt><dd>236 h · 210 absences</dd><dt>check_pareto.py</dt><dd>RDV médical · malade · maladie</dd></dl><p class="sources">preuves: replay.log, 00-check-pareto.txt, 01-run.json, 05-class-a.json, 04-metric.txt · transform v1</p></div><div role="tabpanel" class="view-panel view-panel-screenshots" id="read-screenshots" aria-labelledby="read-screenshots-tab" tabindex="0" hidden><figure class="shot"><img src="evidence/screenshots/class-a-open.png" alt="La métrique dans l&#x27;onglet Métriques: A ouvert sur malade, maladie et RDV médical, les heures et les absences sur chaque ligne" loading="lazy"><figcaption>La métrique dans l&#x27;onglet Métriques: A ouvert sur malade, maladie et RDV médical, les heures et les absences sur chaque ligne</figcaption></figure></div>
+  </div>
+</section>
+  <section class="limits"><h2>Limites</h2><ul><li>Aucun synonyme détecté: lumnik montre trois motifs côte à côte en A, il ne dit pas que c&#x27;est la même cause et ne fusionne rien. Si l&#x27;établissement le décide, un lookup à l&#x27;entrée écrit un seul motif.</li><li>Les heures telles que déclarées: lumnik ne les recalcule pas depuis l&#x27;emploi du temps.</li><li>Aucun élève: la métrique ne dit pas qui est absent, ni quel élève suivre.</li><li>Pas de tendance: un trimestre en un total. Les motifs entrés ou sortis de A attendent l&#x27;historique des métriques.</li><li>420 identifiants d&#x27;élèves et 820 absences synthétiques.</li></ul></section>
+  <section class="try"><p>Ce scénario tourne sur lumnik Open, gratuit et open source.</p><a class="try-button" href="../../essai.html">Essayer lumnik Open →</a></section>
+</main>
+<script src="../assets/scenario.js" defer></script>
+</body>
+</html>
